@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>320</x>
+      <y>90</y>
+      <w>470</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>Sistema aplicación
+halign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>140</x>
+      <y>90</y>
+      <w>60</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Gestor</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>360</x>
+      <y>120</y>
+      <w>120</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Añadir nuevo
+descuento
+bg=LIGHT_GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>450</x>
+      <y>160</y>
+      <w>90</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>600</x>
+      <y>120</y>
+      <w>140</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Enviar notificación
+a clientes
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>350</x>
+      <y>300</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Actualizar precio
+productos afectados
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>510</x>
+      <y>210</y>
+      <w>110</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Guardar nuevo
+descuento
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>650</x>
+      <y>210</y>
+      <w>110</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Ver productos
+con descuento
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>410</x>
+      <y>170</y>
+      <w>100</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>130</y>
+      <w>150</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;130.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>150</y>
+      <w>100</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;50.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>40</x>
+      <y>200</y>
+      <w>260</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes> Precondiciones:
+ - Gestor identificado y autentificado
+ - Productos/categorías ya registradas
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>40</x>
+      <y>280</y>
+      <w>260</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes> Postcondiciones:
+ - Nuevo descuento registrado
+ - Precio de los productos actualizado y
+   muestran el descuento
+ - Clientes notificados sobre descuentos
+   relevantes
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>160</y>
+      <w>110</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;120.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>190</x>
+      <y>140</y>
+      <w>190</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>840</x>
+      <y>280</y>
+      <w>140</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Clientes interesados</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>240</y>
+      <w>150</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>130.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>810</x>
+      <y>90</y>
+      <w>210</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes> Las notificaciones se enviarán
+ a los clientes interesados en
+ esos productos
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>110</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;30.0;40.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>580</x>
+      <y>300</y>
+      <w>180</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Gestionar notificaciones
+de productos rebajados
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>320</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>810</x>
+      <y>170</y>
+      <w>210</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes> Los clientes podrán seleccionar
+ las notificaciones de descuento
+ que quieren recibir en función
+ de sus intereses
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>900</x>
+      <y>140</y>
+      <w>30</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>

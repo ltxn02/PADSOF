@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>360</x>
+      <y>90</y>
+      <w>450</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>Sistema aplicación
+halign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>140</x>
+      <y>90</y>
+      <w>80</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Empleado</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>390</x>
+      <y>120</y>
+      <w>140</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Valorar un producto
+de 2ª mano
+
+bg=LIGHT_GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>200</x>
+      <y>140</y>
+      <w>210</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;190.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>30</x>
+      <y>220</y>
+      <w>310</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes> Precondiciones:
+  - Tasa de valoración abonada por el cliente
+  - Empleado identificado con permisos de
+    valoración
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>160</y>
+      <w>100</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>520</x>
+      <y>130</y>
+      <w>140</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;120.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>640</x>
+      <y>130</y>
+      <w>140</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Guardar valoración</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>590</x>
+      <y>190</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>
+Publicar producto en
+cartera pública
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>170</y>
+      <w>140</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;20.0;40.0;120.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>30</x>
+      <y>330</y>
+      <w>310</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes> Postcondiciones:
+ - Valoración registrada
+ - Producto visible en cartera pública del cliente
+ - Estado de conservación y precio estimado
+   publicado
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>320</x>
+      <y>160</y>
+      <w>110</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>390</x>
+      <y>310</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>
+Mostrar información
+del producto
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>450</x>
+      <y>170</y>
+      <w>100</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;includes&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>620</x>
+      <y>270</y>
+      <w>120</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>
+Ver producto
+tras valoración
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>590</x>
+      <y>330</y>
+      <w>150</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>
+Ver producto antes
+de valoración
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>850</x>
+      <y>310</y>
+      <w>120</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Cliente solicitante</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>840</x>
+      <y>90</y>
+      <w>140</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Clientes interesados</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>350</y>
+      <w>170</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>280</y>
+      <w>170</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>150.0;60.0;10.0;18.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>700</x>
+      <y>110</y>
+      <w>200</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;</panel_attributes>
+    <additional_attributes>180.0;10.0;140.0;10.0;10.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>830</x>
+      <y>220</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes> La valoración habilita
+ la visibilidad pública
+bg=yellow
+valign=center</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>730</x>
+      <y>230</y>
+      <w>120</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+</diagram>
