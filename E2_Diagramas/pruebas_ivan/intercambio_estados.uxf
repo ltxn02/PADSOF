@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLState</id>
+    <coordinates><x>150</x><y>100</y><w>140</w><h>40</h></coordinates>
+    <panel_attributes>Oferta Pendiente</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates><x>420</x><y>100</y><w>140</w><h>40</h></coordinates>
+    <panel_attributes>Aceptado (En curso)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates><x>720</x><y>100</y><w>100</w><h>40</h></coordinates>
+    <panel_attributes>Completado</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLState</id>
+    <coordinates><x>150</x><y>250</y><w>150</w><h>40</h></coordinates>
+    <panel_attributes>Cancelado / Caducado</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLSpecialState</id>
+    <coordinates><x>40</x><y>110</y><w>20</w><h>20</h></coordinates>
+    <panel_attributes>type=initial</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates><x>50</x><y>110</y><w>120</w><h>30</h></coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates><x>280</x><y>100</y><w>160</w><h>40</h></coordinates>
+    <panel_attributes>lt=-&gt;
+Destinatario Acepta</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates><x>550</x><y>90</y><w>190</w><h>60</h></coordinates>
+    <panel_attributes>lt=-&gt;
+Validación tienda y
+ambos obj. recogidos</panel_attributes>
+    <additional_attributes>10.0;20.0;170.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates><x>210</x><y>130</y><w>140</w><h>140</h></coordinates>
+    <panel_attributes>lt=-&gt;
+Rechazado /
+Cancelado /
+Expiran 7 días</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+</diagram>
