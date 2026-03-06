@@ -3,6 +3,7 @@
 	<name>PADSOF</name>
 	<comment></comment>
 	<projects>
+		<project>pruebas_lidia</project>
 	</projects>
 	<buildSpec>
 	</buildSpec>
