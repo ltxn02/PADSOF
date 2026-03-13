@@ -11,4 +11,8 @@ public class Review extends BaseElement{
         this.comment = comment;
         this.product = product;
     }
+
+    public int getRating() {
+        return rating;
+    }
 }

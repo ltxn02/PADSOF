@@ -12,4 +12,14 @@ public abstract class NewProduct extends Item {
         this.stock = stock;
         this.reviews = reviews;
     }
+
+    public int calculateRating(){
+        int rating = 0;
+        for (Review review : reviews){
+            rating += review.getRating();
+        }
+
+        rating /= reviews.size();
+        return rating;
+    }
 }
