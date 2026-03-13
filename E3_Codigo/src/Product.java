@@ -1,4 +1,4 @@
-public class Product {
+public abstract class Product extends NewProduct {
     private static int lastId = 1;
     private int productId;
 
