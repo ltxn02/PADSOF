@@ -1,4 +1,10 @@
 
+/**
+ * Enum para representar la condición de los permisos de los empleados
+ * @author Taha Ridda
+ * @version 1.0
+ *
+ */
 public enum Permission {
 	PRODUCT_LOAD,
 	PRODUCT_EDIT,

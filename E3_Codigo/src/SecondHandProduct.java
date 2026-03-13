@@ -13,7 +13,7 @@ public class SecondHandProduct {
 	private ItemType Itemtype;
 	private Condition condition;
 	
-	public SecondHandProduct(int secondHandId, boolean isAppraised, boolean isOffered, ItemType ItemType, Condition condition /**Client Owner*/) {
+	public SecondHandProduct(int secondHandId, boolean isAppraised, boolean isOffered, ItemType ItemType, Condition condition, /**Client Owner*/) {
 
 		this.secondHandId = secondHandId;
 		this.isAppraised = isAppraised;
