@@ -2,12 +2,15 @@ import java.util.ArrayList;
 
 public abstract class NewProduct extends Item {
     private int stock;
+    private int effectiveStock;
     private ArrayList<Review> reviews;
 
-    public NewProduct(String name, String description, double price, String image, int stock, ArrayList<Review> reviews) {
-        super(name, description, price, image);
+    public NewProduct(String name, String description, double price, String image, ArrayList<Category> categories,int stock, ArrayList<Review> reviews) {
+        super(name, description, price, image, categories);
         if (stock < 0) {
             throw new IllegalArgumentException("Stock cannot be negative");
+        } else if (categories.size() <1) {
+            throw new IllegalArgumentException("Category cannot be empty");
         }
         this.stock = stock;
         this.reviews = reviews;
@@ -21,5 +24,9 @@ public abstract class NewProduct extends Item {
 
         rating /= reviews.size();
         return rating;
+    }
+
+    public boolean isEffectiveStockEmpty(){
+        return effectiveStock == 0;
     }
 }
