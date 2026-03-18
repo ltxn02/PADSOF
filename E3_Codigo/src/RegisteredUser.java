@@ -40,6 +40,6 @@ public abstract class RegisteredUser extends User {
 	
 	@Override
 	public String toString() {
-		
+		return "ok";
 	}
 }
