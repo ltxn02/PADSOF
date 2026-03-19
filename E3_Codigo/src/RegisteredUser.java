@@ -1,7 +1,7 @@
 import java.util.*;
 
 public abstract class RegisteredUser extends User {
-	private static int lastUserId;
+	private static int lastUserId = 0;
 	private int userId;
 	private String username;
 	private String password;
@@ -13,7 +13,6 @@ public abstract class RegisteredUser extends User {
 	private List<Notification> myNotifications;
 	
 	public RegisteredUser(String username, String password, String fullname, String dni, Date birthdate, String email, String phoneNumber) {
-		this.userId = next_id();
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
@@ -21,25 +20,29 @@ public abstract class RegisteredUser extends User {
 		this.birthdate = birthdate;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
-	}
-	
-	private int next_id() {
-		int nextId = lastUserId;
+		this.myNotifications = new ArrayList<>();
+		this.userId = lastUserId;
 		lastUserId++;
-		return nextId;
 	}
 	
 	public boolean login(String username, String password) {
-		if (username == this.username && password == this.password) {
+		if(username == this.username && password == this.password) {
 			return true;
 		}
 		return false;
 	}
+
+	// public boolean logout() {}
+	// public Notification (?) read_notifications() {}
+	// public boolean hide_notification() {}
 	
-	// public 
-	
-	@Override
+	/*@Override
 	public String toString() {
+<<<<<<< Updated upstream
 		return "ok";
 	}
+=======
+		
+	}*/
+>>>>>>> Stashed changes
 }
