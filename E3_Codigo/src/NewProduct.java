@@ -34,17 +34,22 @@ public abstract class NewProduct extends Item {
         return this.effectiveStock >= quantity;
     }
 
-    public void takeEffectiveStock(int quantity) throws IllegalArgumentException{
-        if (quantity < 0 || !isEffectiveStockHigher(quantity)){
-            throw new IllegalArgumentException("Invalid quantity, cannot be negative or higher than the current effective stock");
-        }
-        this.effectiveStock -= quantity;
-    }
-
-    public void giveEffectiveStock(int quantity) throws IllegalArgumentException{
+    public void orderProduct(int quantity) throws IllegalArgumentException{
         if (quantity < 0){
             throw new IllegalArgumentException("Invalid quantity, cannot be negative");
         }
+        this.effectiveStock -= quantity;
+        super.registerTime();
+    }
+
+    public void returnProduct(int quantity, boolean isAll) throws IllegalArgumentException{
+        if (quantity < 0){
+            throw new IllegalArgumentException("Invalid quantity, cannot be negative");
+        }
+
         this.effectiveStock += quantity;
+        if (isAll){
+            super.clearInstants();
+        }
     }
 }
