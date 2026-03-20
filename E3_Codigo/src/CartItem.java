@@ -1,5 +1,3 @@
-
-
 public class CartItem {
 	private NewProduct product;
 	private int quantity;
@@ -13,11 +11,16 @@ public class CartItem {
 		return this.quantity * this.product.getPrice();
 	}
 	
-	public void addQuantity(int quantity) throws IllegalArgumentException {
+	public void orderQuantity(int quantity) throws IllegalArgumentException {
 		if(this.product.isEffectiveStockHigher(quantity) == false) {
 			throw new IllegalArgumentException("Invalid quantity, there's not enough stock");
 		}
 		this.product.orderProduct(quantity);
+		this.quantity = quantity;
+	}
+	
+	public boolean isProduct(NewProduct p) {
+		return this.product == p;
 	}
 	
 	@Override
