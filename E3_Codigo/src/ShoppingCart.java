@@ -3,20 +3,41 @@ import java.time.*;
 
 public class ShoppingCart {
 	private double fullPrice;
-	private Map<NewProduct, Integer> cartItems;
+	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);
 	
 	public ShoppingCart() {
 		this.fullPrice = 0;
-		this.cartItems = new HashMap<>();
+		this.cartItems = new ArrayList<>();
 	}
 	
-	public void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {
+	public void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
 		if(p.isEffectiveStockHigher(quantity) == false) {
 			throw new IllegalArgumentException("Invalid quantity, there's not enough stock");
 		}
-		p.orderProduct(quantity);
-		this.cartItems.put(p, quantity);
+		
+		CartItem c = null;
+		double oldPrice = 0;
+		
+		if((c = this.cartContains(p)) == null) {
+			c = new CartItem(p, quantity);
+		} else {
+			oldPrice = c.fullPrice();
+			c.orderQuantity(quantity);
+		}
+		
+		this.fullPrice -= oldPrice;
+		this.fullPrice += c.fullPrice();
+		this.cartItems.add(c);
+	}
+	
+	private CartItem cartContains(NewProduct p) {
+		for(CartItem c : this.cartItems) {
+			if(c.isProduct(p) == true) {
+				return c;
+			}
+		}
+		return null;
 	}
 	
 	public void removeCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
