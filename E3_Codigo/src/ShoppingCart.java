@@ -11,40 +11,31 @@ public class ShoppingCart {
 		this.cartItems = new HashMap<>();
 	}
 	
-	/*public boolean addCartItem(NewProduct p, int quantity) {
-
-		COMPRUEBA QUE HAY STOCK EFECTIVO SUFICIENTE (return false)
-
-		AÑADE PRODUCTO AL CARRITO
-
-		LLAMA A FUNCION PARA REGISTRAR MOMENTO EXACTO Y ESTABLECER EL
-		STOCK EFECTIVO
-
-		 - Item debería tener atributo de tipo Instant para registrar
-		   el momento en el que un NewProduct o un SecondHandProduct se
-		   reserva para carrito o intercambio.
-		   
-		   > Haz el método para registrar el momento exacto de tipo protected
-		     (accesible solo por las subclases).
-
-		 - NewProduct debería tener atributo effectiveStock para registrar
-		   el stock que hay liberado (sin reservar en carritos) mientras
-		   se mantiene correcto el stock real.
-		   
-		 - Se llamaría a la función de NewProduct de reservarProductos o algo
-		   así que actualizaría el stock efectivo en función de la cantidad de
-		   productos que va a añadir al carrito el cliente.
-		
-		return true;
-	}*/
+	public void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {
+		if(p.isEffectiveStockHigher(quantity) == false) {
+			throw new IllegalArgumentException("Invalid quantity, there's not enough stock");
+		}
+		p.orderProduct(quantity);
+		this.cartItems.put(p, quantity);
+	}
 	
-	/*public void removeCartItem(NewProduct p, int quantity) {
-	 	SI CANTIDAD > QUE CANTIDAD EN EL CARRITO NO AFECTA (SE ELIMINA TODA
+	public void removeCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
+		if(this.cartItems.containsKey(p) == false) {
+			throw new IllegalArgumentException("Product not in the shopping cart");
+		}
+		
+		if(quantity < this.cartItems.get(p)) {
+			p.returnProduct(quantity, false);
+			
+		}
+		
+		p.returnProduct(quantity, isAll);
+	 	/*SI CANTIDAD > QUE CANTIDAD EN EL CARRITO NO AFECTA (SE ELIMINA TODA
 	 	LA CANTIDAD DE ESE PRODUCTO QUE HAYA EN EL CARRITO Y YA)
 	 	
 	 	LLAMA A FUNCION PARA BORRAR MOMENTO DE AÑADIR AL CARRITO DEL PRODUCTO
-	 	Y RESTABLECER EL STOCK EFECTIVO
-	 }*/
+	 	Y RESTABLECER EL STOCK EFECTIVO*/
+	 }
 	
 	public void removeExpiredCartItems() {
 		/*Iterator<Map.Entry<NewProduct, Integer>> it = null;

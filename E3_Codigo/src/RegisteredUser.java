@@ -44,5 +44,4 @@ public abstract class RegisteredUser extends User {
 =======
 		
 	}*/
->>>>>>> Stashed changes
 }
