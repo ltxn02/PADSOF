@@ -32,4 +32,8 @@ public abstract class Item extends BaseElement{
     public boolean isExpired(Duration time) {
         return this.lastAddedAt.plus(time).isBefore(Instant.now());
     }
+
+    public double getPrice(){
+        return this.price;
+    }
 }

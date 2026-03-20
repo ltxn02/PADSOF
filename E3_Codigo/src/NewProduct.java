@@ -52,4 +52,9 @@ public abstract class NewProduct extends Item {
             super.clearInstants();
         }
     }
+
+    @Override
+    public double getPrice() {
+        return super.getPrice();
+    }
 }
