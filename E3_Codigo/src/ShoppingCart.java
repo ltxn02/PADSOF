@@ -57,6 +57,6 @@ public class ShoppingCart {
 	 }
 	
 	public void removeExpiredCartItems() {
-		this.cartItems.removeIf(c -> c.isExpired(ShoppingCart.timeOnHold));
+		this.cartItems.removeIf(item -> item.isExpired(ShoppingCart.timeOnHold));
 	}
 }
