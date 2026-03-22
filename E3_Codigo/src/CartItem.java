@@ -1,3 +1,5 @@
+import java.time.*;
+
 public class CartItem {
 	private NewProduct product;
 	private int quantity;
@@ -17,6 +19,32 @@ public class CartItem {
 		}
 		this.product.orderProduct(quantity);
 		this.quantity = quantity;
+	}
+	
+	public void removeQuantity(int quantity) throws IllegalArgumentException {
+		if(quantity < 0) {
+			throw new IllegalArgumentException("Invalid quantity, must be positive");
+		}
+		
+		boolean isAll = false;
+		int aux = quantity;
+		
+		if(aux >= this.quantity) {
+			aux = this.quantity;
+			this.quantity = 0;
+			isAll = true;
+		} else {
+			this.quantity -= aux;
+		}
+		this.product.returnProduct(aux, isAll);
+	}
+	
+	public boolean isExpired(Duration time) {
+		return this.product.isExpired(time);
+	}
+	
+	public boolean isEmpty() {
+		return this.quantity == 0;
 	}
 	
 	public boolean isProduct(NewProduct p) {

@@ -12,15 +12,12 @@ public class ShoppingCart {
 	}
 	
 	public void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
-		if(p.isEffectiveStockHigher(quantity) == false) {
-			throw new IllegalArgumentException("Invalid quantity, there's not enough stock");
-		}
-		
 		CartItem c = null;
 		double oldPrice = 0;
 		
+		// Devuelve el CartItem c correspondiente al producto p
 		if((c = this.cartContains(p)) == null) {
-			c = new CartItem(p, quantity);
+			c = new CartItem(p, quantity);	// Crea uno nuevo si c no existe
 		} else {
 			oldPrice = c.fullPrice();
 			c.orderQuantity(quantity);
@@ -41,38 +38,25 @@ public class ShoppingCart {
 	}
 	
 	public void removeCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
-		if(this.cartItems.containsKey(p) == false) {
-			throw new IllegalArgumentException("Product not in the shopping cart");
-		}
+		CartItem c = null;
+		double oldPrice = 0, newPrice = 0;
 		
-		if(quantity < this.cartItems.get(p)) {
-			p.returnProduct(quantity, false);
+		if((c = this.cartContains(p)) != null) {
+			oldPrice = c.fullPrice();
+			c.removeQuantity(quantity);
 			
+			if(c.isEmpty() == true) {
+				this.cartItems.remove(c);
+			} else {
+				newPrice = c.fullPrice();
+			}
 		}
 		
-		p.returnProduct(quantity, isAll);
-	 	/*SI CANTIDAD > QUE CANTIDAD EN EL CARRITO NO AFECTA (SE ELIMINA TODA
-	 	LA CANTIDAD DE ESE PRODUCTO QUE HAYA EN EL CARRITO Y YA)
-	 	
-	 	LLAMA A FUNCION PARA BORRAR MOMENTO DE AÑADIR AL CARRITO DEL PRODUCTO
-	 	Y RESTABLECER EL STOCK EFECTIVO*/
+		this.fullPrice -= oldPrice;
+		this.fullPrice += newPrice;
 	 }
 	
 	public void removeExpiredCartItems() {
-		/*Iterator<Map.Entry<NewProduct, Integer>> it = null;
-		for(it = this.cartItems.entrySet().iterator(); it.hasNext(); ) {
-			Map.Entry<NewProduct, Integer> entry = it.next();
-			NewProduct p = entry.getKey();
-			
-			if(this.isExpired(p) == true) {
-				it.remove();
-			}
-		}*/
-		/*this.cartItems.entrySet().removeIf(
-				entry -> {
-					NewProduct p = entry.getKey();
-					return this.isExpired(p);
-				}
-		);*/
+		this.cartItems.removeIf(c -> c.isExpired(ShoppingCart.timeOnHold));
 	}
 }
