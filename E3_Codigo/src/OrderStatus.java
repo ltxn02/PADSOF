@@ -6,8 +6,12 @@
  */
 public enum OrderStatus {
 	SIN_PAGAR,
-	EN_PREPARACIÓN,
-	ENTREGADO;
+	EN_PREPARACION,
+	ENTREGADO,
+	CANCELADO;
+	/*
+	AÑADIMOS UN ESTADO CANCELADO???
+	 */
 	
 	public String toString() {
 		return this.name();
