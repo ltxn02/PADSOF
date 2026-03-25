@@ -2,7 +2,7 @@ import java.util.*;
 import java.time.*;
 
 public class Client extends RegisteredUser {
-	private Date joiningDate;
+	private LocalDateTime joiningDate;
 	private ShoppingCart shoppingCart;
 	private OrderHistoric myOrders;
 	private ExchangeHistoric myExchanges;
@@ -25,6 +25,9 @@ public class Client extends RegisteredUser {
 		this.offersReceived = new ArrayList<Exchange>();
 	}
 	
+	public void addToCart(NewProduct p, int quantity) throws IllegalArgumentException {
+		this.shoppingCart.addCartItem(p, quantity);
+	}
 	/*
 	 *	public boolean addToCart(NewProduct p, quantity q) {
 	 *	  	if (q <= stock) {
