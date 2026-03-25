@@ -7,13 +7,13 @@ public class Order {
     private static int lastId = 1;
     private int orderId;
     private Instant orderedAt;
-    private ArrayList<NewProduct> items;
+    private ArrayList<CartItem> items;
     private Instant paidAt;
     private double price;
     private String pickupCode;
     private OrderStatus orderStatus;
 
-    public Order(ArrayList<NewProduct> items, double price) {
+    public Order(ArrayList<CartItem> items, double price) {
         this.items = items;
         this.price = price;
         this.orderedAt = Instant.now();
