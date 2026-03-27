@@ -4,11 +4,12 @@
  * @version 1.0
  *
  */
-public enum ExchangeOffer {
+public enum ExchangeStatus {
     PENDIENTE,
     ACEPTADA,
     RECHAZADA,
-    EXPIRADA;
+    EXPIRADA,
+    CANCELADA;
 	/*
 	AÑADIMOS UN ESTADO CANCELADO???
 	 */
