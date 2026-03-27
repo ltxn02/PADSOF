@@ -12,7 +12,7 @@ public abstract class RegisteredUser extends User {
 	private String phoneNumber;
 	private List<Notification> myNotifications;
 	
-	public RegisteredUser(String username, String password, String fullname, String dni, Date birthdate, String email, String phoneNumber) {
+	public RegisteredUser(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
