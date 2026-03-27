@@ -7,7 +7,7 @@ public abstract class RegisteredUser extends User {
 	private String password;
 	private String fullname;
 	private String dni;
-	private Date birthdate;
+	private String birthdate;
 	private String email;
 	private String phoneNumber;
 	private List<Notification> myNotifications;
