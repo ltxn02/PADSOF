@@ -12,7 +12,7 @@ public class Client extends RegisteredUser {
 	private List<Exchange> offersMade;
 	private List<Exchange> offersReceived;
 	
-	public Client(String username, String password, String fullname, String dni, Date birthdate, String email, String phoneNumber) {
+	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		super(username, password, fullname, dni, birthdate, email, phoneNumber);
 		this.joiningDate = LocalDateTime.now();
 		this.shoppingCart = new ShoppingCart();
@@ -27,6 +27,21 @@ public class Client extends RegisteredUser {
 	
 	public void addToCart(NewProduct p, int quantity) throws IllegalArgumentException {
 		this.shoppingCart.addCartItem(p, quantity);
+	}
+	
+	public void removeFromCart(NewProduct p, int quantity) throws IllegalArgumentException {
+		this.shoppingCart.removeCartItem(p, quantity);
+	}
+	
+	public void buyCart() {
+		/*List<CartItem> orderedItems = this.shoppingCart.getCartItems();
+		double cost = this.shoppingCart.fullPrice();*/
+		
+		
+	}
+	
+	public void makeOffer() {
+		
 	}
 	/*
 	 *	public boolean addToCart(NewProduct p, quantity q) {
