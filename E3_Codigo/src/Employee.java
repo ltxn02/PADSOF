@@ -9,5 +9,9 @@ public class Employee extends Staff{
     public Employee(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber, double salary, boolean enabled){
         super(username, password, fullname, dni, birthdate, email, phoneNumber, salary);
         this.enabled = enabled;
+        this.permissions= new ArrayList<>();
+    }
+    public void add_permisions(Permission e){
+        this.permissions.add(e);
     }
 }
