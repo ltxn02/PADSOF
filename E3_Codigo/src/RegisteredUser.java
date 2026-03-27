@@ -36,6 +36,10 @@ public abstract class RegisteredUser extends User {
 	// public Notification (?) read_notifications() {}
 	// public boolean hide_notification() {}
 	
+	@Override
+	public String toString() {
+		return this.username;
+	}
 	/*@Override
 	public String toString() {
 <<<<<<< Updated upstream
