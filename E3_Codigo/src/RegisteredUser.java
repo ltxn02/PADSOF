@@ -26,10 +26,11 @@ public abstract class RegisteredUser extends User {
 	}
 	
 	public boolean login(String username, String password) {
-		if(username == this.username && password == this.password) {
-			return true;
-		}
-		return false;
+        return username.equals(this.username) && password.equals(this.password);
+    }
+
+	public String getUsername() {
+		return username;
 	}
 
 	// public boolean logout() {}

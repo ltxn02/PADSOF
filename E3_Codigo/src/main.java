@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.util.Date;
 import java.util.Scanner;
 
 public class main {
@@ -54,11 +56,13 @@ public class main {
         System.out.print("Contraseña: ");
         String password = scanner.nextLine();
 
-        // TODO: Aquí llamarías a la lógica de tu aplicación para validar el usuario.
         // Ejemplo: Usuario user = miTienda.iniciarSesion(identificador, password);
-        // if (user != null) { mostrarMenuPrincipal(user); } else { error }
-
-        System.out.println(">> (Simulando) Comprobando credenciales para: " + identificador);
+        try {
+            RegisteredUser user = Application.login(identificador,password);
+        }
+        catch (IOException e){
+            System.out.println((e.getMessage()));
+        }
     }
 
     /**
@@ -67,22 +71,37 @@ public class main {
     private static void register() {
         System.out.println("\n--- REGISTRO DE NUEVO CLIENTE ---");
 
-        System.out.print("Nombre completo: ");
-        String nombre = scanner.nextLine();
+        System.out.print("Full name: ");
+        String fullname = scanner.nextLine();
 
         System.out.print("DNI: ");
         String dni = scanner.nextLine();
 
-        System.out.print("Correo electrónico: ");
-        String correo = scanner.nextLine();
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
 
-        System.out.print("Elige una contraseña: ");
+        System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        // TODO: Aquí llamarías a la lógica para crear y guardar el objeto Client
-        // Ejemplo: Client nuevoCliente = new Client(nombre, dni, correo, password);
-        // miTienda.añadirUsuario(nuevoCliente);
+        System.out.print("Birthdate: ");
+        String birthdate = scanner.nextLine();
 
-        System.out.println(">> (Simulando) Usuario " + nombre + " registrado correctamente.");
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Phone number: ");
+        String phoneNumber = scanner.nextLine();
+
+        // TODO: Aquí llamarías a la lógica para crear y guardar el objeto Client
+        Client nuevoCliente = new Client(username, password, fullname, dni, birthdate, email, phoneNumber);
+
+        try{
+            Application.registerClient(nuevoCliente);
+        }
+        catch (IOException e){
+            System.out.println((e.getMessage()));
+        }
+
+        System.out.println(">> (Simulando) Usuario " + username + " registrado correctamente.");
     }
 }
