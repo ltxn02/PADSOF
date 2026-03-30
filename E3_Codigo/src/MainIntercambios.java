@@ -27,6 +27,7 @@ public class MainIntercambios {
 
             System.out.println("\nEmpleado ivan valida el intercambio...");
             Exchange intercambio = new Exchange(1, oferta);
+            oferta.aceptaroferta();
             boolean exito = intercambio.validateExchange(ivan);
 
             if (exito) {
@@ -38,7 +39,6 @@ public class MainIntercambios {
                 } else{
                     System.out.println("No");
                 }
-                System.out.print("Estado final: ");
                 System.out.println(oferta);
             } else {
                 System.out.println("Error: La validación falló.");

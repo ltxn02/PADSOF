@@ -72,7 +72,7 @@ public class Exchangeoffer {
  * */
     public void reject_offer(){
         this.Estado= ExchangeStatus.RECHAZADA;
-        this.CambiarisOffered_trasIntercambio();
+        this.liberarProductosofertados();
 
     }
     /**
@@ -81,9 +81,21 @@ public class Exchangeoffer {
     public void expired_offer(){
         if(is_Expired()){
             this.Estado= ExchangeStatus.EXPIRADA;
-            this.CambiarisOffered_trasIntercambio();;
+            this.liberarProductosofertados();;
     }
     }
+
+    public boolean ofertaaceptada(){
+        if (this.Estado == ExchangeStatus.ACEPTADA){
+        return true;
+        }
+        return false;
+    }
+
+    public void aceptaroferta(){
+        this.Estado= ExchangeStatus.ACEPTADA;
+    }
+
     /**
      * funcion para liberar los productos ofertados en un intercambio
      * */
@@ -95,13 +107,18 @@ public class Exchangeoffer {
         for (SecondHandProduct p : offeredProducts) {
             p.change_owners(this.recibidor);
         }
-        CambiarisOffered_trasIntercambio();
-        this.Estado= ExchangeStatus.ACEPTADA;
+        liberarProductos();
         return true;
     }
 
-    public boolean CambiarisOffered_trasIntercambio(){
+    public boolean liberarProductos(){
         this.requestedProduct.change_offered_status(false);
+        for (SecondHandProduct p: offeredProducts){
+            p.change_offered_status(false);
+        }
+        return true;
+    }
+    public boolean liberarProductosofertados(){
         for (SecondHandProduct p: offeredProducts){
             p.change_offered_status(false);
         }

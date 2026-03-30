@@ -27,9 +27,11 @@ public class Exchange {
         if (!e.permissions.contains(Permission.EXCH_VALIDATE)){
             return  false;
         }
+        if (!validateOffer.ofertaaceptada()){
+            return false;
+        }
         this.validatedBy = e;
         this.validateOffer.intercambiar_propietarios();
-        this.validateOffer.CambiarisOffered_trasIntercambio();
         return true;
     }
 
