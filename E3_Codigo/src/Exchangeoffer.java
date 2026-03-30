@@ -72,7 +72,7 @@ public class Exchangeoffer {
  * */
     public void reject_offer(){
         this.Estado= ExchangeStatus.RECHAZADA;
-        this.liberar_productos();
+        this.CambiarisOffered_trasIntercambio();
 
     }
     /**
@@ -81,19 +81,13 @@ public class Exchangeoffer {
     public void expired_offer(){
         if(is_Expired()){
             this.Estado= ExchangeStatus.EXPIRADA;
-            this.liberar_productos();;
+            this.CambiarisOffered_trasIntercambio();;
     }
     }
     /**
      * funcion para liberar los productos ofertados en un intercambio
      * */
-    private void liberar_productos(){
-        this.requestedProduct.change_offered_status(false);
-        for (SecondHandProduct p: this.offeredProducts){
-            p.change_offered_status(false);
-        }
 
-    }
 
     public boolean intercambiar_propietarios() {
         requestedProduct.change_owners(this.comprador);
@@ -101,20 +95,33 @@ public class Exchangeoffer {
         for (SecondHandProduct p : offeredProducts) {
             p.change_owners(this.recibidor);
         }
+        CambiarisOffered_trasIntercambio();
         this.Estado= ExchangeStatus.ACEPTADA;
         return true;
     }
 
-    public String toString(){
-         System.out.println(this.Estado);
-         return "";
-    }
     public boolean CambiarisOffered_trasIntercambio(){
         this.requestedProduct.change_offered_status(false);
         for (SecondHandProduct p: offeredProducts){
             p.change_offered_status(false);
         }
         return true;
+    }
+    public boolean estátodoDisponible(){
+        if(!this.requestedProduct.estádisponible()){
+            return false;
+        }
+        for(SecondHandProduct p: offeredProducts){
+            if (!p.estádisponible()){
+                return false;
+            }
+        }
+        return true;
+
+    }
+    @Override
+    public String toString(){
+        return "Estado de la oferta: " + this.Estado;
     }
 
 

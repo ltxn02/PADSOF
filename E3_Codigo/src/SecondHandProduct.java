@@ -82,6 +82,9 @@ public class SecondHandProduct {
 		return "Dueño:  " + this.owner;
 
 	}
+	public boolean estádisponible(){
+		return !this.isOffered;
+	}
 	
 	
 }
