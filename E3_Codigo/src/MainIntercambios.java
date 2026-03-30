@@ -30,10 +30,11 @@ public class MainIntercambios {
             boolean exito = intercambio.validateExchange(ivan);
 
             if (exito) {
-                System.out.println("Nuevo dueño de Xbox: " + xbox.owner);
-                System.out.println("Nuevo dueño de PS5: " + ps5.owner);
-                System.out.println("Productos liberados: " + (!ps5.isOffered && !xbox.isOffered));
-                System.out.println("Estado final: " + oferta.Estado);
+                System.out.println("Nuevo dueño de Xbox: " + xbox);
+                System.out.println("Nuevo dueño de PS5: " + ps5);
+                //System.out.println("Productos liberados: " + (!ps5.isOffered && !xbox.isOffered));
+                System.out.println("Estado final: ");
+                System.out.println(oferta);
             } else {
                 System.out.println("Error: La validación falló.");
             }}}

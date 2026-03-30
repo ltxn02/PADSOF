@@ -51,4 +51,8 @@ public class Client extends RegisteredUser {
 	 *    	return false;
 	 * 	}
 	*/
+	public String toString(){
+		return this.getUsername();
+	}
+
 }

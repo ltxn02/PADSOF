@@ -28,14 +28,8 @@ public class Exchange {
             return  false;
         }
         this.validatedBy = e;
-        this.validateOffer.requestedProduct.owner= this.validateOffer.comprador;
-        this.validateOffer.requestedProduct.isOffered= false;
-
-        for (SecondHandProduct p: this.validateOffer.offeredProducts){
-            p.owner = this.validateOffer.recibidor;
-            p.isOffered = false;
-        }
-        this.validateOffer.Estado = ExchangeStatus.ACEPTADA;
+        this.validateOffer.intercambiar_propietarios();
+        this.validateOffer.CambiarisOffered_trasIntercambio();
         return true;
     }
 

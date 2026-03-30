@@ -6,19 +6,19 @@ import java.util.List;
  *
  */
 public class SecondHandProduct {
-	public String Name;
-	public double price;
-	public String Foto;
-	public String description;
-	public Employee empleado;
+	private String Name;
+	private double price;
+	private String Foto;
+	private String description;
+	private Employee empleado;
 
-	public int secondHandId;
-	public boolean isAppraised;
-	public double Appraised;
-	public boolean isOffered;
-	public Client owner;
-	public ItemType Itemtype;
-	public Condition condition;
+	private int secondHandId;
+	private boolean isAppraised;
+	private double Appraised;
+	private boolean isOffered;
+	private Client owner;
+	private ItemType Itemtype;
+	private Condition condition;
 	/**
 	 * @param secondHandId id del producto
 	 * @param name nombre del producto
@@ -62,7 +62,26 @@ public class SecondHandProduct {
 		return false;
 
 	}
-	
+
+	public void change_offered_status(boolean a){
+		this.isOffered= a;
+	}
+
+
+	/**
+	 * @author Taha Ridda En Naji
+	 * @param new_ownwer nuevo propietario del producto intercambiado
+	 *
+	 * */
+	public boolean change_owners( Client new_ownwer){
+		this.owner= new_ownwer;
+
+		return true;
+	}
+	public String toString(){
+		return "Dueño:  " + this.owner;
+
+	}
 	
 	
 }

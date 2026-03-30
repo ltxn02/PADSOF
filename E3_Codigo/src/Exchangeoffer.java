@@ -12,14 +12,14 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 public class Exchangeoffer {
-    public int offerid;
-    public LocalDateTime createDate;
-    public Duration timeonHold;
-    public SecondHandProduct requestedProduct;
-    public ArrayList<SecondHandProduct>  offeredProducts;
-    public Client comprador;
-    public Client recibidor;
-    public ExchangeStatus Estado;
+    private int offerid;
+    private LocalDateTime createDate;
+    private Duration timeonHold;
+    private SecondHandProduct requestedProduct;
+    private ArrayList<SecondHandProduct>  offeredProducts;
+    private Client comprador;
+    private Client recibidor;
+    private ExchangeStatus Estado;
 
 
     public boolean is_Expired(){
@@ -47,9 +47,9 @@ public class Exchangeoffer {
         this.timeonHold= limit;
         this.createDate= LocalDateTime.now();
 
-        this.requestedProduct.isOffered= true;
+        this.requestedProduct.change_offered_status(true);
         for (SecondHandProduct p : this.offeredProducts){
-            p.isOffered = true;
+            p.change_offered_status(true);
         }
 
 
@@ -59,9 +59,9 @@ public class Exchangeoffer {
      * */
     public void cancelar_oferta(){
         this.Estado = ExchangeStatus.CANCELADA;
-        this.requestedProduct.isOffered = false;
+        this.requestedProduct.change_offered_status(false);
         for (SecondHandProduct p: this.offeredProducts){
-            p.isOffered = false;
+            p.change_offered_status(false);
         }
 
     }
@@ -88,11 +88,33 @@ public class Exchangeoffer {
      * funcion para liberar los productos ofertados en un intercambio
      * */
     private void liberar_productos(){
-        this.requestedProduct.isOffered = false;
+        this.requestedProduct.change_offered_status(false);
         for (SecondHandProduct p: this.offeredProducts){
-            p.isOffered = false;
+            p.change_offered_status(false);
         }
 
+    }
+
+    public boolean intercambiar_propietarios() {
+        requestedProduct.change_owners(this.comprador);
+
+        for (SecondHandProduct p : offeredProducts) {
+            p.change_owners(this.recibidor);
+        }
+        this.Estado= ExchangeStatus.ACEPTADA;
+        return true;
+    }
+
+    public String toString(){
+         System.out.println(this.Estado);
+         return "";
+    }
+    public boolean CambiarisOffered_trasIntercambio(){
+        this.requestedProduct.change_offered_status(false);
+        for (SecondHandProduct p: offeredProducts){
+            p.change_offered_status(false);
+        }
+        return true;
     }
 
 
