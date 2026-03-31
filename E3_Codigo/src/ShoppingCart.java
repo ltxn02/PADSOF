@@ -3,7 +3,7 @@ import java.time.*;
 
 public class ShoppingCart {
 	private double fullPrice;
-	private List<CartItem> cartItems;
+	private ArrayList<CartItem> cartItems = new ArrayList<>();
 	private static Duration timeOnHold = Duration.ofHours(48);
 	
 	public ShoppingCart() {
@@ -58,5 +58,14 @@ public class ShoppingCart {
 	
 	public void removeExpiredCartItems() {
 		this.cartItems.removeIf(item -> item.isExpired(ShoppingCart.timeOnHold));
+	}
+
+	// NUEVO METODO
+	public void clearCart() {
+		this.cartItems.clear();
+	}
+
+	public ArrayList<CartItem> getCartItems() {
+		return this.cartItems;
 	}
 }

@@ -55,4 +55,12 @@ public class CartItem {
 	public String toString() {
 		return "[" + this.product + " x " + this.quantity + "]";
 	}
+
+	public NewProduct getProduct() {
+		return this.product;
+	}
+
+	public int getQuantity() {
+		return this.quantity;
+	}
 }

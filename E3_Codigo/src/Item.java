@@ -36,4 +36,8 @@ public abstract class Item extends BaseElement{
     public double getPrice(){
         return this.price;
     }
+
+    public String getName(){
+        return this.name;
+    }
 }

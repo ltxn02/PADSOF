@@ -1,9 +1,8 @@
 import java.io.IOException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class main {
-    // Declaramos el Scanner a nivel de clase para poder usarlo en todos los métodos
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -13,61 +12,87 @@ public class main {
 
         // Aquí deberíais cargar los datos persistentes (ej. Sistema.cargarDatos())
 
-        boolean salir = false;
+        boolean salirApp = false;
 
-        while (!salir) {
-            System.out.println("\n¿Qué deseas hacer?");
-            System.out.println("1.- Login");
-            System.out.println("2.- Register");
-            System.out.println("0.- Salir");
-            System.out.print("Elige una opción (0-2): ");
+        while (!salirApp) {
+            System.out.println("\n--- MENÚ INICIAL (INVITADO) ---");
+            System.out.println("1.- Ver catálogo de productos");
+            System.out.println("2.- Login");
+            System.out.println("3.- Registrarse");
+            System.out.println("0.- Salir de la aplicación");
+            System.out.print("Elige una opción (0-3): ");
 
-            // Leemos la opción como texto para evitar errores si el usuario teclea letras
             String opcion = scanner.nextLine();
 
             switch (opcion) {
                 case "1":
-                    login();
+                    verCatalogolnvitado();
                     break;
                 case "2":
+                    login();
+                    break;
+                case "3":
                     register();
                     break;
                 case "0":
-                    salir = true;
+                    salirApp = true;
                     System.out.println("Guardando datos y cerrando la aplicación... ¡Hasta pronto!");
                     // Aquí deberíais guardar los datos persistentes (ej. Sistema.guardarDatos())
                     break;
                 default:
-                    System.out.println("(!) Opción no válida. Por favor, introduce 1 o 2.");
+                    System.out.println("⚠️ Opción no válida. Por favor, introduce un número del 0 al 3.");
             }
         }
-
         scanner.close();
     }
 
-    /**
-     * Método auxiliar para manejar el Inicio de Sesión
-     */
-    private static void login() {
-        System.out.println("\n--- INICIO DE SESIÓN ---");
-        System.out.print("Usuario o Correo: ");
-        String identificador = scanner.nextLine();
+    // --- MÉTODOS DEL MENÚ INICIAL ---
+    private static void verCatalogolnvitado() {
+        System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
 
-        System.out.print("Contraseña: ");
-        String password = scanner.nextLine();
+        // Obtenemos la lista de productos desde Application
+        ArrayList<Product> productos = Application.getCatalog();
 
-        // Ejemplo: Usuario user = miTienda.iniciarSesion(identificador, password);
-        try {
-            RegisteredUser user = Application.login(identificador,password);
+        if (productos.isEmpty()) {
+            System.out.println("Actualmente no hay productos en la tienda.");
+            return;
         }
-        catch (IOException e){
-            System.out.println((e.getMessage()));
+
+        // Recorremos la lista e imprimimos cada producto
+        for (Product p : productos) {
+            // Nota: Asegúrate de tener el metodo getName() en tu clase Item o Product
+            System.out.println("- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }
     }
 
-    /**
-     * Método auxiliar para manejar el Registro de un nuevo Cliente
-     */
+    private static void login() {
+        System.out.println("\n--- INICIO DE SESIÓN ---");
+        System.out.print("Username: ");
+        String identificador = scanner.nextLine();
+
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+
+        try {
+            RegisteredUser user = Application.login(identificador, password);
+
+            // Redirigir al menú correcto según el tipo de usuario logueado
+            if (user instanceof Manager) {
+                System.out.println(">> ¡Bienvenido, Gestor " + user.getUsername() + "!");
+                menuGestor((Manager) user);
+            } else if (user instanceof Client) {
+                System.out.println(">> ¡Bienvenido, Cliente " + user.getUsername() + "!");
+                menuCliente((Client) user);
+            } else if (user instanceof Employee) {
+                System.out.println(">> ¡Bienvenido, Empleado " + user.getUsername() + "!");
+                menuEmpleado((Employee) user);
+            }
+
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+    }
+
     private static void register() {
         System.out.println("\n--- REGISTRO DE NUEVO CLIENTE ---");
 
@@ -92,16 +117,224 @@ public class main {
         System.out.print("Phone number: ");
         String phoneNumber = scanner.nextLine();
 
-        // TODO: Aquí llamarías a la lógica para crear y guardar el objeto Client
         Client nuevoCliente = new Client(username, password, fullname, dni, birthdate, email, phoneNumber);
 
-        try{
+        try {
             Application.registerClient(nuevoCliente);
+            System.out.println(">> (Simulando) Usuario " + username + " registrado correctamente. Ya puedes iniciar sesión.");
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage());
         }
-        catch (IOException e){
-            System.out.println((e.getMessage()));
+    }
+
+    // --- MENÚS ESPECÍFICOS POR ROL ---
+
+    private static void menuCliente(Client cliente) {
+        boolean cerrarSesion = false;
+        while (!cerrarSesion) {
+            System.out.println("\n--- PANEL DE CLIENTE: " + cliente.getUsername() + " ---");
+            System.out.println("1.- Ver Catálogo de Productos y Comprar");
+            System.out.println("2.- Ver mi Carrito");
+            System.out.println("3.- Explorar Ofertas de Intercambio");
+            System.out.println("4.- Gestionar mi Cartera de 2ª Mano");
+            System.out.println("5.- Ver mis Notificaciones");
+            System.out.println("0.- Cerrar Sesión");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    comprarProducto(cliente);
+                    break;
+                case "2":
+                    System.out.println(">> (Simulando) Mostrando carrito y procesando pago...");
+                    verCarrito(cliente);
+                    break;
+                case "0":
+                    cerrarSesion = true;
+                    System.out.println("Cerrando sesión de " + cliente.getUsername() + "...");
+                    break;
+                default:
+                    System.out.println("⚠️ Opción no válida.");
+            }
+        }
+    }
+
+    /**
+     * Metodo para mostrar el catálogo numerado y añadir productos al carrito
+     */
+    private static void comprarProducto(Client cliente) {
+        System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
+
+        ArrayList<Product> productos = Application.getCatalog();
+
+        if (productos.isEmpty()) {
+            System.out.println("Actualmente no hay productos en la tienda.");
+            return;
         }
 
-        System.out.println(">> (Simulando) Usuario " + username + " registrado correctamente.");
+        // 1. Mostramos los productos con un índice (1, 2, 3...)
+        for (int i = 0; i < productos.size(); i++) {
+            Product p = productos.get(i);
+            System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
+        }
+        System.out.println("0.- Volver al menú anterior");
+
+        System.out.print("\nElige el número del producto que deseas añadir al carrito (0 para salir): ");
+        String inputIndex = scanner.nextLine();
+
+        try {
+            int index = Integer.parseInt(inputIndex);
+
+            if (index == 0) {
+                return; // El usuario ha elegido volver
+            }
+
+            if (index < 1 || index > productos.size()) {
+                System.out.println("⚠️ Opción no válida. Producto no encontrado.");
+                return;
+            }
+
+            // Obtenemos el producto seleccionado (restamos 1 porque los arrays empiezan en 0)
+            Product selectedProduct = productos.get(index - 1);
+
+            System.out.print("¿Cuántas unidades de '" + selectedProduct.getName() + "' deseas añadir? ");
+            String inputQty = scanner.nextLine();
+            int quantity = Integer.parseInt(inputQty);
+
+            if (quantity <= 0) {
+                System.out.println("⚠️ La cantidad debe ser mayor que 0.");
+                return;
+            }
+
+            // 2. Añadimos el producto al carrito del cliente
+            // Funciona porque Product hereda de NewProduct (que es lo que pide addCartItem)
+            cliente.getShoppingCart().addCartItem(selectedProduct, quantity);
+            System.out.println("✅ ¡Éxito! " + quantity + "x " + selectedProduct.getName() + " añadido(s) a tu carrito.");
+
+        } catch (NumberFormatException e) {
+            // Capturamos el error si el usuario escribe texto en lugar de números
+            System.out.println("⚠️ Error: Por favor, introduce un número válido.");
+        } catch (IllegalArgumentException e) {
+            // Capturamos el error de vuestra clase CartItem si no hay stock suficiente
+            System.out.println("❌ Error de stock: " + e.getMessage());
+        }
+    }
+
+    private static void menuGestor(Manager gestor) {
+        boolean cerrarSesion = false;
+        while (!cerrarSesion) {
+            System.out.println("\n--- PANEL DE ADMINISTRACIÓN (GESTOR) ---");
+            System.out.println("1.- Gestionar empleados (Alta/Baja/Permisos)");
+            System.out.println("2.- Gestionar catálogo (categorías y packs)");
+            System.out.println("3.- Gestionar descuentos");
+            System.out.println("4.- Ver estadísticas");
+            System.out.println("0.- Cerrar sesión");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    System.out.println(">> (Simulando) Abriendo panel de empleados...");
+                    break;
+                // Añadir aquí los demás cases
+                case "0":
+                    cerrarSesion = true;
+                    System.out.println("Cerrando sesión de administrador...");
+                    break;
+                default:
+                    System.out.println("⚠️ Opción no válida.");
+            }
+        }
+    }
+
+    private static void menuEmpleado(Employee empleado) {
+        boolean cerrarSesion = false;
+        while (!cerrarSesion) {
+            System.out.println("\n--- PANEL DE EMPLEADO ---");
+            System.out.println("1.- Gestionar productos (subida manual/masiva)");
+            System.out.println("2.- Gestionar pedidos (cambiar estados)");
+            System.out.println("3.- Valorar productos de segunda mano");
+            System.out.println("4.- Confirmar intercambios físicos");
+            System.out.println("0.- Cerrar sesión");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    System.out.println(">> (Simulando) Abriendo gestión de inventario...");
+                    break;
+                // Añade aquí los demás cases
+                case "0":
+                    cerrarSesion = true;
+                    System.out.println("Cerrando sesión de empleado...");
+                    break;
+                default:
+                    System.out.println("⚠️ Opción no válida.");
+            }
+        }
+    }
+
+    /**
+     * Metodo para mostrar el carrito y procesar el pago con la librería del profesor
+     */
+    private static void verCarrito(Client cliente) {
+        System.out.println("\n--- TU CARRITO DE LA COMPRA ---");
+
+        ShoppingCart carrito = cliente.getShoppingCart();
+
+        // 1. Comprobamos si el carrito está vacío
+        if (carrito.getCartItems().isEmpty()) {
+            System.out.println("Tu carrito está vacío. ¡Ve al catálogo a añadir cosas!");
+            return;
+        }
+
+        // 2. Mostramos los productos del carrito y el precio total
+        double precioTotal = 0.0;
+        for (CartItem item : carrito.getCartItems()) {
+            // Asumiendo que CartItem tiene métodos para obtener el producto y la cantidad
+            Product p = (Product) item.getProduct();
+            int cantidad = item.getQuantity();
+            double subtotal = p.getPrice() * cantidad;
+            precioTotal += subtotal;
+
+            System.out.println("- " + cantidad + "x " + p.getName() + " | Subtotal: " + subtotal + "€");
+        }
+        System.out.println("---------------------------------");
+        System.out.println("TOTAL A PAGAR: " + precioTotal + "€");
+
+        // 3. Preguntamos si quiere tramitar el pedido
+        System.out.print("\n¿Deseas finalizar la compra y pagar ahora? (S/N): ");
+        String respuesta = scanner.nextLine();
+
+        if (!respuesta.equalsIgnoreCase("S")) {
+            System.out.println("Compra aplazada. Los productos siguen en tu carrito.");
+            return;
+        }
+
+        // 4. Proceso de Pago usando la librería (a través de tu clase Order)
+        System.out.print("Introduce tu número de tarjeta de crédito (16 dígitos): ");
+        String numeroTarjeta = scanner.nextLine();
+
+        System.out.println(">> Conectando con la pasarela de pago...");
+
+        // Creamos el pedido (asumo que tu constructor de Order recibe el cliente, el carrito y el total)
+        Order nuevoPedido = new Order(cliente, carrito, precioTotal);
+
+        // Llamamos al metodo procesarPago que creaste antes en Order.java con sus try-catch
+        boolean pagoExitoso = nuevoPedido.procesarPago(numeroTarjeta);
+
+        if (pagoExitoso) {
+            // Si la librería dice que OK, vaciamos el carrito y guardamos el pedido
+            carrito.clearCart(); // Asegúrate de tener un metodo en ShoppingCart para vaciar la lista
+            cliente.getOrderHistoric().addOrder(nuevoPedido); // Guardamos el pedido en el historial del cliente
+            System.out.println("✅ ¡Compra finalizada con éxito! Tu código de recogida es: " + nuevoPedido.getPickupCode());
+        } else {
+            // Si la librería lanza excepción (tarjeta falsa, sin internet...), el pedido se cancela
+            System.out.println("❌ La compra no se ha podido completar. Revisa tu método de pago.");
+        }
     }
 }

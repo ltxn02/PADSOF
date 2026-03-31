@@ -7,19 +7,28 @@ public class Order {
     private static int lastId = 1;
     private int orderId;
     private Instant orderedAt;
-    private ArrayList<CartItem> items;
+    private Client client;
+    private ArrayList<Item> items;
+
     private Instant paidAt;
     private double price;
     private String pickupCode;
     private OrderStatus orderStatus;
 
-    public Order(ArrayList<CartItem> items, double price) {
-        this.items = items;
+    public Order(Client client, ShoppingCart cart, double price) {
+        this.client = client;
         this.price = price;
-        this.orderedAt = Instant.now();
+        this.orderStatus = OrderStatus.SIN_PAGAR;
         this.orderId = lastId++;
         Order.lastId++;
-        this.orderStatus = OrderStatus.SIN_PAGAR;
+        this.pickupCode = generateCode();
+
+        this.items = new ArrayList<>();
+        for (CartItem ci : cart.getCartItems()) {
+            for (int i = 0; i < ci.getQuantity(); i++) {
+                this.items.add((Item) ci.getProduct());
+            }
+        }
     }
 
     private String generateCode() {
@@ -65,5 +74,9 @@ public class Order {
         */
         this.orderStatus = OrderStatus.CANCELADO;
         return false;
+    }
+
+    public String getPickupCode() {
+        return this.pickupCode;
     }
 }

@@ -3,15 +3,15 @@ import java.time.*;
 
 public class Client extends RegisteredUser {
 	private LocalDateTime joiningDate;
-	private ShoppingCart shoppingCart;
-	private OrderHistoric myOrders;
+	private ShoppingCart shoppingCart;  // Deja solo este
+	private OrderHistoric myOrders;     // Y deja solo este
 	private ExchangeHistoric myExchanges;
 	private List<SecondHandProduct> myProducts;
 	private List<Review> myReviews;
 	private List<Order> ordersMade;
 	private List<Exchange> offersMade;
 	private List<Exchange> offersReceived;
-	
+
 	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		super(username, password, fullname, dni, birthdate, email, phoneNumber);
 		this.joiningDate = LocalDateTime.now();
@@ -53,6 +53,15 @@ public class Client extends RegisteredUser {
 	*/
 	public String toString(){
 		return this.getUsername();
+	}
+
+	// NUEVOS MÉTODOS
+	public ShoppingCart getShoppingCart() {
+		return this.shoppingCart;
+	}
+
+	public OrderHistoric getOrderHistoric() {
+		return this.myOrders;
 	}
 
 }
