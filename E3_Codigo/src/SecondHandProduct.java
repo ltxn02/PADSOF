@@ -30,7 +30,7 @@ public class SecondHandProduct {
 	 * @param ItemType tipo de producto
 	 *
 	 * */
-	public SecondHandProduct(String name, String description, String Foto, double price, boolean isAppraised, ItemType ItemType, Condition condition, Client Owner, ArrayList<Category> categories) {
+	public SecondHandProduct(String name, String description, String Foto, double price, boolean isAppraised, ItemType ItemType, Condition condition, Client Owner) {
 		this.Foto = Foto;
 		this.Name = name;
 		this.price = price;
@@ -44,7 +44,11 @@ public class SecondHandProduct {
 		this.description= description;
 		this.isAppraised = false;
 		this.empleado= null;
-		this.categories= categories;
+		this.categories= new ArrayList<>();
+	}
+
+	public void add_categories(Category e){
+		this.categories.add(e);
 	}
 	/**
 	 * Funcion para valorar un producto por un empleado
@@ -53,6 +57,8 @@ public class SecondHandProduct {
 	 * @param c condicion del producto que se valorará
 	 * @param value valor del producto
 	 * */
+
+
 	public boolean AppraisedSecondHand(Employee e,SecondHandProduct p, Condition c, double value){
 		if (e.permissions.contains(Permission.EXCH_PRODUCT_APPRAISE)){
 			p.condition = c;

@@ -59,7 +59,7 @@ public class SistemaRecomendacionesSegundamano {
 
     private static HashMap<String, Double> generarPerfilPorIntercambios(Client c) {
         HashMap<String, Double> perfil = new HashMap<>();
-            for (Exchangeoffer oferta: c.getMisOfertasEnviadas()) {
+            for (Exchangeoffer oferta: c.obtenerMisOfertasEnviadas()) {
                 SecondHandProduct solicitado= oferta.getRequestedProduct();
                 for (Category cat: solicitado.getCategories()) {
                     perfil.put(cat.getNameCategory(), perfil.getOrDefault(cat.getNameCategory(), 0.0) + 2.0);

@@ -56,6 +56,9 @@ public class Exchangeoffer {
         for (SecondHandProduct p : this.offeredProducts){
             p.change_offered_status(true);
         }
+        this.getComprador().registrarOfertaRealizada(this);
+        offer.getRecibidor().registrarOfertaRecibida(this);
+
 
 
     }

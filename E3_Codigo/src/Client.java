@@ -9,8 +9,8 @@ public class Client extends RegisteredUser {
 	private List<SecondHandProduct> myProducts;
 	private List<Review> myReviews;
 	private List<Order> ordersMade;
-	private List<Exchange> offersMade;
-	private List<Exchange> offersReceived;
+	private List<Exchangeoffer> offersMade;
+	private List<Exchangeoffer> offersReceived;
 	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		super(username, password, fullname, dni, birthdate, email, phoneNumber);
 		this.joiningDate = LocalDateTime.now();
@@ -20,8 +20,8 @@ public class Client extends RegisteredUser {
 		this.myProducts = new ArrayList<SecondHandProduct>();
 		this.myReviews = new ArrayList<Review>();
 		this.ordersMade = new ArrayList<Order>();
-		this.offersMade = new ArrayList<Exchange>();
-		this.offersReceived = new ArrayList<Exchange>();
+		this.offersMade = new ArrayList<Exchangeoffer>();
+		this.offersReceived = new ArrayList<Exchangeoffer>();
 	}
 	
 	public void addToCart(NewProduct p, int quantity) throws IllegalArgumentException {
@@ -63,11 +63,16 @@ public class Client extends RegisteredUser {
 		return this.myOrders;
 	}
 
-	public void registrarOfertaRealizada(Exchange oferta) {
+	public void registrarOfertaRealizada(Exchangeoffer oferta) {
 		this.offersMade.add(oferta);
 	}
 
-	public void registrarOfertaRecibida(Exchange oferta) {
+	public List<Exchangeoffer> obtenerMisOfertasEnviadas(){
+
+		return this.offersMade;
+	}
+
+	public void registrarOfertaRecibida(Exchangeoffer oferta) {
 		this.offersReceived.add(oferta);
 	}
 
@@ -75,8 +80,9 @@ public class Client extends RegisteredUser {
 		return this.myProducts;
 	}
 
-	public List<Exchange> getOffersMade() {
+	public List<Exchangeoffer> getOffersMade() {
 		return this.offersMade;
 	}
+
 
 }
