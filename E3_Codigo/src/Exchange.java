@@ -6,7 +6,7 @@
  */
 
 public class Exchange {
-    public static int exchangeíd = 0;
+    public static int exchangeíd = 1;
     public Exchangeoffer validateOffer;
     public Employee validatedBy;
     /**
@@ -16,6 +16,9 @@ public class Exchange {
     public Exchange( Exchangeoffer offer){
         this.exchangeíd++;
         this.validateOffer = offer;
+        offer.getComprador().registrarOfertaRealizada(this);
+        offer.getRecibidor().registrarOfertaRecibida(this);
+
     }
     /**
      * Funcion para que el empleado valide un intercambio ofertado, ya aceptado

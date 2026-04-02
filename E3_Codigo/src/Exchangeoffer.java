@@ -21,6 +21,13 @@ public class Exchangeoffer {
     private Client recibidor;
     private ExchangeStatus Estado;
 
+    public Client getComprador() {
+        return comprador;
+    }
+
+    public Client getRecibidor() {
+        return recibidor;
+    }
 
     public boolean is_Expired(){
         Duration TiempoTranscurrido= Duration.between(createDate, LocalDateTime.now());
