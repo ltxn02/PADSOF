@@ -67,4 +67,23 @@ public class SistemaRecomendacionesSegundamano {
             }
         return perfil;
     }
+
+    /**
+     * Obtiene el conjunto de productos de segunda mano que pertenecen al cliente.
+     * Se usa para excluir sus propios productos de las recomendaciones.
+     */
+    private static HashSet<SecondHandProduct> obtenerMisProductos(Client c) {
+        HashSet<SecondHandProduct> productos = new HashSet<>();
+
+        // Verificamos que el cliente tenga una cartera de productos asignada
+        if (c.getCarteraSegundaMano() != null) {
+            // Recorremos la lista de productos de segunda mano del cliente
+            for (SecondHandProduct p : c.getCarteraSegundaMano()) {
+                // Añadimos el producto al conjunto
+                productos.add(p);
+            }
+        }
+
+        return productos;
+    }
 }
