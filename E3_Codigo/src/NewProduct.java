@@ -33,6 +33,13 @@ public abstract class NewProduct extends Item {
     public boolean isEffectiveStockHigher(int quantity){
         return this.effectiveStock >= quantity;
     }
+    
+    public void decreaseStock(int quantity) throws IllegalArgumentException {
+    	if(quantity > this.stock) {
+    		throw new IllegalArgumentException("Invalid quantity, stock is lower");
+    	}
+    	this.stock -= quantity;
+    }
 
     public void orderProduct(int quantity) throws IllegalArgumentException{
         if (quantity < 0){

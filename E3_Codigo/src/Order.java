@@ -1,5 +1,5 @@
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Random;
 import es.uam.eps.padsof.telecard.*;
 
@@ -9,7 +9,6 @@ public class Order {
     private Instant orderedAt;
     private Client client;
     private ArrayList<Item> items;
-
     private Instant paidAt;
     private double price;
     private String pickupCode;
@@ -31,7 +30,7 @@ public class Order {
         }
     }
 
-    private String generateCode() {
+    public String generateCode() {
         Random rand = new Random();
         // Genera un número del 0 al 99999
         int numero = rand.nextInt(100000);

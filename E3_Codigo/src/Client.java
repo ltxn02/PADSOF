@@ -33,11 +33,18 @@ public class Client extends RegisteredUser {
 		this.shoppingCart.removeCartItem(p, quantity);
 	}
 	
-	public void buyCart() {
-		/*List<CartItem> orderedItems = this.shoppingCart.getCartItems();
-		double cost = this.shoppingCart.fullPrice();*/
+	public String buyCart(String cardNumber) {
+		List<CartItem> orderedItems = this.shoppingCart.getCartItems();
+		double cost = this.shoppingCart.getPrice();
+		Order order = new Order(orderedItems, cost);
 		
+		this.ordersMade.add(order);
+		if(order.procesarPago(cardNumber)) {
+			String code = order.generateCode();
+			return code;
+		}
 		
+		return null;
 	}
 	
 	public void makeOffer() {

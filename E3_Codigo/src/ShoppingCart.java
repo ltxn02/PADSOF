@@ -68,4 +68,8 @@ public class ShoppingCart {
 	public ArrayList<CartItem> getCartItems() {
 		return this.cartItems;
 	}
+	
+	public double getPrice() {
+		return this.fullPrice;
+	}
 }
