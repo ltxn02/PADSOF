@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Clase para representar los productos de segunda mano
@@ -11,16 +12,16 @@ public class SecondHandProduct {
 	private String Foto;
 	private String description;
 	private Employee empleado;
-
-	private int secondHandId;
+	private ArrayList<Review> reviews;
+	private static int secondHandId = 0;
 	private boolean isAppraised;
 	private double Appraised;
 	private boolean isOffered;
 	private Client owner;
 	private ItemType Itemtype;
 	private Condition condition;
+	private ArrayList<Category> categories;
 	/**
-	 * @param secondHandId id del producto
 	 * @param name nombre del producto
 	 * @param description descripcion del producto
 	 * @param price precio del producto
@@ -29,11 +30,11 @@ public class SecondHandProduct {
 	 * @param ItemType tipo de producto
 	 *
 	 * */
-	public SecondHandProduct(int secondHandId, String name, String description, String Foto, double price, boolean isAppraised, ItemType ItemType, Condition condition, Client Owner) {
+	public SecondHandProduct(String name, String description, String Foto, double price, boolean isAppraised, ItemType ItemType, Condition condition, Client Owner, ArrayList<Category> categories) {
 		this.Foto = Foto;
 		this.Name = name;
 		this.price = price;
-		this.secondHandId = secondHandId;
+		this.secondHandId++;
 		this.isAppraised = isAppraised;
 		this.isOffered = false;
 		this.Itemtype = ItemType;
@@ -43,6 +44,7 @@ public class SecondHandProduct {
 		this.description= description;
 		this.isAppraised = false;
 		this.empleado= null;
+		this.categories= categories;
 	}
 	/**
 	 * Funcion para valorar un producto por un empleado
@@ -82,9 +84,23 @@ public class SecondHandProduct {
 		return "Dueño:  " + this.owner;
 
 	}
+
+	public ArrayList<Category> getCategories() {
+		return categories;
+	}
+
 	public boolean estádisponible(){
 		return !this.isOffered;
 	}
-	
+
+	public int calculateRating(){
+		int rating = 0;
+		for (Review review : reviews){
+			rating += review.getRating();
+		}
+
+		rating /= reviews.size();
+		return rating;
+	}
 	
 }

@@ -57,4 +57,6 @@ public abstract class NewProduct extends Item {
     public double getPrice() {
         return super.getPrice();
     }
+
+
 }

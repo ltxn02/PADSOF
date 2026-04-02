@@ -11,4 +11,8 @@ public abstract class Product extends NewProduct {
         Product.lastId++;
     }
 
+
+
+
+
 }

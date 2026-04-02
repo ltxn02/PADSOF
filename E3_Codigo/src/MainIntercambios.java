@@ -16,17 +16,17 @@ public class MainIntercambios {
 
             ivan.add_permisions(Permission.EXCH_VALIDATE);
 
-            SecondHandProduct ps5 = new SecondHandProduct(1, "PS5", "PLAY", "FOTO", 250, true, ItemType.GAME, Condition.MUY_BUENO, taha);
-            SecondHandProduct xbox = new SecondHandProduct(2, "Xbox", "microsoft", "foto2", 300.0, true, ItemType.GAME, Condition.PERFECTO, lidia);
+            SecondHandProduct ps5 = new SecondHandProduct( "PS5", "PLAY", "FOTO", 250, true, ItemType.GAME, Condition.MUY_BUENO, taha);
+            SecondHandProduct xbox = new SecondHandProduct( "Xbox", "microsoft", "foto2", 300.0, true, ItemType.GAME, Condition.PERFECTO, lidia);
 
             ArrayList<SecondHandProduct> ofrecidos = new ArrayList<>();
             ofrecidos.add(ps5);
 
             System.out.println("Creando oferta: taha ofrece PS5 a lidia por su Xbox...");
-            Exchangeoffer oferta = new Exchangeoffer(1, xbox, ofrecidos, taha, lidia, Duration.ofDays(2));
+            Exchangeoffer oferta = new Exchangeoffer( xbox, ofrecidos, taha, lidia, Duration.ofDays(2));
 
             System.out.println("\nEmpleado ivan valida el intercambio...");
-            Exchange intercambio = new Exchange(1, oferta);
+            Exchange intercambio = new Exchange(oferta);
             oferta.aceptaroferta();
             boolean exito = intercambio.validateExchange(ivan);
 

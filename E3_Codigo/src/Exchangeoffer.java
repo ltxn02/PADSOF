@@ -12,7 +12,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 public class Exchangeoffer {
-    private int offerid;
+    private static int offerid= 0;
     private LocalDateTime createDate;
     private Duration timeonHold;
     private SecondHandProduct requestedProduct;
@@ -29,7 +29,6 @@ public class Exchangeoffer {
 
     /**
      * Constructor de la oferta de intercambio
-     * @param offerid id de la oferta
      * @param requestedProduct producto solicitado
      * @param offeredProducts productos ofertados para el intercambio
      * @param comprador usuario que solicita el intercambio
@@ -37,9 +36,9 @@ public class Exchangeoffer {
      * @param limit limite de la oferta que puede estar pendiente
      * */
 
-    public Exchangeoffer(int offerid, SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client comprador, Client recibidor, Duration limit){
+    public Exchangeoffer( SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client comprador, Client recibidor, Duration limit){
         this.Estado= ExchangeStatus.PENDIENTE;
-        this.offerid= offerid;
+        this.offerid++;
         this.offeredProducts= offeredProducts;
         this.requestedProduct= requestedProduct;
         this.comprador= comprador;
@@ -47,7 +46,6 @@ public class Exchangeoffer {
         this.timeonHold= limit;
         this.createDate= LocalDateTime.now();
 
-        this.requestedProduct.change_offered_status(true);
         for (SecondHandProduct p : this.offeredProducts){
             p.change_offered_status(true);
         }
@@ -113,9 +111,7 @@ public class Exchangeoffer {
 
     public boolean liberarProductos(){
         this.requestedProduct.change_offered_status(false);
-        for (SecondHandProduct p: offeredProducts){
-            p.change_offered_status(false);
-        }
+        liberarProductosofertados();
         return true;
     }
     public boolean liberarProductosofertados(){
@@ -136,6 +132,11 @@ public class Exchangeoffer {
         return true;
 
     }
+
+    public SecondHandProduct getRequestedProduct() {
+        return requestedProduct;
+    }
+
     @Override
     public String toString(){
         return "Estado de la oferta: " + this.Estado;

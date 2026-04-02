@@ -110,8 +110,11 @@ public class Application {
         System.out.println("User " + client.getUsername() + " registered successfully.");
     }
 
-    // Metodo para obtener el catálogo
     public static ArrayList<Product> getCatalog() {
         return catalog;
     }
+    public static ArrayList<RegisteredUser> getUsers() {
+        return new ArrayList<>(users.values());
+    }
+
 }

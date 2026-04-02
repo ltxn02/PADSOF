@@ -138,6 +138,7 @@ public class main {
             System.out.println("3.- Explorar Ofertas de Intercambio");
             System.out.println("4.- Gestionar mi Cartera de 2ª Mano");
             System.out.println("5.- Ver mis Notificaciones");
+            System.out.println("6.- Ver Recomendaciones Personalizadas");
             System.out.println("0.- Cerrar Sesión");
             System.out.print("Elige una opción: ");
 
@@ -150,6 +151,9 @@ public class main {
                 case "2":
                     System.out.println(">> (Simulando) Mostrando carrito y procesando pago...");
                     verCarrito(cliente);
+                    break;
+                case "6":
+                    mostrarRecomendaciones(cliente);
                     break;
                 case "0":
                     cerrarSesion = true;
@@ -247,6 +251,68 @@ public class main {
                 default:
                     System.out.println("⚠️ Opción no válida.");
             }
+        }
+    }
+    private static ArrayList<Client> todoslosClientes() {
+        ArrayList<RegisteredUser> usuarios = Application.getUsers();
+        ArrayList<Client> clientes = new ArrayList<>();
+        for (RegisteredUser u : usuarios) {
+            if (u instanceof Client) {
+                clientes.add((Client) u);
+            }
+        }
+        return clientes;
+    }
+
+    private static void mostrarRecomendaciones(Client c) {
+        System.out.println("\nPRODUCTOS RECOMENDADOS:");
+
+        ArrayList<Product> catalogo = Application.getCatalog();
+        ArrayList<Client> listaClientes = todoslosClientes();
+
+        ArrayList<Product> recomendados = SistemaRecomendaciones.obtenerRecomendaciones(c, catalogo, listaClientes);
+
+        if (recomendados.isEmpty()) {
+            System.out.println("Aún no tenemos suficientes datos para darte recomendaciones.");
+            System.out.println("¡Prueba a comprar y valorar productos primero!");
+            return;
+        }
+
+        for (int i = 0; i < recomendados.size(); i++) {
+            Product p = recomendados.get(i);
+            System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
+        }
+        System.out.println("0.- Volver al menú anterior");
+
+        System.out.print("\n¿Deseas añadir algun producto a tu carrito? (0 para salir): ");
+        String inputIndex = scanner.nextLine();
+
+        try {
+            int index = Integer.parseInt(inputIndex);
+
+            if (index == 0) return;
+
+            if (index < 1 || index > recomendados.size()) {
+                System.out.println("ERROR Opción no válida.");
+                return;
+            }
+
+            Product seleccionado = recomendados.get(index - 1);
+            System.out.print("¿Cuántas unidades de '" + seleccionado.getName() + "' deseas? ");
+            int quantity = Integer.parseInt(scanner.nextLine());
+
+            if (quantity <= 0) {
+                System.out.println("⚠️ La cantidad debe ser mayor que 0.");
+                return;
+            }
+
+            c.getShoppingCart().addCartItem(seleccionado, quantity);
+            System.out.println("✅ ¡Añadido! " + seleccionado.getName() + " ya está en tu carrito.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("⚠️ Error: Introduce un número válido.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("❌ Error de stock: " + e.getMessage());
         }
     }
 

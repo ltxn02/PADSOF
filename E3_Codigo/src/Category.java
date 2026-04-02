@@ -8,4 +8,8 @@ public class Category extends BaseElement{
         this.name = name;
         this.items = items;
     }
+
+    public String getNameCategory() {
+        return name;
+    }
 }

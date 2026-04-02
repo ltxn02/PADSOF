@@ -40,4 +40,8 @@ public abstract class Item extends BaseElement{
     public String getName(){
         return this.name;
     }
+
+    public ArrayList<Category> getCategories() {
+        return categories;
+    }
 }

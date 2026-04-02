@@ -14,4 +14,33 @@ public class Employee extends Staff{
     public void add_permisions(Permission e){
         this.permissions.add(e);
     }
+
+    public void delete_permisions(Permission e){
+        if (this.permissions.contains(e)) {
+            this.permissions.remove(e);
+        }
+    }
+
+    public ArrayList<Permission> permisosEmpleado(){
+        return this.permissions;
+    }
+
+    public void add_roles(EmployeeRoles Rol){
+        this.Rol.add(Rol);
+    }
+
+    public void delete_roles(EmployeeRoles Rol){
+        this.Rol.remove(Rol);
+    }
+
+    public void activateEmployee(){
+        this.enabled = true;
+    }
+
+    public void desactivateEmployee(){
+        this.enabled = false;
+    }
+
+
+
 }
