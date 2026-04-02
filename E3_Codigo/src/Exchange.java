@@ -6,7 +6,7 @@
  */
 
 public class Exchange {
-    public static int exchangeíd = 0;
+    public static int exchangeíd = 1;
     public Exchangeoffer validateOffer;
     public Employee validatedBy;
     /**
