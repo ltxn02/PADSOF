@@ -75,6 +75,10 @@ public class SecondHandProduct {
 
 	}
 
+	public Client getOwner() {
+		return owner;
+	}
+
 	public LocalDateTime getDateadded() {
 		return dateadded;
 	}

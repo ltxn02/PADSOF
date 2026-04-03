@@ -256,8 +256,9 @@ public class main {
         }
         for (int i = 0; i < productos.size(); i++) {
             SecondHandProduct p = productos.get(i);
+            if(p.getOwner().equals(c.getUsername())){
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
-        }
+        }}
         System.out.println("\nA.- Ofertas realizadas | B.- Ofertas recibidas | C.- Mis Productos | 0.- Volver");
         System.out.println("\nSelección: ");
         System.out.print("\nElige el número del producto que deseas ver mas en detalle (0 para salir): ");
