@@ -70,20 +70,11 @@ public class SistemaRecomendaciones {
 
     private static HashSet<Product> obtenerComprados(Client c) {
         HashSet<Product> productos = new HashSet<>();
-
-        // 1. Verificamos que el historial no sea nulo
-        if (c.getOrderHistoric() != null && c.getOrderHistoric().getOrders() != null) {
-
-            // 2. Recorremos cada pedido del historial
+        if (c.getOrderHistoric() != null) {
             for (Order o : c.getOrderHistoric().getOrders()) {
-
-                // 3. Recorremos los productos/ítems de ESE pedido específico
-                // Nota: Aquí asumo que tu clase Order tiene un método para obtener sus productos
-                for (Item item : o.getCartItems()) {
-                    Product p = item.getProduct();
-
-                    if (p != null) {
-                        productos.add(p);
+                for (CartItem item : c.getShoppingCart().getCartItems()) {
+                    if (item.getProduct() instanceof Product) {
+                        productos.add((Product) item.getProduct());
                     }
                 }
             }
