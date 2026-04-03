@@ -3,7 +3,7 @@ import java.time.*;
 
 public class ShoppingCart {
 	private double fullPrice;
-	private ArrayList<CartItem> cartItems = new ArrayList<>();
+	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);
 	
 	public ShoppingCart() {
@@ -65,7 +65,7 @@ public class ShoppingCart {
 		this.cartItems.clear();
 	}
 
-	public ArrayList<CartItem> getCartItems() {
+	public List<CartItem> getCartItems() {
 		return this.cartItems;
 	}
 

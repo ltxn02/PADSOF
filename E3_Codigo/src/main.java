@@ -581,7 +581,7 @@ public class main {
         System.out.println(">> Conectando con la pasarela de pago...");
 
         // Creamos el pedido (asumo que tu constructor de Order recibe el cliente, el carrito y el total)
-        Order nuevoPedido = new Order(cliente, carrito, precioTotal);
+        Order nuevoPedido = new Order(cliente, carrito.getCartItems(), precioTotal);
 
         // Llamamos al metodo procesarPago que creaste antes en Order.java con sus try-catch
         boolean pagoExitoso = nuevoPedido.procesarPago(numeroTarjeta);

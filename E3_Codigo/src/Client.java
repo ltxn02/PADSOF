@@ -11,6 +11,7 @@ public class Client extends RegisteredUser {
 	private List<Order> ordersMade;
 	private List<Exchangeoffer> offersMade;
 	private List<Exchangeoffer> offersReceived;
+	
 	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		super(username, password, fullname, dni, birthdate, email, phoneNumber);
 		this.joiningDate = LocalDateTime.now();
@@ -36,7 +37,7 @@ public class Client extends RegisteredUser {
 		List<CartItem> orderedItems = this.shoppingCart.getCartItems();
 		double cost = this.shoppingCart.getPrice();
 		/* order necesita tres argumentos: cliente, shoppingcart y precio, en esta linea se le esta pasando cartitem y precio*/
-		Order order = new Order(this, this.shoppingCart, cost);
+		Order order = new Order(this, this.shoppingCart.getCartItems(), cost);
 		
 		this.ordersMade.add(order);
 		if(order.procesarPago(cardNumber)) {

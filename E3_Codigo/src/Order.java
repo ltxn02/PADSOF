@@ -8,26 +8,20 @@ public class Order {
     private int orderId;
     private Instant orderedAt;
     private Client client;
-    private ArrayList<Item> items;
+    private List<CartItem> items;
     private Instant paidAt;
     private double price;
     private String pickupCode;
     private OrderStatus orderStatus;
 
-    public Order(Client client, ShoppingCart cart, double price) {
+    public Order(Client client, List<CartItem> cartItems, double price) {
         this.client = client;
         this.price = price;
         this.orderStatus = OrderStatus.SIN_PAGAR;
         this.orderId = lastId++;
         Order.lastId++;
         this.pickupCode = generateCode();
-
-        this.items = new ArrayList<>();
-        for (CartItem ci : cart.getCartItems()) {
-            for (int i = 0; i < ci.getQuantity(); i++) {
-                this.items.add((Item) ci.getProduct());
-            }
-        }
+        this.items = cartItems;
     }
 
     public String generateCode() {
@@ -75,7 +69,7 @@ public class Order {
         return false;
     }
 
-    public ArrayList<Item> getItems() {
+    public List<CartItem> getItems() {
         return items;
     }
 
