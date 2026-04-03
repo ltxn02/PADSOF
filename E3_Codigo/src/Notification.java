@@ -17,7 +17,11 @@ public class Notification extends BaseElement {
         this.notificationId = lastNotificationId++;
         Notification.lastNotificationId++;
     }
-
+    
+    public boolean isRead() {
+    	return this.read;
+    }
+    
     public void markAsRead(boolean read){
         this.read = read;
     }

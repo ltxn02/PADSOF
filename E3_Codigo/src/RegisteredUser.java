@@ -34,7 +34,7 @@ public abstract class RegisteredUser extends User {
 	}
 
 	public String view_notifications() {
-		String res = "My inbox:\n";
+		String res = "My inbox (" + countNewNotifications() + " new):\n";
 		for(Notification n: this.myNotifications) {
 			res += "\t" + n.notificationPreview() + "\n";
 		}
@@ -51,8 +51,55 @@ public abstract class RegisteredUser extends User {
 		notification.markAs(visible);
 	}
 	
-	@Override
-	public String toString() {
-		return this.username;
+	public String userPreview() {
+		return this.fullname + " (@" + this.username + ") - " + maskEmail(this.email);
+	}
+	
+	public String userProfile() {
+		StringBuilder res = new StringBuilder();
+		
+		res.append("Name: " + this.fullname + "\n");
+		res.append("Username: " + this.username + "\n");
+		res.append("Email: " + maskEmail(this.email) + "\n");
+		res.append("Phonenumber: " + this.phoneNumber + "\n");
+		res.append("Datebirth: " + this.birthdate + "\n");
+		res.append("DNI: " + maskDni(this.dni) + "\n");
+		
+		return res.toString();
+	}
+	
+    // -- HELPERS ------------------------------------------------------------------
+	
+	private int countNewNotifications() {
+		int i = 0;
+		for(Notification n: this.myNotifications) {
+			if(n.isRead() == false) {
+				i++;
+			}
+		}
+		return i;
+	}
+	
+	private String maskEmail(String email) {
+		if(email == null || !email.contains("@") || email.indexOf("@") <= 1) {
+			return email;
+		}
+		
+		int i, atIndex = email.indexOf("@");
+		String aux = "";
+		
+		for(i = 1; i < atIndex; i++) {
+			aux += "*";
+		}
+		
+		return email.charAt(0) + aux + email.substring(atIndex);
+	}
+	
+	private String maskDni(String dni) {
+		if(dni == null || dni.length() < 4) {
+			return dni;
+		}
+		
+		return "****" + dni.substring(dni.length() - 4);
 	}
 }
