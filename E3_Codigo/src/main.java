@@ -398,7 +398,9 @@ public class main {
                 default:
                     int index = Integer.parseInt(inputIndex);
                     if (index >= 1 && index <= productos.size()) {
-                        System.out.println("Detalles: " + productos.get(index - 1));
+                        SecondHandProduct select = productos.get(index -1);
+                        System.out.println("Detalles: \n" );
+                        System.out.println(select);
                     } else {
                         System.out.println("Selección no válida.");
                     }
