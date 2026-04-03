@@ -57,10 +57,8 @@ public class Exchangeoffer {
             p.change_offered_status(true);
         }
         this.getComprador().registrarOfertaRealizada(this);
+        /* offer no existe */
         offer.getRecibidor().registrarOfertaRecibida(this);
-
-
-
     }
     /**
      * Funcion para cancelar una oferta sobre un producto
