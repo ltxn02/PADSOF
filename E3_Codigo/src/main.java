@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 
 public class main {
     private static Scanner scanner = new Scanner(System.in);
@@ -134,7 +135,7 @@ public class main {
             System.out.println("\n--- PANEL DE CLIENTE: " + cliente.getUsername() + " ---");
             System.out.println("1.- Ver catálogo de productos y comprar");
             System.out.println("2.- Ver mi carrito");
-            System.out.println("3.- Explorar ofertas de intercambio");
+            System.out.println("3.- Ver Productos de segunda mano");
             System.out.println("4.- Gestionar mi cartera de segunda mano");
             System.out.println("5.- Ver mis notificaciones");
             System.out.println("6.- Ver recomendaciones personalizadas");
@@ -150,6 +151,10 @@ public class main {
                 case "2":
                     System.out.println(">> Mostrando carrito y procesando pago...");
                     verCarrito(cliente);
+                    break;
+                case "3":
+                    System.out.println("Productos de Segunda mano:" );
+                    intercambiarProductos(cliente);
                     break;
                 case "6":
                     mostrarRecomendaciones(cliente);
@@ -224,6 +229,188 @@ public class main {
             System.out.println("[!] Error de stock: " + e.getMessage());
         }
     }
+    private static void intercambiarProductos(Client c){
+        ArrayList<SecondHandProduct> productos = Application.getSecondHandProducts();
+        List<Exchangeoffer> ofertashechas = Application.getoffersmade(c);
+        List<Exchangeoffer> ofertasrecibidas = Application.getoffersreceived(c);
+        List<SecondHandProduct> misproductos = c.getCarteraSegundaMano();
+        List<SecondHandProduct> productosactivos = new ArrayList<>();
+        List<SecondHandProduct> productosinactivos = new ArrayList<>();
+
+        for (SecondHandProduct a: misproductos){
+            if (a.isAppraised()){
+                productosactivos.add(a);
+            } else {
+                productosinactivos.add(a);
+            }
+
+        }
+
+        if (productos.isEmpty()) {
+            System.out.println("Actualmente no hay productos para intercambios en la tienda.");
+            return;
+        }
+        System.out.println("\n         TIENDA DE INTERCAMBIO ");
+        for (int i = 0; i < productos.size(); i++) {
+            SecondHandProduct p = productos.get(i);
+            System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
+        }
+        System.out.println("\nA.- Ofertas realizadas | B.- Ofertas recibidas | C.- Mis Productos | 0.- Volver");
+        System.out.println("\nSelección: ");
+        System.out.print("\nElige el número del producto que deseas ver mas en detalle (0 para salir): ");
+        String inputIndex = scanner.nextLine().toUpperCase();
+
+        try {
+            if (inputIndex.equals("0")) return;
+
+            switch (inputIndex) {
+                case "A":
+                    int i = 0;
+                    for (Exchangeoffer a : ofertashechas) {
+                        System.out.println((i + 1) + "Fecha de la oferta: " + a.getCreateDate() + "Producto en oferta: " + a.getRequestedProduct());
+                        i++;
+                    }
+                    System.out.println("0.- Volver al menú anterior");
+
+                    System.out.print("\nElige el número de la oferta que quieres ver detalladamente (0 para salir): ");
+                    String inputIndex2 = scanner.nextLine();
+                    int index2 = Integer.parseInt(inputIndex2);
+
+                    if (index2 == 0) {
+                        return;
+                    }
+
+                    if (index2 < 1 || index2 > ofertashechas.size()) {
+                        System.out.println("[!] Opción no válida. Oferta no encontrada.");
+                        return;
+                    }
+                    Exchangeoffer selectedOffer = ofertashechas.get(index2 - 1);
+                    System.out.println(selectedOffer);
+                    System.out.println("0.- Volver al menu anterior");
+                    String inputIndex3 = scanner.nextLine();
+                    int index3 = Integer.parseInt(inputIndex3);
+
+                    if (index3 == 0) {
+                        return;
+                    } else {
+                        System.out.println("Opcion no valida");
+                    }
+                    break;
+                case "B":
+                    int s = 0;
+                    for (Exchangeoffer a : ofertasrecibidas) {
+                        System.out.println((s + 1) + "Fecha de la oferta: " + a.getCreateDate() + "Producto en oferta: " + a.getRequestedProduct());
+                        s++;
+                    }
+                    System.out.println("0.- Volver al menú anterior");
+
+                    System.out.println("\nElige el número de la oferta que quieres ver detalladamente (0 para salir): ");
+                    String inputIndex5 = scanner.nextLine();
+                    int index5 = Integer.parseInt(inputIndex5);
+
+                    if (index5 == 0) {
+                        return;
+                    }
+
+                    if (index5 < 1 || index5 > ofertasrecibidas.size()) {
+                        System.out.println("[!] Opción no válida. Oferta no encontrada.");
+                        return;
+                    }
+                    Exchangeoffer selectedOffer2 = ofertasrecibidas.get(index5 - 1);
+                    System.out.println(selectedOffer2);
+                    System.out.println("0.- Volver al menu anterior");
+                    String inputIndex6 = scanner.nextLine();
+                    int index6 = Integer.parseInt(inputIndex6);
+
+                    if (index6 == 0) {
+                        return;
+                    } else {
+                        System.out.println("Opcion no valida");
+                    }
+                    break;
+                case "C":
+                    System.out.println("1.- Ver productos activos");
+                    System.out.println("2.- Ver productos desactivados");
+                    System.out.println("0.- Volver al menu anterior");
+                    String inputIndex7 = scanner.nextLine();
+                    int index7 = Integer.parseInt(inputIndex7);
+
+                    if (index7 == 0) {
+                        return;
+
+                    } else if (index7 < 1 || index7 > 2) {
+                        System.out.println("[!] Opción no válida. Oferta no encontrada.");
+                        return;
+                    }
+                    switch (index7) {
+                        case 1:
+                            int y = 0;
+                            for (SecondHandProduct a : productosactivos) {
+                                System.out.println((y + 1) + "Fecha añadido: " + a.getDateadded() + "Nombre: " + a.getName() + "Valorado en: " + a.getPrice());
+
+                                y++;
+                            }
+                            System.out.println("Elige el número del producto que quieres ver detalladamente");
+                            System.out.println("0.- Volver al menú anterior");
+                            String inputIndex8 = scanner.nextLine();
+                            int index8 = Integer.parseInt(inputIndex8);
+
+                            if (index8 == 0) {
+                                return;
+
+                            } else if (index8 < 1 || index8 > productosactivos.size()) {
+                                System.out.println("[!] Opción no válida. Oferta no encontrada.");
+                                return;
+
+                            } else {
+                                System.out.println(productosactivos.get(index8 - 1));
+                            }
+                            break;
+                        case 2:
+                            int j = 0;
+                            for (SecondHandProduct a : productosinactivos) {
+                                System.out.println((j + 1) + "Fecha añadido: " + a.getDateadded() + "Nombre: " + a.getName() + "Valorado en: " + a.getPrice());
+
+                                j++;
+                            }
+                            System.out.println("Elige el número del producto que quieres ver detalladamente");
+                            System.out.println("0.- Volver al menú anterior");
+                            String inputIndex9 = scanner.nextLine();
+                            int index9 = Integer.parseInt(inputIndex9);
+
+                            if (index9 == 0) {
+                                return;
+
+                            } else if (index9 < 1 || index9 > productosinactivos.size()) {
+                                System.out.println("[!] Opción no válida. Oferta no encontrada.");
+                                return;
+
+                            } else {
+                                System.out.println(productosinactivos.get(index9 - 1));
+
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    int index = Integer.parseInt(inputIndex);
+                    if (index >= 1 && index <= productos.size()) {
+                        System.out.println("Detalles: " + productos.get(index - 1));
+                    } else {
+                        System.out.println("Selección no válida.");
+                    }
+                    break;
+
+            } }
+            catch(NumberFormatException e){
+                System.out.println("[!] Entrada inválida.");
+            }
+
+
+
+    }
+
+
 
     private static void menuGestor(Manager gestor) {
         boolean cerrarSesion = false;

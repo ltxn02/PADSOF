@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 /**
  * Clase para representar los productos de segunda mano
  * @author Taha Ridda
@@ -21,6 +22,8 @@ public class SecondHandProduct {
 	private ItemType Itemtype;
 	private Condition condition;
 	private ArrayList<Category> categories;
+	private LocalDateTime dateadded;
+
 	/**
 	 * @param name nombre del producto
 	 * @param description descripcion del producto
@@ -45,6 +48,7 @@ public class SecondHandProduct {
 		this.isAppraised = false;
 		this.empleado= null;
 		this.categories= new ArrayList<>();
+		this.dateadded = LocalDateTime.now();
 	}
 
 	public void add_categories(Category e){
@@ -71,6 +75,10 @@ public class SecondHandProduct {
 
 	}
 
+	public LocalDateTime getDateadded() {
+		return dateadded;
+	}
+
 	public void change_offered_status(boolean a){
 		this.isOffered= a;
 	}
@@ -87,7 +95,13 @@ public class SecondHandProduct {
 		return true;
 	}
 	public String toString(){
-		return "Dueño:  " + this.owner;
+		return "\nNombre: " + this.Name
+				+ "\nFecha de Añadido:  " + this.dateadded
+				+	"\nCategorias: " + this.categories
+					+ "\nDescripcion:  " + this.description
+				+	"\nValorado en: " + this.price
+						+ "\nCondicion:  " + this.condition
+				+ "\n Empleado que valoró:" + this.empleado;
 
 	}
 
@@ -99,6 +113,10 @@ public class SecondHandProduct {
 		return !this.isOffered;
 	}
 
+	public boolean isAppraised() {
+		return isAppraised;
+	}
+
 	public int calculateRating(){
 		int rating = 0;
 		for (Review review : reviews){
@@ -108,5 +126,12 @@ public class SecondHandProduct {
 		rating /= reviews.size();
 		return rating;
 	}
-	
+
+	public String getName() {
+		return Name;
+	}
+
+	public double getPrice() {
+		return price;
+	}
 }

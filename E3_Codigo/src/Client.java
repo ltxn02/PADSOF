@@ -36,7 +36,7 @@ public class Client extends RegisteredUser {
 		List<CartItem> orderedItems = this.shoppingCart.getCartItems();
 		double cost = this.shoppingCart.getPrice();
 		/* order necesita tres argumentos: cliente, shoppingcart y precio, en esta linea se le esta pasando cartitem y precio*/
-		Order order = new Order(orderedItems, cost);
+		Order order = new Order(this, this.shoppingCart, cost);
 		
 		this.ordersMade.add(order);
 		if(order.procesarPago(cardNumber)) {
@@ -79,6 +79,9 @@ public class Client extends RegisteredUser {
 
 		return this.offersMade;
 	}
+	public List<Exchangeoffer> obtenerMisOfertasRecibidos(){
+		return this.offersReceived;
+	}
 
 	public void registrarOfertaRecibida(Exchangeoffer oferta) {
 		this.offersReceived.add(oferta);
@@ -88,9 +91,6 @@ public class Client extends RegisteredUser {
 		return this.myProducts;
 	}
 
-	public List<Exchangeoffer> getOffersMade() {
-		return this.offersMade;
-	}
 
 
 }

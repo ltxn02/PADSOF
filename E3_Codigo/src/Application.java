@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Application {
     private static HashMap<String, RegisteredUser> users = new HashMap<>();
@@ -14,7 +15,7 @@ public class Application {
         // 1. INICIALIZACIÓN DE USUARIOS POR DEFECTO
         try {
             Manager lidia = new Manager("lidia", "lidia123", "Lidia Martin Teres", "XXXXXXXXX", "01/01/2002", "lidia@rongero.es", "600000000", 10000.00);
-            Manager taha = new Manager("taha", "taha123", "Taha XXX", "XXXXXXXXX", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
+            Manager taha = new Manager("taha", "taha123", "Taha Ridda", "XXXXXXXXX", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
             Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "XXXXXXXXX", "01/01/2002", "ivan@rongero.es", "600000000", 10000.00);
 
             users.put(lidia.getUsername(), lidia);
@@ -115,6 +116,25 @@ public class Application {
     }
     public static ArrayList<RegisteredUser> getUsers() {
         return new ArrayList<>(users.values());
+    }
+    public static ArrayList<SecondHandProduct> getSecondHandProducts(){
+        ArrayList<SecondHandProduct> listaProductos = new ArrayList<>();
+
+        return listaProductos;
+    }
+    public static List<Exchangeoffer> getoffersmade(Client c){
+        List<Exchangeoffer> ofertas = new ArrayList<>();
+        for (Exchangeoffer o: c.obtenerMisOfertasEnviadas()) {
+            ofertas.add(o);
+        }
+        return ofertas;
+    }
+    public static List<Exchangeoffer> getoffersreceived(Client c){
+        List<Exchangeoffer> ofertas = new ArrayList<>();
+        for (Exchangeoffer o: c.obtenerMisOfertasRecibidos()) {
+            ofertas.add(o);
+        }
+        return ofertas;
     }
 
 }

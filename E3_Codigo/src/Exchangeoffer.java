@@ -56,8 +56,8 @@ public class Exchangeoffer {
         for (SecondHandProduct p : this.offeredProducts){
             p.change_offered_status(true);
         }
-        this.getComprador().registrarOfertaRealizada(this);
-        this.getRecibidor().registrarOfertaRecibida(this);
+        this.recibidor.registrarOfertaRealizada(this);
+        this.recibidor.registrarOfertaRecibida(this);
     }
     /**
      * Funcion para cancelar una oferta sobre un producto
@@ -140,13 +140,26 @@ public class Exchangeoffer {
 
     }
 
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public ExchangeStatus getEstado() {
+        return Estado;
+    }
+
     public SecondHandProduct getRequestedProduct() {
         return requestedProduct;
     }
 
     @Override
     public String toString(){
-        return "Estado de la oferta: " + this.Estado;
+        return "Fecha: " + this.createDate + "\nOferta por: " + this.requestedProduct
+                + "\nEstado de la oferta: " + this.Estado
+                + "\nOferta recibida por: " + this.recibidor
+                +"\nProductos ofertados: " + this.offeredProducts
+                + "\nTiempo de oferta: " + this.timeonHold ;
+
     }
 
 
