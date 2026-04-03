@@ -33,20 +33,26 @@ public abstract class RegisteredUser extends User {
 		return username;
 	}
 
-	// public boolean logout() {}
-	// public Notification (?) read_notifications() {}
-	// public boolean hide_notification() {}
+	public String view_notifications() {
+		String res = "My inbox:\n";
+		for(Notification n: this.myNotifications) {
+			res += "\t" + n.notificationPreview() + "\n";
+		}
+		return res;
+	}
+
+	public String read_notification(Notification notification) {
+		String res = "" + notification;
+		notification.markAsRead(true);
+		return res;
+	}
+	
+	public void change_visibility(Notification notification, boolean visible) {
+		notification.markAs(visible);
+	}
 	
 	@Override
 	public String toString() {
 		return this.username;
 	}
-	/*@Override
-	public String toString() {
-<<<<<<< Updated upstream
-		return "ok";
-	}
-=======
-		
-	}*/
 }
