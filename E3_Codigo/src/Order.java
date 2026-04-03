@@ -75,6 +75,10 @@ public class Order {
         return false;
     }
 
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
     public String getPickupCode() {
         return this.pickupCode;
     }
