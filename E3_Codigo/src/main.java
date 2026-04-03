@@ -40,7 +40,7 @@ public class main {
                     // Aquí deberíais guardar los datos persistentes (ej. Sistema.guardarDatos())
                     break;
                 default:
-                    System.out.println("⚠️ Opción no válida. Por favor, introduce un número del 0 al 3.");
+                    System.out.println("[!] Opción no válida. Por favor, introduce un número del 0 al 3.");
             }
         }
         scanner.close();
@@ -60,7 +60,6 @@ public class main {
 
         // Recorremos la lista e imprimimos cada producto
         for (Product p : productos) {
-            // Nota: Asegúrate de tener el metodo getName() en tu clase Item o Product
             System.out.println("- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }
     }
@@ -121,7 +120,7 @@ public class main {
 
         try {
             Application.registerClient(nuevoCliente);
-            System.out.println(">> (Simulando) Usuario " + username + " registrado correctamente. Ya puedes iniciar sesión.");
+            System.out.println(">> Usuario " + username + " registrado correctamente. Ya puedes iniciar sesión.");
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
@@ -133,13 +132,13 @@ public class main {
         boolean cerrarSesion = false;
         while (!cerrarSesion) {
             System.out.println("\n--- PANEL DE CLIENTE: " + cliente.getUsername() + " ---");
-            System.out.println("1.- Ver Catálogo de Productos y Comprar");
-            System.out.println("2.- Ver mi Carrito");
-            System.out.println("3.- Explorar Ofertas de Intercambio");
-            System.out.println("4.- Gestionar mi Cartera de 2ª Mano");
-            System.out.println("5.- Ver mis Notificaciones");
-            System.out.println("6.- Ver Recomendaciones Personalizadas");
-            System.out.println("0.- Cerrar Sesión");
+            System.out.println("1.- Ver catálogo de productos y comprar");
+            System.out.println("2.- Ver mi carrito");
+            System.out.println("3.- Explorar ofertas de intercambio");
+            System.out.println("4.- Gestionar mi cartera de segunda mano");
+            System.out.println("5.- Ver mis notificaciones");
+            System.out.println("6.- Ver recomendaciones personalizadas");
+            System.out.println("0.- Cerrar sesión");
             System.out.print("Elige una opción: ");
 
             String opcion = scanner.nextLine();
@@ -149,7 +148,7 @@ public class main {
                     comprarProducto(cliente);
                     break;
                 case "2":
-                    System.out.println(">> (Simulando) Mostrando carrito y procesando pago...");
+                    System.out.println(">> Mostrando carrito y procesando pago...");
                     verCarrito(cliente);
                     break;
                 case "6":
@@ -160,7 +159,7 @@ public class main {
                     System.out.println("Cerrando sesión de " + cliente.getUsername() + "...");
                     break;
                 default:
-                    System.out.println("⚠️ Opción no válida.");
+                    System.out.println("[!] Opción no válida.");
             }
         }
     }
@@ -196,7 +195,7 @@ public class main {
             }
 
             if (index < 1 || index > productos.size()) {
-                System.out.println("⚠️ Opción no válida. Producto no encontrado.");
+                System.out.println("[!] Opción no válida. Producto no encontrado.");
                 return;
             }
 
@@ -208,21 +207,21 @@ public class main {
             int quantity = Integer.parseInt(inputQty);
 
             if (quantity <= 0) {
-                System.out.println("⚠️ La cantidad debe ser mayor que 0.");
+                System.out.println("[!] La cantidad debe ser mayor que 0.");
                 return;
             }
 
             // 2. Añadimos el producto al carrito del cliente
             // Funciona porque Product hereda de NewProduct (que es lo que pide addCartItem)
             cliente.getShoppingCart().addCartItem(selectedProduct, quantity);
-            System.out.println("✅ ¡Éxito! " + quantity + "x " + selectedProduct.getName() + " añadido(s) a tu carrito.");
+            System.out.println("[+] ¡Éxito! " + quantity + "x " + selectedProduct.getName() + " añadido(s) a tu carrito.");
 
         } catch (NumberFormatException e) {
             // Capturamos el error si el usuario escribe texto en lugar de números
-            System.out.println("⚠️ Error: Por favor, introduce un número válido.");
+            System.out.println("[!] Error: Por favor, introduce un número válido.");
         } catch (IllegalArgumentException e) {
             // Capturamos el error de vuestra clase CartItem si no hay stock suficiente
-            System.out.println("❌ Error de stock: " + e.getMessage());
+            System.out.println("[!] Error de stock: " + e.getMessage());
         }
     }
 
@@ -249,7 +248,7 @@ public class main {
                     System.out.println("Cerrando sesión de administrador...");
                     break;
                 default:
-                    System.out.println("⚠️ Opción no válida.");
+                    System.out.println("[!] Opción no válida.");
             }
         }
     }
@@ -302,17 +301,17 @@ public class main {
             int quantity = Integer.parseInt(scanner.nextLine());
 
             if (quantity <= 0) {
-                System.out.println("⚠️ La cantidad debe ser mayor que 0.");
+                System.out.println("[!] La cantidad debe ser mayor que 0.");
                 return;
             }
 
             c.getShoppingCart().addCartItem(seleccionado, quantity);
-            System.out.println("✅ ¡Añadido! " + seleccionado.getName() + " ya está en tu carrito.");
+            System.out.println("[+] ¡Añadido! " + seleccionado.getName() + " ya está en tu carrito.");
 
         } catch (NumberFormatException e) {
-            System.out.println("⚠️ Error: Introduce un número válido.");
+            System.out.println("[!] Error: Introduce un número válido.");
         } catch (IllegalArgumentException e) {
-            System.out.println("❌ Error de stock: " + e.getMessage());
+            System.out.println("[!] Error de stock: " + e.getMessage());
         }
     }
 
@@ -339,7 +338,7 @@ public class main {
                     System.out.println("Cerrando sesión de empleado...");
                     break;
                 default:
-                    System.out.println("⚠️ Opción no válida.");
+                    System.out.println("[!] Opción no válida.");
             }
         }
     }
@@ -397,10 +396,10 @@ public class main {
             // Si la librería dice que OK, vaciamos el carrito y guardamos el pedido
             carrito.clearCart(); // Asegúrate de tener un metodo en ShoppingCart para vaciar la lista
             cliente.getOrderHistoric().addOrder(nuevoPedido); // Guardamos el pedido en el historial del cliente
-            System.out.println("✅ ¡Compra finalizada con éxito! Tu código de recogida es: " + nuevoPedido.getPickupCode());
+            System.out.println("[+] ¡Compra finalizada con éxito! Tu código de recogida es: " + nuevoPedido.getPickupCode());
         } else {
             // Si la librería lanza excepción (tarjeta falsa, sin internet...), el pedido se cancela
-            System.out.println("❌ La compra no se ha podido completar. Revisa tu método de pago.");
+            System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
         }
     }
 }
