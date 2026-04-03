@@ -35,6 +35,7 @@ public class Client extends RegisteredUser {
 	public String buyCart(String cardNumber) {
 		List<CartItem> orderedItems = this.shoppingCart.getCartItems();
 		double cost = this.shoppingCart.getPrice();
+		/* order necesita tres argumentos: cliente, shoppingcart y precio, en esta linea se le esta pasando cartitem y precio*/
 		Order order = new Order(orderedItems, cost);
 		
 		this.ordersMade.add(order);
