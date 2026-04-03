@@ -229,7 +229,7 @@ public class main {
             System.out.println("[!] Error de stock: " + e.getMessage());
         }
     }
-    private static void intercambiarProductos(Client c){
+    private static void intercambiarProductos(Client c) {
         ArrayList<SecondHandProduct> productos = Application.getSecondHandProducts();
         List<Exchangeoffer> ofertashechas = Application.getoffersmade(c);
         List<Exchangeoffer> ofertasrecibidas = Application.getoffersreceived(c);
@@ -237,20 +237,23 @@ public class main {
         List<SecondHandProduct> productosactivos = new ArrayList<>();
         List<SecondHandProduct> productosinactivos = new ArrayList<>();
 
-        for (SecondHandProduct a: misproductos){
-            if (a.isAppraised()){
+        for (SecondHandProduct a : misproductos) {
+            if (a.isAppraised()) {
                 productosactivos.add(a);
             } else {
                 productosinactivos.add(a);
             }
 
         }
+        while (true) {
+            System.out.println("\n==========================================================================================");
+            System.out.println("                                    TIENDA DE INTERCAMBIO ");
+            System.out.println("===========================================================================================");
+
 
         if (productos.isEmpty()) {
             System.out.println("Actualmente no hay productos para intercambios en la tienda.");
-            return;
         }
-        System.out.println("\n         TIENDA DE INTERCAMBIO ");
         for (int i = 0; i < productos.size(); i++) {
             SecondHandProduct p = productos.get(i);
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
@@ -401,14 +404,14 @@ public class main {
                     }
                     break;
 
-            } }
-            catch(NumberFormatException e){
-                System.out.println("[!] Entrada inválida.");
             }
-
-
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida.");
+        }
 
     }
+    }
+
 
 
 
