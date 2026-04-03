@@ -12,7 +12,7 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 public class Exchangeoffer {
-    private static int offerid= 0;
+    private static int offerid= 1;
     private LocalDateTime createDate;
     private Duration timeonHold;
     private SecondHandProduct requestedProduct;
@@ -57,8 +57,7 @@ public class Exchangeoffer {
             p.change_offered_status(true);
         }
         this.getComprador().registrarOfertaRealizada(this);
-        /* offer no existe */
-        offer.getRecibidor().registrarOfertaRecibida(this);
+        this.getRecibidor().registrarOfertaRecibida(this);
     }
     /**
      * Funcion para cancelar una oferta sobre un producto
