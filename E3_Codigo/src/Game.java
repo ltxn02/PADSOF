@@ -14,4 +14,8 @@ public class Game extends Product{
         this.mechanics = mechanics;
         this.ageRange = ageRange;
     }
+    
+    public AgeRange getAgeRange() {
+    	return this.ageRange;
+    }
 }

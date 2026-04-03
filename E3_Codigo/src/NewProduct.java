@@ -59,7 +59,14 @@ public abstract class NewProduct extends Item {
             super.clearInstants();
         }
     }
-
+    
+    public boolean contains(String str) throws IllegalArgumentException {
+    	if(str == null) {
+    		throw new IllegalArgumentException("Invalid string");
+    	}
+    	return super.getName().toLowerCase().contains(str.toLowerCase());
+    }
+    
     @Override
     public double getPrice() {
         return super.getPrice();

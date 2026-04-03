@@ -16,6 +16,10 @@ public abstract class BaseElement {
 		this.updatedAt = Instant.now();
 	}
 	
+	public boolean isActive() {
+		return this.active == true;
+	}
+	
 	@Override
 	public String toString() {
 		String str = "Status: ";
