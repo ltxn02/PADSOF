@@ -72,7 +72,7 @@ public class SistemaRecomendaciones {
         HashSet<Product> productos = new HashSet<>();
         if (c.getOrderHistoric() != null) {
             for (Order o : c.getOrderHistoric().getOrders()) {
-                for (CartItem item : c.getShoppingCart().getCartItems()) {
+                for (CartItem item : o.getItems()) {
                     if (item.getProduct() instanceof Product) {
                         productos.add((Product) item.getProduct());
                     }

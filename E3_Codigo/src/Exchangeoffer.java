@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Exchangeoffer {
     private static int offerid= 1;
     private LocalDateTime createDate;
-    private Duration timeonHold;
+    private static Duration timeonHold;
     private SecondHandProduct requestedProduct;
     private ArrayList<SecondHandProduct>  offeredProducts;
     private Client comprador;
