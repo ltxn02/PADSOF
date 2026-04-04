@@ -102,4 +102,8 @@ public abstract class RegisteredUser extends User {
 		
 		return "****" + dni.substring(dni.length() - 4);
 	}
+
+	public List<Notification> getMyNotifications() {
+		return this.myNotifications;
+	}
 }
