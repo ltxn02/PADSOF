@@ -19,7 +19,6 @@ public class Order {
         this.price = price;
         this.orderStatus = OrderStatus.SIN_PAGAR;
         this.orderId = lastId++;
-        Order.lastId++;
         this.pickupCode = generateCode();
         this.items = cartItems;
     }
@@ -50,6 +49,7 @@ public class Order {
 
             // Si llega aquí, el pago ha funcionado
             this.orderStatus = OrderStatus.EN_PREPARACION;
+            this.paidAt = Instant.now();
             System.out.println("¡Pago aceptado! El pedido pasa a estar en preparación.");
             return true;
 
@@ -91,5 +91,40 @@ public class Order {
     		throw new IllegalStateException("A paid order cannot be cancelled");
     	}
     	this.orderStatus = OrderStatus.CANCELADO;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public Instant getOrderedAt() {
+        return orderedAt;
+    }
+
+    public Instant getPaidAt() {
+        return paidAt;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Pedido #").append(this.orderId)
+                .append(" | Estado: ").append(this.orderStatus)
+                .append(" | Total: ").append(this.price).append("€\n");
+
+        if (this.paidAt != null) {
+            sb.append("   Pagado el: ").append(this.paidAt).append("\n");
+            sb.append("   Código de recogida: ").append(this.pickupCode).append("\n");
+        }
+
+        sb.append("   Artículos:\n");
+        for (CartItem item : items) {
+            sb.append("    - ").append(item.getQuantity()).append("x ").append(item.getProduct().getName()).append("\n");
+        }
+        return sb.toString();
     }
 }

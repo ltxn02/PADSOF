@@ -52,7 +52,7 @@ public class main {
         System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
 
         // Obtenemos la lista de productos desde Application
-        ArrayList<Product> productos = Application.getCatalog();
+        ArrayList<NewProduct> productos = Application.getCatalog();
 
         if (productos.isEmpty()) {
             System.out.println("Actualmente no hay productos en la tienda.");
@@ -60,7 +60,7 @@ public class main {
         }
 
         // Recorremos la lista e imprimimos cada producto
-        for (Product p : productos) {
+        for (NewProduct p : productos) {
             System.out.println("- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }
     }
@@ -196,7 +196,7 @@ public class main {
     private static void comprarProducto(Client cliente) {
         System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
 
-        ArrayList<Product> productos = Application.getCatalog();
+        ArrayList<NewProduct> productos = Application.getCatalog();
 
         if (productos.isEmpty()) {
             System.out.println("Actualmente no hay productos en la tienda.");
@@ -205,7 +205,7 @@ public class main {
 
         // 1. Mostramos los productos con un índice (1, 2, 3...)
         for (int i = 0; i < productos.size(); i++) {
-            Product p = productos.get(i);
+            NewProduct p = productos.get(i);
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }
         System.out.println("0.- Volver al menú anterior");
@@ -226,7 +226,7 @@ public class main {
             }
 
             // Obtenemos el producto seleccionado (restamos 1 porque los arrays empiezan en 0)
-            Product selectedProduct = productos.get(index - 1);
+            NewProduct selectedProduct = productos.get(index - 1);
 
             System.out.print("¿Cuántas unidades de '" + selectedProduct.getName() + "' deseas añadir? ");
             String inputQty = scanner.nextLine();
@@ -454,6 +454,9 @@ public class main {
                 case "1":
                     gestionarEmpleados(gestor);
                     break;
+                case "2":
+                    gestionarCatalogo(gestor);
+                    break;
                 case "0":
                     cerrarSesion = true;
                     System.out.println("Cerrando sesión de administrador...");
@@ -478,10 +481,11 @@ public class main {
     private static void mostrarRecomendaciones(Client c) {
         System.out.println("\nPRODUCTOS RECOMENDADOS:");
 
-        ArrayList<Product> catalogo = Application.getCatalog();
+        ArrayList<NewProduct> catalogo = Application.getCatalog();
         ArrayList<Client> listaClientes = todoslosClientes();
 
-        ArrayList<Product> recomendados = SistemaRecomendaciones.obtenerRecomendaciones(c, catalogo, listaClientes);
+        // Cambiamos Product por NewProduct aquí
+        ArrayList<NewProduct> recomendados = SistemaRecomendaciones.obtenerRecomendaciones(c, catalogo, listaClientes);
 
         if (recomendados.isEmpty()) {
             System.out.println("Aún no tenemos suficientes datos para darte recomendaciones.");
@@ -489,8 +493,9 @@ public class main {
             return;
         }
 
+        // Y cambiamos Product por NewProduct en el for y al seleccionar
         for (int i = 0; i < recomendados.size(); i++) {
-            Product p = recomendados.get(i);
+            NewProduct p = recomendados.get(i);
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }
         System.out.println("0.- Volver al menú anterior");
@@ -508,7 +513,8 @@ public class main {
                 return;
             }
 
-            Product seleccionado = recomendados.get(index - 1);
+            // Cambiamos Product por NewProduct aquí también
+            NewProduct seleccionado = recomendados.get(index - 1);
             System.out.print("¿Cuántas unidades de '" + seleccionado.getName() + "' deseas? ");
             int quantity = Integer.parseInt(scanner.nextLine());
 
@@ -573,7 +579,7 @@ public class main {
         double precioTotal = 0.0;
         for (CartItem item : carrito.getCartItems()) {
             // Asumiendo que CartItem tiene métodos para obtener el producto y la cantidad
-            Product p = (Product) item.getProduct();
+            NewProduct p = item.getProduct();
             int cantidad = item.getQuantity();
             double subtotal = p.getPrice() * cantidad;
             precioTotal += subtotal;
@@ -932,5 +938,76 @@ public class main {
             }
         }
         return empleados;
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE CATÁLOGO ---
+    private static void gestionarCatalogo(Manager gestor) {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- GESTIÓN DE CATÁLOGO ---");
+            System.out.println("1.- Ver categorías existentes");
+            System.out.println("2.- Añadir nueva categoría");
+            System.out.println("3.- Gestionar Packs (En construcción \uD83D\uDEA7)");
+            System.out.println("0.- Volver al menú anterior");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    verCategorias();
+                    break;
+                case "2":
+                    crearCategoria();
+                    break;
+                case "3":
+                    System.out.println("\n[!] La funcionalidad de Packs aún no ha sido implementada por el equipo.");
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void verCategorias() {
+        System.out.println("\n--- CATEGORÍAS ACTUALES ---");
+        ArrayList<Category> categorias = Application.getGlobalCategories();
+
+        if (categorias.isEmpty()) {
+            System.out.println("No hay categorías registradas en el sistema.");
+            return;
+        }
+
+        for (int i = 0; i < categorias.size(); i++) {
+            System.out.println((i + 1) + ".- " + categorias.get(i).getNameCategory());
+        }
+    }
+
+    private static void crearCategoria() {
+        System.out.println("\n--- CREAR NUEVA CATEGORÍA ---");
+        System.out.print("Nombre de la nueva categoría: ");
+        String nombre = scanner.nextLine();
+
+        if (nombre.trim().isEmpty()) {
+            System.out.println("[!] El nombre no puede estar vacío.");
+            return;
+        }
+
+        // Comprobamos si ya existe (ignorando mayúsculas/minúsculas)
+        for (Category c : Application.getGlobalCategories()) {
+            if (c.getNameCategory().equalsIgnoreCase(nombre)) {
+                System.out.println("[!] Ya existe una categoría con ese nombre.");
+                return;
+            }
+        }
+
+        // Creamos la categoría (pasando una lista vacía de items como pide tu constructor)
+        Category nuevaCategoria = new Category(nombre, new ArrayList<Item>());
+        Application.addCategory(nuevaCategoria);
+
+        System.out.println("[+] Categoría '" + nombre + "' creada con éxito.");
     }
 }

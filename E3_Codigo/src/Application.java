@@ -7,9 +7,8 @@ public class Application {
     private static HashMap<String, RegisteredUser> users = new HashMap<>();
     private static HashMap<String, Notification> notifications = new HashMap<>();
     private static ArrayList<SecondHandProduct> secondHandProducts = new ArrayList<>();
-
-    // Lista para guardar el catálogo de productos de la tienda
-    private static ArrayList<Product> catalog = new ArrayList<>();
+    private static ArrayList<NewProduct> catalog = new ArrayList<>();
+    private static ArrayList<Category> globalCategories = new ArrayList<>();
 
     // --- BLOQUE DE INICIALIZACIÓN ESTÁTICA ---
     static {
@@ -77,6 +76,7 @@ public class Application {
             catalog.add(comic1);
             catalog.add(figura1);
             catalog.add(juego1);
+            globalCategories.add(catComic);
 
             System.out.println("[Sistema] Catálogo inicializado con 3 productos por defecto.");
 
@@ -120,7 +120,7 @@ public class Application {
         System.out.println("[+] Empleado " + employee.getUsername() + " registrado en el sistema.");
     }
 
-    public static ArrayList<Product> getCatalog() {
+    public static ArrayList<NewProduct> getCatalog() {
         return catalog;
     }
 
@@ -151,4 +151,11 @@ public class Application {
         secondHandProducts.add(p);
     }
 
+    public static ArrayList<Category> getGlobalCategories() {
+        return globalCategories;
+    }
+
+    public static void addCategory(Category c) {
+        globalCategories.add(c);
+    }
 }

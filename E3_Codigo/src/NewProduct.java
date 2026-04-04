@@ -17,6 +17,10 @@ public abstract class NewProduct extends Item {
     }
 
     public int calculateRating(){
+        if (reviews == null || reviews.isEmpty()) {
+            return 0; // Evitamos la división por cero
+        }
+
         int rating = 0;
         for (Review review : reviews){
             rating += review.getRating();
