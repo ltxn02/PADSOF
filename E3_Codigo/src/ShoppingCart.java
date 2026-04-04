@@ -1,17 +1,23 @@
 import java.util.*;
 import java.time.*;
+import java.util.concurrent.*;
 
 public class ShoppingCart {
 	private double fullPrice;
 	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);
 	
+	private final ScheduledExecutorService cleaner;
+	
 	public ShoppingCart() {
 		this.fullPrice = 0;
 		this.cartItems = new ArrayList<>();
+		
+		this.cleaner = Executors.newSingleThreadScheduledExecutor();
+		this.cleaner.scheduleAtFixedRate(this::removeExpiredCartItems, 1, 1, TimeUnit.MINUTES);
 	}
 	
-	public void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
+	public synchronized void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
 		CartItem c = null;
 		double oldPrice = 0;
 		
@@ -28,7 +34,7 @@ public class ShoppingCart {
 		this.cartItems.add(c);
 	}
 	
-	private CartItem cartContains(NewProduct p) {
+	private synchronized CartItem cartContains(NewProduct p) {
 		for(CartItem c : this.cartItems) {
 			if(c.isProduct(p) == true) {
 				return c;
@@ -37,7 +43,7 @@ public class ShoppingCart {
 		return null;
 	}
 	
-	public void removeCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
+	public synchronized void removeCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
 		CartItem c = null;
 		double oldPrice = 0, newPrice = 0;
 		
@@ -56,21 +62,29 @@ public class ShoppingCart {
 		this.fullPrice += newPrice;
 	 }
 	
-	public void removeExpiredCartItems() {
+	public synchronized void removeExpiredCartItems() {
 		this.cartItems.removeIf(item -> item.isExpired(ShoppingCart.timeOnHold));
+		this.fullPrice = 0;
+		for(CartItem item: this.cartItems) {
+			this.fullPrice += item.fullPrice();
+		}
+	}
+	
+	public synchronized void setTimeOnHold(long newTimeOnHold) {
+		ShoppingCart.timeOnHold = Duration.ofHours(newTimeOnHold);
 	}
 
 	// NUEVO METODO
-	public void clearCart() {
+	public synchronized void clearCart() {
 		this.cartItems.clear();
 	}
 
-	public List<CartItem> getCartItems() {
+	public synchronized List<CartItem> getCartItems() {
 		return this.cartItems;
 	}
 
 
-	public double getPrice() {
+	public synchronized double getPrice() {
 		return this.fullPrice;
 	}
 }

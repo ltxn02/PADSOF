@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 
 public class ExchangeOffer {
     private static int lastOfferId = 1;
+    private int offerId;
     private LocalDateTime createDate;
     private static Duration timeonHold = Duration.ofDays(7);
     private SecondHandProduct requestedProduct;
-    private ArrayList<SecondHandProduct> offeredProducts;
+    private List<SecondHandProduct> offeredProducts;
     private Client offeror;
     private Client receptor;
     private ExchangeStatus status;
@@ -30,7 +31,7 @@ public class ExchangeOffer {
     }
 
     public boolean is_Expired(){
-        Duration TiempoTranscurrido= Duration.between(createDate, LocalDateTime.now());
+        Duration TiempoTranscurrido = Duration.between(createDate, LocalDateTime.now());
         return TiempoTranscurrido.compareTo(timeonHold) > 0;
     }
 
@@ -38,6 +39,7 @@ public class ExchangeOffer {
      * Constructor de la oferta de intercambio
      * @param requestedProduct producto solicitado
      * @param offeredProducts productos ofertados para el intercambio
+     * @param offeror usuario que solicita el intercambio
      * */
 
     public ExchangeOffer(SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client offeror){
@@ -51,8 +53,7 @@ public class ExchangeOffer {
         for (SecondHandProduct p : this.offeredProducts){
             p.change_offered_status(true);
         }
-        this.receptor.registrarOfertaRealizada(this);
-        this.receptor.registrarOfertaRecibida(this);
+        this.receptor.receiveOffer(this);
         
         this.offerId = ExchangeOffer.lastOfferId;
         ExchangeOffer.lastOfferId++;
@@ -60,13 +61,14 @@ public class ExchangeOffer {
     /**
      * Funcion para cancelar una oferta sobre un producto
      * */
-    public void cancelar_oferta(){
-        this.status = ExchangeStatus.CANCELADA;
-        this.requestedProduct.change_offered_status(false);
-        for (SecondHandProduct p: this.offeredProducts){
+    public void cancelar_oferta() throws IllegalStateException {
+        if(this.status != ExchangeStatus.PENDIENTE) {
+        	throw new IllegalStateException("Can only cancel an order that is pending");
+        }
+    	this.status = ExchangeStatus.CANCELADA;
+        for (SecondHandProduct p: this.offeredProducts) {
             p.change_offered_status(false);
         }
-
     }
 /**
  * Funcion para rechazar la oferta
@@ -84,13 +86,13 @@ public class ExchangeOffer {
     public void expired_offer(){
         if(is_Expired()){
             this.status = ExchangeStatus.EXPIRADA;
-            this.liberarProductosofertados();;
-    }
+            this.liberarProductosofertados();
+        }
     }
 
     public boolean ofertaaceptada(){
         if (this.status == ExchangeStatus.ACEPTADA){
-        return true;
+        	return true;
         }
         return false;
     }

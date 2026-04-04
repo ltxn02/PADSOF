@@ -81,7 +81,57 @@ public class Client extends RegisteredUser {
 			throw new IllegalArgumentException("Invalid products, they must be available");
 		}
 		ExchangeOffer offer = new ExchangeOffer(requested, new ArrayList<>(Arrays.asList(offered)), this);
+		this.offersMade.add(offer);
 	}
+	
+	public void cancelOffer(ExchangeOffer offer) throws IllegalArgumentException, IllegalStateException {
+		if(!this.offersMade.contains(offer)) {
+			throw new IllegalArgumentException("Invalid offer, it's not in your register");
+		}
+		offer.cancelOffer();
+	}
+	
+	public void answerOffer(ExchangeOffer offer, boolean accept) throws IllegalArgumentException {
+		if(!this.offersMade.contains(offer)) {
+			throw new IllegalArgumentException("Invalid offer, it's not in your register");
+		}
+		
+		if(accept == true) {
+			offer.aceptaroferta();
+		} else if(accept == false) {
+			offer.reject_offer();
+		}
+	}
+	
+	private boolean productIsAvailable(SecondHandProduct...products) {
+		for(SecondHandProduct s: products) {
+			if(s.isAvailable()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean productIsYours(SecondHandProduct...products) {
+		for(SecondHandProduct p: products) {
+			if(p.isOwnedBy(this) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 *	public boolean addToCart(NewProduct p, quantity q) {
 	 *	  	if (q <= stock) {
@@ -115,7 +165,7 @@ public class Client extends RegisteredUser {
 		return this.offersReceived;
 	}
 
-	public void registrarOfertaRecibida(ExchangeOffer oferta) {
+	public void receiveOffer(ExchangeOffer oferta) {
 		this.offersReceived.add(oferta);
 	}
 
@@ -129,23 +179,5 @@ public class Client extends RegisteredUser {
 
 	public List<SecondHandProduct> getMyProducts() {
 		return this.myProducts;
-	}
-
-	private boolean productIsAvailable(SecondHandProduct...products) {
-		for(SecondHandProduct s: products) {
-			if(s.isAvailable()) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private boolean productIsYours(SecondHandProduct...products) {
-		for(SecondHandProduct p: products) {
-			if(p.isOwnedBy(this) == false) {
-				return false;
-			}
-		}
-		return true;
 	}
 }
