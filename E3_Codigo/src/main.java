@@ -434,11 +434,8 @@ public class main {
             System.out.println("[!] Entrada inválida.");
         }
 
+        }
     }
-    }
-
-
-
 
     private static void menuGestor(Manager gestor) {
         boolean cerrarSesion = false;
@@ -467,6 +464,7 @@ public class main {
             }
         }
     }
+
     private static ArrayList<Client> todoslosClientes() {
         ArrayList<RegisteredUser> usuarios = Application.getUsers();
         ArrayList<Client> clientes = new ArrayList<>();
