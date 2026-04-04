@@ -23,7 +23,7 @@ public class MainIntercambios {
             ofrecidos.add(ps5);
 
             System.out.println("Creando oferta: taha ofrece PS5 a lidia por su Xbox...");
-            ExchangeOffer oferta = new ExchangeOffer( xbox, ofrecidos, taha, lidia, Duration.ofDays(2));
+            ExchangeOffer oferta = new ExchangeOffer(xbox, ofrecidos, taha);
 
             System.out.println("\nEmpleado ivan valida el intercambio...");
             Exchange intercambio = new Exchange(oferta);

@@ -19,8 +19,8 @@ public class Discount {
         this.description = description;
         this.from = from;
         this.to = to;
-        this.discountId = lastId;
-        Discount.lastId++;
+        this.discountId = lastDiscountId;
+        Discount.lastDiscountId++;
     }
 
     public boolean isValid(Date today) {

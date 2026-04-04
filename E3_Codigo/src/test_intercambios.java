@@ -25,7 +25,7 @@ public class test_intercambios {
         ArrayList<SecondHandProduct> loteAna = new ArrayList<>();
         loteAna.add(iphone);
         loteAna.add(cascos);
-        ExchangeOffer ofertaAna = new ExchangeOffer(portatil, loteAna, ana, carlos, Duration.ofDays(3));
+        ExchangeOffer ofertaAna = new ExchangeOffer(portatil, loteAna, ana);
         System.out.println("Productos de Ana bloqueados: (true)" + (!iphone.isAvailable() && !cascos.isAvailable()));
 
         Exchange exchA = new Exchange(ofertaAna);
@@ -38,7 +38,7 @@ public class test_intercambios {
 
         ArrayList<SecondHandProduct> loteTaha = new ArrayList<>();
         loteTaha.add(ps5);
-        ExchangeOffer ofertaTaha = new ExchangeOffer( switchOled, loteTaha, taha, lidia, Duration.ofDays(1));
+        ExchangeOffer ofertaTaha = new ExchangeOffer(switchOled, loteTaha, taha);
 
         Exchange exchB = new Exchange(ofertaTaha);
         boolean intentoAndres = exchB.validateExchange(andres);
@@ -54,7 +54,7 @@ public class test_intercambios {
 
         System.out.println("\n--------------------------------------------------\n");
 
-        ExchangeOffer ofertaCaduca = new ExchangeOffer( ps5, new ArrayList<>(), martin, taha, Duration.ZERO);
+        ExchangeOffer ofertaCaduca = new ExchangeOffer(ps5, new ArrayList<>(), martin);
 
         try { Thread.sleep(5); } catch (Exception e) {}
 

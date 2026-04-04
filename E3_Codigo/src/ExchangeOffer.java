@@ -17,17 +17,17 @@ public class ExchangeOffer {
     private LocalDateTime createDate;
     private static Duration timeonHold = Duration.ofDays(7);
     private SecondHandProduct requestedProduct;
-    private ArrayList<SecondHandProduct>  offeredProducts;
-    private Client comprador;
-    private Client recibidor;
-    private ExchangeStatus Estado;
+    private ArrayList<SecondHandProduct> offeredProducts;
+    private Client offeror;
+    private Client receptor;
+    private ExchangeStatus status;
 
-    public Client getComprador() {
-        return comprador;
+    public Client getOfferor() {
+        return offeror;
     }
 
-    public Client getRecibidor() {
-        return recibidor;
+    public Client getReceptor() {
+        return receptor;
     }
 
     public boolean is_Expired(){
@@ -44,29 +44,28 @@ public class ExchangeOffer {
      * @param limit limite de la oferta que puede estar pendiente
      * */
 
-    public ExchangeOffer( SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client comprador, Client recibidor, Duration limit){
-        this.Estado= ExchangeStatus.PENDIENTE;
+    public ExchangeOffer(SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client offeror){
+        this.status = ExchangeStatus.PENDIENTE;
         this.offeredProducts= offeredProducts;
         this.requestedProduct= requestedProduct;
-        this.comprador= comprador;
-        this.recibidor= recibidor;
-        this.timeonHold= limit;
+        this.offeror= offeror;
+        this.receptor= requestedProduct.getOwner();
         this.createDate= LocalDateTime.now();
 
         for (SecondHandProduct p : this.offeredProducts){
             p.change_offered_status(true);
         }
-        this.recibidor.registrarOfertaRealizada(this);
-        this.recibidor.registrarOfertaRecibida(this);
+        this.receptor.registrarOfertaRealizada(this);
+        this.receptor.registrarOfertaRecibida(this);
         
-        this.offerId = ExchangeOffer.lastId;
-        ExchangeOffer.lastId++;
+        this.offerId = ExchangeOffer.lastOfferId;
+        ExchangeOffer.lastOfferId++;
     }
     /**
      * Funcion para cancelar una oferta sobre un producto
      * */
     public void cancelar_oferta(){
-        this.Estado = ExchangeStatus.CANCELADA;
+        this.status = ExchangeStatus.CANCELADA;
         this.requestedProduct.change_offered_status(false);
         for (SecondHandProduct p: this.offeredProducts){
             p.change_offered_status(false);
@@ -79,7 +78,7 @@ public class ExchangeOffer {
  *
  * */
     public void reject_offer(){
-        this.Estado= ExchangeStatus.RECHAZADA;
+        this.status = ExchangeStatus.RECHAZADA;
         this.liberarProductosofertados();
 
     }
@@ -88,20 +87,20 @@ public class ExchangeOffer {
      * */
     public void expired_offer(){
         if(is_Expired()){
-            this.Estado= ExchangeStatus.EXPIRADA;
+            this.status = ExchangeStatus.EXPIRADA;
             this.liberarProductosofertados();;
     }
     }
 
     public boolean ofertaaceptada(){
-        if (this.Estado == ExchangeStatus.ACEPTADA){
+        if (this.status == ExchangeStatus.ACEPTADA){
         return true;
         }
         return false;
     }
 
     public void aceptaroferta(){
-        this.Estado= ExchangeStatus.ACEPTADA;
+        this.status = ExchangeStatus.ACEPTADA;
     }
 
     /**
@@ -110,10 +109,10 @@ public class ExchangeOffer {
 
 
     public boolean intercambiar_propietarios() {
-        requestedProduct.change_owners(this.comprador);
+        requestedProduct.change_owners(this.offeror);
 
         for (SecondHandProduct p : offeredProducts) {
-            p.change_owners(this.recibidor);
+            p.change_owners(this.receptor);
         }
         liberarProductos();
         return true;
@@ -148,7 +147,7 @@ public class ExchangeOffer {
     }
 
     public ExchangeStatus getEstado() {
-        return Estado;
+        return status;
     }
 
     public SecondHandProduct getRequestedProduct() {
@@ -158,8 +157,8 @@ public class ExchangeOffer {
     @Override
     public String toString(){
         return "Fecha: " + this.createDate + "\nOferta por: " + this.requestedProduct
-                + "\nEstado de la oferta: " + this.Estado
-                + "\nOferta recibida por: " + this.recibidor
+                + "\nEstado de la oferta: " + this.status
+                + "\nOferta recibida por: " + this.receptor
                 +"\nProductos ofertados: " + this.offeredProducts
                 + "\nTiempo de oferta: " + this.timeonHold ;
 
