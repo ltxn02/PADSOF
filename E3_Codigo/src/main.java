@@ -267,9 +267,9 @@ public class main {
 
         }
         while (true) {
-            System.out.println("\n==========================================================================================");
-            System.out.println("                                    TIENDA DE INTERCAMBIO ");
-            System.out.println("===========================================================================================");
+            System.out.println("\n=============================================================================================================================================================================");
+            System.out.println("                                                                           TIENDA DE INTERCAMBIO ");
+            System.out.println("==============================================================================================================================================================================");
 
 
         if (productos.isEmpty()) {
@@ -312,6 +312,7 @@ public class main {
                     }
                     ExchangeOffer selectedOffer = ofertashechas.get(index2 - 1);
                     System.out.println(selectedOffer);
+
                     System.out.println("0.- Volver al menu anterior");
                     String inputIndex3 = scanner.nextLine();
                     int index3 = Integer.parseInt(inputIndex3);
@@ -344,15 +345,35 @@ public class main {
                     }
                     ExchangeOffer selectedOffer2 = ofertasrecibidas.get(index5 - 1);
                     System.out.println(selectedOffer2);
+                    if (selectedOffer2.getEstado() == ExchangeStatus.PENDIENTE){
+                    System.out.println("1.- Aceptar Oferta");
+                    System.out.println("2.- Rechazar Oferta");
                     System.out.println("0.- Volver al menu anterior");
                     String inputIndex6 = scanner.nextLine();
                     int index6 = Integer.parseInt(inputIndex6);
 
                     if (index6 == 0) {
                         return;
+                    } else if (index6 == 1){
+                        selectedOffer2.aceptaroferta();
+                        System.out.println("Oferta Aceptada correctamente");
+                    } else if (index6 == 2){
+                        selectedOffer2.reject_offer();
+                        System.out.println("Oferta Rechazada Correctamente");
                     } else {
-                        System.out.println("Opcion no valida");
-                    }
+                        System.out.println("[!]Opcion no valida");
+                    }} else {
+                        System.out.println("0.- Volver al menu anterior");
+                        String inputIndex6 = scanner.nextLine();
+                        int index6 = Integer.parseInt(inputIndex6);
+
+                        if (index6 == 0) {
+                            return;
+                        } else {
+                            System.out.println("[!]Opcion no valida");
+                        }
+
+                        }
                     break;
                 case "C":
                     System.out.println("1.- Ver productos activos");

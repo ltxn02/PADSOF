@@ -1,7 +1,7 @@
 /**
  * Clase para representar las ofertas de intercambio
  *  @author Taha Ridda
- * @version 1.0
+ * @version 2.0
  *
  */
 
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 public class ExchangeOffer {
     private static int lastOfferId = 1;
-    private int offerId;
     private LocalDateTime createDate;
     private static Duration timeonHold = Duration.ofDays(7);
     private SecondHandProduct requestedProduct;
@@ -39,9 +38,6 @@ public class ExchangeOffer {
      * Constructor de la oferta de intercambio
      * @param requestedProduct producto solicitado
      * @param offeredProducts productos ofertados para el intercambio
-     * @param comprador usuario que solicita el intercambio
-     * @param recibidor usuario que recibe el intercambio
-     * @param limit limite de la oferta que puede estar pendiente
      * */
 
     public ExchangeOffer(SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client offeror){
