@@ -112,6 +112,14 @@ public class Application {
         System.out.println("User " + client.getUsername() + " registered successfully.");
     }
 
+    public static void registerEmployee(Employee employee) throws IOException {
+        if (users.containsKey(employee.getUsername())) {
+            throw new IOException("El nombre de usuario ya está en uso.");
+        }
+        users.put(employee.getUsername(), employee);
+        System.out.println("[+] Empleado " + employee.getUsername() + " registrado en el sistema.");
+    }
+
     public static ArrayList<Product> getCatalog() {
         return catalog;
     }

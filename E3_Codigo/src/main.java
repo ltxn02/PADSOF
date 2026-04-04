@@ -452,9 +452,8 @@ public class main {
 
             switch (opcion) {
                 case "1":
-                    System.out.println(">> (Simulando) Abriendo panel de empleados...");
+                    gestionarEmpleados(gestor);
                     break;
-                // Añadir aquí los demás cases
                 case "0":
                     cerrarSesion = true;
                     System.out.println("Cerrando sesión de administrador...");
@@ -750,5 +749,188 @@ public class main {
         } catch (NumberFormatException e) {
             System.out.println("[!] Error: Por favor, introduce un número válido.");
         }
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE EMPLEADOS ---
+
+    private static void gestionarEmpleados(Manager gestor) {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- GESTIÓN DE EMPLEADOS ---");
+            System.out.println("1.- Dar de alta un nuevo empleado");
+            System.out.println("2.- Dar de baja / reactivar empleado");
+            System.out.println("3.- Gestionar permisos de un empleado");
+            System.out.println("0.- Volver al menú anterior");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    altaEmpleado();
+                    break;
+                case "2":
+                    cambiarEstadoEmpleado();
+                    break;
+                case "3":
+                    gestionarPermisos();
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void altaEmpleado() {
+        System.out.println("\n--- ALTA DE EMPLEADO ---");
+        System.out.print("Nombre completo: ");
+        String fullname = scanner.nextLine();
+        System.out.print("DNI: ");
+        String dni = scanner.nextLine();
+        System.out.print("Username: ");
+        String username = scanner.nextLine();
+        System.out.print("Password: ");
+        String password = scanner.nextLine();
+        System.out.print("Fecha de nacimiento: ");
+        String birthdate = scanner.nextLine();
+        System.out.print("Email: ");
+        String email = scanner.nextLine();
+        System.out.print("Teléfono: ");
+        String phoneNumber = scanner.nextLine();
+        System.out.print("Salario mensual: ");
+
+        try {
+            double salary = Double.parseDouble(scanner.nextLine());
+
+            // Se crea activo por defecto (true)
+            Employee nuevoEmpleado = new Employee(username, password, fullname, dni, birthdate, email, phoneNumber, salary, true);
+            Application.registerEmployee(nuevoEmpleado);
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Error: El salario debe ser un número (ej: 1200.50).");
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+    }
+
+    private static void cambiarEstadoEmpleado() {
+        ArrayList<Employee> empleados = obtenerListaEmpleados();
+        if (empleados.isEmpty()) {
+            System.out.println("No hay empleados registrados en el sistema.");
+            return;
+        }
+
+        System.out.println("\n--- ESTADO DE EMPLEADOS ---");
+        for (int i = 0; i < empleados.size(); i++) {
+            Employee e = empleados.get(i);
+            String estado = e.isEnabled() ? "ACTIVO" : "DE BAJA";
+            System.out.println((i + 1) + ".- " + e.getUsername() + " | Estado actual: " + estado);
+        }
+
+        System.out.print("\nElige el número del empleado para cambiar su estado (0 para salir): ");
+        try {
+            int index = Integer.parseInt(scanner.nextLine());
+            if (index == 0) return;
+            if (index < 1 || index > empleados.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            Employee seleccionado = empleados.get(index - 1);
+            if (seleccionado.isEnabled()) {
+                seleccionado.desactivateEmployee();
+                System.out.println("[+] El empleado " + seleccionado.getUsername() + " ha sido DADO DE BAJA.");
+            } else {
+                seleccionado.activateEmployee();
+                System.out.println("[+] El empleado " + seleccionado.getUsername() + " ha sido REACTIVADO.");
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida.");
+        }
+    }
+
+    private static void gestionarPermisos() {
+        ArrayList<Employee> empleados = obtenerListaEmpleados();
+        if (empleados.isEmpty()) {
+            System.out.println("No hay empleados registrados en el sistema.");
+            return;
+        }
+
+        System.out.println("\n--- GESTIÓN DE PERMISOS ---");
+        for (int i = 0; i < empleados.size(); i++) {
+            System.out.println((i + 1) + ".- " + empleados.get(i).getUsername());
+        }
+
+        System.out.print("\nElige el número del empleado (0 para salir): ");
+        try {
+            int index = Integer.parseInt(scanner.nextLine());
+            if (index == 0) return;
+            if (index < 1 || index > empleados.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            Employee emp = empleados.get(index - 1);
+
+            System.out.println("\nPermisos actuales de " + emp.getUsername() + ": " + emp.permisosEmpleado());
+            System.out.println("1.- Añadir permiso");
+            System.out.println("2.- Quitar permiso");
+            System.out.print("Elige una opción: ");
+            String accion = scanner.nextLine();
+
+            if (!accion.equals("1") && !accion.equals("2")) {
+                System.out.println("[!] Acción no válida.");
+                return;
+            }
+
+            System.out.println("\nPermisos disponibles:");
+            Permission[] todosLosPermisos = Permission.values();
+            for (int i = 0; i < todosLosPermisos.length; i++) {
+                System.out.println((i + 1) + ".- " + todosLosPermisos[i]);
+            }
+
+            System.out.print("Elige el número del permiso: ");
+            int indexPermiso = Integer.parseInt(scanner.nextLine());
+
+            if (indexPermiso < 1 || indexPermiso > todosLosPermisos.length) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            Permission permisoSeleccionado = todosLosPermisos[indexPermiso - 1];
+
+            if (accion.equals("1")) {
+                if (!emp.permisosEmpleado().contains(permisoSeleccionado)) {
+                    emp.add_permisions(permisoSeleccionado);
+                    System.out.println("[+] Permiso " + permisoSeleccionado + " añadido a " + emp.getUsername());
+                } else {
+                    System.out.println("[!] El empleado ya tiene ese permiso.");
+                }
+            } else {
+                emp.delete_permisions(permisoSeleccionado);
+                System.out.println("[+] Permiso " + permisoSeleccionado + " retirado de " + emp.getUsername());
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida.");
+        }
+    }
+
+    /**
+     * Helper para filtrar el HashMap de la aplicación y obtener solo los empleados
+     */
+    private static ArrayList<Employee> obtenerListaEmpleados() {
+        ArrayList<RegisteredUser> usuarios = Application.getUsers();
+        ArrayList<Employee> empleados = new ArrayList<>();
+        for (RegisteredUser u : usuarios) {
+            if (u instanceof Employee) {
+                empleados.add((Employee) u);
+            }
+        }
+        return empleados;
     }
 }

@@ -6,10 +6,12 @@ public class Employee extends Staff{
     private boolean enabled;
     public ArrayList<EmployeeRoles> Rol;
     public ArrayList<Permission> permissions;
+
     public Employee(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber, double salary, boolean enabled){
         super(username, password, fullname, dni, birthdate, email, phoneNumber, salary);
         this.enabled = enabled;
         this.permissions= new ArrayList<>();
+        this.Rol = new ArrayList<>();
     }
     public void add_permisions(Permission e){
         this.permissions.add(e);
@@ -41,6 +43,9 @@ public class Employee extends Staff{
         this.enabled = false;
     }
 
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 
 
 }
