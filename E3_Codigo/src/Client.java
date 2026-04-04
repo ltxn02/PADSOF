@@ -62,6 +62,10 @@ public class Client extends RegisteredUser {
 		this.myReviews.add(review);
 	}
 	
+	public void registerSecondHandProduct() {
+		
+	}
+	
 	public void makeOffer() {
 		
 	}
