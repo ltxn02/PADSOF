@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  *
  */
 public class SecondHandProduct extends Item {
-	private static int lastId = 0;
+	private static int lastSecondHandProductId = 0;
 	private int secondHandId;
 	private boolean isAppraised;
 	private double appraisal;
@@ -37,8 +37,8 @@ public class SecondHandProduct extends Item {
 		this.condition = condition;
 		this.owner = owner;
 		this.dateadded = LocalDateTime.now();
-		this.secondHandId = SecondHandProduct.lastId;
-		SecondHandProduct.lastId++;
+		this.secondHandId = SecondHandProduct.lastSecondHandProductId;
+		SecondHandProduct.lastSecondHandProductId++;
 	}
 	
 	public SecondHandProduct(String name, String description, String picturePath, ItemType itemType, Client owner) {
@@ -56,7 +56,11 @@ public class SecondHandProduct extends Item {
 		this.isAppraised= true;
 
 	}
-
+	
+	public boolean isOwnedBy(Client owner) {
+		return this.owner == owner;
+	}
+	
 	public Client getOwner() {
 		return owner;
 	}
@@ -95,7 +99,7 @@ public class SecondHandProduct extends Item {
 		return super.getCategories();
 	}
 
-	public boolean estádisponible(){
+	public boolean isAvailable(){
 		return !this.isOffered;
 	}
 

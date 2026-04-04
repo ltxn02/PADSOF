@@ -9,8 +9,8 @@ public class Client extends RegisteredUser {
 	private List<SecondHandProduct> myProducts;
 	private List<Review> myReviews;
 	private List<Order> ordersMade;
-	private List<Exchangeoffer> offersMade;
-	private List<Exchangeoffer> offersReceived;
+	private List<ExchangeOffer> offersMade;
+	private List<ExchangeOffer> offersReceived;
 	
 	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		super(username, password, fullname, dni, birthdate, email, phoneNumber);
@@ -18,11 +18,11 @@ public class Client extends RegisteredUser {
 		this.shoppingCart = new ShoppingCart();
 		this.myOrders = new OrderHistoric();
 		this.myExchanges = new ExchangeHistoric();
-		this.myProducts = new ArrayList<SecondHandProduct>();
-		this.myReviews = new ArrayList<Review>();
-		this.ordersMade = new ArrayList<Order>();
-		this.offersMade = new ArrayList<Exchangeoffer>();
-		this.offersReceived = new ArrayList<Exchangeoffer>();
+		this.myProducts = new ArrayList<>();
+		this.myReviews = new ArrayList<>();
+		this.ordersMade = new ArrayList<>();
+		this.offersMade = new ArrayList<>();
+		this.offersReceived = new ArrayList<>();
 	}
 	
 	public void addToCart(NewProduct p, int quantity) throws IllegalArgumentException {
@@ -62,12 +62,25 @@ public class Client extends RegisteredUser {
 		this.myReviews.add(review);
 	}
 	
-	public void registerSecondHandProduct() {
-		
+	public void registerSecondHandProduct(String name, String description, String picturePath, ItemType itemType) {
+		SecondHandProduct product = new SecondHandProduct(name, description, picturePath, itemType, this);
+		this.myProducts.add(product);
 	}
 	
-	public void makeOffer() {
-		
+	public void removeSecondHandProduct(SecondHandProduct product) throws IllegalArgumentException {
+		if(!this.myProducts.contains(product)) {
+			throw new IllegalArgumentException("Invalid product, doesn't exist in your wallet");
+		}
+		this.myProducts.remove(product);
+	}
+	
+	public void makeOffer(SecondHandProduct requested, SecondHandProduct...offered) throws IllegalArgumentException {
+		if(this.productIsYours(offered) == false) {
+			throw new IllegalArgumentException("Invalid offered products, you must own them");
+		} else if(this.productIsAvailable(offered) == false || requested.isAvailable() == false) {
+			throw new IllegalArgumentException("Invalid products, they must be available");
+		}
+		ExchangeOffer offer = new ExchangeOffer(requested, new ArrayList<>(Arrays.asList(offered)), this);
 	}
 	/*
 	 *	public boolean addToCart(NewProduct p, quantity q) {
@@ -90,19 +103,19 @@ public class Client extends RegisteredUser {
 		return this.myOrders;
 	}
 
-	public void registrarOfertaRealizada(Exchangeoffer oferta) {
+	public void registrarOfertaRealizada(ExchangeOffer oferta) {
 		this.offersMade.add(oferta);
 	}
 
-	public List<Exchangeoffer> obtenerMisOfertasEnviadas(){
+	public List<ExchangeOffer> obtenerMisOfertasEnviadas(){
 
 		return this.offersMade;
 	}
-	public List<Exchangeoffer> obtenerMisOfertasRecibidos(){
+	public List<ExchangeOffer> obtenerMisOfertasRecibidos(){
 		return this.offersReceived;
 	}
 
-	public void registrarOfertaRecibida(Exchangeoffer oferta) {
+	public void registrarOfertaRecibida(ExchangeOffer oferta) {
 		this.offersReceived.add(oferta);
 	}
 
@@ -118,5 +131,21 @@ public class Client extends RegisteredUser {
 		return this.myProducts;
 	}
 
-
+	private boolean productIsAvailable(SecondHandProduct...products) {
+		for(SecondHandProduct s: products) {
+			if(s.isAvailable()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean productIsYours(SecondHandProduct...products) {
+		for(SecondHandProduct p: products) {
+			if(p.isOwnedBy(this) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

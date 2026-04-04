@@ -1,7 +1,7 @@
 import java.util.Date;
 
 public class Discount {
-    private static int lastId;
+    private static int lastDiscountId = 1;
     private int discountId;
     private double percentage;
     private String type;
@@ -19,6 +19,8 @@ public class Discount {
         this.description = description;
         this.from = from;
         this.to = to;
+        this.discountId = lastId;
+        Discount.lastId++;
     }
 
     public boolean isValid(Date today) {

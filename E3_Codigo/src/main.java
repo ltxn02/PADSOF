@@ -252,8 +252,8 @@ public class main {
     }
     private static void intercambiarProductos(Client c) {
         ArrayList<SecondHandProduct> productos = Application.getSecondHandProducts();
-        List<Exchangeoffer> ofertashechas = Application.getoffersmade(c);
-        List<Exchangeoffer> ofertasrecibidas = Application.getoffersreceived(c);
+        List<ExchangeOffer> ofertashechas = Application.getoffersmade(c);
+        List<ExchangeOffer> ofertasrecibidas = Application.getoffersreceived(c);
         List<SecondHandProduct> misproductos = c.getCarteraSegundaMano();
         List<SecondHandProduct> productosactivos = new ArrayList<>();
         List<SecondHandProduct> productosinactivos = new ArrayList<>();
@@ -278,7 +278,7 @@ public class main {
         for (int i = 0; i < productos.size(); i++) {
             SecondHandProduct p = productos.get(i);
             if (p.isAppraised()){
-            if(!p.getOwner().equals(c.getUsername())){
+            if(!p.isOwnedBy(c)){
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }}}
         System.out.println("\nA.- Ofertas realizadas | B.- Ofertas recibidas | C.- Mis Productos | 0.- Volver");
@@ -292,7 +292,7 @@ public class main {
             switch (inputIndex) {
                 case "A":
                     int i = 0;
-                    for (Exchangeoffer a : ofertashechas) {
+                    for (ExchangeOffer a : ofertashechas) {
                         System.out.println((i + 1) + "Fecha de la oferta: " + a.getCreateDate() + "Producto en oferta: " + a.getRequestedProduct());
                         i++;
                     }
@@ -310,7 +310,7 @@ public class main {
                         System.out.println("[!] Opción no válida. Oferta no encontrada.");
                         return;
                     }
-                    Exchangeoffer selectedOffer = ofertashechas.get(index2 - 1);
+                    ExchangeOffer selectedOffer = ofertashechas.get(index2 - 1);
                     System.out.println(selectedOffer);
                     System.out.println("0.- Volver al menu anterior");
                     String inputIndex3 = scanner.nextLine();
@@ -324,7 +324,7 @@ public class main {
                     break;
                 case "B":
                     int s = 0;
-                    for (Exchangeoffer a : ofertasrecibidas) {
+                    for (ExchangeOffer a : ofertasrecibidas) {
                         System.out.println((s + 1) + "Fecha de la oferta: " + a.getCreateDate() + "Producto en oferta: " + a.getRequestedProduct());
                         s++;
                     }
@@ -342,7 +342,7 @@ public class main {
                         System.out.println("[!] Opción no válida. Oferta no encontrada.");
                         return;
                     }
-                    Exchangeoffer selectedOffer2 = ofertasrecibidas.get(index5 - 1);
+                    ExchangeOffer selectedOffer2 = ofertasrecibidas.get(index5 - 1);
                     System.out.println(selectedOffer2);
                     System.out.println("0.- Volver al menu anterior");
                     String inputIndex6 = scanner.nextLine();

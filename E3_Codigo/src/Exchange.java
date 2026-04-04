@@ -6,16 +6,18 @@
  */
 
 public class Exchange {
-    public static int exchangeíd = 1;
-    public Exchangeoffer validateOffer;
+    public static int lastExchangeId = 1;
+    public int exchangeId;
+    public ExchangeOffer validateOffer;
     public Employee validatedBy;
     /**
      * Constructor para el intercambio
      * @param  offer la oferta de intercamcbio
      * */
-    public Exchange( Exchangeoffer offer){
-        this.exchangeíd++;
+    public Exchange(ExchangeOffer offer){
         this.validateOffer = offer;
+        this.exchangeId = Exchange.lastExchangeId;
+        Exchange.lastExchangeId++;
     }
     /**
      * Funcion para que el empleado valide un intercambio ofertado, ya aceptado

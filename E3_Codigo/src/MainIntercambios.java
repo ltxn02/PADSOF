@@ -23,7 +23,7 @@ public class MainIntercambios {
             ofrecidos.add(ps5);
 
             System.out.println("Creando oferta: taha ofrece PS5 a lidia por su Xbox...");
-            Exchangeoffer oferta = new Exchangeoffer( xbox, ofrecidos, taha, lidia, Duration.ofDays(2));
+            ExchangeOffer oferta = new ExchangeOffer( xbox, ofrecidos, taha, lidia, Duration.ofDays(2));
 
             System.out.println("\nEmpleado ivan valida el intercambio...");
             Exchange intercambio = new Exchange(oferta);
@@ -34,7 +34,7 @@ public class MainIntercambios {
                 System.out.println("Nuevo dueño de Xbox: " + xbox);
                 System.out.println("Nuevo dueño de PS5: " + ps5);
                 System.out.print("Productos liberados: " );
-                if (oferta.estátodoDisponible()){
+                if (oferta.isAllAvailable()){
                     System.out.println("Si");
                 } else{
                     System.out.println("No");

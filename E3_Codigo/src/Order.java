@@ -4,7 +4,7 @@ import java.util.Random;
 import es.uam.eps.padsof.telecard.*;
 
 public class Order {
-    private static int lastId = 1;
+    private static int lastOrderId = 1;
     private int orderId;
     private Instant orderedAt;
     private Client client;
@@ -18,9 +18,10 @@ public class Order {
         this.client = client;
         this.price = price;
         this.orderStatus = OrderStatus.SIN_PAGAR;
-        this.orderId = lastId++;
         this.pickupCode = generateCode();
         this.items = cartItems;
+        this.orderId = Order.lastOrderId;
+        Order.lastOrderId++;
     }
 
     public String generateCode() {

@@ -25,8 +25,8 @@ public class test_intercambios {
         ArrayList<SecondHandProduct> loteAna = new ArrayList<>();
         loteAna.add(iphone);
         loteAna.add(cascos);
-        Exchangeoffer ofertaAna = new Exchangeoffer(portatil, loteAna, ana, carlos, Duration.ofDays(3));
-        System.out.println("Productos de Ana bloqueados: (true)" + (!iphone.estádisponible() && !cascos.estádisponible()));
+        ExchangeOffer ofertaAna = new ExchangeOffer(portatil, loteAna, ana, carlos, Duration.ofDays(3));
+        System.out.println("Productos de Ana bloqueados: (true)" + (!iphone.isAvailable() && !cascos.isAvailable()));
 
         Exchange exchA = new Exchange(ofertaAna);
         if (exchA.validateExchange(ivan)) {
@@ -38,7 +38,7 @@ public class test_intercambios {
 
         ArrayList<SecondHandProduct> loteTaha = new ArrayList<>();
         loteTaha.add(ps5);
-        Exchangeoffer ofertaTaha = new Exchangeoffer( switchOled, loteTaha, taha, lidia, Duration.ofDays(1));
+        ExchangeOffer ofertaTaha = new ExchangeOffer( switchOled, loteTaha, taha, lidia, Duration.ofDays(1));
 
         Exchange exchB = new Exchange(ofertaTaha);
         boolean intentoAndres = exchB.validateExchange(andres);
@@ -47,14 +47,14 @@ public class test_intercambios {
 
         System.out.println("\n--------------------------------------------------\n");
 
-        System.out.println("Antes de rechazar, PS5 bloqueada?(true): " + (!ps5.estádisponible()));
+        System.out.println("Antes de rechazar, PS5 bloqueada?(true): " + (!ps5.isAvailable()));
         ofertaTaha.reject_offer();
-        System.out.println("Tras rechazo, PS5 disponible?(true): " + ps5.estádisponible());
+        System.out.println("Tras rechazo, PS5 disponible?(true): " + ps5.isAvailable());
         System.out.println("Estado final oferta Taha(rechazada): " + ofertaTaha);
 
         System.out.println("\n--------------------------------------------------\n");
 
-        Exchangeoffer ofertaCaduca = new Exchangeoffer( ps5, new ArrayList<>(), martin, taha, Duration.ZERO);
+        ExchangeOffer ofertaCaduca = new ExchangeOffer( ps5, new ArrayList<>(), martin, taha, Duration.ZERO);
 
         try { Thread.sleep(5); } catch (Exception e) {}
 
@@ -62,7 +62,7 @@ public class test_intercambios {
             ofertaCaduca.expired_offer();
             System.out.println("La oferta de Martín ha expirado correctamente.");
             System.out.println("Estado oferta (expirada): " + ofertaCaduca);
-            System.out.println("PS5 liberada para otros(si)?: " + ps5.estádisponible()); // Usando tu método de oferta
+            System.out.println("PS5 liberada para otros(si)?: " + ps5.isAvailable()); // Usando tu método de oferta
         }
 
         System.out.println("\n--- TEST FINALIZADO CON ÉXITO ---");

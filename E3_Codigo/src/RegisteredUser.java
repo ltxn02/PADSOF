@@ -21,7 +21,7 @@ public abstract class RegisteredUser extends User {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.myNotifications = new ArrayList<>();
-		this.userId = lastUserId;
+		this.userId = RegisteredUser.lastUserId;
 		RegisteredUser.lastUserId++;
 	}
 	

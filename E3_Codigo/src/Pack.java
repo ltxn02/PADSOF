@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Pack extends NewProduct {
-    private static int lastId = 1;
+    private static int lastPackId = 1;
     private int packId;
 
     // La relación de composición que viene del rombo negro en el UML
@@ -16,8 +16,8 @@ public class Pack extends NewProduct {
             throw new IllegalArgumentException("Error: Un Pack debe contener al menos 2 productos iniciales.");
         }
 
-        this.packId = Pack.lastId;
-        Pack.lastId++;
+        this.packId = Pack.lastPackId;
+        Pack.lastPackId++;
 
         // Inicializamos la lista de productos del pack
         this.products = new ArrayList<>(initialProducts);

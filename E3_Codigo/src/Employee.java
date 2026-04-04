@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Employee extends Staff{
+public class Employee extends Staff {
     private boolean enabled;
     public ArrayList<EmployeeRoles> Rol;
     public ArrayList<Permission> permissions;

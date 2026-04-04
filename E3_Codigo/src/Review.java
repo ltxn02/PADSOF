@@ -1,4 +1,6 @@
 public class Review extends BaseElement{
+	private static int lastReviewId = 1;
+	private int reviewId;
     private int rating;
     private String comment;
     private NewProduct product;
@@ -12,6 +14,8 @@ public class Review extends BaseElement{
         this.comment = comment;
         this.product = product;
         this.addReviewToProduct(product);
+        this.reviewId = Review.lastReviewId;
+        Review.lastReviewId++;
     }
 
     public int getRating() {

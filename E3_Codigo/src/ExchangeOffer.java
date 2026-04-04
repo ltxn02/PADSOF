@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-public class Exchangeoffer {
-    private static int offerid= 1;
+public class ExchangeOffer {
+    private static int lastOfferId = 1;
+    private int offerId;
     private LocalDateTime createDate;
-    private static Duration timeonHold;
+    private static Duration timeonHold = Duration.ofDays(7);
     private SecondHandProduct requestedProduct;
     private ArrayList<SecondHandProduct>  offeredProducts;
     private Client comprador;
@@ -43,9 +44,8 @@ public class Exchangeoffer {
      * @param limit limite de la oferta que puede estar pendiente
      * */
 
-    public Exchangeoffer( SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client comprador, Client recibidor, Duration limit){
+    public ExchangeOffer( SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client comprador, Client recibidor, Duration limit){
         this.Estado= ExchangeStatus.PENDIENTE;
-        this.offerid++;
         this.offeredProducts= offeredProducts;
         this.requestedProduct= requestedProduct;
         this.comprador= comprador;
@@ -58,6 +58,9 @@ public class Exchangeoffer {
         }
         this.recibidor.registrarOfertaRealizada(this);
         this.recibidor.registrarOfertaRecibida(this);
+        
+        this.offerId = ExchangeOffer.lastId;
+        ExchangeOffer.lastId++;
     }
     /**
      * Funcion para cancelar una oferta sobre un producto
@@ -127,12 +130,12 @@ public class Exchangeoffer {
         }
         return true;
     }
-    public boolean estátodoDisponible(){
-        if(!this.requestedProduct.estádisponible()){
+    public boolean isAllAvailable(){
+        if(!this.requestedProduct.isAvailable()){
             return false;
         }
         for(SecondHandProduct p: offeredProducts){
-            if (!p.estádisponible()){
+            if (!p.isAvailable()){
                 return false;
             }
         }

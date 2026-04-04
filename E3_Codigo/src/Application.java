@@ -132,16 +132,16 @@ public class Application {
         return secondHandProducts;
     }
 
-    public static List<Exchangeoffer> getoffersmade(Client c){
-        List<Exchangeoffer> ofertas = new ArrayList<>();
-        for (Exchangeoffer o: c.obtenerMisOfertasEnviadas()) {
+    public static List<ExchangeOffer> getoffersmade(Client c){
+        List<ExchangeOffer> ofertas = new ArrayList<>();
+        for (ExchangeOffer o: c.obtenerMisOfertasEnviadas()) {
             ofertas.add(o);
         }
         return ofertas;
     }
-    public static List<Exchangeoffer> getoffersreceived(Client c){
-        List<Exchangeoffer> ofertas = new ArrayList<>();
-        for (Exchangeoffer o: c.obtenerMisOfertasRecibidos()) {
+    public static List<ExchangeOffer> getoffersreceived(Client c){
+        List<ExchangeOffer> ofertas = new ArrayList<>();
+        for (ExchangeOffer o: c.obtenerMisOfertasRecibidos()) {
             ofertas.add(o);
         }
         return ofertas;
