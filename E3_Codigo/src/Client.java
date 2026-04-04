@@ -106,6 +106,13 @@ public class Client extends RegisteredUser {
 		return this.myProducts;
 	}
 
+	public void addMyProduct(SecondHandProduct p) {
+		this.myProducts.add(p);
+	}
+
+	public List<SecondHandProduct> getMyProducts() {
+		return this.myProducts;
+	}
 
 
 }

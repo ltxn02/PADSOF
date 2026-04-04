@@ -135,7 +135,7 @@ public class main {
             System.out.println("\n--- PANEL DE CLIENTE: " + cliente.getUsername() + " ---");
             System.out.println("1.- Ver catálogo de productos y comprar");
             System.out.println("2.- Ver mi carrito");
-            System.out.println("3.- Ver Productos de segunda mano");
+            System.out.println("3.- Ver productos de segunda mano");
             System.out.println("4.- Gestionar mi cartera de segunda mano");
             System.out.println("5.- Ver mis notificaciones");
             System.out.println("6.- Ver recomendaciones personalizadas");
@@ -155,6 +155,9 @@ public class main {
                 case "3":
                     System.out.println("Productos de Segunda mano:" );
                     intercambiarProductos(cliente);
+                    break;
+                case "4":
+                    gestionarCartera(cliente);
                     break;
                 case "6":
                     mostrarRecomendaciones(cliente);
@@ -595,5 +598,93 @@ public class main {
             // Si la librería lanza excepción (tarjeta falsa, sin internet...), el pedido se cancela
             System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
         }
+    }
+
+    /**
+     * Submenú para gestionar los productos de segunda mano del cliente
+     */
+    private static void gestionarCartera(Client cliente) {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- MI CARTERA DE SEGUNDA MANO ---");
+            System.out.println("1.- Ver mis productos subidos");
+            System.out.println("2.- Subir un nuevo producto para valorar");
+            System.out.println("0.- Volver al menú anterior");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    verMisProductosSegundaMano(cliente);
+                    break;
+                case "2":
+                    subirProductoSegundaMano(cliente);
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void verMisProductosSegundaMano(Client cliente) {
+        System.out.println("\n--- MIS PRODUCTOS DE SEGUNDA MANO ---");
+        List<SecondHandProduct> misProductos = cliente.getMyProducts();
+
+        if (misProductos.isEmpty()) {
+            System.out.println("Todavía no has subido ningún producto.");
+            return;
+        }
+
+        for (SecondHandProduct p : misProductos) {
+            System.out.println(p.toString());
+            System.out.println("--------------------------------");
+        }
+    }
+
+    private static void subirProductoSegundaMano(Client cliente) {
+        System.out.println("\n--- SUBIR NUEVO PRODUCTO ---");
+
+        System.out.print("Nombre del producto: ");
+        String nombre = scanner.nextLine();
+
+        System.out.print("Descripción breve: ");
+        String descripcion = scanner.nextLine();
+
+        System.out.print("Ruta de la foto (ej. img/manga.jpg): ");
+        String foto = scanner.nextLine();
+
+        // 1. Elegir Tipo de Producto (Enum ItemType)
+        System.out.println("Tipo de producto (1. COMIC, 2. GAME, 3. FIGURINE): ");
+        String tipoInput = scanner.nextLine();
+        ItemType tipo = ItemType.COMIC; // Por defecto
+        if (tipoInput.equals("2")) tipo = ItemType.GAME;
+        if (tipoInput.equals("3")) tipo = ItemType.FIGURINE;
+
+        // 2. Elegir Condición (Enum Condition)
+        System.out.println("Estado de conservación (1. PERFECTO, 2. MUY_BUENO, 3. USO_LIGERO, 4. USO_EVIDENTE, 5. DAÑADO): ");
+        String condInput = scanner.nextLine();
+        Condition condicion = Condition.PERFECTO; // Por defecto
+        switch (condInput) {
+            case "2": condicion = Condition.MUY_BUENO; break;
+            case "3": condicion = Condition.USO_LIGERO; break;
+            case "4": condicion = Condition.USO_EVIDENTE; break;
+            case "5": condicion = Condition.DAÑADO; break;
+        }
+
+        // 3. Creamos el producto usando tu constructor.
+        // Pasamos 0.0 al precio y false a isAppraised porque la tienda aún no lo ha tasado.
+        SecondHandProduct nuevoProducto = new SecondHandProduct(
+                nombre, descripcion, foto, 0.0, false, tipo, condicion, cliente
+        );
+
+        // 4. Lo añadimos a la lista personal del cliente y a la lista general de la app
+        cliente.addMyProduct(nuevoProducto);
+        Application.addSecondHandProduct(nuevoProducto);
+
+        System.out.println("\n[+] Producto subido con éxito. Un empleado lo tasará pronto.");
     }
 }

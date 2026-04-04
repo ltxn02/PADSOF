@@ -6,6 +6,7 @@ import java.util.List;
 public class Application {
     private static HashMap<String, RegisteredUser> users = new HashMap<>();
     private static HashMap<String, Notification> notifications = new HashMap<>();
+    private static ArrayList<SecondHandProduct> secondHandProducts = new ArrayList<>();
 
     // Lista para guardar el catálogo de productos de la tienda
     private static ArrayList<Product> catalog = new ArrayList<>();
@@ -114,14 +115,15 @@ public class Application {
     public static ArrayList<Product> getCatalog() {
         return catalog;
     }
+
     public static ArrayList<RegisteredUser> getUsers() {
         return new ArrayList<>(users.values());
     }
-    public static ArrayList<SecondHandProduct> getSecondHandProducts(){
-        ArrayList<SecondHandProduct> listaProductos = new ArrayList<>();
 
-        return listaProductos;
+    public static ArrayList<SecondHandProduct> getSecondHandProducts() {
+        return secondHandProducts;
     }
+
     public static List<Exchangeoffer> getoffersmade(Client c){
         List<Exchangeoffer> ofertas = new ArrayList<>();
         for (Exchangeoffer o: c.obtenerMisOfertasEnviadas()) {
@@ -135,6 +137,10 @@ public class Application {
             ofertas.add(o);
         }
         return ofertas;
+    }
+
+    public static void addSecondHandProduct(SecondHandProduct p) {
+        secondHandProducts.add(p);
     }
 
 }
