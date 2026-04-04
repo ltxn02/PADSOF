@@ -72,8 +72,24 @@ public class Order {
     public List<CartItem> getItems() {
         return items;
     }
+    
+    public boolean hasProduct(NewProduct p) {
+    	for(CartItem c: this.items) {
+    		if(c.isProduct(p)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 
     public String getPickupCode() {
         return this.pickupCode;
+    }
+    
+    public void cancelOrder() throws IllegalStateException {
+    	if(this.orderStatus == OrderStatus.EN_PREPARACION || this.orderStatus == OrderStatus.ENTREGADO) {
+    		throw new IllegalStateException("A paid order cannot be cancelled");
+    	}
+    	this.orderStatus = OrderStatus.CANCELADO;
     }
 }

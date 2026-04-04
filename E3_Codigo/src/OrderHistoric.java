@@ -26,4 +26,17 @@ public class OrderHistoric {
     public void removeOrder(Order order) {
         this.orders.remove(order);
     }
+    
+    public boolean hasOrder(Order order) {
+    	return this.orders.contains(order);
+    }
+    
+    public boolean hasProduct(NewProduct p) {
+    	for(Order order: this.orders) {
+    		if(order.hasProduct(p)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 }

@@ -67,6 +67,10 @@ public abstract class NewProduct extends Item {
     	return super.getName().toLowerCase().contains(str.toLowerCase());
     }
     
+    public void addReview(Review review) {
+    	this.reviews.add(review);
+    }
+    
     @Override
     public double getPrice() {
         return super.getPrice();

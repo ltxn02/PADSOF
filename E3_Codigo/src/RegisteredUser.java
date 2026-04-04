@@ -22,7 +22,7 @@ public abstract class RegisteredUser extends User {
 		this.phoneNumber = phoneNumber;
 		this.myNotifications = new ArrayList<>();
 		this.userId = lastUserId;
-		lastUserId++;
+		RegisteredUser.lastUserId++;
 	}
 	
 	public boolean login(String username, String password) {

@@ -35,9 +35,8 @@ public class Client extends RegisteredUser {
 	
 	public String buyCart(String cardNumber) {
 		List<CartItem> orderedItems = this.shoppingCart.getCartItems();
-		double cost = this.shoppingCart.getPrice();
-		/* order necesita tres argumentos: cliente, shoppingcart y precio, en esta linea se le esta pasando cartitem y precio*/
-		Order order = new Order(this, this.shoppingCart.getCartItems(), cost);
+		double price = this.shoppingCart.getPrice();
+		Order order = new Order(this, orderedItems, price);
 		
 		this.ordersMade.add(order);
 		if(order.procesarPago(cardNumber)) {
@@ -46,6 +45,21 @@ public class Client extends RegisteredUser {
 		}
 		
 		return null;
+	}
+	
+	public void cancelOrder(Order order) throws IllegalArgumentException, IllegalStateException {
+		if(!this.myOrders.hasOrder(order)) {
+			throw new IllegalArgumentException("Invalid order");
+		}
+		order.cancelOrder();
+	}
+	
+	public void reviewProduct(NewProduct product, int rating, String comment) throws IllegalArgumentException {
+		if(this.myOrders.hasProduct(product) == false) {
+			throw new IllegalArgumentException("Invalid product, not bought by the client");
+		}
+		Review review = new Review(rating, comment, product, this);
+		this.myReviews.add(review);
 	}
 	
 	public void makeOffer() {

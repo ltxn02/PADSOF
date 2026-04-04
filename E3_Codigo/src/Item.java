@@ -19,6 +19,11 @@ public abstract class Item extends BaseElement{
         this.description = description;
         this.picturePath = picturePath;
         this.categories = categories;
+        this.lastAddedAt = null;
+    }
+    
+    public Item(String name, String description, double price, String picturePath) {
+    	this(name, description, price, picturePath, new ArrayList<Category>());
     }
 
     protected void registerTime() {
