@@ -37,7 +37,11 @@ public abstract class Item extends BaseElement{
     public boolean isExpired(Duration time) {
         return this.lastAddedAt.plus(time).isBefore(Instant.now());
     }
-
+    
+    protected void setPrice(double price) {
+    	this.price = price;
+    }
+    
     public double getPrice(){
         return this.price;
     }
@@ -45,8 +49,22 @@ public abstract class Item extends BaseElement{
     public String getName(){
         return this.name;
     }
-
+    
+    public void addCategory(Category category) throws IllegalArgumentException {
+    	if(this.categories.contains(category)) {
+    		throw new IllegalArgumentException("Invalid category, already exists");
+    	}
+    	this.categories.add(category);
+    }
+    
     public ArrayList<Category> getCategories() {
         return categories;
+    }
+    
+    public StringBuilder itemInfo() {
+    	StringBuilder res = new StringBuilder();
+    	res.append("\nName: " + this.name + "\n\t'" + this.description + "'\n");
+    	res.append("\tCategories: " + this.categories + "\n");
+    	return res;
     }
 }

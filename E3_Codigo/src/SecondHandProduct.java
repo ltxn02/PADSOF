@@ -7,21 +7,16 @@ import java.time.LocalDateTime;
  * @version 1.0
  *
  */
-public class SecondHandProduct {
-	private String Name;
-	private double price;
-	private String Foto;
-	private String description;
-	private Employee empleado;
-	private ArrayList<Review> reviews;
-	private static int secondHandId = 0;
+public class SecondHandProduct extends Item {
+	private static int lastId = 0;
+	private int secondHandId;
 	private boolean isAppraised;
-	private double Appraised;
+	private double appraisal;
 	private boolean isOffered;
+	private List<Review> reviews;
 	private Client owner;
-	private ItemType Itemtype;
+	private ItemType itemType;
 	private Condition condition;
-	private ArrayList<Category> categories;
 	private LocalDateTime dateadded;
 
 	/**
@@ -29,49 +24,36 @@ public class SecondHandProduct {
 	 * @param description descripcion del producto
 	 * @param price precio del producto
 	 * @param isAppraised estado de revision del producto
-	 * @param Owner dueño del producto
-	 * @param ItemType tipo de producto
+	 * @param owner dueño del producto
+	 * @param itemType tipo de producto
 	 *
 	 * */
-	public SecondHandProduct(String name, String description, String Foto, double price, boolean isAppraised, ItemType ItemType, Condition condition, Client Owner) {
-		this.Foto = Foto;
-		this.Name = name;
-		this.price = price;
-		this.secondHandId++;
+	public SecondHandProduct(String name, String description, String picturePath, double price, boolean isAppraised, ItemType itemType, Condition condition, Client owner) {
+		super(name, description, price, picturePath);
 		this.isAppraised = isAppraised;
 		this.isOffered = false;
-		this.Itemtype = ItemType;
+		this.reviews = new ArrayList<>();
+		this.itemType = itemType;
 		this.condition = condition;
-		this.owner = Owner;
-		this.isAppraised= false;
-		this.description= description;
-		this.isAppraised = false;
-		this.empleado= null;
-		this.categories= new ArrayList<>();
+		this.owner = owner;
 		this.dateadded = LocalDateTime.now();
+		this.secondHandId = SecondHandProduct.lastId;
+		SecondHandProduct.lastId++;
+	}
+	
+	public SecondHandProduct(String name, String description, String picturePath, ItemType itemType, Client owner) {
+		this(name, description, picturePath, 0, false, itemType, null, owner);
 	}
 
-	public void add_categories(Category e){
-		this.categories.add(e);
-	}
 	/**
 	 * Funcion para valorar un producto por un empleado
-	 * @param e empleado que debe valorar el producto
-	 * @param p producto que se valora
 	 * @param c condicion del producto que se valorará
 	 * @param value valor del producto
 	 * */
-
-
-	public boolean AppraisedSecondHand(Employee e,SecondHandProduct p, Condition c, double value){
-		if (e.permissions.contains(Permission.EXCH_PRODUCT_APPRAISE)){
-			p.condition = c;
-			p.price = value;
-			p.isAppraised= true;
-			p.empleado= e;
-			return true;
-		}
-		return false;
+	public void appraiseSecondHand(Condition c, double value) {
+		this.condition = c;
+		this.setPrice(value);
+		this.isAppraised= true;
 
 	}
 
@@ -82,35 +64,35 @@ public class SecondHandProduct {
 	public LocalDateTime getDateadded() {
 		return dateadded;
 	}
-
-	public void change_offered_status(boolean a){
-		this.isOffered= a;
+	
+	public void change_offered_status(boolean offered){
+		this.isOffered = offered;
 	}
 
 
 	/**
 	 * @author Taha Ridda En Naji
-	 * @param new_ownwer nuevo propietario del producto intercambiado
+	 * @param new_owner nuevo propietario del producto intercambiado
 	 *
 	 * */
-	public boolean change_owners( Client new_ownwer){
-		this.owner= new_ownwer;
-
-		return true;
+	public void change_owners(Client new_owner) {
+		this.owner = new_owner;
 	}
+	
 	public String toString(){
-		return "\nNombre: " + this.Name
-				+ "\nFecha de Añadido:  " + this.dateadded
-				+	"\nCategorias: " + this.categories
-					+ "\nDescripcion:  " + this.description
-				+	"\nValorado en: " + this.price
-						+ "\nCondicion:  " + this.condition
-				+ "\n Empleado que valoró:" + this.empleado;
+		StringBuilder res = super.itemInfo();
+		if(isAppraised) {
+			res.append("\tValued on: " + this.appraisal + "\n");
+			res.append("\t\tCondition: " + this.condition);
+		} else {
+			res.append("\tPending appraisal\n");
+		}
+		return res.toString();
 
 	}
 
 	public ArrayList<Category> getCategories() {
-		return categories;
+		return super.getCategories();
 	}
 
 	public boolean estádisponible(){
@@ -132,10 +114,10 @@ public class SecondHandProduct {
 	}
 
 	public String getName() {
-		return Name;
+		return super.getName();
 	}
 
 	public double getPrice() {
-		return price;
+		return super.getPrice();
 	}
 }
