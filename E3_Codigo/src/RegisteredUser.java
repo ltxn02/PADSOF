@@ -106,4 +106,9 @@ public abstract class RegisteredUser extends User {
 	public List<Notification> getMyNotifications() {
 		return this.myNotifications;
 	}
+
+	// Metodo para añadir una notificación a la bandeja de entrada
+	public void addNotification(Notification n) {
+		this.myNotifications.add(n);
+	}
 }

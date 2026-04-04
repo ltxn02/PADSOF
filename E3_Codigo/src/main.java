@@ -122,6 +122,21 @@ public class main {
         try {
             Application.registerClient(nuevoCliente);
             System.out.println(">> Usuario " + username + " registrado correctamente. Ya puedes iniciar sesión.");
+
+            // --- CÓDIGO DE PRUEBA DE NOTIFICACIONES ---
+            // 1. Creamos la lista de destinatarios (el constructor de Notification lo pide)
+            ArrayList<RegisteredUser> destinatarios = new ArrayList<>();
+            destinatarios.add(nuevoCliente);
+
+            // 2. Creamos el mensaje largo para probar que el preview de tu compañera funciona (corta a los 20 caracteres)
+            String mensajeLargo = "¡Bienvenido a Rongero! Esperamos que disfrutes comprando y vendiendo tus productos frikis de segunda mano. Esto es texto extra para ver cómo se ve un mensaje largo.Esto es texto extra para ver cómo se ve un mensaje largo.Esto es texto extra para ver cómo se ve un mensaje largo.Esto es texto extra para ver cómo se ve un mensaje largo.";
+            Notification bienvenida = new Notification(mensajeLargo, destinatarios);
+
+            // 3. Se la metemos en la bandeja al cliente
+            nuevoCliente.addNotification(bienvenida);
+
+            // --- FIN CÓDIGO DE PRUEBA ---
+
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
