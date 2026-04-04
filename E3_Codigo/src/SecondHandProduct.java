@@ -3,8 +3,8 @@ import java.util.List;
 import java.time.LocalDateTime;
 /**
  * Clase para representar los productos de segunda mano
- * @author Taha Ridda
- * @version 1.0
+ * @author Taha Ridda En Naji
+ * @version 2.0
  *
  */
 public class SecondHandProduct extends Item {
@@ -13,7 +13,6 @@ public class SecondHandProduct extends Item {
 	private boolean isAppraised;
 	private double appraisal;
 	private boolean isOffered;
-	private List<Review> reviews;
 	private Client owner;
 	private ItemType itemType;
 	private Condition condition;
@@ -32,7 +31,6 @@ public class SecondHandProduct extends Item {
 		super(name, description, price, picturePath);
 		this.isAppraised = isAppraised;
 		this.isOffered = false;
-		this.reviews = new ArrayList<>();
 		this.itemType = itemType;
 		this.condition = condition;
 		this.owner = owner;
@@ -105,16 +103,6 @@ public class SecondHandProduct extends Item {
 
 	public boolean isAppraised() {
 		return isAppraised;
-	}
-
-	public int calculateRating(){
-		int rating = 0;
-		for (Review review : reviews){
-			rating += review.getRating();
-		}
-
-		rating /= reviews.size();
-		return rating;
 	}
 
 	public String getName() {
