@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Employee extends Staff {
     private boolean enabled;
@@ -22,14 +20,18 @@ public class Employee extends Staff {
     }
     
     
+    public void loadProduct(ItemType itemType, Map<String, Object> data) {
+    	
+    }
+    
     /* FALTA COMPROBAR QUE TIPO DE PRODUCTO ES ENTRE Game, Comic, Figurine Y Pack (NO SE PUEDE CREAR OBJETO DE TIPO NEWPRODUCT O PRODUCT)*/
-    /*public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
+    public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
     	catalog.addProductOnSale(name, description, price, picturePath, stock, categories, reviews);
     }
     
     public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock) {
     	this.loadProduct(catalog, name, description, price, picturePath, stock, new ArrayList<Category>(), new ArrayList<Review>());
-    }*/
+    }
     
     // public void loadProduct(FILE)
     
