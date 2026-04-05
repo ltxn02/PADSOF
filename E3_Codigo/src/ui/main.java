@@ -1328,8 +1328,10 @@ public class main {
 
             System.out.print("Nombre: "); data.put("name", scanner.nextLine());
             System.out.print("Descripción: "); data.put("description", scanner.nextLine());
-            System.out.print("Precio: "); data.put("price", scanner.nextLine());
-            System.out.print("Stock inicial: "); data.put("stock", scanner.nextLine());
+
+            // Convertimos precio y stock a sus tipos correspondientes
+            System.out.print("Precio: "); data.put("price", Double.parseDouble(scanner.nextLine()));
+            System.out.print("Stock inicial: "); data.put("stock", Integer.parseInt(scanner.nextLine()));
             System.out.print("Ruta Imagen (ej: img/test.jpg): "); data.put("picturePath", scanner.nextLine());
 
             System.out.println("Tipo (1: COMIC, 2: GAME, 3: FIGURINE): ");
@@ -1338,17 +1340,26 @@ public class main {
 
             if (tipo.equals("1")) {
                 itemType = utils.ItemType.COMIC;
-                System.out.print("Nº de Páginas: "); data.put("nPages", scanner.nextLine());
+                System.out.print("Nº de Páginas: "); data.put("nPages", Integer.parseInt(scanner.nextLine()));
                 System.out.print("Editorial: "); data.put("publisher", scanner.nextLine());
-                System.out.print("Año Publicación: "); data.put("publicationYear", scanner.nextLine());
+                System.out.print("Año Publicación: "); data.put("publicationYear", Integer.parseInt(scanner.nextLine()));
+                System.out.print("Autores (separados por comas): ");
+                data.put("writtenBy", new ArrayList<>(java.util.Arrays.asList(scanner.nextLine().split(","))));
+
             } else if (tipo.equals("2")) {
                 itemType = utils.ItemType.GAME;
-                System.out.print("Nº de Jugadores: "); data.put("nPlayers", scanner.nextLine());
+                System.out.print("Nº de Jugadores: "); data.put("nPlayers", Integer.parseInt(scanner.nextLine()));
+                System.out.print("Mecánicas (separadas por comas): ");
+                data.put("mechanics", new ArrayList<>(java.util.Arrays.asList(scanner.nextLine().split(","))));
+                System.out.print("Rango de edad (ej: 10-99): ");
+                String[] edades = scanner.nextLine().split("-");
+                data.put("ageRange", new utils.AgeRange(Integer.parseInt(edades[0]), Integer.parseInt(edades[1])));
+
             } else if (tipo.equals("3")) {
                 itemType = utils.ItemType.FIGURINE;
-                System.out.print("Altura (cm): "); data.put("height", scanner.nextLine());
-                System.out.print("Anchura (cm): "); data.put("width", scanner.nextLine());
-                System.out.print("Profundidad (cm): "); data.put("depth", scanner.nextLine());
+                System.out.print("Altura (cm): "); data.put("height", Double.parseDouble(scanner.nextLine()));
+                System.out.print("Anchura (cm): "); data.put("width", Double.parseDouble(scanner.nextLine()));
+                System.out.print("Profundidad (cm): "); data.put("depth", Double.parseDouble(scanner.nextLine()));
                 System.out.print("Material: "); data.put("material", scanner.nextLine());
                 System.out.print("Franquicia: "); data.put("franchise", scanner.nextLine());
             } else {
@@ -1356,11 +1367,26 @@ public class main {
                 return;
             }
 
-            empleado.loadProduct(itemType, data);
-            System.out.println("[+] Producto añadido al catálogo manualmente.");
+            // --- Inyectamos la categoría por defecto para cumplir con la regla de NewProduct ---
+            ArrayList<Category> defaultCategories = new ArrayList<>();
+            defaultCategories.add(new Category(itemType.toString(), new ArrayList<>()));
+            data.put("categories", defaultCategories);
 
+            Catalog catalogoVirtual = new Catalog(
+                    Application.getGlobalCategories(),
+                    new ArrayList<>(),
+                    Application.getCatalog()
+            );
+
+            empleado.loadProduct(catalogoVirtual, itemType, data);
+            System.out.println("[+] Producto añadido al catálogo con éxito.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Error: Has introducido texto donde se esperaba un número.");
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("[!] Error inesperado: " + e.getMessage());
         }
     }
 
@@ -1370,43 +1396,62 @@ public class main {
         String ruta = scanner.nextLine();
         if (ruta.trim().isEmpty()) ruta = "fileLoadBulkTest";
 
-        // Usamos try-with-resources para asegurar que el archivo se cierra solo
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(ruta))) {
             String linea;
             int procesados = 0;
 
+            Catalog catalogoVirtual = new Catalog(Application.getGlobalCategories(), new ArrayList<>(), Application.getCatalog());
+
             while ((linea = br.readLine()) != null) {
                 String[] partes = linea.split(";");
-                if (partes.length < 6) continue; // Saltamos líneas vacías o mal formateadas
+                if (partes.length < 6) continue;
 
                 utils.ItemType type = utils.ItemType.valueOf(partes[0].trim().toUpperCase());
 
                 java.util.Map<String, Object> data = new java.util.HashMap<>();
                 data.put("name", partes[1]);
                 data.put("description", partes[2]);
-                data.put("price", partes[3]);
-                data.put("stock", partes[4]);
+
+                // Convertimos precio y stock a números
+                data.put("price", Double.parseDouble(partes[3]));
+                data.put("stock", Integer.parseInt(partes[4]));
                 data.put("picturePath", partes[5]);
 
-                // Según el formato de fileLoadBulkTest, leemos los atributos extra
+                // Según el formato de fileLoadBulkTest, leemos los atributos extra y convertimos listas
                 if (type == utils.ItemType.COMIC) {
-                    data.put("nPages", partes[6]);
+                    data.put("nPages", Integer.parseInt(partes[6]));
                     data.put("publisher", partes[7]);
-                    data.put("publicationYear", partes[8]);
+                    data.put("publicationYear", Integer.parseInt(partes[8]));
+                    data.put("writtenBy", new ArrayList<>(java.util.Arrays.asList(partes[9].split(","))));
+
                 } else if (type == utils.ItemType.GAME) {
-                    data.put("nPlayers", partes[6]);
+                    data.put("nPlayers", Integer.parseInt(partes[6]));
+                    data.put("mechanics", new ArrayList<>(java.util.Arrays.asList(partes[7].split(","))));
+                    String[] edades = partes[8].split("-");
+                    data.put("ageRange", new utils.AgeRange(Integer.parseInt(edades[0]), Integer.parseInt(edades[1])));
+
                 } else if (type == utils.ItemType.FIGURINE) {
-                    data.put("height", partes[6]);
-                    data.put("width", partes[7]);
-                    data.put("depth", partes[8]);
+                    data.put("height", Double.parseDouble(partes[6]));
+                    data.put("width", Double.parseDouble(partes[7]));
+                    data.put("depth", Double.parseDouble(partes[8]));
                     data.put("material", partes[9]);
                     data.put("franchise", partes[10]);
+
+                } else if (type == utils.ItemType.PACK) {
+                    // Usamos la función de Taha para buscar los productos que van dentro del pack
+                    data.put("products", catalogoVirtual.packProducts(partes[6]));
                 }
 
-                empleado.loadProduct(type, data);
+                // Inyectamos la categoría obligatoria en el Map
+                ArrayList<Category> defaultCategories = new ArrayList<>();
+                defaultCategories.add(new Category(type.toString(), new ArrayList<>()));
+                data.put("categories", defaultCategories);
+
+                // Delegamos en su código
+                empleado.loadProduct(catalogoVirtual, type, data);
                 procesados++;
             }
-            System.out.println("[+] ¡Subida masiva completada! Se han cargado " + procesados + " productos.");
+            System.out.println("[+] ¡Subida masiva completada! Se han cargado " + procesados + " productos mediante Catalog.");
 
         } catch (java.io.FileNotFoundException e) {
             System.out.println("[!] No se ha encontrado el archivo: " + ruta);

@@ -93,9 +93,12 @@ public abstract class Item extends BaseElement{
     	res.append("  Categories: " + this.categories + "\n");
     	return res.toString();
     }
-    
+
     public boolean isNamed(String name) {
-    	if(this.name == name) return true;
-    	return false;
+        // Usamos equalsIgnoreCase para comparar el texto real, ignorando mayúsculas/minúsculas
+        if (this.name != null && this.name.equalsIgnoreCase(name.trim())) {
+            return true;
+        }
+        return false;
     }
 }
