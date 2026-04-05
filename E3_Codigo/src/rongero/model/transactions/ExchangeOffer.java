@@ -1,166 +1,168 @@
-/**
- * Clase para representar las ofertas de intercambio
- *  @author Taha Ridda
- * @version 2.0
- *
- */
+package model.transactions;
 
+import model.catalog.SecondHandProduct;
+import model.user.Client;
+import util.ExchangeStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 
+/**
+ * Clase que gestiona una oferta de intercambio entre dos clientes.
+ * Contiene la lógica para proponer un lote de productos a cambio de uno deseado,
+ * controlando los estados de aceptación, rechazo y expiración.
+ * @author Taha Ridda En Naji
+ * @version 3.0
+ */
 public class ExchangeOffer {
     private static int lastOfferId = 1;
-    private int offerId;
-    private LocalDateTime createDate;
-    private static Duration timeonHold = Duration.ofDays(7);
-    private SecondHandProduct requestedProduct;
-    private List<SecondHandProduct> offeredProducts;
-    private Client offeror;
-    private Client receptor;
+    private final int offerId;
+    private final LocalDateTime createDate;
+    private static Duration timeOnHold = Duration.ofDays(7);
+
+    private final SecondHandProduct requestedProduct;
+    private final List<SecondHandProduct> offeredProducts;
+    private final Client offeror;
+    private final Client receptor;
     private ExchangeStatus status;
 
-    public Client getOfferor() {
-        return offeror;
-    }
+    public ExchangeOffer(SecondHandProduct requestedProduct, List<SecondHandProduct> offeredProducts, Client offeror) {
+        if (requestedProduct == null || offeredProducts == null || offeredProducts.isEmpty() || offeror == null) {
+            throw new IllegalArgumentException("Datos de oferta incompletos.");
+        }
 
-    public Client getReceptor() {
-        return receptor;
-    }
-
-    public boolean is_Expired(){
-        Duration TiempoTranscurrido = Duration.between(createDate, LocalDateTime.now());
-        return TiempoTranscurrido.compareTo(timeonHold) > 0;
-    }
-
-    /**
-     * Constructor de la oferta de intercambio
-     * @param requestedProduct producto solicitado
-     * @param offeredProducts productos ofertados para el intercambio
-     * @param offeror usuario que solicita el intercambio
-     * */
-
-    public ExchangeOffer(SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client offeror){
+        this.offerId = ExchangeOffer.lastOfferId++;
+        this.createDate = LocalDateTime.now();
         this.status = ExchangeStatus.PENDIENTE;
-        this.offeredProducts= offeredProducts;
-        this.requestedProduct= requestedProduct;
-        this.offeror= offeror;
-        this.receptor= requestedProduct.getOwner();
-        this.createDate= LocalDateTime.now();
 
-        for (SecondHandProduct p : this.offeredProducts){
+        this.requestedProduct = requestedProduct;
+        this.offeredProducts = new ArrayList<>(offeredProducts);
+        this.offeror = offeror;
+        this.receptor = requestedProduct.getOwner();
+
+        for (SecondHandProduct p : this.offeredProducts) {
             p.change_offered_status(true);
         }
+
         this.receptor.receiveOffer(this);
-        
-        this.offerId = ExchangeOffer.lastOfferId;
-        ExchangeOffer.lastOfferId++;
     }
-    /**
-     * Funcion para cancelar una oferta sobre un producto
-     * */
-    public void cancelar_oferta() throws IllegalStateException {
-        if(this.status != ExchangeStatus.PENDIENTE) {
-        	throw new IllegalStateException("Can only cancel an order that is pending");
+
+    public boolean isExpired() {
+        return Duration.between(createDate, LocalDateTime.now()).compareTo(timeOnHold) > 0;
+    }
+
+    public boolean isAllAvailable() {
+        if (!requestedProduct.isAvailable()) return false;
+        for (SecondHandProduct p : offeredProducts) {
+            if (!p.isAvailable()) return false;
         }
-    	this.status = ExchangeStatus.CANCELADA;
-        for (SecondHandProduct p: this.offeredProducts) {
-            p.change_offered_status(false);
+        return true;
+    }
+
+    public synchronized void ejecutarIntercambio() {
+        if (this.status != ExchangeStatus.ACEPTADA) {
+            throw new IllegalStateException("Solo se puede ejecutar un intercambio aceptado.");
         }
-    }
-/**
- * Funcion para rechazar la oferta
- *
- *
- * */
-    public void reject_offer(){
-        this.status = ExchangeStatus.RECHAZADA;
-        this.liberarProductosofertados();
 
-    }
-    /**
-     * Funcion que caduca las ofertas que quedan pendientes
-     * */
-    public void expired_offer(){
-        if(is_Expired()){
-            this.status = ExchangeStatus.EXPIRADA;
-            this.liberarProductosofertados();
-        }
-    }
-
-    public boolean ofertaaceptada(){
-        if (this.status == ExchangeStatus.ACEPTADA){
-        	return true;
-        }
-        return false;
-    }
-
-    public void aceptaroferta(){
-        this.status = ExchangeStatus.ACEPTADA;
-    }
-
-    /**
-     * funcion para liberar los productos ofertados en un intercambio
-     * */
-
-
-    public boolean intercambiar_propietarios() {
-        requestedProduct.change_owners(this.offeror);
+        this.requestedProduct.change_owners(this.offeror);
 
         for (SecondHandProduct p : offeredProducts) {
             p.change_owners(this.receptor);
         }
+
         liberarProductos();
-        return true;
+        this.status = ExchangeStatus.ACEPTADA;
     }
 
-    public boolean liberarProductos(){
-        this.requestedProduct.change_offered_status(false);
-        liberarProductosofertados();
-        return true;
+    public void cancelarOferta() {
+        if (this.status == ExchangeStatus.PENDIENTE) {
+            this.status = ExchangeStatus.CANCELADA;
+            liberarProductosOfertados();
+        }
     }
-    public boolean liberarProductosofertados(){
-        for (SecondHandProduct p: offeredProducts){
-            p.change_offered_status(false);
-        }
-        return true;
-    }
-    public boolean isAllAvailable(){
-        if(!this.requestedProduct.isAvailable()){
-            return false;
-        }
-        for(SecondHandProduct p: offeredProducts){
-            if (!p.isAvailable()){
-                return false;
-            }
-        }
-        return true;
 
+    public ExchangeStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * Acepta la oferta de intercambio y ejecuta la transferencia de productos.
+     * @throws IllegalStateException si la oferta no está en estado PENDIENTE.
+     */
+    public synchronized void aceptarOferta() {
+        if (this.status != ExchangeStatus.PENDIENTE) {
+            throw new IllegalStateException("Solo se puede aceptar una oferta que esté PENDIENTE.");
+        }
+
+        if (!isAllAvailable()) {
+            this.status = ExchangeStatus.CANCELADA;
+            liberarProductos();
+            System.out.println("[!] Error: Algunos productos ya no están disponibles. Oferta cancelada.");
+            return;
+        }
+
+        this.status = ExchangeStatus.ACEPTADA;
+
+        this.requestedProduct.change_owners(this.offeror);
+
+        for (SecondHandProduct p : this.offeredProducts) {
+            p.change_owners(this.receptor);
+        }
+
+        liberarProductos();
+        this.status = ExchangeStatus.ACEPTADA;
+
+        System.out.println("[✔] Intercambio ejecutado: " + offeror.getUsername() + " <-> " + receptor.getUsername());
     }
 
     public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public ExchangeStatus getEstado() {
-        return status;
-    }
-
     public SecondHandProduct getRequestedProduct() {
         return requestedProduct;
     }
 
-    @Override
-    public String toString(){
-        return "Fecha: " + this.createDate + "\nOferta por: " + this.requestedProduct
-                + "\nEstado de la oferta: " + this.status
-                + "\nOferta recibida por: " + this.receptor
-                +"\nProductos ofertados: " + this.offeredProducts
-                + "\nTiempo de oferta: " + this.timeonHold ;
-
+    public void rejectOffer() {
+        if (this.status == ExchangeStatus.PENDIENTE) {
+            this.status = ExchangeStatus.RECHAZADA;
+            liberarProductosOfertados();
+        }
     }
 
+    private void liberarProductos() {
+        this.requestedProduct.change_offered_status(false);
+        liberarProductosOfertados();
+    }
 
+    private void liberarProductosOfertados() {
+        for (SecondHandProduct p : offeredProducts) {
+            p.change_offered_status(false);
+        }
+    }
+    public boolean ofertaAceptada(){
+        if (this.getStatus()== ExchangeStatus.ACEPTADA){
+            return true;
+        }   else {
+            return false;
+        }
+    }
+    public int getOfferId() { return offerId; }
+    public Client getOfferor() { return offeror; }
+    public Client getReceptor() { return receptor; }
+    public List<SecondHandProduct> getOfferedProducts() { return offeredProducts; }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--- OFERTA #").append(offerId).append(" ---\n");
+        sb.append("Producto Deseado: ").append(requestedProduct.getName()).append(" (").append(requestedProduct.getPrice()).append("€)\n");
+        sb.append("Lote Ofrecido (").append(offeredProducts.size()).append(" productos):\n");
+        for (SecondHandProduct p : offeredProducts) {
+            sb.append("  - ").append(p.getName()).append(" (").append(p.getPrice()).append("€)\n");
+        }
+        sb.append("Estado: ").append(status);
+        return sb.toString();
+    }
 }

@@ -1,3 +1,5 @@
+package model.catalog;
+
 import java.util.ArrayList;
 
 public class Category extends BaseElement{
@@ -11,5 +13,9 @@ public class Category extends BaseElement{
 
     public String getNameCategory() {
         return name;
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
     }
 }

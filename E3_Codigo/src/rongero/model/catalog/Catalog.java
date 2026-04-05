@@ -1,3 +1,5 @@
+package model.catalog;
+import util.AgeRange;
 import java.util.*;
 
 public class Catalog {
@@ -56,13 +58,11 @@ public class Catalog {
 	
 	private void organiseGame(Game p) {
 		for(AgeRange age: this.ageRanges) {
-			if(age.containedIn(p.getAgeRange()) == true) {
+			//if(age.containedIn(p.getAgeRange()) == true) {
 				this.gamesByAge.get(age).add(p);
-			}
+			//}
 		}
-		
-		this.addAgeRange(p.getAgeRange());
-		this.gamesByAge.get(p.getAgeRange()).add(p);
+
 	}
 	
 	public void addProductsOnSale(NewProduct...products) {

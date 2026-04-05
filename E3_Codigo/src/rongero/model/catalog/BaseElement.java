@@ -1,3 +1,5 @@
+package model.catalog;
+
 import java.time.*;
 
 public abstract class BaseElement {

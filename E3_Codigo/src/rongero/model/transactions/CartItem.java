@@ -1,5 +1,7 @@
+package model.transactions;
 import java.time.*;
-
+import model.discounts.*;
+import model.catalog.NewProduct;
 public class CartItem {
 	private NewProduct product;
 	private int quantity;
@@ -10,8 +12,13 @@ public class CartItem {
 	}
 	
 	public double fullPrice() {
-		return this.quantity * this.product.getPrice();
-	}
+		IDiscount d = product.getDiscount();
+
+		if (d instanceof ICantidad && !d.isExpired()) {
+			return ((ICantidad) d).applyCantidad(product.getPrice(), this.quantity);
+		}
+
+		return product.getPriceWithDiscount() * this.quantity;	}
 	
 	public void orderQuantity(int quantity) throws IllegalArgumentException {
 		if(this.product.isEffectiveStockHigher(quantity) == false) {

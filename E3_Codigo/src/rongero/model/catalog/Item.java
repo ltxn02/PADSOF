@@ -1,16 +1,23 @@
+package model.catalog;
+
+import model.discounts.IDiscount;
+import java.util.List;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import model.discounts.IRebaja;
 
 public abstract class Item extends BaseElement{
     private String name;
     private String description;
     private double price;
     private String picturePath;
-    private ArrayList<Category> categories;
+    private List<Category> categories;
+    private IDiscount discount;
     private Instant lastAddedAt;
+    private IRebaja rebaja;
     
-    public Item(String name, String description, double price, String picturePath, ArrayList<Category> categories) {
+    public Item(String name, String description, double price, String picturePath, List<Category> categories) {
         if (price < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
@@ -21,10 +28,35 @@ public abstract class Item extends BaseElement{
         this.categories = categories;
         this.lastAddedAt = null;
     }
-    
+
+
+
     public Item(String name, String description, double price, String picturePath) {
     	this(name, description, price, picturePath, new ArrayList<Category>());
     }
+
+    public double getPrice() {
+        if (this.discount == null || this.discount.isExpired()) {
+            return this.price;
+        }
+
+        // Si es una rebaja (porcentaje o fijo), la aplicamos
+        if (this.discount instanceof IRebaja) {
+            return ((IRebaja) this.discount).applyRebaja(this.price);
+        }
+
+        return this.price;
+    }
+
+    public void setDiscount(IDiscount discount) {
+        this.discount = discount;
+    }
+
+
+
+
+
+
 
     protected void registerTime() {
         this.lastAddedAt = Instant.now();
@@ -41,10 +73,6 @@ public abstract class Item extends BaseElement{
     protected void setPrice(double price) {
     	this.price = price;
     }
-    
-    public double getPrice(){
-        return this.price;
-    }
 
     public String getName(){
         return this.name;
@@ -57,7 +85,7 @@ public abstract class Item extends BaseElement{
     	this.categories.add(category);
     }
     
-    public ArrayList<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
     

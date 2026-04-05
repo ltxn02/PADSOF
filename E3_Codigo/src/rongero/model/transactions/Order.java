@@ -1,7 +1,11 @@
+package model.transactions;
 import java.time.Instant;
 import java.util.*;
 import java.util.Random;
 import es.uam.eps.padsof.telecard.*;
+import util.OrderStatus;
+import model.user.Client;
+import model.catalog.NewProduct;
 
 public class Order {
     private static int lastOrderId = 1;

@@ -1,3 +1,6 @@
+package model.transactions;
+import model.catalog.NewProduct;
+
 import java.util.ArrayList;
 
 public class OrderHistoric {

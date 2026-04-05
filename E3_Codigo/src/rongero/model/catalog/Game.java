@@ -1,3 +1,7 @@
+package model.catalog;
+import util.AgeRange;
+import util.Review;
+import model.discounts.*;
 import java.util.ArrayList;
 
 public class Game extends Product{
@@ -5,7 +9,7 @@ public class Game extends Product{
     private ArrayList<String> mechanics;
     private AgeRange ageRange;
 
-    public Game(String name, String description, double price, String image, ArrayList<Category> categories, int stock, ArrayList<Review> reviews, Discount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
+    public Game(String name, String description, double price, String image, ArrayList<Category> categories, int stock, ArrayList<Review> reviews, IDiscount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
         super(name, description, price, image, categories, stock, reviews, discount);
         if (nPlayers < 1) {
             throw new IllegalArgumentException("Argumentos inválidos");

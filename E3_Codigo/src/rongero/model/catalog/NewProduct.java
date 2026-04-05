@@ -1,11 +1,16 @@
+package model.catalog;
+import java.util.List;
 import java.util.ArrayList;
+import util.Review;
+import model.discounts.*;
 
 public abstract class NewProduct extends Item {
     private int stock;
     private int effectiveStock;
-    private ArrayList<Review> reviews;
+    private List<Review> reviews;
+    private IDiscount discount;
 
-    public NewProduct(String name, String description, double price, String image, ArrayList<Category> categories,int stock, ArrayList<Review> reviews) {
+    public NewProduct(String name, String description, double price, String image, List<Category> categories,int stock, List<Review> reviews) {
         super(name, description, price, image, categories);
         if (stock < 0) {
             throw new IllegalArgumentException("Stock cannot be negative");
@@ -14,6 +19,7 @@ public abstract class NewProduct extends Item {
         }
         this.stock = stock;
         this.reviews = reviews;
+        this.effectiveStock= stock;
     }
 
     public int calculateRating(){
@@ -79,6 +85,28 @@ public abstract class NewProduct extends Item {
     public double getPrice() {
         return super.getPrice();
     }
+    public void setDiscount(IDiscount discount) {
+        this.discount = discount;
+    }
+    public IDiscount getDiscount() {
+        return this.discount;
+    }
+    public double getPriceWithDiscount() {
+        // Si no hay descuento o ha caducado, devolvemos el precio normal
+        if (this.discount == null || this.discount.isExpired()) {
+            return this.getPrice();
+        }
+
+        // Si el descuento es una "Rebaja" (Porcentaje o Fijo), lo aplicamos
+        if (this.discount instanceof IRebaja) {
+            return ((IRebaja) this.discount).applyRebaja(this.getPrice());
+        }
+
+        // Para otros tipos (como Cantidad), el precio unitario base no cambia aquí
+        return this.getPrice();
+    }
+
+
 
 
 }
