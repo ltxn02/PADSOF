@@ -108,8 +108,8 @@ public class Catalog {
 			if(product instanceof Game) {
 				this.organiseGame((Game)product);
 			}
-		}*/
-	}
+		}
+	}*/
 	
 	private NewProduct productNamed(String name) {
 		for(NewProduct p: this.productsOnSale) {
@@ -169,7 +169,7 @@ public class Catalog {
 		return "Full catalog:\n" + this.allProducts();
 	}
 	
-	private boolean validateData(ItemType itemType, Map<String, Object> data) {
+	private void validateData(ItemType itemType, Map<String, Object> data) {
 		// 1. Validate common attributes (obligatory)
 		this.checkField(data, "name", String.class);
 		this.checkField(data, "description", String.class);

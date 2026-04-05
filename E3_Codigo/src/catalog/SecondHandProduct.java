@@ -31,10 +31,10 @@ public class SecondHandProduct extends Item {
 	 *
 	 * */
 	public SecondHandProduct(String name, String description, String picturePath, double price, boolean isAppraised, ItemType itemType, Condition condition, Client owner) {
+		super(name, description, price, picturePath);
 		if(itemType == ItemType.PACK) {
 			throw new IllegalArgumentException("Invalid item type, a second hand product cannot be a pack");
 		}
-		super(name, description, price, picturePath);
 		this.isAppraised = isAppraised;
 		this.isOffered = false;
 		this.itemType = itemType;
