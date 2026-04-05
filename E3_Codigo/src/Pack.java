@@ -7,9 +7,9 @@ public class Pack extends NewProduct {
     // La relación de composición que viene del rombo negro en el UML
     private ArrayList<NewProduct> products;
 
-    public Pack(String name, String description, double price, String image, ArrayList<Category> categories, int stock, ArrayList<Review> reviews, ArrayList<NewProduct> initialProducts) {
+    public Pack(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, ArrayList<NewProduct> initialProducts) {
         // 1. Llamamos al constructor de la clase padre (NewProduct)
-        super(name, description, price, image, categories, stock, reviews);
+        super(name, description, price, image, stock, categories, reviews);
 
         // 2. Validamos la regla de multiplicidad 2...* que pusisteis en el diagrama
         if (initialProducts == null || initialProducts.size() < 2) {

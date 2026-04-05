@@ -5,7 +5,7 @@ public abstract class NewProduct extends Item {
     private int effectiveStock;
     private ArrayList<Review> reviews;
 
-    public NewProduct(String name, String description, double price, String image, ArrayList<Category> categories,int stock, ArrayList<Review> reviews) {
+    public NewProduct(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
         super(name, description, price, image, categories);
         if (stock < 0) {
             throw new IllegalArgumentException("Stock cannot be negative");
@@ -14,6 +14,10 @@ public abstract class NewProduct extends Item {
         }
         this.stock = stock;
         this.reviews = reviews;
+    }
+    
+    public NewProduct(String name, String description, double price, String image, int stock) {
+    	this(name, description, price, image, stock, new ArrayList<Category>(), new ArrayList<Review>());
     }
 
     public int calculateRating(){
@@ -43,6 +47,13 @@ public abstract class NewProduct extends Item {
     		throw new IllegalArgumentException("Invalid quantity, stock is lower");
     	}
     	this.stock -= quantity;
+    }
+    
+    public void increaseStock(int quantity) throws IllegalArgumentException {
+    	if(quantity < 0) {
+    		throw new IllegalArgumentException("Invalid quantity, stock cannot be negative");
+    	}
+    	this.stock += quantity;
     }
 
     public void orderProduct(int quantity) throws IllegalArgumentException{
@@ -75,10 +86,13 @@ public abstract class NewProduct extends Item {
     	this.reviews.add(review);
     }
     
+    public void editProductInfo(String name, String description, double price, String picturePath, int stock) {
+    	super.edit(name, description, price, picturePath);
+    	if(stock >= 0) this.stock = stock;
+    }
+    
     @Override
     public double getPrice() {
         return super.getPrice();
     }
-
-
 }

@@ -52,17 +52,17 @@ public abstract class RegisteredUser extends User {
 	}
 	
 	public String userPreview() {
-		return this.fullname + " (@" + this.username + ") - " + maskEmail(this.email);
+		return this.fullname + " (@" + this.username + ")";
 	}
 	
 	public String userProfile() {
 		StringBuilder res = new StringBuilder();
 		
-		res.append("Name: " + this.fullname + "\n");
-		res.append("Username: " + this.username + "\n");
+		res.append("Nombre: " + this.fullname + "\n");
+		res.append("Usuario: " + this.username + "\n");
 		res.append("Email: " + maskEmail(this.email) + "\n");
-		res.append("Phonenumber: " + this.phoneNumber + "\n");
-		res.append("Datebirth: " + this.birthdate + "\n");
+		res.append("Teléfono: " + this.phoneNumber + "\n");
+		res.append("Fecha de nacimiento: " + this.birthdate + "\n");
 		res.append("DNI: " + maskDni(this.dni) + "\n");
 		
 		return res.toString();

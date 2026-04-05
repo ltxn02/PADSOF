@@ -7,14 +7,18 @@ public class ShoppingCart {
 	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);
 	
-	private final ScheduledExecutorService cleaner;
+	private static final ScheduledExecutorService cleaner =
+			Executors.newSingleThreadScheduledExecutor(r -> {
+				Thread t = new Thread(r);
+				t.setDaemon(true);
+				return t;
+			});
 	
 	public ShoppingCart() {
 		this.fullPrice = 0;
 		this.cartItems = new ArrayList<>();
 		
-		this.cleaner = Executors.newSingleThreadScheduledExecutor();
-		this.cleaner.scheduleAtFixedRate(this::removeExpiredCartItems, 1, 1, TimeUnit.MINUTES);
+		ShoppingCart.cleaner.scheduleAtFixedRate(this::removeExpiredCartItems, 1, 1, TimeUnit.MINUTES);
 	}
 	
 	public synchronized void addCartItem(NewProduct p, int quantity) throws IllegalArgumentException {		
@@ -70,8 +74,34 @@ public class ShoppingCart {
 		}
 	}
 	
+	public static void shutdownCleaner() {
+		ShoppingCart.cleaner.shutdownNow();
+	}
+	
 	public synchronized void setTimeOnHold(long newTimeOnHold) {
 		ShoppingCart.timeOnHold = Duration.ofHours(newTimeOnHold);
+	}
+	
+	public synchronized String shoppingCartPreview() {
+		int items = (this.cartItems == null) ? 0 : this.cartItems.size();	
+		return items + " items. Total: " + this.fullPrice;
+	}
+	
+	public synchronized String shoppingCartView() {
+		StringBuilder sb = new StringBuilder("--- MI CARRITO DE LA COMPRA ---\n");
+		
+		if(this.cartItems == null || this.cartItems.isEmpty()) {
+			sb.append("El carrito está vacío...\n");
+			return sb.toString();
+		}
+		
+		for(CartItem item: this.cartItems) {
+			sb.append("  " + item + "\n");
+		}
+		
+		sb.append("----------------\n");
+		sb.append("TOTAL: " + String.format("%.2f €", this.fullPrice));
+		return sb.toString();
 	}
 
 	// NUEVO METODO

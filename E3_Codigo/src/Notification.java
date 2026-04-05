@@ -1,4 +1,5 @@
-import java.time.Instant;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Notification extends BaseElement {
@@ -27,14 +28,12 @@ public class Notification extends BaseElement {
     }
     
     public String notificationPreview() {
-    	String res = this.buildString(20);
-    	return res;
+    	return this.buildString(20);
     }
     
     @Override
     public String toString() {
-    	String res = this.buildString(-1);
-    	return res; 
+    	return this.buildString(-1);
     }
     
     // -- HELPERS ------------------------------------------------------------------
@@ -59,10 +58,17 @@ public class Notification extends BaseElement {
     	}
     	
     	res.append(this.read ? "   " : " ! ");
-    	res.append("[" + this.receivedAt.toString() + "] ");
+    	res.append("[" + formatInstant(this.receivedAt) + "] ");
     	res.append(notificationId + ": ");
     	res.append(this.message.substring(0, end) + endString);
     	
     	return res.toString();
+    }
+    
+    private String formatInstant(Instant instant) {
+    	if(instant == null) return "N/A";
+    	
+    	DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm").withZone(ZoneId.systemDefault());
+    	return fmt.format(instant);
     }
 }

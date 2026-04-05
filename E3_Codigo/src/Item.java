@@ -38,6 +38,13 @@ public abstract class Item extends BaseElement{
         return this.lastAddedAt.plus(time).isBefore(Instant.now());
     }
     
+    protected void edit(String name, String description, double price, String picturePath) {
+    	if(name != null) this.name = name;
+    	if(description != null) this.description = description;
+    	if(price > 0) this.price = price;
+    	if(picturePath != null) this.picturePath = picturePath;
+    }
+    
     protected void setPrice(double price) {
     	this.price = price;
     }
@@ -61,10 +68,30 @@ public abstract class Item extends BaseElement{
         return categories;
     }
     
-    public StringBuilder itemInfo() {
+    public String itemAuxPreview() {
+    	return this.name + " (" + String.format("%.2f €", this.price) + ")";
+    }
+    
+    public String itemPreview() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(this.name + " | ");
+    	if(this.description.length() < 15) {
+    		sb.append(this.description + " | ");
+    	} else {
+    		sb.append(this.description.substring(12) + "...");
+    	}
+    	return sb.toString();
+    }
+    
+    public String itemInfo() {
     	StringBuilder res = new StringBuilder();
-    	res.append("\nName: " + this.name + "\n\t'" + this.description + "'\n");
-    	res.append("\tCategories: " + this.categories + "\n");
-    	return res;
+    	res.append("\nName: " + this.name + "\n  '" + this.description + "'\n");
+    	res.append("  Categories: " + this.categories + "\n");
+    	return res.toString();
+    }
+    
+    public boolean isNamed(String name) {
+    	if(this.name == name) return true;
+    	return false;
     }
 }

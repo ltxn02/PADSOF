@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Function;
 import java.time.*;
 
 public class Client extends RegisteredUser {
@@ -9,6 +10,7 @@ public class Client extends RegisteredUser {
 	private List<SecondHandProduct> myProducts;
 	private List<Review> myReviews;
 	private List<Order> ordersMade;
+	private List<Exchange> exchangesMade;
 	private List<ExchangeOffer> offersMade;
 	private List<ExchangeOffer> offersReceived;
 	
@@ -21,6 +23,7 @@ public class Client extends RegisteredUser {
 		this.myProducts = new ArrayList<>();
 		this.myReviews = new ArrayList<>();
 		this.ordersMade = new ArrayList<>();
+		this.exchangesMade = new ArrayList<>();
 		this.offersMade = new ArrayList<>();
 		this.offersReceived = new ArrayList<>();
 	}
@@ -39,7 +42,10 @@ public class Client extends RegisteredUser {
 		Order order = new Order(this, orderedItems, price);
 		
 		this.ordersMade.add(order);
+		this.myOrders.addOrder(order);
+		
 		if(order.procesarPago(cardNumber)) {
+			this.shoppingCart.clearCart();
 			String code = order.generateCode();
 			return code;
 		}
@@ -67,6 +73,10 @@ public class Client extends RegisteredUser {
 		this.myProducts.add(product);
 	}
 	
+	public void registerSecondHandProduct(SecondHandProduct product) {
+		this.myProducts.add(product);
+	}
+	
 	public void removeSecondHandProduct(SecondHandProduct product) throws IllegalArgumentException {
 		if(!this.myProducts.contains(product)) {
 			throw new IllegalArgumentException("Invalid product, doesn't exist in your wallet");
@@ -91,6 +101,10 @@ public class Client extends RegisteredUser {
 		offer.cancelOffer();
 	}
 	
+	public void receiveOffer(ExchangeOffer oferta) {
+		this.offersReceived.add(oferta);
+	}
+	
 	public void answerOffer(ExchangeOffer offer, boolean accept) throws IllegalArgumentException {
 		if(!this.offersMade.contains(offer)) {
 			throw new IllegalArgumentException("Invalid offer, it's not in your register");
@@ -101,6 +115,80 @@ public class Client extends RegisteredUser {
 		} else if(accept == false) {
 			offer.reject_offer();
 		}
+	}
+	
+	public void makeExchange(Exchange exchange) {
+		this.exchangesMade.add(exchange);
+		this.myExchanges.addExchange(exchange);
+	}
+	
+	public String clientFullProfile() {
+		StringBuilder sb = new StringBuilder(super.userProfile());
+		
+		sb.append("Se unió el: " + this.joiningDate + "\n");
+		sb.append("--- Resumen de actividad ---\n");
+		sb.append("Carrito: " + String.format("%.2f €", this.shoppingCart.shoppingCartPreview()) + "\n");
+		sb.append(formatListPreview("Pedidos", Order::orderPreview, this.ordersMade));
+		sb.append(formatListPreview("Intercambios", null, this.exchangesMade));
+		sb.append(formatListPreview("Productos de segunda mano", SecondHandProduct::secondHandProductPreview, this.myProducts));
+		sb.append(formatListPreview("Reseñas", Review::reviewPreview, this.myReviews));
+		sb.append(formatListPreview("Ofertas hechas", ExchangeOffer::offerMadePreview, this.offersMade));
+		sb.append(formatListPreview("Ofertas recibidas", ExchangeOffer::offerReceivedPreview, this.offersReceived));
+		
+		return sb.toString();
+	}
+	
+	public String viewShoppingCart() {
+		return this.shoppingCart.shoppingCartView();
+	}
+	
+	public String viewMyProducts() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("\n--- MI CARTERA DE SEGUNDA MANO ---\n");
+		
+		if(this.myProducts.isEmpty()) {
+			sb.append("Todavía no has subido ningún producto\n");
+			return sb.toString();
+		}
+		
+		for(SecondHandProduct p: this.myProducts) {
+			sb.append(p + "\n\"--------------------------------\n");
+		}
+		
+		return sb.toString();
+	}
+	
+	public String toString(){
+		return super.userPreview();
+	}
+	
+	// -- HELPERS ------------------------------------------------------------------
+	
+	private <T> String formatListPreview(String listName, Function<T, String> previewFunction, List<T> list) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(listName + ": ");
+		if(list == null) {
+			sb.append("N/A\n");
+			return sb.toString();
+		}
+		
+		if(list.isEmpty()) {
+			sb.append("0 items");
+			return sb.toString();
+		}
+		
+		sb.append(list.size() + " items\n");
+		if(previewFunction != null) {
+			int limit = Math.min(list.size(), 3);
+			for(int i = 0; i < limit; i++) {
+				sb.append(previewFunction.apply((T)list.get(i)) + "\n");
+			}
+			
+			if(list.size() > 3) sb.append(" ... y \n" + (list.size() - 3) + "más\n");
+		}
+		
+		return sb.toString();
 	}
 	
 	private boolean productIsAvailable(SecondHandProduct...products) {
@@ -132,52 +220,21 @@ public class Client extends RegisteredUser {
 	
 	
 	
-	/*
-	 *	public boolean addToCart(NewProduct p, quantity q) {
-	 *	  	if (q <= stock) {
-	 *			return this.shoppingCart.addProduct(p, q);
-	 *    	}	
-	 *    	return false;
-	 * 	}
-	*/
-	public String toString(){
-		return this.getUsername();
-	}
 
 	// NUEVOS MÉTODOS
-	public ShoppingCart getShoppingCart() {
-		return this.shoppingCart;
-	}
 
 	public OrderHistoric getOrderHistoric() {
 		return this.myOrders;
 	}
 
-	public void registrarOfertaRealizada(ExchangeOffer oferta) {
-		this.offersMade.add(oferta);
-	}
-
-	public List<ExchangeOffer> obtenerMisOfertasEnviadas(){
-
+	public List<ExchangeOffer> getOffersMade(){
 		return this.offersMade;
 	}
 	public List<ExchangeOffer> obtenerMisOfertasRecibidos(){
 		return this.offersReceived;
 	}
 
-	public void receiveOffer(ExchangeOffer oferta) {
-		this.offersReceived.add(oferta);
-	}
-
 	public List<SecondHandProduct> getCarteraSegundaMano() {
-		return this.myProducts;
-	}
-
-	public void addMyProduct(SecondHandProduct p) {
-		this.myProducts.add(p);
-	}
-
-	public List<SecondHandProduct> getMyProducts() {
 		return this.myProducts;
 	}
 }

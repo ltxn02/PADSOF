@@ -46,7 +46,7 @@ public class Application {
             autores.add("Eiichiro Oda");
 
             Comic comic1 = new Comic("One Piece Vol. 1", "El inicio de la aventura de Luffy",
-                    7.99, "img/onepiece1.jpg", comicCategories, 50, emptyReviews, null,
+                    7.99, "img/onepiece1.jpg", 50, comicCategories, emptyReviews, null,
                     208, "Planeta Cómic", 1997, autores);
 
             // --- PRODUCTO 2: FIGURA ---
@@ -54,7 +54,7 @@ public class Application {
             figuraCategories.add(catFigura);
 
             Figurine figura1 = new Figurine("Figura Goku", "Figura de colección 15cm",
-                    35.50, "img/goku.jpg", figuraCategories, 15, emptyReviews, null,
+                    35.50, "img/goku.jpg", 15, figuraCategories, emptyReviews, null,
                     15.0, 5.0, 5.0, "PVC", "Anime");
 
             // --- PRODUCTO 3: JUEGO DE MESA ---
@@ -69,7 +69,7 @@ public class Application {
             AgeRange edadCatan = new AgeRange(10, 99);
 
             Game juego1 = new Game("Catán", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", juegoCategories, 30, emptyReviews, null,
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
                     4, mecanicas, edadCatan);
 
             // Añadimos los productos a nuestro catálogo
@@ -134,7 +134,7 @@ public class Application {
 
     public static List<ExchangeOffer> getoffersmade(Client c){
         List<ExchangeOffer> ofertas = new ArrayList<>();
-        for (ExchangeOffer o: c.obtenerMisOfertasEnviadas()) {
+        for (ExchangeOffer o: c.getOffersMade()) {
             ofertas.add(o);
         }
         return ofertas;

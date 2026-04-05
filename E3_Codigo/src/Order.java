@@ -46,7 +46,7 @@ public class Order {
 
         // 2. Intentar hacer el cargo con un try-catch
         try {
-            TeleChargeAndPaySystem.charge(numeroTarjeta, "Pedido Rongero #" + this.orderId, this.price, true);
+            TeleChargeAndPaySystem.charge(numeroTarjeta, "\nPedido Rongero #" + this.orderId, this.price, true);
 
             // Si llega aquí, el pago ha funcionado
             this.orderStatus = OrderStatus.EN_PREPARACION;
@@ -109,7 +109,17 @@ public class Order {
     public Instant getPaidAt() {
         return paidAt;
     }
-
+    
+    public String orderPreview() {
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("  #" + this.orderId + " | ");
+    	sb.append(this.items.size() + " items (" + String.format("%.2f €", this.price) + " | ");
+    	sb.append(this.orderStatus);
+    	
+    	return sb.toString();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

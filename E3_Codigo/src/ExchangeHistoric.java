@@ -26,4 +26,8 @@ public class ExchangeHistoric {
     public void removeExchange(Exchange exchange) {
         this.exchanges.remove(exchange);
     }
+    
+    public boolean hasExchange(Exchange exchange) {
+    	return this.exchanges.contains(exchange);
+    }
 }

@@ -11,7 +11,6 @@ public class SecondHandProduct extends Item {
 	private static int lastSecondHandProductId = 0;
 	private int secondHandId;
 	private boolean isAppraised;
-	private double appraisal;
 	private boolean isOffered;
 	private Client owner;
 	private ItemType itemType;
@@ -81,10 +80,22 @@ public class SecondHandProduct extends Item {
 		this.owner = new_owner;
 	}
 	
+	public String secondHandProductPreview() {
+		StringBuilder sb = new StringBuilder("  " + super.itemPreview() + " | ");
+		
+		if(this.isAppraised) {
+			sb.append(this.condition + " (" + String.format(".2f €", super.getPrice()));
+		} else {
+			sb.append("Pending appraisal");
+		}
+		
+		return sb.toString();
+	}
+	
 	public String toString(){
-		StringBuilder res = super.itemInfo();
+		StringBuilder res = new StringBuilder(super.itemInfo());
 		if(isAppraised) {
-			res.append("\tValued on: " + this.appraisal + "\n");
+			res.append("\tValued on: " + super.getPrice() + "\n");
 			res.append("\t\tCondition: " + this.condition);
 		} else {
 			res.append("\tPending appraisal\n");

@@ -13,6 +13,39 @@ public class Employee extends Staff {
         this.permissions= new ArrayList<>();
         this.Rol = new ArrayList<>();
     }
+    
+    public void editProduct(NewProduct p, String name, String description, double price, String picturePath, int stock) throws SecurityException {
+    	if(this.checkPermission(Permission.PRODUCT_EDIT) == false) {
+    		throw new SecurityException("Employee doesn't have permission to edit products");
+    	}
+    	p.editProductInfo(name, description, price, picturePath, stock);
+    }
+    
+    
+    /* FALTA COMPROBAR QUE TIPO DE PRODUCTO ES ENTRE Game, Comic, Figurine Y Pack (NO SE PUEDE CREAR OBJETO DE TIPO NEWPRODUCT O PRODUCT)*/
+    /*public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
+    	catalog.addProductOnSale(name, description, price, picturePath, stock, categories, reviews);
+    }
+    
+    public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock) {
+    	this.loadProduct(catalog, name, description, price, picturePath, stock, new ArrayList<Category>(), new ArrayList<Review>());
+    }*/
+    
+    // public void loadProduct(FILE)
+    
+    
+    
+    
+    
+    
+    
+    
+    private boolean checkPermission(Permission p) {
+    	return this.permissions.contains(p);
+    }
+    
+    
+    
     public void add_permisions(Permission e){
         this.permissions.add(e);
     }

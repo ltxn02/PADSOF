@@ -1,5 +1,3 @@
-import java.util.Date;
-
 public abstract class Staff extends RegisteredUser{
     private double salary;
 

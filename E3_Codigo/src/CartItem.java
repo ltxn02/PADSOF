@@ -53,7 +53,7 @@ public class CartItem {
 	
 	@Override
 	public String toString() {
-		return "[" + this.product + " x " + this.quantity + "]";
+		return this.quantity + " x " + this.product.itemAuxPreview();
 	}
 
 	public NewProduct getProduct() {

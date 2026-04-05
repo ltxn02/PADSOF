@@ -65,13 +65,31 @@ public class Catalog {
 		this.gamesByAge.get(p.getAgeRange()).add(p);
 	}
 	
-	public void addProductsOnSale(NewProduct...products) {
-		for(NewProduct p: products) {
-			this.productsOnSale.add(p);
-			if(p instanceof Game) {
-				this.organiseGame((Game)p);
+	/*public void addProductOnSale(String name, String description, double price, String picturePath, ArrayList<Category> categories, int stock, ArrayList<Review> reviews) {
+		NewProduct p = this.productNamed(name);
+		
+		if(p != null) {
+			this.addExistingProduct(p, stock);
+		} else {
+			NewProduct product = new NewProduct(name, description, price, picturePath, categories, stock, reviews);
+			this.productsOnSale.add(product);
+			if(product instanceof Game) {
+				this.organiseGame((Game)product);
 			}
 		}
+	}*/
+	
+	private NewProduct productNamed(String name) {
+		for(NewProduct p: this.productsOnSale) {
+			if(p.isNamed(name)) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	private void addExistingProduct(NewProduct p, int stock) {
+		p.increaseStock(stock);
 	}
 	
 	public List<NewProduct> visibleProducts() {

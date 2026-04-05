@@ -45,6 +45,7 @@ public class main {
             }
         }
         scanner.close();
+        ShoppingCart.shutdownCleaner();
     }
 
     // --- MÉTODOS DEL MENÚ INICIAL ---
@@ -239,7 +240,7 @@ public class main {
 
             // 2. Añadimos el producto al carrito del cliente
             // Funciona porque Product hereda de NewProduct (que es lo que pide addCartItem)
-            cliente.getShoppingCart().addCartItem(selectedProduct, quantity);
+            cliente.addToCart(selectedProduct, quantity);
             System.out.println("[+] ¡Éxito! " + quantity + "x " + selectedProduct.getName() + " añadido(s) a tu carrito.");
 
         } catch (NumberFormatException e) {
@@ -544,7 +545,7 @@ public class main {
                 return;
             }
 
-            c.getShoppingCart().addCartItem(seleccionado, quantity);
+            c.addToCart(seleccionado, quantity);
             System.out.println("[+] ¡Añadido! " + seleccionado.getName() + " ya está en tu carrito.");
 
         } catch (NumberFormatException e) {
@@ -586,9 +587,9 @@ public class main {
      * Metodo para mostrar el carrito y procesar el pago con la librería del profesor
      */
     private static void verCarrito(Client cliente) {
-        System.out.println("\n--- TU CARRITO DE LA COMPRA ---");
+        System.out.println(cliente.viewShoppingCart());
 
-        ShoppingCart carrito = cliente.getShoppingCart();
+        /*ShoppingCart carrito = cliente.getShoppingCart();
 
         // 1. Comprobamos si el carrito está vacío
         if (carrito.getCartItems().isEmpty()) {
@@ -608,7 +609,7 @@ public class main {
             System.out.println("- " + cantidad + "x " + p.getName() + " | Subtotal: " + subtotal + "€");
         }
         System.out.println("---------------------------------");
-        System.out.println("TOTAL A PAGAR: " + precioTotal + "€");
+        System.out.println("TOTAL A PAGAR: " + precioTotal + "€");*/
 
         // 3. Preguntamos si quiere tramitar el pedido
         System.out.print("\n¿Deseas finalizar la compra y pagar ahora? (S/N): ");
@@ -624,7 +625,15 @@ public class main {
         String numeroTarjeta = scanner.nextLine();
 
         System.out.println(">> Conectando con la pasarela de pago...");
-
+        
+        String code = cliente.buyCart(numeroTarjeta);
+        
+        if(code == null) {
+        	System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
+        } else {
+        	System.out.println("[+] ¡Compra finalizada con éxito! Tu código de recogida es: " + code);
+        }
+        /*
         // Creamos el pedido (asumo que tu constructor de Order recibe el cliente, el carrito y el total)
         Order nuevoPedido = new Order(cliente, carrito.getCartItems(), precioTotal);
 
@@ -639,7 +648,7 @@ public class main {
         } else {
             // Si la librería lanza excepción (tarjeta falsa, sin internet...), el pedido se cancela
             System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
-        }
+        }*/
     }
 
     /**
@@ -658,7 +667,7 @@ public class main {
 
             switch (opcion) {
                 case "1":
-                    verMisProductosSegundaMano(cliente);
+                    System.out.println(cliente.viewMyProducts());
                     break;
                 case "2":
                     subirProductoSegundaMano(cliente);
@@ -669,21 +678,6 @@ public class main {
                 default:
                     System.out.println("[!] Opción no válida.");
             }
-        }
-    }
-
-    private static void verMisProductosSegundaMano(Client cliente) {
-        System.out.println("\n--- MIS PRODUCTOS DE SEGUNDA MANO ---");
-        List<SecondHandProduct> misProductos = cliente.getMyProducts();
-
-        if (misProductos.isEmpty()) {
-            System.out.println("Todavía no has subido ningún producto.");
-            return;
-        }
-
-        for (SecondHandProduct p : misProductos) {
-            System.out.println(p.toString());
-            System.out.println("--------------------------------");
         }
     }
 
@@ -724,7 +718,7 @@ public class main {
         );
 
         // 4. Lo añadimos a la lista personal del cliente y a la lista general de la app
-        cliente.addMyProduct(nuevoProducto);
+        cliente.registerSecondHandProduct(nuevoProducto);
         Application.addSecondHandProduct(nuevoProducto);
 
         System.out.println("\n[+] Producto subido con éxito. Un empleado lo tasará pronto.");

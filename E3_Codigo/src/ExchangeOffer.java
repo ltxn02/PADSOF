@@ -61,7 +61,7 @@ public class ExchangeOffer {
     /**
      * Funcion para cancelar una oferta sobre un producto
      * */
-    public void cancelar_oferta() throws IllegalStateException {
+    public void cancelOffer() throws IllegalStateException {
         if(this.status != ExchangeStatus.PENDIENTE) {
         	throw new IllegalStateException("Can only cancel an order that is pending");
         }
@@ -151,7 +151,27 @@ public class ExchangeOffer {
     public SecondHandProduct getRequestedProduct() {
         return requestedProduct;
     }
-
+    
+    public String offerMadePreview() {
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("  #" + this.offerId + " | ");
+    	sb.append("to: " + this.receptor + " | ");
+    	sb.append(this.status);
+    	
+    	return sb.toString();
+    }
+    
+    public String offerReceivedPreview() {
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("  #" + this.offerId + " | ");
+    	sb.append("from: " + this.offeror + " | ");
+    	sb.append(this.status);
+    	
+    	return sb.toString();
+    }
+    
     @Override
     public String toString(){
         return "Fecha: " + this.createDate + "\nOferta por: " + this.requestedProduct
@@ -161,6 +181,4 @@ public class ExchangeOffer {
                 + "\nTiempo de oferta: " + this.timeonHold ;
 
     }
-
-
 }
