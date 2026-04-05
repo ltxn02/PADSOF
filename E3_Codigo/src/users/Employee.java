@@ -25,11 +25,14 @@ public class Employee extends Staff {
     	p.editProductInfo(name, description, price, picturePath, stock);
     }
     
-    public void loadProduct(Catalog catalog, ItemType itemType, Map<String, Object> data) {
+    public void loadProduct(Catalog catalog, ItemType itemType, Map<String, Object> data) throws SecurityException {
+    	if(this.checkPermission(Permission.PRODUCT_LOAD) == false) {
+    		throw new SecurityException("Employee doesn't have permission to load products");
+    	}
     	catalog.addProductOnSale(itemType, data);
     }
     
-    public void loadProductBulk(String filePath, Catalog catalog) {
+    public void loadProductBulk(String filePath, Catalog catalog) throws SecurityException {
         String line;
         String cvsSplitBy = ";";
 
