@@ -3,11 +3,11 @@ JAVA = java
 SRC_DIR = src
 BIN_DIR = bin
 LIB = lib/TeleChargeAndPaySystem8.jar
-MAIN = main
+MAIN = ui.main
 
 compile:
 	mkdir -p $(BIN_DIR)
-	$(JAVAC) -cp "$(LIB)" -d $(BIN_DIR) $(SRC_DIR)/*.java
+	$(JAVAC) -cp "$(LIB)" -d $(BIN_DIR) $(shell find $(SRC_DIR) -name "*.java")
 
 run:
 	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN)
