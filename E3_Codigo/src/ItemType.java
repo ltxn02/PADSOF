@@ -7,11 +7,10 @@
 public enum ItemType {
 	COMIC,
 	GAME,
-	FIGURINE;
+	FIGURINE,
+	PACK;
 	
 	public String toString() {
 		return this.name();		
 	}
-	
-	
 }

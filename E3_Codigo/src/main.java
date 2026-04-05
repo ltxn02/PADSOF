@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class main {
     private static Scanner scanner = new Scanner(System.in);
@@ -466,7 +468,6 @@ public class main {
             System.out.println("1.- Gestionar empleados (Alta/Baja/Permisos)");
             System.out.println("2.- Gestionar catálogo (categorías y packs)");
             System.out.println("3.- Gestionar descuentos");
-            System.out.println("4.- Ver estadísticas");
             System.out.println("0.- Cerrar sesión");
             System.out.print("Elige una opción: ");
 
@@ -478,6 +479,9 @@ public class main {
                     break;
                 case "2":
                     gestionarCatalogo(gestor);
+                    break;
+                case "3":
+                    gestionarDescuentos();
                     break;
                 case "0":
                     cerrarSesion = true;
@@ -589,28 +593,6 @@ public class main {
     private static void verCarrito(Client cliente) {
         System.out.println(cliente.viewShoppingCart());
 
-        /*ShoppingCart carrito = cliente.getShoppingCart();
-
-        // 1. Comprobamos si el carrito está vacío
-        if (carrito.getCartItems().isEmpty()) {
-            System.out.println("Tu carrito está vacío. ¡Ve al catálogo a añadir cosas!");
-            return;
-        }
-
-        // 2. Mostramos los productos del carrito y el precio total
-        double precioTotal = 0.0;
-        for (CartItem item : carrito.getCartItems()) {
-            // Asumiendo que CartItem tiene métodos para obtener el producto y la cantidad
-            NewProduct p = item.getProduct();
-            int cantidad = item.getQuantity();
-            double subtotal = p.getPrice() * cantidad;
-            precioTotal += subtotal;
-
-            System.out.println("- " + cantidad + "x " + p.getName() + " | Subtotal: " + subtotal + "€");
-        }
-        System.out.println("---------------------------------");
-        System.out.println("TOTAL A PAGAR: " + precioTotal + "€");*/
-
         // 3. Preguntamos si quiere tramitar el pedido
         System.out.print("\n¿Deseas finalizar la compra y pagar ahora? (S/N): ");
         String respuesta = scanner.nextLine();
@@ -633,22 +615,6 @@ public class main {
         } else {
         	System.out.println("[+] ¡Compra finalizada con éxito! Tu código de recogida es: " + code);
         }
-        /*
-        // Creamos el pedido (asumo que tu constructor de Order recibe el cliente, el carrito y el total)
-        Order nuevoPedido = new Order(cliente, carrito.getCartItems(), precioTotal);
-
-        // Llamamos al metodo procesarPago que creaste antes en Order.java con sus try-catch
-        boolean pagoExitoso = nuevoPedido.procesarPago(numeroTarjeta);
-
-        if (pagoExitoso) {
-            // Si la librería dice que OK, vaciamos el carrito y guardamos el pedido
-            carrito.clearCart(); // Asegúrate de tener un metodo en ShoppingCart para vaciar la lista
-            cliente.getOrderHistoric().addOrder(nuevoPedido); // Guardamos el pedido en el historial del cliente
-            System.out.println("[+] ¡Compra finalizada con éxito! Tu código de recogida es: " + nuevoPedido.getPickupCode());
-        } else {
-            // Si la librería lanza excepción (tarjeta falsa, sin internet...), el pedido se cancela
-            System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
-        }*/
     }
 
     /**
@@ -962,7 +928,7 @@ public class main {
             System.out.println("\n--- GESTIÓN DE CATÁLOGO ---");
             System.out.println("1.- Ver categorías existentes");
             System.out.println("2.- Añadir nueva categoría");
-            System.out.println("3.- Gestionar Packs (En construcción \uD83D\uDEA7)");
+            System.out.println("3.- Gestionar Packs");
             System.out.println("0.- Volver al menú anterior");
             System.out.print("Elige una opción: ");
 
@@ -976,7 +942,7 @@ public class main {
                     crearCategoria();
                     break;
                 case "3":
-                    System.out.println("\n[!] La funcionalidad de Packs aún no ha sido implementada por el equipo.");
+                    gestionarPacks();
                     break;
                 case "0":
                     volver = true;
@@ -1024,5 +990,300 @@ public class main {
         Application.addCategory(nuevaCategoria);
 
         System.out.println("[+] Categoría '" + nombre + "' creada con éxito.");
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE PACKS ---
+
+    private static void gestionarPacks() {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- GESTIÓN DE PACKS ---");
+            System.out.println("1.- Ver Packs creados en la tienda");
+            System.out.println("2.- Crear un nuevo Pack");
+            System.out.println("0.- Volver al menú anterior");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+            switch (opcion) {
+                case "1":
+                    verPacks();
+                    break;
+                case "2":
+                    crearPack();
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void verPacks() {
+        System.out.println("\n--- PACKS ACTUALES ---");
+        boolean hayPacks = false;
+
+        for (NewProduct np : Application.getCatalog()) {
+            // Filtramos el catálogo para mostrar solo los que sean instancia de Pack
+            if (np instanceof Pack) {
+                Pack pack = (Pack) np;
+                hayPacks = true;
+                System.out.println("- " + pack.getName() + " | Precio especial: " + pack.getPrice() + "€");
+                System.out.println("  Contiene: " + pack.getProducts().size() + " productos.");
+            }
+        }
+        if (!hayPacks) {
+            System.out.println("Actualmente no hay Packs creados en el sistema.");
+        }
+    }
+
+    private static void crearPack() {
+        System.out.println("\n--- CREAR NUEVO PACK ---");
+        ArrayList<NewProduct> catalogo = Application.getCatalog();
+
+        // Filtramos para que solo salgan productos individuales (evitamos meter packs dentro de packs para no liar al usuario)
+        ArrayList<NewProduct> productosIndividuales = new ArrayList<>();
+        for (NewProduct np : catalogo) {
+            if (!(np instanceof Pack)) {
+                productosIndividuales.add(np);
+            }
+        }
+
+        if (productosIndividuales.size() < 2) {
+            System.out.println("[!] No hay suficientes productos en la tienda para crear un pack. Se necesitan al menos 2.");
+            return;
+        }
+
+        ArrayList<NewProduct> productosDelPack = new ArrayList<>();
+        boolean seleccionando = true;
+
+        // Bucle para añadir productos al Pack
+        while (seleccionando) {
+            System.out.println("\nProductos disponibles para añadir:");
+            for (int i = 0; i < productosIndividuales.size(); i++) {
+                System.out.println((i + 1) + ".- " + productosIndividuales.get(i).getName() + " (" + productosIndividuales.get(i).getPrice() + "€)");
+            }
+
+            System.out.println("\nProductos en el pack actual: " + productosDelPack.size());
+            System.out.print("Elige el número del producto a añadir (o 0 para terminar la selección): ");
+
+            try {
+                int index = Integer.parseInt(scanner.nextLine());
+                if (index == 0) {
+                    if (productosDelPack.size() >= 2) {
+                        seleccionando = false; // Salimos del bucle si ya tiene al menos 2
+                    } else {
+                        System.out.println("[!] Recuerda la regla de negocio: Un pack necesita contener al menos 2 productos.");
+                    }
+                } else if (index > 0 && index <= productosIndividuales.size()) {
+                    NewProduct seleccionado = productosIndividuales.get(index - 1);
+                    if (!productosDelPack.contains(seleccionado)) {
+                        productosDelPack.add(seleccionado);
+                        System.out.println("[+] '" + seleccionado.getName() + "' añadido al pack.");
+                    } else {
+                        System.out.println("[!] Ese producto ya está dentro del pack.");
+                    }
+                } else {
+                    System.out.println("[!] Opción no válida.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("[!] Introduce un número válido.");
+            }
+        }
+
+        // Una vez elegidos los productos, pedimos los datos generales del Pack
+        System.out.print("\nNombre del Pack (ej. Pack Especial Anime): ");
+        String nombre = scanner.nextLine();
+        System.out.print("Descripción: ");
+        String descripcion = scanner.nextLine();
+        System.out.print("Precio total rebajado del Pack (ej: 40.50): ");
+        double precio = Double.parseDouble(scanner.nextLine());
+        System.out.print("Unidades de este pack en stock (ej: 10): ");
+        int stock = Integer.parseInt(scanner.nextLine());
+        System.out.print("Ruta de la imagen (ej: img/pack.jpg): ");
+        String image = scanner.nextLine();
+
+        // El programa recopila automáticamente las categorías de los productos interiores para asignárselas al Pack
+        ArrayList<Category> categoriasPack = new ArrayList<>();
+        for (NewProduct np : productosDelPack) {
+            for (Category c : np.getCategories()) {
+                if (!categoriasPack.contains(c)) {
+                    categoriasPack.add(c);
+                }
+            }
+        }
+
+        try {
+            // Usamos el constructor de Pack que subiste en tus archivos
+            Pack nuevoPack = new Pack(nombre, descripcion, precio, image, stock, categoriasPack, new ArrayList<Review>(), productosDelPack);
+            Application.getCatalog().add(nuevoPack);
+            System.out.println("[+] ¡Éxito! Pack '" + nombre + "' creado y subido al catálogo de la tienda.");
+        } catch (Exception e) {
+            System.out.println("[!] Error al crear el pack: " + e.getMessage());
+        }
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE DESCUENTOS ---
+    private static void gestionarDescuentos() {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- GESTIÓN DE DESCUENTOS ---");
+            System.out.println("1.- Ver descuentos creados");
+            System.out.println("2.- Crear un nuevo descuento");
+            System.out.println("3.- Asignar descuento a un producto");
+            System.out.println("0.- Volver al menú anterior");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+            switch (opcion) {
+                case "1":
+                    verDescuentos();
+                    break;
+                case "2":
+                    crearDescuento();
+                    break;
+                case "3":
+                    asignarDescuento();
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void verDescuentos() {
+        System.out.println("\n--- DESCUENTOS ACTUALES ---");
+        ArrayList<Discount> descuentos = Application.getGlobalDiscounts();
+
+        if (descuentos.isEmpty()) {
+            System.out.println("No hay descuentos registrados en el sistema.");
+            return;
+        }
+
+        for (int i = 0; i < descuentos.size(); i++) {
+            Discount d = descuentos.get(i);
+            // Multiplicamos por 100 y lo pasamos a entero para que 0.2 se vea como "20"
+            int porcentajeReal = (int) (d.getPercentage() * 100);
+            System.out.println((i + 1) + ".- [" + d.getType() + "] " + porcentajeReal + "% de rebaja | " + d.getDescription());
+        }
+    }
+
+    private static void crearDescuento() {
+        System.out.println("\n--- CREAR NUEVO DESCUENTO ---");
+
+        System.out.print("Porcentaje de descuento (ej: 0.20 para 20%): ");
+        double percentage;
+        try {
+            percentage = Double.parseDouble(scanner.nextLine());
+            if (percentage < 0 || percentage > 1) {
+                System.out.println("[!] El porcentaje debe estar entre 0.0 y 1.0");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Error: Introduce un número válido.");
+            return;
+        }
+
+        System.out.print("Tipo de descuento (ej: REBAJA, 2X1, EMPLEADO): ");
+        String type = scanner.nextLine();
+
+        System.out.print("Descripción breve: ");
+        String description = scanner.nextLine();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false); // Para que no invente fechas raras como 32/13/2024
+
+        Date fromDate = null;
+        Date toDate = null;
+
+        try {
+            System.out.print("Fecha de inicio (DD/MM/YYYY): ");
+            fromDate = sdf.parse(scanner.nextLine());
+
+            System.out.print("Fecha de fin (DD/MM/YYYY): ");
+            toDate = sdf.parse(scanner.nextLine());
+
+            if (toDate.before(fromDate)) {
+                System.out.println("[!] La fecha de fin no puede ser anterior a la fecha de inicio.");
+                return;
+            }
+
+            // Usamos el constructor de tu clase Discount
+            Discount nuevoDescuento = new Discount(percentage, type, description, fromDate, toDate);
+            Application.addDiscount(nuevoDescuento);
+            System.out.println("[+] ¡Descuento creado y guardado en el sistema!");
+
+        } catch (Exception e) {
+            System.out.println("[!] Error al procesar las fechas. Usa el formato DD/MM/YYYY.");
+        }
+    }
+
+    private static void asignarDescuento() {
+        ArrayList<Discount> descuentos = Application.getGlobalDiscounts();
+        if (descuentos.isEmpty()) {
+            System.out.println("[!] Primero debes crear un descuento en la opción 2.");
+            return;
+        }
+
+        // 1. Mostrar productos disponibles (solo individuales, no Packs)
+        ArrayList<Product> productosIndividuales = new ArrayList<>();
+        for (NewProduct np : Application.getCatalog()) {
+            if (np instanceof Product) {
+                productosIndividuales.add((Product) np);
+            }
+        }
+
+        if (productosIndividuales.isEmpty()) {
+            System.out.println("[!] No hay productos individuales en el catálogo para asignar descuentos.");
+            return;
+        }
+
+        System.out.println("\n--- ASIGNAR DESCUENTO ---");
+        System.out.println("Elige el producto al que quieres aplicar el descuento:");
+        for (int i = 0; i < productosIndividuales.size(); i++) {
+            Product p = productosIndividuales.get(i);
+            String tieneDescuento = (p.getDiscount() != null) ? " (Ya tiene descuento)" : "";
+            System.out.println((i + 1) + ".- " + p.getName() + " - " + p.getPrice() + "€" + tieneDescuento);
+        }
+
+        try {
+            System.out.print("Número del producto (0 para cancelar): ");
+            int indexProd = Integer.parseInt(scanner.nextLine());
+            if (indexProd == 0) return;
+            if (indexProd < 1 || indexProd > productosIndividuales.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+            Product prodSeleccionado = productosIndividuales.get(indexProd - 1);
+
+            // 2. Mostrar descuentos disponibles con el nuevo formato
+            System.out.println("\nDescuentos disponibles:");
+            for (int i = 0; i < descuentos.size(); i++) {
+                Discount d = descuentos.get(i);
+                int porcentajeReal = (int) (d.getPercentage() * 100);
+                System.out.println((i + 1) + ".- [" + d.getType() + "] " + porcentajeReal + "% - " + d.getDescription());
+            }
+
+            System.out.print("Número del descuento a aplicar (0 para cancelar): ");
+            int indexDesc = Integer.parseInt(scanner.nextLine());
+            if (indexDesc == 0) return;
+            if (indexDesc < 1 || indexDesc > descuentos.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            Discount descSeleccionado = descuentos.get(indexDesc - 1);
+
+            // 3. Asignar usando el setter que acabamos de crear en Product.java
+            prodSeleccionado.setDiscount(descSeleccionado);
+            System.out.println("[+] ¡Éxito! Descuento [" + descSeleccionado.getType() + "] aplicado a '" + prodSeleccionado.getName() + "'.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida.");
+        }
     }
 }
