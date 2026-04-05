@@ -962,7 +962,7 @@ public class main {
             System.out.println("\n--- GESTIÓN DE CATÁLOGO ---");
             System.out.println("1.- Ver categorías existentes");
             System.out.println("2.- Añadir nueva categoría");
-            System.out.println("3.- Gestionar Packs (En construcción \uD83D\uDEA7)");
+            System.out.println("3.- Gestionar Packs");
             System.out.println("0.- Volver al menú anterior");
             System.out.print("Elige una opción: ");
 
@@ -976,7 +976,7 @@ public class main {
                     crearCategoria();
                     break;
                 case "3":
-                    System.out.println("\n[!] La funcionalidad de Packs aún no ha sido implementada por el equipo.");
+                    gestionarPacks();
                     break;
                 case "0":
                     volver = true;
@@ -1024,5 +1024,137 @@ public class main {
         Application.addCategory(nuevaCategoria);
 
         System.out.println("[+] Categoría '" + nombre + "' creada con éxito.");
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE PACKS ---
+
+    private static void gestionarPacks() {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- GESTIÓN DE PACKS ---");
+            System.out.println("1.- Ver Packs creados en la tienda");
+            System.out.println("2.- Crear un nuevo Pack");
+            System.out.println("0.- Volver al menú anterior");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+            switch (opcion) {
+                case "1":
+                    verPacks();
+                    break;
+                case "2":
+                    crearPack();
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void verPacks() {
+        System.out.println("\n--- PACKS ACTUALES ---");
+        boolean hayPacks = false;
+
+        for (NewProduct np : Application.getCatalog()) {
+            // Filtramos el catálogo para mostrar solo los que sean instancia de Pack
+            if (np instanceof Pack) {
+                Pack pack = (Pack) np;
+                hayPacks = true;
+                System.out.println("- " + pack.getName() + " | Precio especial: " + pack.getPrice() + "€");
+                System.out.println("  Contiene: " + pack.getProducts().size() + " productos.");
+            }
+        }
+        if (!hayPacks) {
+            System.out.println("Actualmente no hay Packs creados en el sistema.");
+        }
+    }
+
+    private static void crearPack() {
+        System.out.println("\n--- CREAR NUEVO PACK ---");
+        ArrayList<NewProduct> catalogo = Application.getCatalog();
+
+        // Filtramos para que solo salgan productos individuales (evitamos meter packs dentro de packs para no liar al usuario)
+        ArrayList<NewProduct> productosIndividuales = new ArrayList<>();
+        for (NewProduct np : catalogo) {
+            if (!(np instanceof Pack)) {
+                productosIndividuales.add(np);
+            }
+        }
+
+        if (productosIndividuales.size() < 2) {
+            System.out.println("[!] No hay suficientes productos en la tienda para crear un pack. Se necesitan al menos 2.");
+            return;
+        }
+
+        ArrayList<NewProduct> productosDelPack = new ArrayList<>();
+        boolean seleccionando = true;
+
+        // Bucle para añadir productos al Pack
+        while (seleccionando) {
+            System.out.println("\nProductos disponibles para añadir:");
+            for (int i = 0; i < productosIndividuales.size(); i++) {
+                System.out.println((i + 1) + ".- " + productosIndividuales.get(i).getName() + " (" + productosIndividuales.get(i).getPrice() + "€)");
+            }
+
+            System.out.println("\nProductos en el pack actual: " + productosDelPack.size());
+            System.out.print("Elige el número del producto a añadir (o 0 para terminar la selección): ");
+
+            try {
+                int index = Integer.parseInt(scanner.nextLine());
+                if (index == 0) {
+                    if (productosDelPack.size() >= 2) {
+                        seleccionando = false; // Salimos del bucle si ya tiene al menos 2
+                    } else {
+                        System.out.println("[!] Recuerda la regla de negocio: Un pack necesita contener al menos 2 productos.");
+                    }
+                } else if (index > 0 && index <= productosIndividuales.size()) {
+                    NewProduct seleccionado = productosIndividuales.get(index - 1);
+                    if (!productosDelPack.contains(seleccionado)) {
+                        productosDelPack.add(seleccionado);
+                        System.out.println("[+] '" + seleccionado.getName() + "' añadido al pack.");
+                    } else {
+                        System.out.println("[!] Ese producto ya está dentro del pack.");
+                    }
+                } else {
+                    System.out.println("[!] Opción no válida.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("[!] Introduce un número válido.");
+            }
+        }
+
+        // Una vez elegidos los productos, pedimos los datos generales del Pack
+        System.out.print("\nNombre del Pack (ej. Pack Especial Anime): ");
+        String nombre = scanner.nextLine();
+        System.out.print("Descripción: ");
+        String descripcion = scanner.nextLine();
+        System.out.print("Precio total rebajado del Pack (ej: 40.50): ");
+        double precio = Double.parseDouble(scanner.nextLine());
+        System.out.print("Unidades de este pack en stock (ej: 10): ");
+        int stock = Integer.parseInt(scanner.nextLine());
+        System.out.print("Ruta de la imagen (ej: img/pack.jpg): ");
+        String image = scanner.nextLine();
+
+        // El programa recopila automáticamente las categorías de los productos interiores para asignárselas al Pack
+        ArrayList<Category> categoriasPack = new ArrayList<>();
+        for (NewProduct np : productosDelPack) {
+            for (Category c : np.getCategories()) {
+                if (!categoriasPack.contains(c)) {
+                    categoriasPack.add(c);
+                }
+            }
+        }
+
+        try {
+            // Usamos el constructor de Pack que subiste en tus archivos
+            Pack nuevoPack = new Pack(nombre, descripcion, precio, image, stock, categoriasPack, new ArrayList<Review>(), productosDelPack);
+            Application.getCatalog().add(nuevoPack);
+            System.out.println("[+] ¡Éxito! Pack '" + nombre + "' creado y subido al catálogo de la tienda.");
+        } catch (Exception e) {
+            System.out.println("[!] Error al crear el pack: " + e.getMessage());
+        }
     }
 }
