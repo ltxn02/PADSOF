@@ -1,0 +1,8 @@
+COMIC;Spider-Man: Blue;Una historia de amor y perdida;25.95;10;img/comic/spidey.jpg;160;Marvel;2002;Jeph Loeb,Tim Sale
+COMIC;Watchmen;¿Quien vigila a los vigilantes?;35.00;5;img/comic/watchmen.jpg;416;DC Comics;1986;Alan Moore,Dave Gibbons
+GAME;Catan;Juego de gestion de recursos;40.00;20;img/game/catan.jpg;4;Dados,Comercio,Gestion;10-99
+GAME;Zelda: Breath of the Wild;Aventura en Hyrule;59.99;15;img/game/zelda.jpg;1;Mundo Abierto,Accion;12-99
+FIGURINE;Goku SSJ;Figura articulada de alta calidad;45.50;8;img/fig/goku.jpg;18.5;10.0;5.0;PVC;Dragon Ball
+FIGURINE;Batman Totem;Estatua coleccionista;120.00;2;img/fig/batman.jpg;30.0;15.0;15.0;Resina;DC Multiverse
+PACK;Pack Iniciacion;Incluye Catan y Zelda;85.00;3;img/pack/starter.jpg;Catan,Zelda: Breath of the Wild
+PACK;Coleccion Spiderman;Comics y Figura;65.00;1;img/pack/spidey_bundle.jpg;Spider-Man: Blue,Goku SSJ

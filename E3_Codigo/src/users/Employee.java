@@ -1,12 +1,10 @@
 package users;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.io.*;
 import utils.*;
 import transactions.*;
 import catalog.*;
-import java.util.*;
 
 public class Employee extends Staff {
     private boolean enabled;
@@ -27,23 +25,84 @@ public class Employee extends Staff {
     	p.editProductInfo(name, description, price, picturePath, stock);
     }
     
-    
-    public void loadProduct(ItemType itemType, Map<String, Object> data) {
-    	
+    public void loadProduct(Catalog catalog, ItemType itemType, Map<String, Object> data) {
+    	catalog.addProductOnSale(itemType, data);
     }
     
-    /* FALTA COMPROBAR QUE TIPO DE PRODUCTO ES ENTRE Game, Comic, Figurine Y Pack (NO SE PUEDE CREAR OBJETO DE TIPO NEWPRODUCT O PRODUCT)*/
-    /*public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
-    	catalog.addProductOnSale(name, description, price, picturePath, stock, categories, reviews);
-    }*/
-    
-    /*public void loadProduct(Catalog catalog, String name, String description, double price, String picturePath, int stock) {
-    	this.loadProduct(catalog, name, description, price, picturePath, stock, new ArrayList<Category>(), new ArrayList<Review>());
-    }*/
-    
-    // public void loadProduct(FILE)
-    
-    
+    public void loadProductBulk(String filePath, Catalog catalog) {
+        String line;
+        String cvsSplitBy = ";";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] dataArray = line.split(cvsSplitBy);
+                
+                try {
+                    // 1. Determinar el tipo (primera columna)
+                    ItemType type = ItemType.valueOf(dataArray[0].toUpperCase());
+                    
+                    // 2. Construir el mapa de datos
+                    Map<String, Object> data = new HashMap<>();
+                    
+                    // Datos comunes (posiciones 1 a 5)
+                    data.put("name", dataArray[1]);
+                    data.put("description", dataArray[2]);
+                    data.put("price", Double.parseDouble(dataArray[3]));
+                    data.put("stock", Integer.parseInt(dataArray[4]));
+                    data.put("picturePath", dataArray[5]);
+                    
+                    // 3. Datos específicos según el tipo
+                    fillSpecificData(catalog, type, data, dataArray);
+
+                    // 4. Llamar a tu función existente
+                    this.loadProduct(catalog, type, data);
+
+                } catch (Exception e) {
+                    System.err.println("Error parsing line: " + line + " -> " + e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Could not read file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Método auxiliar para mapear las columnas extras según el tipo de producto.
+     */
+    private void fillSpecificData(Catalog catalog, ItemType type, Map<String, Object> data, String[] row) {
+        switch (type) {
+            case COMIC:
+                data.put("nPages", Integer.parseInt(row[6]));
+                data.put("publisher", row[7]);
+                data.put("publicationYear", Integer.parseInt(row[8]));
+                // Para listas, asumiendo formato "Autor1,Autor2,Autor3"
+                data.put("writtenBy", new ArrayList<>(Arrays.asList(row[9].split(","))));
+                break;
+
+            case GAME:
+                data.put("nPlayers", Integer.parseInt(row[6]));
+                data.put("mechanics", new ArrayList<>(Arrays.asList(row[7].split(","))));
+                data.put("ageRange", AgeRange.stringToAgeRange(row[8]));
+                break;
+
+            case FIGURINE:
+                data.put("height", Double.parseDouble(row[6]));
+                data.put("width", Double.parseDouble(row[7]));
+                data.put("depth", Double.parseDouble(row[8]));
+                data.put("material", row[9]);
+                data.put("franchise", row[10]);
+                break;
+
+            case PACK:
+                // Para el PACK, podrías recibir una lista de IDs o nombres de productos
+                // Aquí deberías implementar una lógica para buscar esos productos en el catálogo
+                data.put("products", catalog.packProducts(row[6])); 
+                break;
+        }
+    }
     
     
     

@@ -11,6 +11,7 @@ public abstract class Product extends NewProduct {
 
     public Product(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, Discount discount) {
         super(name, description, price, image, stock, categories, reviews);
+        this.discount = discount;
         this.productId = Product.lastProductId;
         Product.lastProductId++;
     }

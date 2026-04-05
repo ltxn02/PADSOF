@@ -67,7 +67,7 @@ public class Catalog {
 		this.gamesByAge.get(p.getAgeRange()).add(p);
 	}
 	
-	/*public void addProductOnSale(ItemType itemType, Map<String, Object> data) {
+	public void addProductOnSale(ItemType itemType, Map<String, Object> data) {
 		try {
 			this.validateData(itemType, data);
 			
@@ -75,41 +75,62 @@ public class Catalog {
 			if(p != null) {
 				this.addExistingProduct(p, (Integer) data.get("stock"));
 			} else {
+				String name = (String) data.get("name"), description = (String) data.get("description"), picturePath = (String) data.get("picturePath");
+				double price = (Double) data.get("price");
+				int stock = (Integer) data.get("stock");
+				Discount discount = (Discount) data.get("discount");
+				@SuppressWarnings("unchecked")
+				ArrayList<Category> categories = data.get("categories") != null ? (ArrayList<Category>) data.get("categories") : new ArrayList<>();
+				@SuppressWarnings("unchecked")
+				ArrayList<Review> reviews = data.get("reviews") != null ? (ArrayList<Review>) data.get("reviews") : new ArrayList<>();
+				
 				switch(itemType) {
 					case COMIC: {
+						@SuppressWarnings("unchecked")
+		                ArrayList<String> authors = (ArrayList<String>) data.get("writtenBy");
+						
 						this.productsOnSale.add(new Comic(
-								(String) data.get("name"),
-								(String) data.get("description"),
-								(Double) data.get("price"),
-								(String) data.get("picturePath"),
-								(Integer) data.get("stock"),
-								(ArrayList<Category>) data.getOrDefault("categories", new ArrayList<>()),
-								(ArrayList<Review>) data.getOrDefault("reviews", new ArrayList<>()),
-								(Discount) new Discount(0, null, null, null, null),
+								name, description, price, picturePath, stock, categories, reviews, discount,
 								(Integer) data.get("nPages"),
 								(String) data.get("publisher"),
 								(Integer) data.get("publicationYear"),
-								(ArrayList<String>) data.get("writtenBy")));
+								authors));
+						break;
 					}
-					case
+					case GAME: {
+						@SuppressWarnings("unchecked")
+		                ArrayList<String> mechanics = (ArrayList<String>) data.get("mechanics");
+						
+						this.productsOnSale.add(new Game(
+								name, description, price, picturePath, stock, categories, reviews, discount,
+								(Integer) data.get("nPlayers"), mechanics,
+								(AgeRange) data.get("ageRange")));
+						break;
+					}
+					case FIGURINE: {
+						this.productsOnSale.add(new Figurine(
+								name, description, price, picturePath, stock, categories, reviews, discount,
+								(Double) data.get("height"),
+								(Double) data.get("width"),
+								(Double) data.get("depth"),
+								(String) data.get("material"),
+								(String) data.get("franchise")));
+						break;
+					}
+					case PACK: {
+						@SuppressWarnings("unchecked")
+		                ArrayList<NewProduct> products = (ArrayList<NewProduct>) data.get("products");
+						
+						this.productsOnSale.add(new Pack(
+								name, description, price, picturePath, stock, categories, reviews, products));
+						break;
+					}
 				}
 			}
-		}*/
-		
-		/*if(this.validateData(data)) {
-			throw new IllegalArgumentException("Invalid data map");
+		} catch (IllegalArgumentException e) {
+			System.err.println("Product couldn't be loaded: " + e.getMessage());
 		}
-		
-		if(p != null) {
-			this.addExistingProduct(p, stock);
-		} else {
-			NewProduct product = new NewProduct(name, description, price, picturePath, stock, categories, reviews);
-			this.productsOnSale.add(product);
-			if(product instanceof Game) {
-				this.organiseGame((Game)product);
-			}
-		}
-	}*/
+	}
 	
 	private NewProduct productNamed(String name) {
 		for(NewProduct p: this.productsOnSale) {
@@ -122,6 +143,24 @@ public class Catalog {
 	
 	private void addExistingProduct(NewProduct p, int stock) {
 		p.increaseStock(stock);
+	}
+	
+	public ArrayList<NewProduct> packProducts(String productStr) {
+		ArrayList<NewProduct> packItems = new ArrayList<>();
+		
+		String[] names = productStr.split(",");
+		for(String name: names) {
+			String trimmedName = name.trim();
+			
+			NewProduct p = this.productNamed(name);
+			
+			if(p != null) {
+				packItems.add(p);
+			} else {
+				throw new IllegalArgumentException("Component product not found in catalog: " + trimmedName);
+			}
+		}
+		return packItems;
 	}
 	
 	public List<NewProduct> visibleProducts() {
@@ -182,6 +221,9 @@ public class Catalog {
 		if(data.get("reviews") != null) {
 			this.checkField(data, "reviews", ArrayList.class);
 		}
+		if(data.get("discount") != null) {
+			this.checkField(data, "discount", Discount.class);
+		}
 		
 		switch(itemType) {
 			case COMIC: {
@@ -189,11 +231,13 @@ public class Catalog {
 				checkField(data, "publisher", String.class);
 				checkField(data, "publicationYear", Integer.class);
 				checkField(data, "writtenBy", ArrayList.class);
+				break;
 			}
 			case GAME: {
 				checkField(data, "nPlayers", Integer.class);
 				checkField(data, "mechanics", ArrayList.class);
 				checkField(data, "ageRange", AgeRange.class);
+				break;
 			}
 			case FIGURINE: {
 				checkField(data, "height", Double.class);
@@ -201,9 +245,11 @@ public class Catalog {
 				checkField(data, "depth", Double.class);
 				checkField(data, "material", String.class);
 				checkField(data, "franchise", String.class);
+				break;
 			}
 			case PACK: {
 				checkField(data, "products", ArrayList.class);
+				break;
 			}
 		}
 	}
