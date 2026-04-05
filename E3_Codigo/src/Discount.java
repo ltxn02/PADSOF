@@ -33,4 +33,16 @@ public class Discount {
     public double applyDiscount(double originalPrice){
         return originalPrice * percentage;
     }
+
+    public double getPercentage() {
+        return this.percentage;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getType() {
+        return this.type;
+    }
 }

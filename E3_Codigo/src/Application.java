@@ -9,6 +9,7 @@ public class Application {
     private static ArrayList<SecondHandProduct> secondHandProducts = new ArrayList<>();
     private static ArrayList<NewProduct> catalog = new ArrayList<>();
     private static ArrayList<Category> globalCategories = new ArrayList<>();
+    private static ArrayList<Discount> globalDiscounts = new ArrayList<>();
 
     // --- BLOQUE DE INICIALIZACIÓN ESTÁTICA ---
     static {
@@ -157,5 +158,13 @@ public class Application {
 
     public static void addCategory(Category c) {
         globalCategories.add(c);
+    }
+
+    public static ArrayList<Discount> getGlobalDiscounts() {
+        return globalDiscounts;
+    }
+
+    public static void addDiscount(Discount d) {
+        globalDiscounts.add(d);
     }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class Product extends NewProduct {
     private static int lastProductId = 1;
@@ -11,8 +12,28 @@ public abstract class Product extends NewProduct {
         Product.lastProductId++;
     }
 
+    public void setDiscount(Discount discount) {
+        this.discount = discount;
+    }
 
+    public Discount getDiscount() {
+        return this.discount;
+    }
 
+    @Override
+    public double getPrice() {
+        // 1. Obtenemos el precio original llamando a la clase padre
+        double precioOriginal = super.getPrice();
 
+        // 2. Comprobamos si tiene un descuento y si no está caducado
+        if (this.discount != null && this.discount.isValid(new Date())) {
+            // El metodo applyDiscount devuelve cuánto dinero te ahorras (ej. 20% de 50€ = 10€)
+            double rebaja = this.discount.applyDiscount(precioOriginal);
+            // El precio final es el original menos la rebaja (50€ - 10€ = 40€)
+            return precioOriginal - rebaja;
+        }
 
+        // Si no hay descuento o está caducado, devolvemos el precio normal
+        return precioOriginal;
+    }
 }
