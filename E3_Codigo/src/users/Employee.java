@@ -24,12 +24,65 @@ public class Employee extends Staff {
     	}
     	p.editProductInfo(name, description, price, picturePath, stock);
     }
-    
-    public void loadProduct(Catalog catalog, ItemType itemType, Map<String, Object> data) throws SecurityException {
-    	if(this.checkPermission(Permission.PRODUCT_LOAD) == false) {
-    		throw new SecurityException("Employee doesn't have permission to load products");
-    	}
-    	catalog.addProductOnSale(itemType, data);
+
+    public void loadProduct(ItemType itemType, Map<String, Object> data) throws SecurityException {
+        // 1. Comprobamos permisos usando el método de Taha
+        if(this.checkPermission(Permission.PRODUCT_LOAD) == false) {
+            throw new SecurityException("[!] Acceso denegado: No tienes permiso para cargar productos.");
+        }
+
+        try {
+            // 2. Extraemos los datos comunes
+            String name = (String) data.get("name");
+            String desc = (String) data.get("description");
+            double price = Double.parseDouble(data.get("price").toString());
+            String pic = (String) data.get("picturePath");
+            int stock = Integer.parseInt(data.get("stock").toString());
+
+            NewProduct nuevoProducto = null;
+
+            // --- SOLUCIÓN: Creamos una categoría por defecto para cumplir con la regla de NewProduct ---
+            ArrayList<Category> defaultCategories = new ArrayList<>();
+            defaultCategories.add(new Category(itemType.toString(), new ArrayList<>()));
+
+            // 3. Construimos el producto según su tipo pasándole la defaultCategory
+            switch(itemType) {
+                case COMIC:
+                    int nPages = Integer.parseInt(data.get("nPages").toString());
+                    String publisher = (String) data.get("publisher");
+                    int pubYear = Integer.parseInt(data.get("publicationYear").toString());
+
+                    nuevoProducto = new Comic(name, desc, price, pic, stock, defaultCategories, new ArrayList<>(), null, nPages, publisher, pubYear, new ArrayList<>());
+                    break;
+
+                case GAME:
+                    int nPlayers = Integer.parseInt(data.get("nPlayers").toString());
+                    nuevoProducto = new Game(name, desc, price, pic, stock, defaultCategories, new ArrayList<>(), null, nPlayers, new ArrayList<>(), null);
+                    break;
+
+                case FIGURINE:
+                    double height = Double.parseDouble(data.get("height").toString());
+                    double width = Double.parseDouble(data.get("width").toString());
+                    double depth = Double.parseDouble(data.get("depth").toString());
+                    String material = (String) data.get("material");
+                    String franchise = (String) data.get("franchise");
+
+                    nuevoProducto = new Figurine(name, desc, price, pic, stock, defaultCategories, new ArrayList<>(), null, height, width, depth, material, franchise);
+                    break;
+
+                case PACK:
+                    System.out.println("[!] Los packs se gestionan desde el menú de Gestor.");
+                    return;
+            }
+
+            // 4. Lo añadimos al catálogo global
+            if (nuevoProducto != null) {
+                logic.Application.getCatalog().add(nuevoProducto);
+            }
+
+        } catch (Exception e) {
+            System.out.println("[!] Error construyendo el producto. Revisa los datos: " + e.getMessage());
+        }
     }
     
     public void loadProductBulk(String filePath, Catalog catalog) throws SecurityException {
@@ -61,7 +114,7 @@ public class Employee extends Staff {
                     fillSpecificData(catalog, type, data, dataArray);
 
                     // 4. Llamar a tu función existente
-                    this.loadProduct(catalog, type, data);
+                    this.loadProduct(type, data);
 
                 } catch (Exception e) {
                     System.err.println("Error parsing line: " + line + " -> " + e.getMessage());

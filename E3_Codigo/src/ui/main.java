@@ -580,7 +580,7 @@ public class main {
 
             switch (opcion) {
                 case "1":
-                    System.out.println(">> (Simulando) Abriendo gestión de inventario...");
+                    gestionarInventario(empleado);
                     break;
                 // Añade aquí los demás cases
                 case "0":
@@ -1290,6 +1290,128 @@ public class main {
 
         } catch (NumberFormatException e) {
             System.out.println("[!] Entrada inválida.");
+        }
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE INVENTARIO (EMPLEADO) ---
+
+    private static void gestionarInventario(Employee empleado) {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- GESTIÓN DE INVENTARIO ---");
+            System.out.println("1.- Subida manual de producto");
+            System.out.println("2.- Subida masiva (Leer archivo CSV/TXT)");
+            System.out.println("0.- Volver al panel de empleado");
+            System.out.print("Elige una opción: ");
+
+            String opcion = scanner.nextLine();
+            switch (opcion) {
+                case "1":
+                    subidaManual(empleado);
+                    break;
+                case "2":
+                    subidaMasiva(empleado);
+                    break;
+                case "0":
+                    volver = true;
+                    break;
+                default:
+                    System.out.println("[!] Opción no válida.");
+            }
+        }
+    }
+
+    private static void subidaManual(Employee empleado) {
+        System.out.println("\n--- SUBIDA MANUAL DE PRODUCTO ---");
+        try {
+            java.util.Map<String, Object> data = new java.util.HashMap<>();
+
+            System.out.print("Nombre: "); data.put("name", scanner.nextLine());
+            System.out.print("Descripción: "); data.put("description", scanner.nextLine());
+            System.out.print("Precio: "); data.put("price", scanner.nextLine());
+            System.out.print("Stock inicial: "); data.put("stock", scanner.nextLine());
+            System.out.print("Ruta Imagen (ej: img/test.jpg): "); data.put("picturePath", scanner.nextLine());
+
+            System.out.println("Tipo (1: COMIC, 2: GAME, 3: FIGURINE): ");
+            String tipo = scanner.nextLine();
+            utils.ItemType itemType = null;
+
+            if (tipo.equals("1")) {
+                itemType = utils.ItemType.COMIC;
+                System.out.print("Nº de Páginas: "); data.put("nPages", scanner.nextLine());
+                System.out.print("Editorial: "); data.put("publisher", scanner.nextLine());
+                System.out.print("Año Publicación: "); data.put("publicationYear", scanner.nextLine());
+            } else if (tipo.equals("2")) {
+                itemType = utils.ItemType.GAME;
+                System.out.print("Nº de Jugadores: "); data.put("nPlayers", scanner.nextLine());
+            } else if (tipo.equals("3")) {
+                itemType = utils.ItemType.FIGURINE;
+                System.out.print("Altura (cm): "); data.put("height", scanner.nextLine());
+                System.out.print("Anchura (cm): "); data.put("width", scanner.nextLine());
+                System.out.print("Profundidad (cm): "); data.put("depth", scanner.nextLine());
+                System.out.print("Material: "); data.put("material", scanner.nextLine());
+                System.out.print("Franquicia: "); data.put("franchise", scanner.nextLine());
+            } else {
+                System.out.println("[!] Tipo no válido.");
+                return;
+            }
+
+            empleado.loadProduct(itemType, data);
+            System.out.println("[+] Producto añadido al catálogo manualmente.");
+
+        } catch (SecurityException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void subidaMasiva(Employee empleado) {
+        System.out.println("\n--- SUBIDA MASIVA DE PRODUCTOS ---");
+        System.out.print("Ruta del archivo (Pulsa Enter para usar 'fileLoadBulkTest'): ");
+        String ruta = scanner.nextLine();
+        if (ruta.trim().isEmpty()) ruta = "fileLoadBulkTest";
+
+        // Usamos try-with-resources para asegurar que el archivo se cierra solo
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(ruta))) {
+            String linea;
+            int procesados = 0;
+
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(";");
+                if (partes.length < 6) continue; // Saltamos líneas vacías o mal formateadas
+
+                utils.ItemType type = utils.ItemType.valueOf(partes[0].trim().toUpperCase());
+
+                java.util.Map<String, Object> data = new java.util.HashMap<>();
+                data.put("name", partes[1]);
+                data.put("description", partes[2]);
+                data.put("price", partes[3]);
+                data.put("stock", partes[4]);
+                data.put("picturePath", partes[5]);
+
+                // Según el formato de fileLoadBulkTest, leemos los atributos extra
+                if (type == utils.ItemType.COMIC) {
+                    data.put("nPages", partes[6]);
+                    data.put("publisher", partes[7]);
+                    data.put("publicationYear", partes[8]);
+                } else if (type == utils.ItemType.GAME) {
+                    data.put("nPlayers", partes[6]);
+                } else if (type == utils.ItemType.FIGURINE) {
+                    data.put("height", partes[6]);
+                    data.put("width", partes[7]);
+                    data.put("depth", partes[8]);
+                    data.put("material", partes[9]);
+                    data.put("franchise", partes[10]);
+                }
+
+                empleado.loadProduct(type, data);
+                procesados++;
+            }
+            System.out.println("[+] ¡Subida masiva completada! Se han cargado " + procesados + " productos.");
+
+        } catch (java.io.FileNotFoundException e) {
+            System.out.println("[!] No se ha encontrado el archivo: " + ruta);
+        } catch (Exception e) {
+            System.out.println("[!] Error leyendo el archivo: " + e.getMessage());
         }
     }
 }
