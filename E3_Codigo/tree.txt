@@ -1,0 +1,350 @@
+.
+├── Makefile
+├── bin
+│   ├── AgeRange.class
+│   ├── Application.class
+│   ├── BaseElement.class
+│   ├── CartItem.class
+│   ├── Catalog.class
+│   ├── Category.class
+│   ├── Client.class
+│   ├── Comic.class
+│   ├── Condition.class
+│   ├── Discount.class
+│   ├── Employee.class
+│   ├── EmployeeRoles.class
+│   ├── Exchange.class
+│   ├── ExchangeHistoric.class
+│   ├── ExchangeOffer.class
+│   ├── ExchangeStatus.class
+│   ├── Exchangeoffer.class
+│   ├── Figurine.class
+│   ├── Game.class
+│   ├── Guest.class
+│   ├── Item.class
+│   ├── ItemType.class
+│   ├── Main.class
+│   ├── MainIntercambios.class
+│   ├── Manager.class
+│   ├── NewProduct.class
+│   ├── Notification.class
+│   ├── Order.class
+│   ├── OrderHistoric.class
+│   ├── OrderStatus.class
+│   ├── Pack.class
+│   ├── Permission.class
+│   ├── Product.class
+│   ├── RegisteredUser.class
+│   ├── Review.class
+│   ├── SecondHandProduct.class
+│   ├── ShoppingCart.class
+│   ├── SistemaRecomendaciones.class
+│   ├── SistemaRecomendacionesSegundamano.class
+│   ├── Staff.class
+│   ├── User.class
+│   ├── logic
+│   │   ├── Application.class
+│   │   ├── SistemaRecomendaciones.class
+│   │   └── SistemaRecomendacionesSegundamano.class
+│   ├── main.class
+│   ├── model
+│   │   ├── catalog
+│   │   │   ├── BaseElement.class
+│   │   │   ├── Catalog.class
+│   │   │   ├── Category.class
+│   │   │   ├── Comic.class
+│   │   │   ├── Figurine.class
+│   │   │   ├── Game.class
+│   │   │   ├── ICatalogFactory.class
+│   │   │   ├── Item.class
+│   │   │   ├── NewProduct.class
+│   │   │   ├── Pack.class
+│   │   │   ├── Product.class
+│   │   │   ├── SecondHandProduct.class
+│   │   │   └── StandardCatalogFactory.class
+│   │   ├── discounts
+│   │   │   ├── Discount.class
+│   │   │   ├── FixedAmountDiscount.class
+│   │   │   ├── GiftDiscount.class
+│   │   │   ├── ICantidad.class
+│   │   │   ├── IDiscount.class
+│   │   │   ├── IDiscountFactory.class
+│   │   │   ├── IRebaja.class
+│   │   │   ├── IRegalo.class
+│   │   │   ├── IVolumen.class
+│   │   │   ├── PercentageDiscount.class
+│   │   │   ├── QuantityDiscount.class
+│   │   │   ├── StandardDiscountFactory.class
+│   │   │   └── VolumeDiscount.class
+│   │   ├── transactions
+│   │   │   ├── CartItem.class
+│   │   │   ├── EnviarOfertaIntercambio.class
+│   │   │   ├── Exchange.class
+│   │   │   ├── ExchangeHistoric.class
+│   │   │   ├── ExchangeOffer.class
+│   │   │   ├── Order.class
+│   │   │   ├── OrderHistoric.class
+│   │   │   └── ShoppingCart.class
+│   │   └── user
+│   │       ├── Client.class
+│   │       ├── Employee.class
+│   │       ├── Guest.class
+│   │       ├── Manager.class
+│   │       ├── RegisteredUser.class
+│   │       ├── Staff.class
+│   │       ├── TodosLosClientes.class
+│   │       └── User.class
+│   ├── test_intercambios.class
+│   ├── ui
+│   │   ├── AltaEmpleado.class
+│   │   ├── CambiarEstadoEmpleado.class
+│   │   ├── ComprarProducto.class
+│   │   ├── CrearCategoria.class
+│   │   ├── GestionarCartera.class
+│   │   ├── GestionarCatalogo.class
+│   │   ├── GestionarDescuentos.class
+│   │   ├── GestionarEmpleado.class
+│   │   ├── GestionarPermisos.class
+│   │   ├── IntercambiadorCasoA.class
+│   │   ├── IntercambiadorCasoB.class
+│   │   ├── IntercambiadorCasoC.class
+│   │   ├── IntercambiadorCasoCParte1.class
+│   │   ├── IntercambiadorCasoDefault.class
+│   │   ├── IntercambiarProductos.class
+│   │   ├── IntercambioMostrar.class
+│   │   ├── Login.class
+│   │   ├── MenuCliente.class
+│   │   ├── MenuCreacion.class
+│   │   ├── MenuEmpleado.class
+│   │   ├── MenuGestor.class
+│   │   ├── MostrarRecomendaciones.class
+│   │   ├── MostrarRecomendacionesSegundaMano.class
+│   │   ├── ObtenerListaEmpleados.class
+│   │   ├── Register.class
+│   │   ├── SubirProductoSegundaMano.class
+│   │   ├── VerCarrito.class
+│   │   ├── VerCatalogoInvitado.class
+│   │   ├── VerCategoria.class
+│   │   ├── VerHistorial.class
+│   │   ├── VerMisProductosSegundaMano.class
+│   │   ├── VerNotificaciones.class
+│   │   └── main.class
+│   └── util
+│       ├── AgeRange.class
+│       ├── BinPersistenceStrategy.class
+│       ├── Condition.class
+│       ├── Discount.class
+│       ├── EmployeeRoles.class
+│       ├── ExchangeStatus.class
+│       ├── IPersistenceStrategy.class
+│       ├── ItemType.class
+│       ├── Notification.class
+│       ├── OrderStatus.class
+│       ├── Permission.class
+│       └── Review.class
+├── diagramaClases2.uxf
+├── doc
+│   ├── AgeRange.html
+│   ├── BaseElement.html
+│   ├── CartItem.html
+│   ├── Category.html
+│   ├── Client.html
+│   ├── Comic.html
+│   ├── Condition.html
+│   ├── Discount.html
+│   ├── Employee.html
+│   ├── EmployeeRoles.html
+│   ├── Exchange.html
+│   ├── ExchangeHistoric.html
+│   ├── ExchangeStatus.html
+│   ├── Exchangeoffer.html
+│   ├── Figurine.html
+│   ├── Game.html
+│   ├── Guest.html
+│   ├── Item.html
+│   ├── ItemType.html
+│   ├── Main.html
+│   ├── Manager.html
+│   ├── NewProduct.html
+│   ├── Notification.html
+│   ├── Order.html
+│   ├── OrderHistoric.html
+│   ├── OrderStatus.html
+│   ├── Permission.html
+│   ├── Product.html
+│   ├── RegisteredUser.html
+│   ├── Review.html
+│   ├── SecondHandProduct.html
+│   ├── ShoppingCart.html
+│   ├── Staff.html
+│   ├── User.html
+│   ├── allclasses-index.html
+│   ├── allpackages-index.html
+│   ├── element-list
+│   ├── help-doc.html
+│   ├── index-all.html
+│   ├── index.html
+│   ├── legal
+│   │   ├── COPYRIGHT
+│   │   ├── LICENSE
+│   │   ├── dejavufonts.md
+│   │   ├── jquery.md
+│   │   └── jqueryUI.md
+│   ├── member-search-index.js
+│   ├── module-search-index.js
+│   ├── overview-tree.html
+│   ├── package-search-index.js
+│   ├── package-summary.html
+│   ├── package-tree.html
+│   ├── resource-files
+│   │   ├── copy.svg
+│   │   ├── fonts
+│   │   │   ├── DejaVuLGCSans-Bold.woff
+│   │   │   ├── DejaVuLGCSans-Bold.woff2
+│   │   │   ├── DejaVuLGCSans-BoldOblique.woff
+│   │   │   ├── DejaVuLGCSans-BoldOblique.woff2
+│   │   │   ├── DejaVuLGCSans-Oblique.woff
+│   │   │   ├── DejaVuLGCSans-Oblique.woff2
+│   │   │   ├── DejaVuLGCSans.woff
+│   │   │   ├── DejaVuLGCSans.woff2
+│   │   │   ├── DejaVuLGCSansMono-Bold.woff
+│   │   │   ├── DejaVuLGCSansMono-Bold.woff2
+│   │   │   ├── DejaVuLGCSansMono-BoldOblique.woff
+│   │   │   ├── DejaVuLGCSansMono-BoldOblique.woff2
+│   │   │   ├── DejaVuLGCSansMono-Oblique.woff
+│   │   │   ├── DejaVuLGCSansMono-Oblique.woff2
+│   │   │   ├── DejaVuLGCSansMono.woff
+│   │   │   ├── DejaVuLGCSansMono.woff2
+│   │   │   ├── DejaVuLGCSerif-Bold.woff
+│   │   │   ├── DejaVuLGCSerif-Bold.woff2
+│   │   │   ├── DejaVuLGCSerif-BoldItalic.woff
+│   │   │   ├── DejaVuLGCSerif-BoldItalic.woff2
+│   │   │   ├── DejaVuLGCSerif-Italic.woff
+│   │   │   ├── DejaVuLGCSerif-Italic.woff2
+│   │   │   ├── DejaVuLGCSerif.woff
+│   │   │   ├── DejaVuLGCSerif.woff2
+│   │   │   └── dejavu.css
+│   │   ├── glass.svg
+│   │   ├── jquery-ui.min.css
+│   │   ├── left.svg
+│   │   ├── link.svg
+│   │   ├── right.svg
+│   │   ├── stylesheet.css
+│   │   └── x.svg
+│   ├── script-files
+│   │   ├── jquery-3.7.1.min.js
+│   │   ├── jquery-ui.min.js
+│   │   ├── script.js
+│   │   ├── search-page.js
+│   │   └── search.js
+│   ├── search.html
+│   ├── tag-search-index.js
+│   └── type-search-index.js
+├── lib
+│   └── TeleChargeAndPaySystem8.jar
+├── src
+│   └── rongero
+│       ├── MainIntercambios.java
+│       ├── logic
+│       │   ├── Application.java
+│       │   ├── SistemaRecomendaciones.java
+│       │   └── SistemaRecomendacionesSegundamano.java
+│       ├── model
+│       │   ├── catalog
+│       │   │   ├── BaseElement.java
+│       │   │   ├── Catalog.java
+│       │   │   ├── Category.java
+│       │   │   ├── Comic.java
+│       │   │   ├── Figurine.java
+│       │   │   ├── Game.java
+│       │   │   ├── ICatalogFactory.java
+│       │   │   ├── Item.java
+│       │   │   ├── NewProduct.java
+│       │   │   ├── Pack.java
+│       │   │   ├── Product.java
+│       │   │   ├── SecondHandProduct.java
+│       │   │   └── StandardCatalogFactory.java
+│       │   ├── discounts
+│       │   │   ├── Discount.java
+│       │   │   ├── FixedAmountDiscount.java
+│       │   │   ├── GiftDiscount.java
+│       │   │   ├── ICantidad.java
+│       │   │   ├── IDiscount.java
+│       │   │   ├── IDiscountFactory.java
+│       │   │   ├── IRebaja.java
+│       │   │   ├── IRegalo.java
+│       │   │   ├── IVolumen.java
+│       │   │   ├── PercentageDiscount.java
+│       │   │   ├── QuantityDiscount.java
+│       │   │   ├── StandardDiscountFactory.java
+│       │   │   └── VolumeDiscount.java
+│       │   ├── transactions
+│       │   │   ├── CartItem.java
+│       │   │   ├── EnviarOfertaIntercambio.java
+│       │   │   ├── Exchange.java
+│       │   │   ├── ExchangeHistoric.java
+│       │   │   ├── ExchangeOffer.java
+│       │   │   ├── Order.java
+│       │   │   ├── OrderHistoric.java
+│       │   │   └── ShoppingCart.java
+│       │   └── user
+│       │       ├── Client.java
+│       │       ├── Employee.java
+│       │       ├── Guest.java
+│       │       ├── Manager.java
+│       │       ├── RegisteredUser.java
+│       │       ├── Staff.java
+│       │       ├── TodosLosClientes.java
+│       │       └── User.java
+│       ├── test_intercambios.java
+│       ├── ui
+│       │   ├── AltaEmpleado.java
+│       │   ├── CambiarEstadoEmpleado.java
+│       │   ├── ComprarProducto.java
+│       │   ├── CrearCategoria.java
+│       │   ├── GestionarCartera.java
+│       │   ├── GestionarCatalogo.java
+│       │   ├── GestionarDescuentos.java
+│       │   ├── GestionarEmpleado.java
+│       │   ├── GestionarPermisos.java
+│       │   ├── IntercambiadorCasoA.java
+│       │   ├── IntercambiadorCasoB.java
+│       │   ├── IntercambiadorCasoC.java
+│       │   ├── IntercambiadorCasoCParte1.java
+│       │   ├── IntercambiadorCasoDefault.java
+│       │   ├── IntercambiarProductos.java
+│       │   ├── IntercambioMostrar.java
+│       │   ├── Login.java
+│       │   ├── MenuCliente.java
+│       │   ├── MenuCreacion.java
+│       │   ├── MenuEmpleado.java
+│       │   ├── MenuGestor.java
+│       │   ├── MostrarRecomendaciones.java
+│       │   ├── MostrarRecomendacionesSegundaMano.java
+│       │   ├── ObtenerListaEmpleados.java
+│       │   ├── Register.java
+│       │   ├── SubirProductoSegundaMano.java
+│       │   ├── VerCarrito.java
+│       │   ├── VerCatalogoInvitado.java
+│       │   ├── VerCategoria.java
+│       │   ├── VerHistorial.java
+│       │   ├── VerMisProductosSegundaMano.java
+│       │   ├── VerNotificaciones.java
+│       │   └── main.java
+│       └── util
+│           ├── AgeRange.java
+│           ├── BinPersistenceStrategy.java
+│           ├── Condition.java
+│           ├── Discount.java
+│           ├── EmployeeRoles.java
+│           ├── ExchangeStatus.java
+│           ├── IPersistenceStrategy.java
+│           ├── ItemType.java
+│           ├── Notification.java
+│           ├── OrderStatus.java
+│           ├── Permission.java
+│           ├── Review.java
+│           └── SaveLoader.java
+└── tree.txt
+
+26 directories, 322 files

@@ -1,4 +1,4 @@
-package ui;
+package rongero.ui;
 
 import model.catalog.NewProduct;
 import model.transactions.CartItem;

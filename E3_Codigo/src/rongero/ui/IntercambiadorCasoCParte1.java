@@ -1,4 +1,4 @@
-package ui;
+package rongero.ui;
 
 import model.catalog.SecondHandProduct;
 import java.util.List;

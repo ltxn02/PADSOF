@@ -1,4 +1,4 @@
-package ui;
+package rongero.ui;
 
 import logic.Application;
 import model.catalog.Category;

@@ -1,4 +1,4 @@
-package ui;
+package rongero.ui;
 
 import model.user.Manager;
 import model.catalog.*;

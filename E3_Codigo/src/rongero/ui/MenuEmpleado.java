@@ -1,4 +1,4 @@
-package ui;
+package rongero.ui;
 import java.util.Scanner;
 import model.user.Employee;
 
