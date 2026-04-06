@@ -45,9 +45,8 @@ public class MainIntercambios {
             // FINAL: Bloque de código añadido
             ////////////////////////////////////
             
-            
-            /*boolean exito = intercambio.validateOffer(ivan);
-            if (exito) {
+            /**
+            intercambio.validateExchange(ivan);
                 System.out.println("Nuevo dueño de Xbox: " + xbox);
                 System.out.println("Nuevo dueño de PS5: " + ps5);
                 System.out.print("Productos liberados: " );
@@ -57,8 +56,7 @@ public class MainIntercambios {
                     System.out.println("No");
                 }
                 System.out.println(oferta);
-            } else {
                 System.out.println("Error: La validación falló.");
-            }*/
+                */
         }
     }
