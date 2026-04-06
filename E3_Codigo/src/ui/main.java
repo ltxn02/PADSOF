@@ -1172,59 +1172,70 @@ public class main {
 
         for (int i = 0; i < descuentos.size(); i++) {
             Discount d = descuentos.get(i);
-            // Multiplicamos por 100 y lo pasamos a entero para que 0.2 se vea como "20"
-            int porcentajeReal = (int) (d.getPercentage() * 100);
-            System.out.println((i + 1) + ".- [" + d.getType() + "] " + porcentajeReal + "% de rebaja | " + d.getDescription());
+
+            // --- SOLUCIÓN: Comprobamos qué tipo de hijo es antes de llamar a sus métodos ---
+            String infoRebaja = "";
+            if (d instanceof utils.PercentageDiscount) {
+                // Hacemos el casting (utils.PercentageDiscount) d para poder usar getPercentage()
+                int porcentajeReal = (int) (((utils.PercentageDiscount) d).getPercentage() * 100);
+                infoRebaja = porcentajeReal + "%";
+            } else if (d instanceof utils.FixedDiscount) {
+                // Hacemos el casting para poder usar getAmount()
+                infoRebaja = ((utils.FixedDiscount) d).getAmount() + "€";
+            }
+
+            System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " de rebaja | " + d.getDescription());
         }
     }
 
     private static void crearDescuento() {
         System.out.println("\n--- CREAR NUEVO DESCUENTO ---");
+        System.out.println("1.- Rebaja por porcentaje (ej: 20%)");
+        System.out.println("2.- Descuento de importe fijo (ej: 10€)");
+        System.out.print("Elige el tipo de descuento: ");
+        String tipoDesc = scanner.nextLine();
 
-        System.out.print("Porcentaje de descuento (ej: 0.20 para 20%): ");
-        double percentage;
-        try {
-            percentage = Double.parseDouble(scanner.nextLine());
-            if (percentage < 0 || percentage > 1) {
-                System.out.println("[!] El porcentaje debe estar entre 0.0 y 1.0");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("[!] Error: Introduce un número válido.");
+        if (!tipoDesc.equals("1") && !tipoDesc.equals("2")) {
+            System.out.println("[!] Tipo no válido.");
             return;
         }
-
-        System.out.print("Tipo de descuento (ej: REBAJA, 2X1, EMPLEADO): ");
-        String type = scanner.nextLine();
 
         System.out.print("Descripción breve: ");
         String description = scanner.nextLine();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false); // Para que no invente fechas raras como 32/13/2024
-
+        sdf.setLenient(false);
         Date fromDate = null;
         Date toDate = null;
 
         try {
             System.out.print("Fecha de inicio (DD/MM/YYYY): ");
             fromDate = sdf.parse(scanner.nextLine());
-
             System.out.print("Fecha de fin (DD/MM/YYYY): ");
             toDate = sdf.parse(scanner.nextLine());
 
             if (toDate.before(fromDate)) {
-                System.out.println("[!] La fecha de fin no puede ser anterior a la fecha de inicio.");
+                System.out.println("[!] La fecha de fin no puede ser anterior a la de inicio.");
                 return;
             }
 
-            // Usamos el constructor de tu clase Discount
-            Discount nuevoDescuento = new Discount(percentage, type, description, fromDate, toDate);
-            Application.addDiscount(nuevoDescuento);
-            System.out.println("[+] ¡Descuento creado y guardado en el sistema!");
+            utils.Discount nuevoDescuento = null;
+
+            if (tipoDesc.equals("1")) {
+                System.out.print("Porcentaje de descuento (ej: 0.20 para 20%): ");
+                double p = Double.parseDouble(scanner.nextLine());
+                nuevoDescuento = new utils.PercentageDiscount(p, description, fromDate, toDate);
+            } else {
+                System.out.print("Importe fijo a descontar (ej: 5.50 para 5,50€): ");
+                double amt = Double.parseDouble(scanner.nextLine());
+                nuevoDescuento = new utils.FixedDiscount(amt, description, fromDate, toDate);
+            }
+
+            logic.Application.addDiscount(nuevoDescuento);
+            System.out.println("[+] ¡Descuento guardado en el sistema!");
 
         } catch (Exception e) {
-            System.out.println("[!] Error al procesar las fechas. Usa el formato DD/MM/YYYY.");
+            System.out.println("[!] Error al procesar los datos: " + e.getMessage());
         }
     }
 
@@ -1266,12 +1277,20 @@ public class main {
             }
             Product prodSeleccionado = productosIndividuales.get(indexProd - 1);
 
-            // 2. Mostrar descuentos disponibles con el nuevo formato
+            // 2. Mostrar descuentos disponibles con el nuevo formato (Misma solución que arriba)
             System.out.println("\nDescuentos disponibles:");
             for (int i = 0; i < descuentos.size(); i++) {
                 Discount d = descuentos.get(i);
-                int porcentajeReal = (int) (d.getPercentage() * 100);
-                System.out.println((i + 1) + ".- [" + d.getType() + "] " + porcentajeReal + "% - " + d.getDescription());
+
+                String infoRebaja = "";
+                if (d instanceof utils.PercentageDiscount) {
+                    int porcentajeReal = (int) (((utils.PercentageDiscount) d).getPercentage() * 100);
+                    infoRebaja = porcentajeReal + "%";
+                } else if (d instanceof utils.FixedDiscount) {
+                    infoRebaja = ((utils.FixedDiscount) d).getAmount() + "€";
+                }
+
+                System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " - " + d.getDescription());
             }
 
             System.out.print("Número del descuento a aplicar (0 para cancelar): ");
@@ -1284,7 +1303,7 @@ public class main {
 
             Discount descSeleccionado = descuentos.get(indexDesc - 1);
 
-            // 3. Asignar usando el setter que acabamos de crear en Product.java
+            // 3. Asignar usando el setter
             prodSeleccionado.setDiscount(descSeleccionado);
             System.out.println("[+] ¡Éxito! Descuento [" + descSeleccionado.getType() + "] aplicado a '" + prodSeleccionado.getName() + "'.");
 

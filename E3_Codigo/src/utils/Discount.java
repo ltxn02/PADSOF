@@ -1,46 +1,30 @@
 package utils;
 import users.Manager;
-import transactions.*;
-import catalog.*;
 import java.util.Date;
 
-public class Discount {
+public abstract class Discount {
     private static int lastDiscountId = 1;
     private int discountId;
-    private double percentage;
     private String type;
     private String description;
     private Date from;
     private Date to;
     private Manager createdBy;
 
-    public Discount(double percentage, String type, String description, Date from, Date to) {
-        if (percentage < 0 || percentage > 1) {
-            throw new IllegalArgumentException("Invalid percentage");
-        }
-        this.percentage = percentage;
+    public Discount(String type, String description, Date from, Date to) {
         this.type = type;
         this.description = description;
         this.from = from;
         this.to = to;
-        this.discountId = lastDiscountId;
-        Discount.lastDiscountId++;
+        this.discountId = lastDiscountId++;
     }
 
     public boolean isValid(Date today) {
-        if (today.after(this.from) && today.before(this.to)) {
-            return true;
-        }
-        return false;
+        return today.after(this.from) && today.before(this.to);
     }
 
-    public double applyDiscount(double originalPrice){
-        return originalPrice * percentage;
-    }
-
-    public double getPercentage() {
-        return this.percentage;
-    }
+    // --- Cada hijo decidirá cómo se calcula la rebaja ---
+    public abstract double applyDiscount(double originalPrice);
 
     public String getDescription() {
         return this.description;
