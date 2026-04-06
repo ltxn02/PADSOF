@@ -1,11 +1,6 @@
 package ui;
 
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.time.format.DateTimeFormatter;
 
 import utils.*;
 import users.*;
@@ -33,8 +28,25 @@ public class MainIntercambios {
             System.out.println("\nEmpleado ivan valida el intercambio...");
             Exchange intercambio = new Exchange(oferta);
             oferta.aceptaroferta();
-            boolean exito = intercambio.validateExchange(ivan);
-
+            
+            
+            ////////////////////////////////////
+            // INICIO: Bloque de código añadido
+            ivan.validateExchange(intercambio);
+            System.out.println("Nuevo dueño de Xbox: " + xbox);
+            System.out.println("Nuevo dueño de PS5: " + ps5);
+            System.out.print("Productos liberados: " );
+            if (oferta.isAllAvailable()){
+                System.out.println("Si");
+            } else{
+                System.out.println("No");
+            }
+            System.out.println(oferta);
+            // FINAL: Bloque de código añadido
+            ////////////////////////////////////
+            
+            
+            /*boolean exito = intercambio.validateOffer(ivan);
             if (exito) {
                 System.out.println("Nuevo dueño de Xbox: " + xbox);
                 System.out.println("Nuevo dueño de PS5: " + ps5);
@@ -47,4 +59,6 @@ public class MainIntercambios {
                 System.out.println(oferta);
             } else {
                 System.out.println("Error: La validación falló.");
-            }}}
+            }*/
+        }
+    }

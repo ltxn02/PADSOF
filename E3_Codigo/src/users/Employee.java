@@ -20,14 +20,14 @@ public class Employee extends Staff {
     
     public void editProduct(NewProduct p, String name, String description, double price, String picturePath, int stock) throws SecurityException {
     	if(this.checkPermission(Permission.PRODUCT_EDIT) == false) {
-    		throw new SecurityException("Employee doesn't have permission to edit products");
+    		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to edit products");
     	}
     	p.editProductInfo(name, description, price, picturePath, stock);
     }
 
     public void loadProduct(Catalog catalog, ItemType itemType, Map<String, Object> data) throws SecurityException {
     	if(this.checkPermission(Permission.PRODUCT_LOAD) == false) {
-    		throw new SecurityException("Employee doesn't have permission to load products");
+    		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to load products");
     	}
     	catalog.addProductOnSale(itemType, data);
     }
@@ -74,14 +74,14 @@ public class Employee extends Staff {
     
     public void changeVisibilityProduct(NewProduct product, boolean visible) throws SecurityException {
     	if(this.checkPermission(Permission.PRODUCT_EDIT) == false) {
-    		throw new SecurityException("Employee doesn't have permission to edit products");
+    		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to edit products");
     	}
     	product.changeVisibilityProduct(visible);
     }
     
     public void appraiseSecondHandProduct(Client client, SecondHandProduct product, Condition c, double valuedOn) throws SecurityException, IllegalArgumentException {
     	if(this.checkPermission(Permission.EXCH_PRODUCT_APPRAISE) == false) {
-    		throw new SecurityException("Employee doesn't have permission to appraise products from a client's wallet");
+    		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to appraise products from a client's wallet");
     	}
     	
     	if(client.hasSecondHandProduct(product) == false) {
@@ -93,7 +93,7 @@ public class Employee extends Staff {
     
     public void validateExchange(Exchange exchange) throws SecurityException {
     	if(this.checkPermission(Permission.EXCH_VALIDATE) == false) {
-    		throw new SecurityException("Employee doesn't have permission to validate exchanges");
+    		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to validate exchanges");
     	}
     	
     	try {

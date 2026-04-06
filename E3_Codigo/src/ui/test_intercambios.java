@@ -33,11 +33,24 @@ public class test_intercambios {
         System.out.println("Productos de Ana bloqueados: (true)" + (!iphone.isAvailable() && !cascos.isAvailable()));
 
         Exchange exchA = new Exchange(ofertaAna);
+        
+        
+        ////////////////////////////////////
+        // INICIO: Bloque de código añadido
+        ivan.validateExchange(exchA);
+        System.out.println("Resultado: Carlos ahora tiene: " + iphone + " y " + cascos);
+        System.out.println("resultado: Ana ahora tiene: " + portatil);
+        // FINAL: Bloque de código añadido
+        ////////////////////////////////////
+        
+        
+        /*exchA.validateExchange(ivan);
         if (exchA.validateExchange(ivan)) {
             System.out.println("Resultado: Carlos ahora tiene: " + iphone + " y " + cascos);
             System.out.println("resultado: Ana ahora tiene: " + portatil);
-        }
+        }*/
 
+        
         System.out.println("\n--------------------------------------------------\n");
 
         ArrayList<SecondHandProduct> loteTaha = new ArrayList<>();
@@ -45,8 +58,23 @@ public class test_intercambios {
         ExchangeOffer ofertaTaha = new ExchangeOffer(switchOled, loteTaha, taha);
 
         Exchange exchB = new Exchange(ofertaTaha);
-        boolean intentoAndres = exchB.validateExchange(andres);
-        System.out.println("Andres pudo validar (no)?: " + (intentoAndres ? "SÍ (FALLO DE SEGURIDAD)" : "NO (SISTEMA SEGURO)"));
+        
+        
+        ////////////////////////////////////
+        // INICIO: Bloque de código añadido
+        try {
+        	andres.validateExchange(exchB);
+        } catch (Exception e) {
+        	System.err.println("Error validating exchange: " + e.getMessage());
+        }
+        // FINAL: Bloque de código añadido
+        ////////////////////////////////////
+        
+        
+        /*boolean intentoAndres = exchB.validateExchange(andres);
+        System.out.println("Andres pudo validar (no)?: " + (intentoAndres ? "SÍ (FALLO DE SEGURIDAD)" : "NO (SISTEMA SEGURO)"));*/
+        
+        
         System.out.println("Estado de la oferta tras intento fallido: (Pendiente)" + ofertaTaha);
 
         System.out.println("\n--------------------------------------------------\n");
