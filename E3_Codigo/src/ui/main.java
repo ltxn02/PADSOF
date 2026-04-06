@@ -366,6 +366,9 @@ public class main {
                     } else if (index6 == 1){
                         selectedOffer2.aceptaroferta();
                         System.out.println("Oferta Aceptada correctamente");
+                        transactions.Exchange nuevoIntercambio = new transactions.Exchange(selectedOffer2);
+                        selectedOffer2.getOfferor().makeExchange(nuevoIntercambio);
+                        selectedOffer2.getReceptor().makeExchange(nuevoIntercambio);
                     } else if (index6 == 2){
                         selectedOffer2.reject_offer();
                         System.out.println("Oferta Rechazada Correctamente");
@@ -454,6 +457,45 @@ public class main {
                         SecondHandProduct select = productos.get(index -1);
                         System.out.println("Detalles: \n" );
                         System.out.println(select);
+
+                        System.out.println("\n¿Deseas proponer un intercambio por este producto?");
+                        System.out.println("1.- Sí, hacer oferta");
+                        System.out.println("0.- Volver");
+                        System.out.print("Elige una opción: ");
+                        String hacerOferta = scanner.nextLine();
+
+                        if (hacerOferta.equals("1")) {
+                            if (productosactivos.isEmpty()) {
+                                System.out.println("[!] No tienes productos propios que estén tasados para poder ofrecer a cambio.");
+                            } else {
+                                System.out.println("\nTus productos disponibles para ofrecer:");
+                                for (int k = 0; k < productosactivos.size(); k++) {
+                                    SecondHandProduct miProd = productosactivos.get(k);
+                                    System.out.println((k + 1) + ".- " + miProd.getName() + " (Tasado en: " + miProd.getPrice() + "€)");
+                                }
+                                System.out.print("Elige el número de tu producto que quieres ofrecer (0 para cancelar): ");
+                                int miProdIndex = Integer.parseInt(scanner.nextLine());
+
+                                if (miProdIndex > 0 && miProdIndex <= productosactivos.size()) {
+                                    SecondHandProduct miProductoOfrecido = productosactivos.get(miProdIndex - 1);
+                                    try {
+                                        // 1. Llamamos al metodo makeOffer del cliente
+                                        c.makeOffer(select, miProductoOfrecido);
+
+                                        // 2. PARCHE: Nos aseguramos de que el receptor reciba la oferta en su lista
+                                        // (Por si no estaba enlazado en el constructor interno de ExchangeOffer)
+                                        List<transactions.ExchangeOffer> misOfertas = c.getOffersMade();
+                                        transactions.ExchangeOffer ultimaOferta = misOfertas.get(misOfertas.size() - 1);
+                                        select.getOwner().receiveOffer(ultimaOferta);
+
+                                        System.out.println("[+] ¡Oferta enviada con éxito a " + select.getOwner().getUsername() + "!");
+                                    } catch (Exception e) {
+                                        System.out.println("[!] Error al hacer la oferta: " + e.getMessage());
+                                    }
+                                }
+                            }
+                        }
+
                     } else {
                         System.out.println("Selección no válida.");
                     }
@@ -587,6 +629,9 @@ public class main {
                     break;
                 case "3":
                     valorarProductosSegundaMano(empleado);
+                    break;
+                case "4":
+                    confirmarIntercambios(empleado);
                     break;
                 case "0":
                     cerrarSesion = true;
@@ -1617,6 +1662,78 @@ public class main {
             System.out.println("[!] Entrada inválida. Introduce un número correcto.");
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    // --- SUBMENÚ: CONFIRMAR INTERCAMBIOS FÍSICOS (EMPLEADO) ---
+    private static void confirmarIntercambios(Employee empleado) {
+        System.out.println("\n--- CONFIRMAR INTERCAMBIOS FÍSICOS ---");
+
+        // 1. Recopilar todos los intercambios del sistema (evitando duplicados)
+        ArrayList<transactions.Exchange> todosLosIntercambios = new ArrayList<>();
+
+        for (users.RegisteredUser u : logic.Application.getUsers()) {
+            if (u instanceof users.Client) {
+                users.Client c = (users.Client) u;
+                if (c.getExchangeHistoric() != null && c.getExchangeHistoric().getExchanges() != null) {
+                    for (transactions.Exchange ex : c.getExchangeHistoric().getExchanges()) {
+                        // Como un intercambio afecta a dos clientes, evitamos meter el mismo dos veces
+                        if (!todosLosIntercambios.contains(ex)) {
+                            todosLosIntercambios.add(ex);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. Filtrar solo los que están pendientes de validar en tienda
+        // (En Exchange.java, validatedBy es null hasta que un empleado lo valida)
+        ArrayList<transactions.Exchange> pendientes = new ArrayList<>();
+        for (transactions.Exchange ex : todosLosIntercambios) {
+            if (ex.validatedBy == null) {
+                pendientes.add(ex);
+            }
+        }
+
+        if (pendientes.isEmpty()) {
+            System.out.println("No hay intercambios físicos pendientes de validación en la tienda.");
+            return;
+        }
+
+        // 3. Mostrar la lista de intercambios pendientes
+        for (int i = 0; i < pendientes.size(); i++) {
+            transactions.Exchange ex = pendientes.get(i);
+            transactions.ExchangeOffer oferta = ex.validateOffer; // Accedemos a la oferta pública en Exchange.java
+
+            System.out.println((i + 1) + ".- Intercambio #" + ex.exchangeId + " | De: "
+                    + oferta.getOfferor().getUsername() + " para: " + oferta.getReceptor().getUsername());
+            System.out.println("    -> Producto implicado: " + oferta.getRequestedProduct().getName());
+        }
+
+        // 4. Seleccionar el intercambio y que el empleado lo valide
+        System.out.print("\nElige el número del intercambio que los clientes han traído a la tienda (o 0 para volver): ");
+        try {
+            int index = Integer.parseInt(scanner.nextLine());
+            if (index == 0) return;
+            if (index < 1 || index > pendientes.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            transactions.Exchange seleccionado = pendientes.get(index - 1);
+
+            empleado.validateExchange(seleccionado);
+
+            System.out.println("[+] ¡Éxito! El intercambio #" + seleccionado.exchangeId + " ha sido validado en tienda.");
+            System.out.println("    Los productos han cambiado de propietario oficialmente en el sistema.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida. Introduce un número correcto.");
+        } catch (SecurityException e) {
+            System.out.println(e.getMessage());
+        } catch (IllegalStateException e) {
+            // Esta excepción saltará si por algún motivo la oferta no estaba aceptada por el cliente receptor
+            System.out.println("[!] No se puede validar: " + e.getMessage());
         }
     }
 }

@@ -208,7 +208,7 @@ public class Client extends RegisteredUser {
 	
 	private boolean productIsAvailable(SecondHandProduct...products) {
 		for(SecondHandProduct s: products) {
-			if(s.isAvailable()) {
+			if(!s.isAvailable()) {
 				return false;
 			}
 		}
@@ -232,16 +232,10 @@ public class Client extends RegisteredUser {
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public transactions.ExchangeHistoric getExchangeHistoric() {
+		return this.myExchanges;
+	}
 
 	// NUEVOS MÉTODOS
 
