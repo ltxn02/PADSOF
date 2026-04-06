@@ -290,7 +290,7 @@ public class main {
             if(!p.isOwnedBy(c)){
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }}}
-        System.out.println("\nA.- Ofertas realizadas | B.- Ofertas recibidas | C.- Mis Productos | 0.- Volver");
+        System.out.println("\nA.- Ofertas realizadas | B.- Ofertas recibidas | C.- Mis Productos | D.- Subir Producto| 0.- Volver");
         System.out.println("\nSelección: ");
         System.out.print("\nElige el número del producto que deseas ver mas en detalle (0 para salir): ");
         String inputIndex = scanner.nextLine().toUpperCase();
@@ -447,6 +447,9 @@ public class main {
                             break;
                     }
                     break;
+                case "D":
+                    subirProductoSegundaMano(c);
+                    break;
                 default:
                     int index = Integer.parseInt(inputIndex);
                     if (index >= 1 && index <= productos.size()) {
@@ -554,7 +557,6 @@ public class main {
         ArrayList<NewProduct> catalogo = Application.getCatalog();
         ArrayList<Client> listaClientes = todoslosClientes();
 
-        // Cambiamos Product por NewProduct aquí
         ArrayList<NewProduct> recomendados = SistemaRecomendaciones.obtenerRecomendaciones(c, catalogo, listaClientes);
 
         if (recomendados.isEmpty()) {
@@ -563,7 +565,6 @@ public class main {
             return;
         }
 
-        // Y cambiamos Product por NewProduct en el for y al seleccionar
         for (int i = 0; i < recomendados.size(); i++) {
             NewProduct p = recomendados.get(i);
             System.out.println((i + 1) + ".- " + p.getName() + " | Precio: " + p.getPrice() + "€");
@@ -583,7 +584,6 @@ public class main {
                 return;
             }
 
-            // Cambiamos Product por NewProduct aquí también
             NewProduct seleccionado = recomendados.get(index - 1);
             System.out.print("¿Cuántas unidades de '" + seleccionado.getName() + "' deseas? ");
             int quantity = Integer.parseInt(scanner.nextLine());
