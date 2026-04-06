@@ -73,7 +73,7 @@ public class Employee extends Staff {
     }
 
     /**
-     * Método auxiliar para mapear las columnas extras según el tipo de producto.
+     * Metodo auxiliar para mapear las columnas extras según el tipo de producto.
      */
     private void fillSpecificData(Catalog catalog, ItemType type, Map<String, Object> data, String[] row) {
         switch (type) {
@@ -107,17 +107,10 @@ public class Employee extends Staff {
         }
     }
     
-    
-    
-    
-    
-    
     private boolean checkPermission(Permission p) {
     	return this.permissions.contains(p);
     }
-    
-    
-    
+
     public void add_permisions(Permission e){
         this.permissions.add(e);
     }
@@ -152,5 +145,13 @@ public class Employee extends Staff {
         return this.enabled;
     }
 
+    public void updateOrderStatus(Order order, OrderStatus newStatus) throws SecurityException {
+        // 1. Verificamos que el empleado tiene el permiso específico
+        if(this.checkPermission(Permission.ORDER_STATUS_UPDATE) == false) {
+            throw new SecurityException("[!] Acceso denegado: No tienes el permiso ORDER_STATUS_UPDATE para cambiar el estado de los pedidos.");
+        }
 
+        // 2. Si lo tiene, actualizamos el estado del pedido
+        order.setOrderStatus(newStatus);
+    }
 }

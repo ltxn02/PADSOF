@@ -125,7 +125,11 @@ public class Order {
     	
     	return sb.toString();
     }
-    
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

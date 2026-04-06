@@ -582,7 +582,9 @@ public class main {
                 case "1":
                     gestionarInventario(empleado);
                     break;
-                // Añade aquí los demás cases
+                case "2":
+                    gestionarPedidos(empleado);
+                    break;
                 case "0":
                     cerrarSesion = true;
                     System.out.println("Cerrando sesión de empleado...");
@@ -1476,6 +1478,73 @@ public class main {
             System.out.println("[!] No se ha encontrado el archivo: " + ruta);
         } catch (Exception e) {
             System.out.println("[!] Error leyendo el archivo: " + e.getMessage());
+        }
+    }
+
+    // --- SUBMENÚ: GESTIÓN DE PEDIDOS (EMPLEADO) ---
+    private static void gestionarPedidos(Employee empleado) {
+        System.out.println("\n--- GESTIÓN DE ESTADO DE PEDIDOS ---");
+
+        // 1. Recopilar todos los pedidos del sistema buscando en el historial de cada cliente
+        ArrayList<Order> todosLosPedidos = new ArrayList<>();
+        for (RegisteredUser u : Application.getUsers()) {
+            if (u instanceof Client) {
+                Client c = (Client) u;
+                if (c.getOrderHistoric() != null && c.getOrderHistoric().getOrders() != null) {
+                    todosLosPedidos.addAll(c.getOrderHistoric().getOrders());
+                }
+            }
+        }
+
+        if (todosLosPedidos.isEmpty()) {
+            System.out.println("No hay ningún pedido registrado en el sistema actualmente.");
+            return;
+        }
+
+        // 2. Mostrar la lista de pedidos usando el orderPreview que ya tenéis en Order.java
+        for (int i = 0; i < todosLosPedidos.size(); i++) {
+            Order o = todosLosPedidos.get(i);
+            System.out.println((i + 1) + ".- " + o.orderPreview());
+        }
+
+        // 3. Seleccionar el pedido a modificar
+        System.out.print("\nElige el número del pedido que deseas actualizar (o 0 para volver): ");
+        try {
+            int index = Integer.parseInt(scanner.nextLine());
+            if (index == 0) return;
+            if (index < 1 || index > todosLosPedidos.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            Order pedidoSeleccionado = todosLosPedidos.get(index - 1);
+
+            // 4. Mostrar los estados disponibles y pedir el nuevo
+            System.out.println("\nEl estado actual es: " + pedidoSeleccionado.getOrderStatus());
+            System.out.println("¿A qué estado deseas cambiarlo?");
+
+            utils.OrderStatus[] estados = utils.OrderStatus.values();
+            for (int i = 0; i < estados.length; i++) {
+                System.out.println((i + 1) + ".- " + estados[i].name());
+            }
+
+            System.out.print("Elige el número del nuevo estado: ");
+            int estadoIndex = Integer.parseInt(scanner.nextLine());
+            if (estadoIndex < 1 || estadoIndex > estados.length) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            utils.OrderStatus nuevoEstado = estados[estadoIndex - 1];
+
+            // 5. El empleado intenta cambiar el estado (saltará la excepción si no tiene permiso)
+            empleado.updateOrderStatus(pedidoSeleccionado, nuevoEstado);
+            System.out.println("[+] ¡Éxito! El pedido ha pasado al estado: " + nuevoEstado.name());
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida. Introduce un número.");
+        } catch (SecurityException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
