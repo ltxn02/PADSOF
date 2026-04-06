@@ -19,7 +19,7 @@ public class main {
         System.out.println("      BIENVENIDO A RONGERO           ");
         System.out.println("=====================================");
 
-        // Aquí deberíais cargar los datos persistentes (ej. Sistema.cargarDatos())
+        logic.Application.cargarDatos("rongero_data.dat");
 
         boolean salirApp = false;
 
@@ -46,7 +46,8 @@ public class main {
                 case "0":
                     salirApp = true;
                     System.out.println("Guardando datos y cerrando la aplicación... ¡Hasta pronto!");
-                    // Aquí deberíais guardar los datos persistentes (ej. Sistema.guardarDatos())
+                    // --- Guarda los datos antes de salir ---
+                    logic.Application.guardarDatos("rongero_data.dat");
                     break;
                 default:
                     System.out.println("[!] Opción no válida. Por favor, introduce un número del 0 al 3.");

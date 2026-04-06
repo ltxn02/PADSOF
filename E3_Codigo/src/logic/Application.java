@@ -172,4 +172,40 @@ public class Application {
     public static void addDiscount(Discount d) {
         globalDiscounts.add(d);
     }
+
+    // --- PERSISTENCIA DE DATOS ---
+    public static void guardarDatos(String rutaArchivo) {
+        try (java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(new java.io.FileOutputStream(rutaArchivo))) {
+            oos.writeObject(users);
+            oos.writeObject(notifications);
+            oos.writeObject(secondHandProducts);
+            oos.writeObject(catalog);
+            oos.writeObject(globalCategories);
+            oos.writeObject(globalDiscounts);
+            System.out.println("[Sistema] Datos guardados correctamente en " + rutaArchivo);
+        } catch (java.io.IOException e) {
+            System.out.println("[!] Error al guardar los datos: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void cargarDatos(String rutaArchivo) {
+        java.io.File archivo = new java.io.File(rutaArchivo);
+        if (!archivo.exists()) {
+            System.out.println("[Sistema] No se encontró archivo de guardado previo. Iniciando con datos por defecto.");
+            return;
+        }
+
+        try (java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new java.io.FileInputStream(rutaArchivo))) {
+            users = (java.util.HashMap<String, RegisteredUser>) ois.readObject();
+            notifications = (java.util.HashMap<String, Notification>) ois.readObject();
+            secondHandProducts = (java.util.ArrayList<SecondHandProduct>) ois.readObject();
+            catalog = (java.util.ArrayList<NewProduct>) ois.readObject();
+            globalCategories = (java.util.ArrayList<Category>) ois.readObject();
+            globalDiscounts = (java.util.ArrayList<Discount>) ois.readObject();
+            System.out.println("[Sistema] Datos cargados correctamente desde " + rutaArchivo);
+        } catch (java.io.IOException | ClassNotFoundException e) {
+            System.out.println("[!] Error al cargar los datos: " + e.getMessage());
+        }
+    }
 }
