@@ -530,7 +530,7 @@ public class main {
                     gestionarCatalogo(gestor);
                     break;
                 case "3":
-                    gestionarDescuentos();
+                    gestionarDescuentosMenu();
                     break;
                 case "0":
                     cerrarSesion = true;
@@ -1046,7 +1046,6 @@ public class main {
         System.out.println("[+] Categoría '" + nombre + "' creada con éxito.");
     }
 
-    // --- SUBMENÚ: GESTIÓN DE PACKS ---
 
     private static void gestionarPacks() {
         boolean volver = false;
@@ -1178,190 +1177,181 @@ public class main {
         }
     }
 
-    // --- SUBMENÚ: GESTIÓN DE DESCUENTOS ---
-    private static void gestionarDescuentos() {
-        boolean volver = false;
-        while (!volver) {
-            System.out.println("\n--- GESTIÓN DE DESCUENTOS ---");
-            System.out.println("1.- Ver descuentos creados");
-            System.out.println("2.- Crear un nuevo descuento");
-            System.out.println("3.- Asignar descuento a un producto");
-            System.out.println("0.- Volver al menú anterior");
-            System.out.print("Elige una opción: ");
 
-            String opcion = scanner.nextLine();
-            switch (opcion) {
-                case "1":
-                    //verDescuentos();
+
+    private static void gestionarDescuentosMenu() {
+        System.out.println("\n--- GESTOR DE PROMOCIONES ---");
+        System.out.println("1.- Ver descuentos activos");
+        System.out.println("2.- Crear y asignar nueva promoción");
+        System.out.println("3.- Asignar descuento existente a producto");
+        System.out.println("0.- Volver");
+        System.out.print("Selecciona opción: ");
+
+        String opcion = scanner.nextLine();
+        switch (opcion) {
+            case "1": verDescuentosActivos(); break;
+            case "2": menuCreacionDescuento(); break;
+            case "3": asignarDescuento(); break;
+            case "0": break;
+            default: System.out.println("[!] Opción no válida.");
+        }
+    }
+
+    private static void verDescuentosActivos() {
+        System.out.println("\n--- DESCUENTOS EN PRODUCTOS ---");
+        for (NewProduct p : Application.getCatalog()) {
+            // Solo los que son instancia de Product tienen getDiscount()
+            if (p instanceof Product) {
+                Product prodConMetodos = (Product) p;
+                if (prodConMetodos.getDiscount() != null) {
+                    System.out.println("- [" + prodConMetodos.getName() + "]: " + prodConMetodos.getDiscount().getDescription());
+                }
+            }
+        }
+
+        System.out.println("\n--- DESCUENTOS GLOBALES (CARRITO) ---");
+        for (IDiscount d : Application.getGlobalDiscounts()) {
+            System.out.println("- " + d.getDescription());
+        }
+    }
+
+    private static void menuCreacionDescuento() {
+        IDiscountFactory factory = new StandardDiscountFactory();
+        System.out.println("\n--- CREAR NUEVA PROMOCIÓN ---");
+        System.out.println("1.- Rebaja (%) | 2.- Volumen (€) | 3.- Regalo | 4.- Cantidad (X por Y)");
+        System.out.print("Selecciona opción: ");
+        String tipo = scanner.nextLine();
+
+        System.out.print("Descripción de la oferta: ");
+        String desc = scanner.nextLine();
+
+        try {
+            switch (tipo) {
+                case "1": // REBAJA (%)
+                    System.out.print("Nombre del producto a rebajar: ");
+                    NewProduct base = buscarProductoEnCatalogo(scanner.nextLine());
+                    if (base instanceof Product) {
+                        System.out.print("Porcentaje de rebaja (ej: 20): ");
+                        double pct = Double.parseDouble(scanner.nextLine());
+                        IRebaja rebaja = factory.createPercentageDiscount(pct, desc);
+                        ((Product) base).setDiscount(rebaja);
+                        Application.addDiscount((Discount) rebaja);
+                        System.out.println("[+] Rebaja aplicada.");
+                    } else {
+                        System.out.println("[!] Producto no encontrado o es un Pack.");
+                    }
                     break;
-                case "2":
-                    //crearDescuento();
+
+                case "2": // VOLUMEN (Si gastas X, descuenta Y)
+                    // DECLARACIÓN DE VARIABLES (Esto es lo que te faltaba)
+                    System.out.print("Gasto mínimo en el carrito (€): ");
+                    double threshold = Double.parseDouble(scanner.nextLine());
+                    System.out.print("Euros a descontar del total (€): ");
+                    double amount = Double.parseDouble(scanner.nextLine());
+
+                    IVolumen vol = factory.createVolumeDiscount(threshold, amount, desc);
+                    Application.addDiscount((Discount) vol);
+                    System.out.println("[+] Descuento de volumen añadido.");
                     break;
-                case "3":
-                    //asignarDescuento();
+
+                case "3": // REGALO
+                    // DECLARACIÓN DE VARIABLES (Esto es lo que te faltaba)
+                    System.out.print("Gasto mínimo para activar el regalo (€): ");
+                    double min = Double.parseDouble(scanner.nextLine());
+                    System.out.print("Nombre del producto que se regala: ");
+                    NewProduct pRegalo = buscarProductoEnCatalogo(scanner.nextLine());
+
+                    if (pRegalo != null) {
+                        IRegalo gift = factory.createGiftDiscount(min, pRegalo, desc);
+                        Application.addDiscount((Discount) gift);
+                        System.out.println("[+] Promoción de regalo añadida.");
+                    } else {
+                        System.out.println("[!] El producto para regalo no existe.");
+                    }
                     break;
-                case "0":
-                    volver = true;
+
+                case "4": // CANTIDAD (X por Y)
+                    System.out.print("Nombre del producto: ");
+                    NewProduct pCant = buscarProductoEnCatalogo(scanner.nextLine());
+                    if (pCant instanceof Product) {
+                        System.out.print("Lleva (X): ");
+                        int x = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Paga (Y): ");
+                        int y = Integer.parseInt(scanner.nextLine());
+
+                        ICantidad promo = factory.createQuantityDiscount(x, y, desc);
+                        ((Product) pCant).setDiscount(promo);
+                        Application.addDiscount((Discount) promo);
+                        System.out.println("[+] Oferta de cantidad guardada.");
+                    }
                     break;
+
                 default:
                     System.out.println("[!] Opción no válida.");
             }
-        }
-    }
-/**
-    private static void verDescuentos() {
-        System.out.println("\n--- DESCUENTOS ACTUALES ---");
-        ArrayList<Discount> descuentos = Application.getGlobalDiscounts();
-
-        if (descuentos.isEmpty()) {
-            System.out.println("No hay descuentos registrados en el sistema.");
-            return;
-        }
-
-        for (int i = 0; i < descuentos.size(); i++) {
-            Discount d = descuentos.get(i);
-
-            // --- SOLUCIÓN: Comprobamos qué tipo de hijo es antes de llamar a sus métodos ---
-            String infoRebaja = "";
-            if (d instanceof discounts.PercentageDiscount) {
-                int porcentajeReal = (int) (((discounts.PercentageDiscount) d).getPercentage() * 100);
-                infoRebaja = porcentajeReal + "%";
-            } else if (d instanceof discounts.FixedAmountDiscount) {
-                infoRebaja = ((discounts.FixedAmountDiscount) d).getAmount() + "€";
-            }
-
-            System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " de rebaja | " + d.getDescription());
-        }
-    }
-*/
-/**
-    private static void crearDescuento() {
-        System.out.println("\n--- CREAR NUEVO DESCUENTO ---");
-        System.out.println("1.- Rebaja por porcentaje (ej: 20%)");
-        System.out.println("2.- Descuento de importe fijo (ej: 10€)");
-        System.out.print("Elige el tipo de descuento: ");
-        String tipoDesc = scanner.nextLine();
-
-        if (!tipoDesc.equals("1") && !tipoDesc.equals("2")) {
-            System.out.println("[!] Tipo no válido.");
-            return;
-        }
-
-        System.out.print("Descripción breve: ");
-        String description = scanner.nextLine();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false);
-        Date fromDate = null;
-        Date toDate = null;
-
-        try {
-            System.out.print("Fecha de inicio (DD/MM/YYYY): ");
-            fromDate = sdf.parse(scanner.nextLine());
-            System.out.print("Fecha de fin (DD/MM/YYYY): ");
-            toDate = sdf.parse(scanner.nextLine());
-
-            if (toDate.before(fromDate)) {
-                System.out.println("[!] La fecha de fin no puede ser anterior a la de inicio.");
-                return;
-            }
-
-            discounts.Discount nuevoDescuento = null;
-
-            if (tipoDesc.equals("1")) {
-                System.out.print("Porcentaje de descuento (ej: 0.20 para 20%): ");
-                double p = Double.parseDouble(scanner.nextLine());
-                nuevoDescuento = new discounts.PercentageDiscount(p, description, fromDate, toDate);
-            } else {
-                System.out.print("Importe fijo a descontar (ej: 5.50 para 5,50€): ");
-                double amt = Double.parseDouble(scanner.nextLine());
-                // Fíjate que ahora se llama FixedAmountDiscount
-                nuevoDescuento = new discounts.FixedAmountDiscount(amt, description, fromDate, toDate);
-            }
-
-            logic.Application.addDiscount(nuevoDescuento);
-            System.out.println("[+] ¡Descuento guardado en el sistema!");
-
         } catch (Exception e) {
             System.out.println("[!] Error al procesar los datos: " + e.getMessage());
         }
     }
-*/
-/**
     private static void asignarDescuento() {
-        ArrayList<Discount> descuentos = Application.getGlobalDiscounts();
-        if (descuentos.isEmpty()) {
-            System.out.println("[!] Primero debes crear un descuento en la opción 2.");
+        ArrayList<NewProduct> catalogo = Application.getCatalog();
+        ArrayList<IDiscount> bolsa = Application.getGlobalDiscounts();
+
+        if (bolsa.isEmpty()) {
+            System.out.println("[!] No hay descuentos en la bolsa global. Crea uno primero.");
             return;
         }
 
-        // 1. Mostrar productos disponibles (solo individuales, no Packs)
-        ArrayList<Product> productosIndividuales = new ArrayList<>();
-        for (NewProduct np : Application.getCatalog()) {
+        // 1. Filtramos solo los que son 'Product'
+        ArrayList<Product> productosValidos = new ArrayList<>();
+        for (NewProduct np : catalogo) {
             if (np instanceof Product) {
-                productosIndividuales.add((Product) np);
+                productosValidos.add((Product) np);
             }
         }
 
-        if (productosIndividuales.isEmpty()) {
-            System.out.println("[!] No hay productos individuales en el catálogo para asignar descuentos.");
+        if (productosValidos.isEmpty()) {
+            System.out.println("[!] No hay productos individuales disponibles.");
             return;
         }
 
-        System.out.println("\n--- ASIGNAR DESCUENTO ---");
-        System.out.println("Elige el producto al que quieres aplicar el descuento:");
-        for (int i = 0; i < productosIndividuales.size(); i++) {
-            Product p = productosIndividuales.get(i);
-            String tieneDescuento = (p.getDiscount() != null) ? " (Ya tiene descuento)" : "";
-            System.out.println((i + 1) + ".- " + p.getName() + " - " + p.getPrice() + "€" + tieneDescuento);
+        // 2. Selección de Producto
+        System.out.println("\n--- SELECCIONA PRODUCTO ---");
+        for (int i = 0; i < productosValidos.size(); i++) {
+            System.out.println((i + 1) + ".- " + productosValidos.get(i).getName());
         }
+        System.out.print("Selección: ");
+        int pIdx = Integer.parseInt(scanner.nextLine()) - 1;
 
-        try {
-            System.out.print("Número del producto (0 para cancelar): ");
-            int indexProd = Integer.parseInt(scanner.nextLine());
-            if (indexProd == 0) return;
-            if (indexProd < 1 || indexProd > productosIndividuales.size()) {
-                System.out.println("[!] Opción no válida.");
-                return;
-            }
-            Product prodSeleccionado = productosIndividuales.get(indexProd - 1);
+        // 3. Selección de Descuento
+        System.out.println("\n--- SELECCIONA DESCUENTO ---");
+        for (int i = 0; i < bolsa.size(); i++) {
+            System.out.println((i + 1) + ".- " + bolsa.get(i).getDescription());
+        }
+        System.out.print("Selección: ");
+        int dIdx = Integer.parseInt(scanner.nextLine()) - 1;
 
-            // 2. Mostrar descuentos disponibles con el nuevo formato (Misma solución que arriba)
-            System.out.println("\nDescuentos disponibles:");
-            for (int i = 0; i < descuentos.size(); i++) {
-                Discount d = descuentos.get(i);
+        // 4. Aplicación
+        if (pIdx >= 0 && pIdx < productosValidos.size() && dIdx >= 0 && dIdx < bolsa.size()) {
+            Product elegido = productosValidos.get(pIdx);
+            IDiscount desc = bolsa.get(dIdx);
 
-                String infoRebaja = "";
-                if (d instanceof discounts.PercentageDiscount) {
-                    int porcentajeReal = (int) (((discounts.PercentageDiscount) d).getPercentage() * 100);
-                    infoRebaja = porcentajeReal + "%";
-                } else if (d instanceof discounts.FixedAmountDiscount) {
-                    infoRebaja = ((discounts.FixedAmountDiscount) d).getAmount() + "€";
-                }
-
-                System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " - " + d.getDescription());
-            }
-
-            System.out.print("Número del descuento a aplicar (0 para cancelar): ");
-            int indexDesc = Integer.parseInt(scanner.nextLine());
-            if (indexDesc == 0) return;
-            if (indexDesc < 1 || indexDesc > descuentos.size()) {
-                System.out.println("[!] Opción no válida.");
-                return;
-            }
-
-            Discount descSeleccionado = descuentos.get(indexDesc - 1);
-
-            // 3. Asignar usando el setter
-            prodSeleccionado.setDiscount(descSeleccionado);
-            System.out.println("[+] ¡Éxito! Descuento [" + descSeleccionado.getType() + "] aplicado a '" + prodSeleccionado.getName() + "'.");
-
-        } catch (NumberFormatException e) {
-            System.out.println("[!] Entrada inválida.");
+            elegido.setDiscount(desc);
+            System.out.println("[+] Descuento aplicado a " + elegido.getName());
         }
     }
-*/
-    // --- SUBMENÚ: GESTIÓN DE INVENTARIO (EMPLEADO) ---
+
+// --- HELPERS ---
+
+    private static NewProduct buscarProductoEnCatalogo(String nombre) {
+        for (NewProduct p : Application.getCatalog()) {
+            if (p.getName().equalsIgnoreCase(nombre)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
 
     private static void gestionarInventario(Employee empleado) {
         boolean volver = false;

@@ -15,7 +15,7 @@ public class Application {
     private static ArrayList<SecondHandProduct> secondHandProducts = new ArrayList<>();
     private static ArrayList<NewProduct> catalog = new ArrayList<>();
     private static ArrayList<Category> globalCategories = new ArrayList<>();
-    private static ArrayList<Discount> globalDiscounts = new ArrayList<>();
+    private static ArrayList<IDiscount> globalDiscounts = new ArrayList<>();
 
     // --- BLOQUE DE INICIALIZACIÓN ESTÁTICA ---
     static {
@@ -166,11 +166,11 @@ public class Application {
         globalCategories.add(c);
     }
 
-    public static ArrayList<Discount> getGlobalDiscounts() {
+    public static ArrayList<IDiscount> getGlobalDiscounts() {
         return globalDiscounts;
     }
 
-    public static void addDiscount(Discount d) {
+    public static void addDiscount(IDiscount d) {
         globalDiscounts.add(d);
     }
 
@@ -203,7 +203,7 @@ public class Application {
             secondHandProducts = (java.util.ArrayList<SecondHandProduct>) ois.readObject();
             catalog = (java.util.ArrayList<NewProduct>) ois.readObject();
             globalCategories = (java.util.ArrayList<Category>) ois.readObject();
-            globalDiscounts = (java.util.ArrayList<Discount>) ois.readObject();
+            globalDiscounts = (java.util.ArrayList<IDiscount>) ois.readObject();
             System.out.println("[Sistema] Datos cargados correctamente desde " + rutaArchivo);
         } catch (java.io.IOException | ClassNotFoundException e) {
             System.out.println("[!] Error al cargar los datos: " + e.getMessage());

@@ -10,4 +10,9 @@ public class Manager extends Staff implements java.io.Serializable{
         super(username, password, fullname, dni, birthdate, email, phoneNumber, salary);
     }
 
+
+
+
+
+
 }
