@@ -24,15 +24,13 @@ public class MainIntercambios {
 
             System.out.println("Creando oferta: taha ofrece PS5 a lidia por su Xbox...");
             ExchangeOffer oferta = new ExchangeOffer(xbox, ofrecidos, taha);
+            lidia.answerOffer(xbox, true);
 
-            System.out.println("\nEmpleado ivan valida el intercambio...");
-            Exchange intercambio = new Exchange(oferta);
-            oferta.aceptaroferta();
-            
+            System.out.println("\nEmpleado ivan valida el intercambio...");            
             
             ////////////////////////////////////
             // INICIO: Bloque de código añadido
-            ivan.validateExchange(intercambio);
+            ivan.validateExchange(lidia.findExchange(xbox));
             System.out.println("Nuevo dueño de Xbox: " + xbox);
             System.out.println("Nuevo dueño de PS5: " + ps5);
             System.out.print("Productos liberados: " );

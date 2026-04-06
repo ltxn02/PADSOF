@@ -26,19 +26,19 @@ public class ExchangeOffer {
     private List<SecondHandProduct> offeredProducts;
     private Client offeror;
     private Client receptor;
-    private ExchangeStatus status;
+    private ExchangeOfferStatus status;
 
     public Client getOfferor() {
-        return offeror;
+        return this.offeror;
     }
 
     public Client getReceptor() {
-        return receptor;
+        return this.receptor;
     }
 
     public boolean is_Expired(){
         Duration TiempoTranscurrido = Duration.between(createDate, LocalDateTime.now());
-        return TiempoTranscurrido.compareTo(timeonHold) > 0;
+        return TiempoTranscurrido.compareTo(ExchangeOffer.timeonHold) > 0;
     }
 
     /**
@@ -49,7 +49,7 @@ public class ExchangeOffer {
      * */
 
     public ExchangeOffer(SecondHandProduct requestedProduct, ArrayList<SecondHandProduct> offeredProducts, Client offeror){
-        this.status = ExchangeStatus.PENDIENTE;
+        this.status = ExchangeOfferStatus.PENDIENTE;
         this.offeredProducts= offeredProducts;
         this.requestedProduct= requestedProduct;
         this.offeror= offeror;
@@ -68,10 +68,10 @@ public class ExchangeOffer {
      * Funcion para cancelar una oferta sobre un producto
      * */
     public void cancelOffer() throws IllegalStateException {
-        if(this.status != ExchangeStatus.PENDIENTE) {
+        if(this.status != ExchangeOfferStatus.PENDIENTE) {
         	throw new IllegalStateException("Can only cancel an order that is pending");
         }
-    	this.status = ExchangeStatus.CANCELADA;
+    	this.status = ExchangeOfferStatus.CANCELADA;
         for (SecondHandProduct p: this.offeredProducts) {
             p.change_offered_status(false);
         }
@@ -82,7 +82,7 @@ public class ExchangeOffer {
  *
  * */
     public void reject_offer(){
-        this.status = ExchangeStatus.RECHAZADA;
+        this.status = ExchangeOfferStatus.RECHAZADA;
         this.liberarProductosofertados();
 
     }
@@ -91,20 +91,30 @@ public class ExchangeOffer {
      * */
     public void expired_offer(){
         if(is_Expired()){
-            this.status = ExchangeStatus.EXPIRADA;
+            this.status = ExchangeOfferStatus.EXPIRADA;
             this.liberarProductosofertados();
         }
     }
 
     public boolean ofertaaceptada() {
-        if (this.status == ExchangeStatus.ACEPTADA){
+        if (this.status == ExchangeOfferStatus.ACEPTADA){
         	return true;
         }
         return false;
     }
 
     public void aceptaroferta(){
-        this.status = ExchangeStatus.ACEPTADA;
+        this.status = ExchangeOfferStatus.ACEPTADA;
+        
+        try {
+	        Exchange exchange = new Exchange(this);
+	        
+	        this.offeror.addExchange(exchange);
+	        this.receptor.addExchange(exchange);
+	        
+        } catch (Exception e) {
+        	System.err.println("Error creating new Exchange: " + e.getMessage());
+        }
     }
 
     /**
@@ -118,16 +128,16 @@ public class ExchangeOffer {
         for (SecondHandProduct p : offeredProducts) {
             p.change_owners(this.receptor);
         }
-        liberarProductos();
+        this.liberarProductos();
         return true;
     }
 
-    public boolean liberarProductos(){
+    public boolean liberarProductos() {
         this.requestedProduct.change_offered_status(false);
-        liberarProductosofertados();
+        this.liberarProductosofertados();
         return true;
     }
-    public boolean liberarProductosofertados(){
+    public boolean liberarProductosofertados() {
         for (SecondHandProduct p: offeredProducts){
             p.change_offered_status(false);
         }
@@ -147,15 +157,19 @@ public class ExchangeOffer {
     }
 
     public LocalDateTime getCreateDate() {
-        return createDate;
+        return this.createDate;
     }
 
-    public ExchangeStatus getEstado() {
-        return status;
+    public ExchangeOfferStatus getEstado() {
+        return this.status;
     }
 
     public SecondHandProduct getRequestedProduct() {
-        return requestedProduct;
+        return this.requestedProduct;
+    }
+    
+    public boolean isRequestedProduct(SecondHandProduct p) {
+    	return this.requestedProduct == p;
     }
     
     public String offerMadePreview() {

@@ -25,23 +25,52 @@ public class test_intercambios {
         SecondHandProduct iphone = new SecondHandProduct( "iPhone 13", "Apple", "f3", 600, true, ItemType.GAME, Condition.MUY_BUENO, ana);
         SecondHandProduct portatil = new SecondHandProduct( "HP Victus", "HP", "f4", 700, true, ItemType.FIGURINE, Condition.PERFECTO, carlos);
         SecondHandProduct cascos = new SecondHandProduct( "Sony WH", "Audio", "f5", 150, true, ItemType.GAME, Condition.DAÑADO, martin);
-
+        
         ArrayList<SecondHandProduct> loteAna = new ArrayList<>();
         loteAna.add(iphone);
         loteAna.add(cascos);
-        ExchangeOffer ofertaAna = new ExchangeOffer(portatil, loteAna, ana);
+        
+        for(SecondHandProduct p: loteAna) {
+        	try {
+        		ana.registerSecondHandProduct(p);
+        	} catch (Exception e) {
+        		System.err.println("Error registering product: " + e.getMessage());
+        	}
+        	
+        }
+        
+        try {
+        	ana.makeOffer(portatil, iphone, cascos);
+        } catch (Exception e) {
+        	System.err.println("Error making offer: " + e.getMessage());
+        }
         System.out.println("Productos de Ana bloqueados: (true)" + (!iphone.isAvailable() && !cascos.isAvailable()));
-
-        Exchange exchA = new Exchange(ofertaAna);
+        try {
+        	portatil.getOwner().answerOffer(portatil, true);
+        } catch (Exception e) {
+        	System.err.println("Error answering offer: " + e.getMessage());
+        }
         
-        
-        ////////////////////////////////////
-        // INICIO: Bloque de código añadido
-        ivan.validateExchange(exchA);
-        System.out.println("Resultado: Carlos ahora tiene: " + iphone + " y " + cascos);
-        System.out.println("resultado: Ana ahora tiene: " + portatil);
-        // FINAL: Bloque de código añadido
-        ////////////////////////////////////
+        try {
+        	////////////////////////////////////
+			// INICIO: Bloque de código añadido
+        	try {
+        		Exchange exchA = portatil.getOwner().findExchange(portatil);
+        		ivan.validateExchange(exchA);
+    			System.out.println("Resultado: Carlos ahora tiene: " + iphone + " y " + cascos);
+    			System.out.println("resultado: Ana ahora tiene: " + portatil);
+    			
+        	} catch(Exception e) {
+        		System.err.println("Error: " + e.getMessage());
+        	}
+        	
+			// FINAL: Bloque de código añadido
+			////////////////////////////////////
+		
+			
+        } catch(Exception e) {
+        	System.err.println("Error creating the exchange: " + e.getMessage());
+        }
         
         
         /*exchA.validateExchange(ivan);
@@ -55,36 +84,51 @@ public class test_intercambios {
 
         ArrayList<SecondHandProduct> loteTaha = new ArrayList<>();
         loteTaha.add(ps5);
-        ExchangeOffer ofertaTaha = new ExchangeOffer(switchOled, loteTaha, taha);
-
-        Exchange exchB = new Exchange(ofertaTaha);
         
-        
-        ////////////////////////////////////
-        // INICIO: Bloque de código añadido
-        try {
-        	andres.validateExchange(exchB);
-        } catch (Exception e) {
-        	System.err.println("Error validating exchange: " + e.getMessage());
+        for(SecondHandProduct p: loteTaha) {
+        	try {
+        		ana.registerSecondHandProduct(p);
+        	} catch (Exception e) {
+        		System.err.println("Error registering product: " + e.getMessage());
+        	}
+        	
         }
-        // FINAL: Bloque de código añadido
-        ////////////////////////////////////
         
+        try {
+        	taha.makeOffer(switchOled, ps5);
+        } catch (Exception e) {
+        	System.err.println("Error making offer: " + e.getMessage());
+        }
+        
+        System.out.println("Productos de Ana bloqueados: (true)" + (!iphone.isAvailable() && !cascos.isAvailable()));
+        
+        try {
+        	switchOled.getOwner().answerOffer(switchOled, true);
+        } catch (Exception e) {
+        	System.err.println("Error answering offer: " + e.getMessage());
+        }
+        
+        try {
+    		Exchange exchB = switchOled.getOwner().findExchange(switchOled);
+    		andres.validateExchange(exchB);
+    		
+    		System.out.println("Estado de la oferta tras intento fallido: (Pendiente)" + exchB.getAssociatedOffer());
+
+            System.out.println("\n--------------------------------------------------\n");
+
+            System.out.println("Antes de rechazar, PS5 bloqueada?(true): " + (!ps5.isAvailable()));
+            exchB.getAssociatedOffer().reject_offer();
+            System.out.println("Tras rechazo, PS5 disponible?(true): " + ps5.isAvailable());
+            System.out.println("Estado final oferta Taha(rechazada): " + exchB.getAssociatedOffer());
+
+            System.out.println("\n--------------------------------------------------\n");
+			
+    	} catch(Exception e) {
+    		System.err.println("Error: " + e.getMessage());
+    	}        
         
         /*boolean intentoAndres = exchB.validateExchange(andres);
         System.out.println("Andres pudo validar (no)?: " + (intentoAndres ? "SÍ (FALLO DE SEGURIDAD)" : "NO (SISTEMA SEGURO)"));*/
-        
-        
-        System.out.println("Estado de la oferta tras intento fallido: (Pendiente)" + ofertaTaha);
-
-        System.out.println("\n--------------------------------------------------\n");
-
-        System.out.println("Antes de rechazar, PS5 bloqueada?(true): " + (!ps5.isAvailable()));
-        ofertaTaha.reject_offer();
-        System.out.println("Tras rechazo, PS5 disponible?(true): " + ps5.isAvailable());
-        System.out.println("Estado final oferta Taha(rechazada): " + ofertaTaha);
-
-        System.out.println("\n--------------------------------------------------\n");
 
         ExchangeOffer ofertaCaduca = new ExchangeOffer(ps5, new ArrayList<>(), martin);
 

@@ -132,9 +132,41 @@ public class Client extends RegisteredUser {
 		}
 	}
 	
-	public void makeExchange(Exchange exchange) {
+	public void answerOffer(SecondHandProduct product, boolean accept) throws IllegalArgumentException, IllegalStateException {
+		if(!this.productIsYours(product)) {
+			throw new IllegalArgumentException("Invalid product, it is not in your wallet");
+		}
+		
+		ExchangeOffer offer = this.offerRegarding(product);
+		if(offer == null) {
+			throw new IllegalStateException("This offer does not exist in your register");
+		}
+		
+		this.answerOffer(offer, accept);
+	}
+	
+	public ExchangeOffer findReceivingOffer(SecondHandProduct product) throws IllegalArgumentException {
+		for(ExchangeOffer offer: this.offersReceived) {
+			if(offer.isRequestedProduct(product)) {
+				return offer;
+			}
+		}
+		
+		return null;
+	}
+
+	public void addExchange(Exchange exchange) {
 		this.exchangesMade.add(exchange);
 		this.myExchanges.addExchange(exchange);
+	}
+	
+	public Exchange findExchange(SecondHandProduct product) throws IllegalArgumentException {
+		for(Exchange exchange: this.exchangesMade) {
+			if(exchange.isThisExchangeOffer(findReceivingOffer(product))) {
+				return exchange;
+			}
+		}
+		return null;
 	}
 	
 	public String clientFullProfile() {
@@ -231,6 +263,15 @@ public class Client extends RegisteredUser {
 			}
 		}
 		return false;
+	}
+	
+	private ExchangeOffer offerRegarding(SecondHandProduct p) {
+		for(ExchangeOffer offer: this.offersReceived) {
+			if(offer.isRequestedProduct(p) == true) {
+				return offer;
+			}
+		}
+		return null;
 	}
 
 	public transactions.ExchangeHistoric getExchangeHistoric() {

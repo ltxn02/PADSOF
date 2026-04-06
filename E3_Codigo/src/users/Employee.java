@@ -102,6 +102,18 @@ public class Employee extends Staff {
     		System.err.println("Error validating exchange: " + e.getMessage());
     	}
     }
+    
+    public void cancelExchange(Exchange exchange) throws SecurityException {
+    	if(this.checkPermission(Permission.EXCH_VALIDATE) == false) {
+    		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to cancel exchanges");
+    	}
+    	
+    	try {
+    		exchange.cancelExchange(this);
+    	} catch (Exception e) {
+    		System.err.println("Error cancelling exchange: " + e.getMessage());
+    	}
+    }
 
     /**
      * Metodo auxiliar para mapear las columnas extras según el tipo de producto.

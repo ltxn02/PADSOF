@@ -352,8 +352,8 @@ public class main {
                         return;
                     }
                     ExchangeOffer selectedOffer2 = ofertasrecibidas.get(index5 - 1);
-                    selectedOffer2.imprimirCliente();
-                    if (selectedOffer2.getEstado() == ExchangeStatus.PENDIENTE){
+                    System.out.println(selectedOffer2);
+                    if (selectedOffer2.getEstado() == ExchangeOfferStatus.PENDIENTE){
                     System.out.println("1.- Aceptar Oferta");
                     System.out.println("2.- Rechazar Oferta");
                     System.out.println("0.- Volver al menu anterior");
@@ -365,9 +365,6 @@ public class main {
                     } else if (index6 == 1){
                         selectedOffer2.aceptaroferta();
                         System.out.println("Oferta Aceptada correctamente");
-                        transactions.Exchange nuevoIntercambio = new transactions.Exchange(selectedOffer2);
-                        selectedOffer2.getOfferor().makeExchange(nuevoIntercambio);
-                        selectedOffer2.getReceptor().makeExchange(nuevoIntercambio);
                     } else if (index6 == 2){
                         selectedOffer2.reject_offer();
                         System.out.println("Oferta Rechazada Correctamente");
@@ -1689,7 +1686,7 @@ public class main {
         // (En Exchange.java, validatedBy es null hasta que un empleado lo valida)
         ArrayList<transactions.Exchange> pendientes = new ArrayList<>();
         for (transactions.Exchange ex : todosLosIntercambios) {
-            if (ex.validatedBy == null) {
+            if (ex.isExchange(ExchangeStatus.EN_PROCESO)) {
                 pendientes.add(ex);
             }
         }
@@ -1702,9 +1699,9 @@ public class main {
         // 3. Mostrar la lista de intercambios pendientes
         for (int i = 0; i < pendientes.size(); i++) {
             transactions.Exchange ex = pendientes.get(i);
-            transactions.ExchangeOffer oferta = ex.validateOffer; // Accedemos a la oferta pública en Exchange.java
+            transactions.ExchangeOffer oferta = ex.getAssociatedOffer(); // Accedemos a la oferta pública en Exchange.java
 
-            System.out.println((i + 1) + ".- Intercambio #" + ex.exchangeId + " | De: "
+            System.out.println((i + 1) + ".- Intercambio #" + ex.getExchangeId() + " | De: "
                     + oferta.getOfferor().getUsername() + " para: " + oferta.getReceptor().getUsername());
             System.out.println("    -> Producto implicado: " + oferta.getRequestedProduct().getName());
         }
@@ -1723,7 +1720,7 @@ public class main {
 
             empleado.validateExchange(seleccionado);
 
-            System.out.println("[+] ¡Éxito! El intercambio #" + seleccionado.exchangeId + " ha sido validado en tienda.");
+            System.out.println("[+] ¡Éxito! El intercambio #" + seleccionado.getExchangeId() + " ha sido validado en tienda.");
             System.out.println("    Los productos han cambiado de propietario oficialmente en el sistema.");
 
         } catch (NumberFormatException e) {

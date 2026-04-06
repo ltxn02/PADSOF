@@ -82,6 +82,7 @@ public class SecondHandProduct extends Item {
 	 *
 	 * */
 	public void change_owners(Client new_owner) {
+		this.owner.removeSecondHandProduct(this);
 		this.owner = new_owner;
 	}
 	
