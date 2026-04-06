@@ -1,4 +1,4 @@
-package ui;
+package tests;
 import utils.*;
 import users.*;
 import catalog.*;
