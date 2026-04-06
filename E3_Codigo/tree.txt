@@ -1,6 +1,62 @@
 .
 ├── Makefile
 ├── bin
+│   ├── catalog
+│   │   ├── Catalog$1.class
+│   │   ├── Catalog.class
+│   │   ├── Category.class
+│   │   ├── Comic.class
+│   │   ├── Figurine.class
+│   │   ├── Game.class
+│   │   ├── Item.class
+│   │   ├── NewProduct.class
+│   │   ├── Pack.class
+│   │   ├── Product.class
+│   │   └── SecondHandProduct.class
+│   ├── logic
+│   │   ├── Application.class
+│   │   ├── SistemaRecomendaciones.class
+│   │   └── SistemaRecomendacionesSegundamano.class
+│   ├── tests
+│   │   ├── Main.class
+│   │   ├── MainIntercambios.class
+│   │   └── test_intercambios.class
+│   ├── transactions
+│   │   ├── Exchange.class
+│   │   ├── ExchangeHistoric.class
+│   │   ├── ExchangeOffer.class
+│   │   ├── Order.class
+│   │   ├── OrderHistoric.class
+│   │   └── ShoppingCart.class
+│   ├── ui
+│   │   ├── Main.class
+│   │   ├── MainIntercambios.class
+│   │   ├── main.class
+│   │   └── test_intercambios.class
+│   ├── users
+│   │   ├── Client.class
+│   │   ├── Employee$1.class
+│   │   ├── Employee.class
+│   │   ├── Guest.class
+│   │   ├── Manager.class
+│   │   ├── RegisteredUser.class
+│   │   ├── Staff.class
+│   │   └── User.class
+│   └── utils
+│       ├── AgeRange.class
+│       ├── BaseElement.class
+│       ├── CartItem.class
+│       ├── Condition.class
+│       ├── Discount.class
+│       ├── EmployeeRoles.class
+│       ├── ExchangeStatus.class
+│       ├── FixedDiscount.class
+│       ├── ItemType.class
+│       ├── Notification.class
+│       ├── OrderStatus.class
+│       ├── PercentageDiscount.class
+│       ├── Permission.class
+│       └── Review.class
 ├── diagramaClases2.uxf
 ├── doc
 │   ├── AgeRange.html
@@ -118,6 +174,11 @@
 │   │   ├── Application.java
 │   │   ├── SistemaRecomendaciones.java
 │   │   └── SistemaRecomendacionesSegundamano.java
+│   ├── tests
+│   │   ├── Main.java
+│   │   ├── MainIntercambios.java
+│   │   ├── PruebaIntercambioCompleto.java
+│   │   └── test_intercambios.java
 │   ├── transactions
 │   │   ├── Exchange.java
 │   │   ├── ExchangeHistoric.java
@@ -126,10 +187,7 @@
 │   │   ├── OrderHistoric.java
 │   │   └── ShoppingCart.java
 │   ├── ui
-│   │   ├── Main.java
-│   │   ├── MainIntercambios.java
-│   │   ├── main.java
-│   │   └── test_intercambios.java
+│   │   └── main.java
 │   ├── users
 │   │   ├── Client.java
 │   │   ├── Employee.java
@@ -145,12 +203,15 @@
 │       ├── Condition.java
 │       ├── Discount.java
 │       ├── EmployeeRoles.java
+│       ├── ExchangeOfferStatus.java
 │       ├── ExchangeStatus.java
+│       ├── FixedDiscount.java
 │       ├── ItemType.java
 │       ├── Notification.java
 │       ├── OrderStatus.java
+│       ├── PercentageDiscount.java
 │       ├── Permission.java
 │       └── Review.java
 └── tree.txt
 
-15 directories, 139 files
+23 directories, 192 files
