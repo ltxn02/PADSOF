@@ -118,7 +118,7 @@ public class SecondHandProduct extends Item {
 	}
 
 	public boolean isAppraised() {
-		return isAppraised;
+		return this.isAppraised;
 	}
 
 	public String getName() {

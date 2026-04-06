@@ -585,6 +585,9 @@ public class main {
                 case "2":
                     gestionarPedidos(empleado);
                     break;
+                case "3":
+                    valorarProductosSegundaMano(empleado);
+                    break;
                 case "0":
                     cerrarSesion = true;
                     System.out.println("Cerrando sesión de empleado...");
@@ -1543,6 +1546,75 @@ public class main {
 
         } catch (NumberFormatException e) {
             System.out.println("[!] Entrada inválida. Introduce un número.");
+        } catch (SecurityException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    // --- SUBMENÚ: VALORAR PRODUCTOS SEGUNDA MANO (EMPLEADO) ---
+
+    private static void valorarProductosSegundaMano(Employee empleado) {
+        System.out.println("\n--- VALORAR PRODUCTOS DE SEGUNDA MANO ---");
+
+        // 1. Filtrar solo los productos que NO han sido tasados aún
+        ArrayList<SecondHandProduct> todos = logic.Application.getSecondHandProducts();
+        ArrayList<SecondHandProduct> pendientes = new ArrayList<>();
+
+        for (SecondHandProduct p : todos) {
+            if (!p.isAppraised()) {
+                pendientes.add(p);
+            }
+        }
+
+        if (pendientes.isEmpty()) {
+            System.out.println("¡Genial! No hay productos de segunda mano pendientes de valoración.");
+            return;
+        }
+
+        // 2. Mostrar la lista de productos pendientes
+        for (int i = 0; i < pendientes.size(); i++) {
+            SecondHandProduct p = pendientes.get(i);
+            System.out.println((i + 1) + ".- " + p.getName() + " | Subido por: " + p.getOwner().getUsername());
+            System.out.println("    Descripción del cliente: " + p.itemPreview());
+        }
+
+        // 3. Seleccionar el producto
+        System.out.print("\nElige el número del producto a valorar (o 0 para volver): ");
+        try {
+            int index = Integer.parseInt(scanner.nextLine());
+            if (index == 0) return;
+            if (index < 1 || index > pendientes.size()) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+
+            SecondHandProduct seleccionado = pendientes.get(index - 1);
+
+            // 4. Elegir la condición (estado físico)
+            System.out.println("\nSelecciona el estado de conservación real del producto:");
+            utils.Condition[] condiciones = utils.Condition.values();
+            for (int i = 0; i < condiciones.length; i++) {
+                System.out.println((i + 1) + ".- " + condiciones[i].name());
+            }
+
+            System.out.print("Elige el número de la condición: ");
+            int condIndex = Integer.parseInt(scanner.nextLine());
+            if (condIndex < 1 || condIndex > condiciones.length) {
+                System.out.println("[!] Opción no válida.");
+                return;
+            }
+            utils.Condition condicion = condiciones[condIndex - 1];
+
+            // 5. Fijar el precio
+            System.out.print("Introduce el precio de tasación en tienda (ej: 15.50): ");
+            double precio = Double.parseDouble(scanner.nextLine());
+
+            // 6. Pasamos el dueño del producto como primer argumento
+            empleado.appraiseSecondHandProduct(seleccionado.getOwner(), seleccionado, condicion, precio);
+            System.out.println("[+] ¡Éxito! Producto '" + seleccionado.getName() + "' tasado oficialmente en " + precio + "€ con estado " + condicion.name() + ".");
+
+        } catch (NumberFormatException e) {
+            System.out.println("[!] Entrada inválida. Introduce un número correcto.");
         } catch (SecurityException e) {
             System.out.println(e.getMessage());
         }
