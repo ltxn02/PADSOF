@@ -71,6 +71,37 @@ public class Employee extends Staff {
             System.err.println("Could not read file: " + e.getMessage());
         }
     }
+    
+    public void changeVisibilityProduct(NewProduct product, boolean visible) throws SecurityException {
+    	if(this.checkPermission(Permission.PRODUCT_EDIT) == false) {
+    		throw new SecurityException("Employee doesn't have permission to edit products");
+    	}
+    	product.changeVisibilityProduct(visible);
+    }
+    
+    public void appraiseSecondHandProduct(Client client, SecondHandProduct product, Condition c, double valuedOn) throws SecurityException, IllegalArgumentException {
+    	if(this.checkPermission(Permission.EXCH_PRODUCT_APPRAISE) == false) {
+    		throw new SecurityException("Employee doesn't have permission to appraise products from a client's wallet");
+    	}
+    	
+    	if(client.hasSecondHandProduct(product) == false) {
+    		throw new IllegalArgumentException("Invalid product, it doesn't exist in the client's wallet");
+    	}
+    	
+    	product.appraiseSecondHand(c, valuedOn);
+    }
+    
+    public void validateExchange(Exchange exchange) throws SecurityException {
+    	if(this.checkPermission(Permission.EXCH_VALIDATE) == false) {
+    		throw new SecurityException("Employee doesn't have permission to validate exchanges");
+    	}
+    	
+    	try {
+    		exchange.validateExchange(this);
+    	} catch (Exception e) {
+    		System.err.println("Error validating exchange: " + e.getMessage());
+    	}
+    }
 
     /**
      * Metodo auxiliar para mapear las columnas extras según el tipo de producto.

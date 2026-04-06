@@ -29,16 +29,12 @@ public class Exchange {
      * @param e El empleado que hace la validación del intercambio
      * @return retorna true si se valida el intercamio y false si no se intercambia
      * */
-    public boolean validateExchange(Employee e){
-        if (!e.permissions.contains(Permission.EXCH_VALIDATE)){
-            return  false;
-        }
-        if (!validateOffer.ofertaaceptada()){
-            return false;
-        }
+    public void validateExchange(Employee e) throws IllegalStateException {
+    	if(!validateOffer.ofertaaceptada()) {
+    		throw new IllegalStateException("Cannot validate an offer that hasn't been accepted");
+    	}
         this.validatedBy = e;
         this.validateOffer.intercambiar_propietarios();
-        return true;
     }
 
 }

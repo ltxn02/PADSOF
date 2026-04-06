@@ -58,7 +58,6 @@ public class SecondHandProduct extends Item {
 		this.condition = c;
 		this.setPrice(value);
 		this.isAppraised= true;
-
 	}
 	
 	public boolean isOwnedBy(Client owner) {
@@ -76,7 +75,6 @@ public class SecondHandProduct extends Item {
 	public void change_offered_status(boolean offered){
 		this.isOffered = offered;
 	}
-
 
 	/**
 	 * @author Taha Ridda En Naji

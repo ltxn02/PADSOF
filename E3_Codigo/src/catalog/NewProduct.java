@@ -95,6 +95,10 @@ public abstract class NewProduct extends Item {
     	if(stock >= 0) this.stock = stock;
     }
     
+    public void changeVisibilityProduct(boolean visible) {
+    	this.markAs(visible);
+    }
+    
     @Override
     public double getPrice() {
         return super.getPrice();

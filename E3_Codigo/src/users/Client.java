@@ -73,12 +73,18 @@ public class Client extends RegisteredUser {
 		this.myReviews.add(review);
 	}
 	
-	public void registerSecondHandProduct(String name, String description, String picturePath, ItemType itemType) {
+	public void registerSecondHandProduct(String name, String description, String picturePath, ItemType itemType) throws IllegalArgumentException {
+		if(this.productNamedExists(name) == true) {
+			throw new IllegalArgumentException("A product with the same name is already registered in your wallet");
+		}
 		SecondHandProduct product = new SecondHandProduct(name, description, picturePath, itemType, this);
 		this.myProducts.add(product);
 	}
 	
-	public void registerSecondHandProduct(SecondHandProduct product) {
+	public void registerSecondHandProduct(SecondHandProduct product) throws IllegalArgumentException {
+		if(this.hasSecondHandProduct(product) == true) {
+			throw new IllegalArgumentException("This product is already registered in your wallet");
+		}
 		this.myProducts.add(product);
 	}
 	
@@ -87,6 +93,10 @@ public class Client extends RegisteredUser {
 			throw new IllegalArgumentException("Invalid product, doesn't exist in your wallet");
 		}
 		this.myProducts.remove(product);
+	}
+	
+	public boolean hasSecondHandProduct(SecondHandProduct product) {
+		return this.myProducts.contains(product);
 	}
 	
 	public void makeOffer(SecondHandProduct requested, SecondHandProduct...offered) throws IllegalArgumentException {
@@ -214,7 +224,14 @@ public class Client extends RegisteredUser {
 		return true;
 	}
 	
-	
+	private boolean productNamedExists(String name) {
+		for(SecondHandProduct product : this.myProducts) {
+			if(product.isNamed(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	

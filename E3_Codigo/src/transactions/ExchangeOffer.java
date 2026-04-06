@@ -96,7 +96,7 @@ public class ExchangeOffer {
         }
     }
 
-    public boolean ofertaaceptada(){
+    public boolean ofertaaceptada() {
         if (this.status == ExchangeStatus.ACEPTADA){
         	return true;
         }
