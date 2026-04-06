@@ -17,7 +17,7 @@ import users.*;
 import catalog.*;
 
 
-public class ExchangeOffer {
+public class ExchangeOffer implements java.io.Serializable{
     private static int lastOfferId = 1;
     private int offerId;
     private LocalDateTime createDate;

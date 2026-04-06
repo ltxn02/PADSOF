@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public abstract class Item extends BaseElement{
+public abstract class Item extends BaseElement implements java.io.Serializable{
     private String name;
     private String description;
     private double price;

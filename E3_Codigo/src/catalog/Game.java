@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public class Game extends Product{
+public class Game extends Product implements java.io.Serializable{
     private int nPlayers;
     private ArrayList<String> mechanics;
     private AgeRange ageRange;

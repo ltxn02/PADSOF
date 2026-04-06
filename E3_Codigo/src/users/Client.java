@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.time.*;
 
-public class Client extends RegisteredUser {
+public class Client extends RegisteredUser implements java.io.Serializable{
 	private LocalDateTime joiningDate;
 	private ShoppingCart shoppingCart;  // Deja solo este
 	private OrderHistoric myOrders;     // Y deja solo este

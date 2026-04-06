@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public class Figurine extends Product{
+public class Figurine extends Product implements java.io.Serializable{
     private double height;
     private double width;
     private double depth;

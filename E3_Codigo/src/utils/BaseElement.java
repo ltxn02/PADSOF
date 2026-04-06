@@ -2,7 +2,7 @@ package utils;
 
 import java.time.*;
 
-public abstract class BaseElement {
+public abstract class BaseElement implements java.io.Serializable{
 	private boolean active;
 	private Instant createdAt;
 	private Instant updatedAt;

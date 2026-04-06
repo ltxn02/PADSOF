@@ -1,6 +1,6 @@
 package utils;
 
-public class AgeRange extends BaseElement {
+public class AgeRange extends BaseElement implements java.io.Serializable{
 	private String label;
     private int minAge;
     private int maxAge;

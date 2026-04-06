@@ -7,7 +7,7 @@ import transactions.*;
 import catalog.*;
 import users.RegisteredUser;
 
-public class Notification extends BaseElement {
+public class Notification extends BaseElement implements java.io.Serializable{
     private int notificationId;
     private static int lastNotificationId = 1;
     private String message;

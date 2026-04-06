@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public class Comic extends Product{
+public class Comic extends Product implements java.io.Serializable{
     private int nPages;
     private String publisher;
     private int publicationYear;

@@ -7,7 +7,7 @@ import users.*;
 import transactions.*;
 import catalog.*;
 
-public class Review extends BaseElement{
+public class Review extends BaseElement implements java.io.Serializable{
 	private static int lastReviewId = 1;
 	private int reviewId;
     private int rating;

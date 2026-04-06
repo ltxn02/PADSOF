@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public abstract class NewProduct extends Item {
+public abstract class NewProduct extends Item implements java.io.Serializable{
     private int stock;
     private int effectiveStock;
     private ArrayList<Review> reviews;

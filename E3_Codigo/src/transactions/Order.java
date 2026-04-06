@@ -9,7 +9,7 @@ import users.*;
 import catalog.*;
 
 
-public class Order {
+public class Order implements java.io.Serializable{
     private static int lastOrderId = 1;
     private int orderId;
     private Instant orderedAt;

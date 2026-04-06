@@ -11,7 +11,7 @@ import users.Client;
  * @version 2.0
  *
  */
-public class SecondHandProduct extends Item {
+public class SecondHandProduct extends Item implements java.io.Serializable{
 	private static int lastSecondHandProductId = 0;
 	private int secondHandId;
 	private boolean isAppraised;

@@ -5,7 +5,7 @@ import catalog.*;
 
 import java.util.ArrayList;
 
-public class ExchangeHistoric {
+public class ExchangeHistoric implements java.io.Serializable{
     private ArrayList<Exchange> exchanges;
 
     public ExchangeHistoric() {

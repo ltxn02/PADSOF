@@ -6,7 +6,7 @@ import utils.*;
 import transactions.*;
 import catalog.*;
 
-public class Employee extends Staff {
+public class Employee extends Staff implements java.io.Serializable{
     private boolean enabled;
     public ArrayList<EmployeeRoles> Rol;
     public ArrayList<Permission> permissions;

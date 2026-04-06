@@ -3,7 +3,7 @@ package utils;
 import catalog.NewProduct;
 import java.time.*;
 
-public class CartItem {
+public class CartItem implements java.io.Serializable{
 	private NewProduct product;
 	private int quantity;
 	

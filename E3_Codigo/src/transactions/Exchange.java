@@ -10,7 +10,7 @@ import catalog.*;
  *
  */
 
-public class Exchange {
+public class Exchange implements java.io.Serializable{
     private static int lastExchangeId = 1;
     private int exchangeId;
     private ExchangeOffer associatedOffer;

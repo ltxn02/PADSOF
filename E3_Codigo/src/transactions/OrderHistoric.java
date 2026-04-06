@@ -5,7 +5,7 @@ import catalog.*;
 
 import java.util.ArrayList;
 
-public class OrderHistoric {
+public class OrderHistoric implements java.io.Serializable{
     private ArrayList<Order> orders;
 
     public OrderHistoric(ArrayList<Order> orders) {
@@ -31,11 +31,11 @@ public class OrderHistoric {
     public void removeOrder(Order order) {
         this.orders.remove(order);
     }
-    
+
     public boolean hasOrder(Order order) {
     	return this.orders.contains(order);
     }
-    
+
     public boolean hasProduct(NewProduct p) {
     	for(Order order: this.orders) {
     		if(order.hasProduct(p)) {

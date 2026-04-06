@@ -2,9 +2,10 @@ package catalog;
 import java.util.ArrayList;
 import java.util.Date;
 import utils.*;
+import discounts.*;
 
 
-public abstract class Product extends NewProduct {
+public abstract class Product extends NewProduct implements java.io.Serializable{
     private static int lastProductId = 1;
     private int productId;
     private Discount discount;

@@ -4,7 +4,7 @@ import transactions.*;
 import catalog.*;
 import java.util.*;
 
-public abstract class User extends BaseElement {
+public abstract class User extends BaseElement implements java.io.Serializable{
 	/** 
 	 * La idea de las funciones de catalog es que el usuario pueda visualizar el catalogo, haciendo busquedas, filtrando
 	 * o lo que sea, asi que realmente no sé si tendrá que devolver Catalog, Product[*], nada y simplemente mostrar por

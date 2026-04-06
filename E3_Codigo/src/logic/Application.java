@@ -7,6 +7,7 @@ import utils.*;
 import users.*;
 import catalog.*;
 import transactions.*;
+import discounts.*;
 
 public class Application {
     private static HashMap<String, RegisteredUser> users = new HashMap<>();

@@ -7,7 +7,7 @@ import utils.*;
 import users.*;
 import catalog.*;
 
-public class ShoppingCart {
+public class ShoppingCart implements java.io.Serializable{
 	private double fullPrice;
 	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);

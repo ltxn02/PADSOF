@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public class Category extends BaseElement{
+public class Category extends BaseElement implements java.io.Serializable{
     private String name;
     private ArrayList<Item> items;
 

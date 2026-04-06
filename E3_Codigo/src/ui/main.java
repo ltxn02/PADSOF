@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import discounts.*;
 
 public class main {
     private static Scanner scanner = new Scanner(System.in);
@@ -1222,13 +1223,11 @@ public class main {
 
             // --- SOLUCIÓN: Comprobamos qué tipo de hijo es antes de llamar a sus métodos ---
             String infoRebaja = "";
-            if (d instanceof utils.PercentageDiscount) {
-                // Hacemos el casting (utils.PercentageDiscount) d para poder usar getPercentage()
-                int porcentajeReal = (int) (((utils.PercentageDiscount) d).getPercentage() * 100);
+            if (d instanceof discounts.PercentageDiscount) {
+                int porcentajeReal = (int) (((discounts.PercentageDiscount) d).getPercentage() * 100);
                 infoRebaja = porcentajeReal + "%";
-            } else if (d instanceof utils.FixedDiscount) {
-                // Hacemos el casting para poder usar getAmount()
-                infoRebaja = ((utils.FixedDiscount) d).getAmount() + "€";
+            } else if (d instanceof discounts.FixedAmountDiscount) {
+                infoRebaja = ((discounts.FixedAmountDiscount) d).getAmount() + "€";
             }
 
             System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " de rebaja | " + d.getDescription());
@@ -1266,16 +1265,17 @@ public class main {
                 return;
             }
 
-            utils.Discount nuevoDescuento = null;
+            discounts.Discount nuevoDescuento = null;
 
             if (tipoDesc.equals("1")) {
                 System.out.print("Porcentaje de descuento (ej: 0.20 para 20%): ");
                 double p = Double.parseDouble(scanner.nextLine());
-                nuevoDescuento = new utils.PercentageDiscount(p, description, fromDate, toDate);
+                nuevoDescuento = new discounts.PercentageDiscount(p, description, fromDate, toDate);
             } else {
                 System.out.print("Importe fijo a descontar (ej: 5.50 para 5,50€): ");
                 double amt = Double.parseDouble(scanner.nextLine());
-                nuevoDescuento = new utils.FixedDiscount(amt, description, fromDate, toDate);
+                // Fíjate que ahora se llama FixedAmountDiscount
+                nuevoDescuento = new discounts.FixedAmountDiscount(amt, description, fromDate, toDate);
             }
 
             logic.Application.addDiscount(nuevoDescuento);
@@ -1330,11 +1330,11 @@ public class main {
                 Discount d = descuentos.get(i);
 
                 String infoRebaja = "";
-                if (d instanceof utils.PercentageDiscount) {
-                    int porcentajeReal = (int) (((utils.PercentageDiscount) d).getPercentage() * 100);
+                if (d instanceof discounts.PercentageDiscount) {
+                    int porcentajeReal = (int) (((discounts.PercentageDiscount) d).getPercentage() * 100);
                     infoRebaja = porcentajeReal + "%";
-                } else if (d instanceof utils.FixedDiscount) {
-                    infoRebaja = ((utils.FixedDiscount) d).getAmount() + "€";
+                } else if (d instanceof discounts.FixedAmountDiscount) {
+                    infoRebaja = ((discounts.FixedAmountDiscount) d).getAmount() + "€";
                 }
 
                 System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " - " + d.getDescription());

@@ -4,7 +4,7 @@ import transactions.*;
 import catalog.*;
 import java.util.*;
 
-public abstract class RegisteredUser extends User {
+public abstract class RegisteredUser extends User implements java.io.Serializable{
 	private static int lastUserId = 0;
 	private int userId;
 	private String username;

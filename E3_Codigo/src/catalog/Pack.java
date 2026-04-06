@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import utils.*;
 
 
-public class Pack extends NewProduct {
+public class Pack extends NewProduct implements java.io.Serializable{
     private static int lastPackId = 1;
     private int packId;
 
