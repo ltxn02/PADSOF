@@ -1,6 +1,6 @@
 package model.discounts;
 
-import model.catalog.Item;
+import model.catalog.*;
 import model.transactions.ShoppingCart;
 import java.time.LocalDateTime;
 /**
@@ -36,11 +36,24 @@ public class GiftDiscount extends Discount implements IRegalo, IVolumen {
      * @version 3.0
      */
     @Override
+
+
     public void aplicarRegalo(ShoppingCart cart) {
-        if (!isExpired() && cart.getPrice() >= minGasto) {
-            cart.addGift(this.regalo);
+        if (!isExpired() && cart.getFullPrice() >= minGasto) {
+            // Solo añadimos si el regalo es un NewProduct y tiene stock
+            if (this.regalo instanceof NewProduct) {
+                NewProduct pRegalo = (NewProduct) this.regalo;
+                if (pRegalo.isEffectiveStockHigher(1)) {
+                    cart.addGift(this.regalo);
+                }
+            } else {
+                // Si es un producto de segunda mano o genérico, se añade igual
+                cart.addGift(this.regalo);
+            }
         }
     }
+
+
     /**
      * Implementación de la interfaz IVolumen. En este tipo de descuento, el precio
      * total no se ve alterado numéricamente, por lo que devuelve el total original.

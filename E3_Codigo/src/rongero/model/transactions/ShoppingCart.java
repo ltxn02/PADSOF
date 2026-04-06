@@ -108,15 +108,19 @@ public class ShoppingCart {
 	public synchronized double getPrice() {
 		this.gifts.clear();
 		double finalPrice = this.fullPrice;
+		double mejorDescuento = 0;
 
-		if (this.globalDiscounts != null && !this.globalDiscounts.isEmpty()) {
-			for (IVolumen d : globalDiscounts) {
-				if (!d.isExpired()) {
-					finalPrice = d.applyVolumen(finalPrice);
+		for (IVolumen d : globalDiscounts) {
+			if (!d.isExpired()) {
+				double precioConEsteDescuento = d.applyVolumen(this.fullPrice);
+				double ahorro = this.fullPrice - precioConEsteDescuento;
 
-					if (d instanceof IRegalo) {
-						((IRegalo) d).aplicarRegalo(this);
-					}
+				// Si quieres que se ACUMULEN:
+				finalPrice -= ahorro;
+
+				// Si es un regalo, se procesa aparte
+				if (d instanceof IRegalo) {
+					((IRegalo) d).aplicarRegalo(this);
 				}
 			}
 		}
@@ -151,6 +155,13 @@ public class ShoppingCart {
 	 * @author Taha Ridda En Naji
 	 * @version 3.0
 	 */
+	public synchronized void addGlobalDiscount(IVolumen discount) {
+		if (discount != null) {
+			this.globalDiscounts.add(discount);
+		}
+	}
+
+	// En model.transactions.ShoppingCart
 	public synchronized void addGift(Item item) {
 		if (item != null && !this.gifts.contains(item)) {
 			this.gifts.add(item);

@@ -70,4 +70,14 @@ public class CartItem {
 	public int getQuantity() {
 		return this.quantity;
 	}
+
+	// Dentro de CartItem.java o ShoppingCart
+	public double calcularTotalLinea() {
+		IDiscount desc = product.getDiscount();
+		if (desc instanceof ICantidad && !desc.isExpired()) {
+			return ((ICantidad) desc).applyCantidad(product.getPrice(), this.quantity);
+		}
+		return product.getPriceWithDiscount() * this.quantity;
+	}
+
 }

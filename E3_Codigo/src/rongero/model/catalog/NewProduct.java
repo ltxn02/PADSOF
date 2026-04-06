@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import util.Review;
 import model.discounts.*;
 
-public abstract class NewProduct extends Item {
+public  class NewProduct extends Item {
     private int stock;
     private int effectiveStock;
     private List<Review> reviews;
