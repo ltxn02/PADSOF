@@ -177,7 +177,6 @@ public class ExchangeOffer {
     	
     	return sb.toString();
     }
-    
     @Override
     public String toString(){
         return "Fecha: " + this.createDate + "\nOferta por: " + this.requestedProduct
@@ -187,4 +186,69 @@ public class ExchangeOffer {
                 + "\nTiempo de oferta: " + this.timeonHold ;
 
     }
+
+    /**
+     * Muestra la oferta desde el punto de vista de los clientes involucrados.
+     * Enfocado en la claridad del trueque y el valor de los productos.
+     */
+    public void imprimirCliente() {
+        String linea = "----------------------------------------------------------------";
+        System.out.println("\n" + linea);
+        System.out.println("                PROPUESTA DE INTERCAMBIO #" + this.offerId);
+        System.out.println(linea);
+
+        System.out.println("  OFERTANTE: " + this.offeror.getUsername());
+        System.out.println("  RECEPTOR:  " + this.receptor.getUsername());
+        System.out.println("  ESTADO:    [" + this.status + "]");
+        System.out.println(linea);
+
+        System.out.println("  LO QUE SE PIDE:");
+        System.out.println("    => " + requestedProduct.getName() + " (" + requestedProduct.getPrice() + "€)");
+
+        System.out.println("\n  LO QUE SE OFRECE A CAMBIO:");
+        double suma = 0;
+        for (SecondHandProduct p : offeredProducts) {
+            System.out.println("    + " + p.getName() + " [" + p.getCondition() + "]");
+            suma += p.getPrice();
+        }
+        System.out.printf("\n  VALOR TOTAL OFRECIDO: %.2f€\n", suma);
+        System.out.println(linea + "\n");
+    }
+
+    /**
+     * Muestra la oferta con detalles técnicos para empleados y managers.
+     * Incluye control de tiempos y estados internos.
+     */
+    public void imprimirSuperior() {
+        String marca = "################################################################";
+        System.out.println("\n" + marca);
+        System.out.println("  AUDITORÍA DE INTERCAMBIO - ID: EXCH-OFFER-" + this.offerId);
+        System.out.println(marca);
+
+        System.out.println("  REGISTRO:  " + this.createDate);
+        System.out.println("  EXPIRADA:  " + (is_Expired() ? "SÍ" : "NO"));
+        System.out.println("  ESTADO:    " + this.status);
+
+        System.out.println("\n  TRAZABILIDAD DE USUARIOS:");
+        System.out.println("    - ID Ofertante: " + this.offeror.getUsername() + " (Solicitante)");
+        System.out.println("    - ID Receptor:  " + this.receptor.getUsername() + " (Dueño del ítem)");
+
+        System.out.println("\n  VERIFICACIÓN DE DISPONIBILIDAD:");
+        System.out.println("    - Item Solicitado disponible: " + (requestedProduct.isAvailable() ? "SÍ" : "NO (BLOQUEADO)"));
+        boolean todosDisp = true;
+        for(SecondHandProduct p : offeredProducts) if(!p.isAvailable()) todosDisp = false;
+        System.out.println("    - Lote ofrecido disponible:   " + (todosDisp ? "SÍ" : "REVISAR ITEMS"));
+
+        System.out.println(marca + "\n");
+    }
+
+
+
+
+
+
+
+
+
+
 }

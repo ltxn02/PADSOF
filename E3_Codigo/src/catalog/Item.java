@@ -101,4 +101,8 @@ public abstract class Item extends BaseElement{
         }
         return false;
     }
+
+    public String getDescription() {
+        return description;
+    }
 }

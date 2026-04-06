@@ -320,8 +320,7 @@ public class main {
                         return;
                     }
                     ExchangeOffer selectedOffer = ofertashechas.get(index2 - 1);
-                    System.out.println(selectedOffer);
-
+                    selectedOffer.imprimirCliente();
                     System.out.println("0.- Volver al menu anterior");
                     String inputIndex3 = scanner.nextLine();
                     int index3 = Integer.parseInt(inputIndex3);
@@ -353,7 +352,7 @@ public class main {
                         return;
                     }
                     ExchangeOffer selectedOffer2 = ofertasrecibidas.get(index5 - 1);
-                    System.out.println(selectedOffer2);
+                    selectedOffer2.imprimirCliente();
                     if (selectedOffer2.getEstado() == ExchangeStatus.PENDIENTE){
                     System.out.println("1.- Aceptar Oferta");
                     System.out.println("2.- Rechazar Oferta");
@@ -422,7 +421,7 @@ public class main {
                                 return;
 
                             } else {
-                                System.out.println(productosactivos.get(index8 - 1));
+                                productosactivos.get(index8 - 1).imprimirCliente();
                             }
                             break;
                         case 2:
@@ -445,7 +444,7 @@ public class main {
                                 return;
 
                             } else {
-                                System.out.println(productosinactivos.get(index9 - 1));
+                                productosinactivos.get(index9 - 1).imprimirCliente();
 
                             }
                             break;

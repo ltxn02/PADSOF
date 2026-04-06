@@ -109,6 +109,10 @@ public class SecondHandProduct extends Item {
 
 	}
 
+	public Condition getCondition() {
+		return condition;
+	}
+
 	public ArrayList<Category> getCategories() {
 		return super.getCategories();
 	}
@@ -128,4 +132,55 @@ public class SecondHandProduct extends Item {
 	public double getPrice() {
 		return super.getPrice();
 	}
+
+	/**
+	 * Muestra la ficha del producto desde la perspectiva de un comprador o del dueño.
+	 * Se centra en el nombre, estado estético y precio.
+	 */
+	public void imprimirCliente() {
+		String linea = "****************************************************************";
+		System.out.println("\n" + linea);
+		System.out.println("                VISTA DE PRODUCTO: " + this.getName().toUpperCase());
+		System.out.println(linea);
+
+		System.out.println("  ESTADO ESTÉTICO: " + (this.condition != null ? this.condition : "Pendiente de revisión"));
+
+		if (isAppraised) {
+			System.out.printf("  PRECIO DE VENTA: %.2f €\n", this.getPrice());
+		} else {
+			System.out.println("  PRECIO DE VENTA: [ En proceso de tasación ]");
+		}
+
+		System.out.println("\n  DESCRIPCIÓN:");
+		System.out.println("  \"" + this.getDescription()+ "\"");
+
+		System.out.println(linea + "\n");
+	}
+
+	/**
+	 * Muestra la ficha técnica completa para empleados y gestores.
+	 * Incluye IDs de base de datos, fechas de registro y control de disponibilidad.
+	 */
+	public void imprimirSuperior() {
+		String decoracion = "################################################################";
+		System.out.println("\n" + decoracion);
+		System.out.println("  PANEL DE CONTROL TÉCNICO - ID INTERNO: SH-" + this.secondHandId);
+		System.out.println(decoracion);
+
+		System.out.println("  DATOS DE PROPIEDAD:");
+		System.out.println("    > Propietario: " + (owner != null ? owner.getUsername() : "SISTEMA"));
+		System.out.println("    > Fecha Alta:  " + this.dateadded);
+
+		System.out.println("\n  CONTROL DE ESTADO:");
+		System.out.println("    > Tipo Item:   " + this.itemType);
+		System.out.println("    > Tasado:      " + (isAppraised ? "SÍ" : "NO"));
+		System.out.println("    > En Oferta:   " + (isOffered ? "SÍ (Bloqueado)" : "NO (Disponible)"));
+
+		System.out.println("\n  VALORES FINANCIEROS:");
+		System.out.printf("    > Precio Base: %.2f €\n", this.getPrice());
+		System.out.println("    > Condición:   " + (this.condition != null ? this.condition : "POR DEFINIR"));
+
+		System.out.println(decoracion + "\n");
+	}
+
 }
