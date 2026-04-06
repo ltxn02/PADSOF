@@ -38,7 +38,7 @@ public class PruebaIntercambioCompleto {
             System.out.println("\n[SISTEMA] Generando oferta de Taha para Lidia...");
             ExchangeOffer oferta1 = new ExchangeOffer(ps5, loteTaha, taha);
 
-            oferta1.imprimir();
+            oferta1.imprimirCliente();
 
             System.out.println("[INTERACCIÓN] Lidia acepta la oferta de Taha.");
             oferta1.aceptaroferta();
@@ -58,7 +58,7 @@ public class PruebaIntercambioCompleto {
             System.out.println("[SISTEMA] Generando oferta de Ivan para Lidia...");
             ExchangeOffer oferta2 = new ExchangeOffer(switchOled, loteIvan, ivan);
 
-            oferta2.imprimir();
+            oferta2.imprimirCliente();
 
             System.out.println("[INTERACCIÓN] Lidia RECHAZA la oferta de Ivan.");
             oferta2.reject_offer();
