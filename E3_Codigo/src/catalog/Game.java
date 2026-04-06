@@ -2,6 +2,7 @@ package catalog;
 
 import java.util.ArrayList;
 import utils.*;
+import discounts.*;
 
 
 public class Game extends Product implements java.io.Serializable{
@@ -9,7 +10,7 @@ public class Game extends Product implements java.io.Serializable{
     private ArrayList<String> mechanics;
     private AgeRange ageRange;
 
-    public Game(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, Discount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
+    public Game(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
         super(name, description, price, image, stock, categories, reviews, discount);
         if (nPlayers < 1) {
             throw new IllegalArgumentException("Argumentos inválidos");

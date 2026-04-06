@@ -1,6 +1,7 @@
 package catalog;
 import java.util.*;
 import utils.*;
+import discounts.*;
 
 public class Catalog {
 	private List<Category> categories;
@@ -78,7 +79,7 @@ public class Catalog {
 				String name = (String) data.get("name"), description = (String) data.get("description"), picturePath = (String) data.get("picturePath");
 				double price = (Double) data.get("price");
 				int stock = (Integer) data.get("stock");
-				Discount discount = (Discount) data.get("discount");
+				IDiscount discount = (IDiscount) data.get("discount");
 				@SuppressWarnings("unchecked")
 				ArrayList<Category> categories = data.get("categories") != null ? (ArrayList<Category>) data.get("categories") : new ArrayList<>();
 				@SuppressWarnings("unchecked")

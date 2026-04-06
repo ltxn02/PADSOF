@@ -1192,13 +1192,13 @@ public class main {
             String opcion = scanner.nextLine();
             switch (opcion) {
                 case "1":
-                    verDescuentos();
+                    //verDescuentos();
                     break;
                 case "2":
-                    crearDescuento();
+                    //crearDescuento();
                     break;
                 case "3":
-                    asignarDescuento();
+                    //asignarDescuento();
                     break;
                 case "0":
                     volver = true;
@@ -1208,7 +1208,7 @@ public class main {
             }
         }
     }
-
+/**
     private static void verDescuentos() {
         System.out.println("\n--- DESCUENTOS ACTUALES ---");
         ArrayList<Discount> descuentos = Application.getGlobalDiscounts();
@@ -1233,7 +1233,8 @@ public class main {
             System.out.println((i + 1) + ".- [" + d.getType() + "] " + infoRebaja + " de rebaja | " + d.getDescription());
         }
     }
-
+*/
+/**
     private static void crearDescuento() {
         System.out.println("\n--- CREAR NUEVO DESCUENTO ---");
         System.out.println("1.- Rebaja por porcentaje (ej: 20%)");
@@ -1285,7 +1286,8 @@ public class main {
             System.out.println("[!] Error al procesar los datos: " + e.getMessage());
         }
     }
-
+*/
+/**
     private static void asignarDescuento() {
         ArrayList<Discount> descuentos = Application.getGlobalDiscounts();
         if (descuentos.isEmpty()) {
@@ -1358,7 +1360,7 @@ public class main {
             System.out.println("[!] Entrada inválida.");
         }
     }
-
+*/
     // --- SUBMENÚ: GESTIÓN DE INVENTARIO (EMPLEADO) ---
 
     private static void gestionarInventario(Employee empleado) {

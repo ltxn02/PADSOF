@@ -11,7 +11,9 @@ public class ShoppingCart implements java.io.Serializable{
 	private double fullPrice;
 	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);
-	
+	private List<discounts.IVolumen> globalDiscounts = new ArrayList<>();
+	private List<catalog.Item> gifts = new ArrayList<>();
+
 	private static final ScheduledExecutorService cleaner =
 			Executors.newSingleThreadScheduledExecutor(r -> {
 				Thread t = new Thread(r);
@@ -120,6 +122,37 @@ public class ShoppingCart implements java.io.Serializable{
 
 
 	public synchronized double getPrice() {
+		this.gifts.clear();
+		double finalPrice = this.fullPrice;
+
+		for (discounts.IVolumen d : globalDiscounts) {
+			if (!d.isExpired()) {
+				finalPrice = d.applyVolumen(finalPrice);
+
+				if (d instanceof discounts.IRegalo) {
+					((discounts.IRegalo) d).aplicarRegalo(this);
+				}
+			}
+		}
+		return Math.round(finalPrice * 100.0) / 100.0;
+	}
+	public double getFullPrice() {
 		return this.fullPrice;
 	}
+
+	public void addGlobalDiscount(discounts.IVolumen d) {
+		this.globalDiscounts.add(d);
+	}
+
+	public List<catalog.Item> getGifts() {
+		return this.gifts;
+	}
+
+	public void addGift(catalog.Item item) {
+		if (item != null && !this.gifts.contains(item)) {
+			this.gifts.add(item);
+		}
+	}
+
+
 }
