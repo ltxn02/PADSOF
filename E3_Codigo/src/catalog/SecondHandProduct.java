@@ -43,6 +43,9 @@ public class SecondHandProduct extends Item {
 		this.dateadded = LocalDateTime.now();
 		this.secondHandId = SecondHandProduct.lastSecondHandProductId;
 		SecondHandProduct.lastSecondHandProductId++;
+		if (this.owner != null) {
+			this.owner.registerSecondHandProduct(this);
+		}
 	}
 	
 	public SecondHandProduct(String name, String description, String picturePath, ItemType itemType, Client owner) {
