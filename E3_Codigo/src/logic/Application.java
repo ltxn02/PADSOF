@@ -21,9 +21,9 @@ public class Application {
     static {
         // 1. INICIALIZACIÓN DE USUARIOS POR DEFECTO
         try {
-            Manager lidia = new Manager("lidia", "lidia123", "Lidia Martin Teres", "XXXXXXXXX", "01/01/2002", "lidia@rongero.es", "600000000", 10000.00);
-            Manager taha = new Manager("taha", "taha123", "Taha Ridda", "XXXXXXXXX", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
-            Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "XXXXXXXXX", "01/01/2002", "ivan@rongero.es", "600000000", 10000.00);
+            Manager lidia = new Manager("lidia", "lidia123", "Lidia Martin Teres", "12345678A", "01/01/2002", "lidia@rongero.es", "600000000", 10000.00);
+            Manager taha = new Manager("taha", "taha123", "Taha Ridda", "12345678A", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
+            Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "12345678A", "01/01/2002", "ivan@rongero.es", "600000000", 10000.00);
 
             users.put(lidia.getUsername(), lidia);
             users.put(taha.getUsername(), taha);
