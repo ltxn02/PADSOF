@@ -7,14 +7,27 @@ import logic.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.List;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import discounts.*;
 
+/**
+ * Clase principal que actúa como punto de entrada (Entry Point) a la aplicación Rongero.
+ * Gestiona el bucle inicial de ejecución, la carga y guardado de datos persistentes,
+ * y el enrutamiento de los usuarios hacia sus respectivos menús de interfaz según
+ * su rol (Gestor, Empleado o Cliente).
+ *
+ * @author Iván Sánchez
+ * @version 3.0
+ */
 public class main {
     private static Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Metodo principal que arranca la ejecución del demostrador del sistema.
+     * Carga automáticamente los datos guardados en disco y muestra el menú
+     * inicial para usuarios invitados. Al salir, asegura el guardado del estado.
+     *
+     * @param args Argumentos de la línea de comandos (no utilizados).
+     */
     public static void main(String[] args) {
         System.out.println("=====================================");
         System.out.println("      BIENVENIDO A RONGERO           ");
@@ -58,11 +71,13 @@ public class main {
         ShoppingCart.shutdownCleaner();
     }
 
-    // --- MÉTODOS DEL MENÚ INICIAL ---
+    /**
+     * Muestra una vista previa del catálogo de la tienda para los usuarios
+     * que navegan como invitados (sin haber iniciado sesión).
+     */
     private static void verCatalogolnvitado() {
         System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
 
-        // Obtenemos la lista de productos desde Application
         ArrayList<NewProduct> productos = Application.getCatalog();
 
         if (productos.isEmpty()) {
@@ -70,12 +85,17 @@ public class main {
             return;
         }
 
-        // Recorremos la lista e imprimimos cada producto
         for (NewProduct p : productos) {
             System.out.println("- " + p.getName() + " | Precio: " + p.getPrice() + "€");
         }
     }
 
+    /**
+     * Procesa el inicio de sesión de un usuario.
+     * Solicita las credenciales, valida contra la lógica de negocio y, en caso
+     * de éxito, transfiere el control de la consola a la clase de menú específica
+     * correspondiente al rol del usuario logueado.
+     */
     private static void login() {
         System.out.println("\n--- INICIO DE SESIÓN ---");
         System.out.print("Username: ");
@@ -104,27 +124,26 @@ public class main {
         }
     }
 
+    /**
+     * Guía al usuario invitado a través del proceso de creación de una nueva cuenta
+     * de Cliente en el sistema. Incluye una prueba técnica de generación de la primera
+     * notificación de bienvenida en la bandeja de entrada del usuario.
+     */
     private static void register() {
         System.out.println("\n--- REGISTRO DE NUEVO CLIENTE ---");
 
         System.out.print("Full name: ");
         String fullname = scanner.nextLine();
-
         System.out.print("DNI: ");
         String dni = scanner.nextLine();
-
         System.out.print("Username: ");
         String username = scanner.nextLine();
-
         System.out.print("Password: ");
         String password = scanner.nextLine();
-
         System.out.print("Birthdate: ");
         String birthdate = scanner.nextLine();
-
         System.out.print("Email: ");
         String email = scanner.nextLine();
-
         System.out.print("Phone number: ");
         String phoneNumber = scanner.nextLine();
 
@@ -135,17 +154,13 @@ public class main {
             System.out.println(">> Usuario " + username + " registrado correctamente. Ya puedes iniciar sesión.");
 
             // --- CÓDIGO DE PRUEBA DE NOTIFICACIONES ---
-            // 1. Creamos la lista de destinatarios (el constructor de Notification lo pide)
             ArrayList<RegisteredUser> destinatarios = new ArrayList<>();
             destinatarios.add(nuevoCliente);
 
-            // 2. Creamos el mensaje largo para probar que el preview de tu compañera funciona (corta a los 20 caracteres)
             String mensajeLargo = "¡Bienvenido a Rongero! Esperamos que disfrutes comprando y vendiendo tus productos frikis de segunda mano. Esto es texto extra para ver cómo se ve un mensaje largo.Esto es texto extra para ver cómo se ve un mensaje largo.Esto es texto extra para ver cómo se ve un mensaje largo.Esto es texto extra para ver cómo se ve un mensaje largo.";
             Notification bienvenida = new Notification(mensajeLargo, destinatarios);
 
-            // 3. Se la metemos en la bandeja al cliente
             nuevoCliente.addNotification(bienvenida);
-
             // --- FIN CÓDIGO DE PRUEBA ---
 
         } catch (IOException e) {
