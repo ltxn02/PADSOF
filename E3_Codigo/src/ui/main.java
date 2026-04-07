@@ -147,9 +147,9 @@ public class main {
         System.out.print("Phone number: ");
         String phoneNumber = scanner.nextLine();
 
-        Client nuevoCliente = new Client(username, password, fullname, dni, birthdate, email, phoneNumber);
-
         try {
+            Client nuevoCliente = new Client(username, password, fullname, dni, birthdate, email, phoneNumber);
+
             Application.registerClient(nuevoCliente);
             System.out.println(">> Usuario " + username + " registrado correctamente. Ya puedes iniciar sesión.");
 
@@ -163,7 +163,12 @@ public class main {
             nuevoCliente.addNotification(bienvenida);
             // --- FIN CÓDIGO DE PRUEBA ---
 
+        } catch (IllegalArgumentException e) {
+            // AQUÍ ATRAPAMOS LOS ERRORES DE DNI, TELÉFONO Y EMAIL
+            System.out.println("\n[!] ERROR DE REGISTRO: " + e.getMessage());
+            System.out.println("[!] Por favor, vuelve a intentarlo ingresando los datos correctamente.");
         } catch (IOException e) {
+            // AQUÍ ATRAPAMOS SI EL USUARIO YA EXISTÍA
             System.out.println("ERROR: " + e.getMessage());
         }
     }
