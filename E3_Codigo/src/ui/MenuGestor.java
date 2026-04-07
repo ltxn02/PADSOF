@@ -8,9 +8,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
 
+/**
+ * Clase que encapsula la interfaz de usuario por consola para el rol de Gestor (Manager).
+ * Proporciona los menús y submenús necesarios para administrar empleados,
+ * gestionar el catálogo (categorías y packs), administrar descuentos globales y consultar estadísticas.
+ *
+ * @author Iván Sánchez
+ * @version 1.0
+ */
 public class MenuGestor {
 
-    // Metodo principal de entrada al menú del Gestor
+    /**
+     * Muestra el panel de administración principal y gestiona el bucle de interacción del Gestor.
+     * * @param gestor  El usuario gestor que ha iniciado sesión.
+     * @param scanner Objeto Scanner compartido para leer las entradas del teclado.
+     */
     public static void mostrarMenu(Manager gestor, Scanner scanner) {
         boolean cerrarSesion = false;
         while (!cerrarSesion) {
@@ -48,6 +60,11 @@ public class MenuGestor {
     }
 
     // --- SUBMENÚ: GESTIÓN DE EMPLEADOS ---
+
+    /**
+     * Muestra el submenú de gestión de empleados, permitiendo altas, bajas y modificación de permisos.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void gestionarEmpleados(Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -70,6 +87,10 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Solicita por consola los datos necesarios para registrar un nuevo empleado en el sistema.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void altaEmpleado(Scanner scanner) {
         System.out.println("\n--- ALTA DE EMPLEADO ---");
         System.out.print("Nombre completo: ");
@@ -99,6 +120,10 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Permite cambiar el estado de un empleado alternando entre ACTIVO y DE BAJA.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void cambiarEstadoEmpleado(Scanner scanner) {
         ArrayList<Employee> empleados = obtenerListaEmpleados();
         if (empleados.isEmpty()) {
@@ -135,6 +160,10 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Gestiona la adición o retirada de permisos específicos para un empleado.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void gestionarPermisos(Scanner scanner) {
         ArrayList<Employee> empleados = obtenerListaEmpleados();
         if (empleados.isEmpty()) {
@@ -201,6 +230,10 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Metodo auxiliar que filtra la lista general de usuarios para devolver únicamente los empleados.
+     * * @return Una lista ({@link ArrayList}) que contiene solo objetos de tipo {@link Employee}.
+     */
     private static ArrayList<Employee> obtenerListaEmpleados() {
         ArrayList<RegisteredUser> usuarios = Application.getUsers();
         ArrayList<Employee> empleados = new ArrayList<>();
@@ -213,6 +246,11 @@ public class MenuGestor {
     }
 
     // --- SUBMENÚ: GESTIÓN DE CATÁLOGO ---
+
+    /**
+     * Muestra el submenú para la administración general del catálogo (categorías y packs).
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void gestionarCatalogo(Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -235,6 +273,9 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Muestra por pantalla la lista de categorías actualmente registradas en el sistema.
+     */
     private static void verCategorias() {
         System.out.println("\n--- CATEGORÍAS ACTUALES ---");
         ArrayList<Category> categorias = Application.getGlobalCategories();
@@ -248,6 +289,10 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Permite crear una nueva categoría de productos y añadirla al catálogo global.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void crearCategoria(Scanner scanner) {
         System.out.println("\n--- CREAR NUEVA CATEGORÍA ---");
         System.out.print("Nombre de la nueva categoría: ");
@@ -268,6 +313,10 @@ public class MenuGestor {
         System.out.println("[+] Categoría '" + nombre + "' creada con éxito.");
     }
 
+    /**
+     * Muestra el submenú de gestión específica de Packs de productos.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void gestionarPacks(Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -287,6 +336,9 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Busca e imprime por pantalla todos los productos del catálogo que son de tipo Pack.
+     */
     private static void verPacks() {
         System.out.println("\n--- PACKS ACTUALES ---");
         boolean hayPacks = false;
@@ -303,6 +355,11 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Inicia el proceso interactivo para crear un nuevo Pack, seleccionando un mínimo
+     * de 2 productos ya existentes en la tienda.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void crearPack(Scanner scanner) {
         System.out.println("\n--- CREAR NUEVO PACK ---");
         ArrayList<NewProduct> catalogo = Application.getCatalog();
@@ -385,6 +442,11 @@ public class MenuGestor {
     }
 
     // --- SUBMENÚ: GESTIÓN DE DESCUENTOS ---
+
+    /**
+     * Muestra el submenú para la gestión de promociones, permitiendo crearlas y asignarlas.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void gestionarDescuentosMenu(Scanner scanner) {
         System.out.println("\n--- GESTOR DE PROMOCIONES ---");
         System.out.println("1.- Ver descuentos activos");
@@ -403,6 +465,10 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Lista los descuentos que están actualmente aplicados a productos individuales
+     * y los descuentos globales aplicables a los carritos.
+     */
     private static void verDescuentosActivos() {
         System.out.println("\n--- DESCUENTOS EN PRODUCTOS ---");
         for (NewProduct p : Application.getCatalog()) {
@@ -420,6 +486,11 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Proceso interactivo para crear una nueva promoción mediante la fábrica (Factory).
+     * Soporta descuentos de rebaja (%), por volumen (€), por regalo o por cantidad (Ej: 3x2).
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void menuCreacionDescuento(Scanner scanner) {
         IDiscountFactory factory = new StandardDiscountFactory();
         System.out.println("\n--- CREAR NUEVA PROMOCIÓN ---");
@@ -493,6 +564,11 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Vincula un descuento previamente creado e insertado en la bolsa global
+     * a un producto concreto del catálogo.
+     * * @param scanner Objeto Scanner para leer la entrada del usuario.
+     */
     private static void asignarDescuento(Scanner scanner) {
         ArrayList<NewProduct> catalogo = Application.getCatalog();
         ArrayList<IDiscount> bolsa = Application.getGlobalDiscounts();
@@ -536,6 +612,11 @@ public class MenuGestor {
         }
     }
 
+    /**
+     * Metodo auxiliar que busca un producto en el catálogo general por su nombre.
+     * * @param nombre El nombre exacto del producto a buscar.
+     * @return El objeto {@link NewProduct} si se encuentra, o null en caso contrario.
+     */
     private static NewProduct buscarProductoEnCatalogo(String nombre) {
         for (NewProduct p : Application.getCatalog()) {
             if (p.getName().equalsIgnoreCase(nombre)) {
