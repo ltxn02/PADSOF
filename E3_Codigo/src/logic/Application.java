@@ -25,13 +25,16 @@ public class Application {
             Manager taha = new Manager("taha", "taha123", "Taha Ridda", "12345678A", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
             Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "12345678A", "01/01/2002", "ivan@rongero.es", "600000000", 10000.00);
 
+            Employee empleadoDefecto = new Employee("empleado", "empleado123", "Empleado de Prueba", "87654321B", "15/05/1995", "empleado@rongero.es", "600000000", 1200.00, true);
+
             users.put(lidia.getUsername(), lidia);
             users.put(taha.getUsername(), taha);
             users.put(ivan.getUsername(), ivan);
+            users.put(empleadoDefecto.getUsername(), empleadoDefecto);
 
-            System.out.println("[Sistema] Cuentas de gestor creadas por defecto.");
+            System.out.println("[Sistema] Cuentas de gestor y empleado creadas por defecto.");
         } catch (Exception e) {
-            System.err.println("Error al crear gestores por defecto: " + e.getMessage());
+            System.err.println("Error al crear usuarios por defecto: " + e.getMessage());
         }
 
         // 2. INICIALIZACIÓN DE PRODUCTOS POR DEFECTO
@@ -89,7 +92,7 @@ public class Application {
 
         } catch (Exception e) {
             System.err.println("Error al crear los productos por defecto: " + e.getMessage());
-            e.printStackTrace(); // Esto os ayudará a depurar si falla algún constructor
+            e.printStackTrace();
         }
     }
     // ------------------------------------------------
@@ -110,7 +113,6 @@ public class Application {
     }
 
     public static void registerClient(Client client) throws IOException {
-        // Validación extra recomendada: no permitir registrar usuarios que ya existen
         if (users.containsKey(client.getUsername())) {
             throw new IOException("El nombre de usuario ya está en uso.");
         }
