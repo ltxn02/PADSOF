@@ -49,4 +49,25 @@ public class Comic extends Product implements java.io.Serializable {
         this.publicationYear = publicationYear;
         this.writtenBy = writtenBy;
     }
+    
+    /**
+     * Modifica la información específica de este comic..
+     * @param discount        Descuento aplicable al producto (interfaz IDiscount). Puede ser null.
+     * @param nPages          Número total de páginas del cómic. Si el valor es menor o igual a 0, se ajustará automáticamente a 1.
+     * @param publisher       Nombre de la editorial que lo publica (ej: "DC Comics", "Norma Editorial").
+     * @param publicationYear Año original en el que fue publicado.
+     * @param writtenBy       Lista con los nombres de los autores principales (guionistas y dibujantes).
+     */
+    public void editFigurineInfo(IDiscount discount, int nPages, String publisher, int publicationYear, ArrayList<String> writtenBy) {
+    	super.setDiscount(discount);
+    	if (nPages <= 0) {
+            this.nPages = 1;
+        } else {
+            this.nPages = nPages;
+        }
+
+        this.publisher = publisher;
+        this.publicationYear = publicationYear;
+        this.writtenBy = writtenBy;
+    }
 }

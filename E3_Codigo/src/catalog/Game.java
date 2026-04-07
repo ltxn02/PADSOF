@@ -49,4 +49,18 @@ public class Game extends Product implements java.io.Serializable{
     public AgeRange getAgeRange() {
         return this.ageRange;
     }
+    
+    /**
+     * Modifica la información específica de este juego.
+     * @param discount		Descuento aplicable al producto (interfaz IDiscount). Puede ser null.
+     * @param nPlayers		Número de jugadores recomendados o requeridos.
+     * @param mechanics		Lista de cadenas de texto con las mecánicas del juego (ej: "Gestión de recursos").
+     * @param ageRange		Rango de edad recomendado para jugar.
+     */
+    public void editGameInfo(IDiscount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
+    	super.setDiscount(discount);
+    	this.nPlayers = nPlayers;
+    	this.mechanics = mechanics;
+    	this.ageRange = ageRange;
+    }
 }

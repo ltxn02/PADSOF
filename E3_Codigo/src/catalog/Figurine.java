@@ -48,4 +48,22 @@ public class Figurine extends Product implements java.io.Serializable {
         this.material = material;
         this.franchise = franchise;
     }
+    
+    /**
+     * Modifica la información específica de esta figura.
+     * @param discount    Descuento aplicable al producto (interfaz IDiscount). Puede ser null.
+     * @param height      Altura física de la figura en centímetros.
+     * @param width       Anchura física de la figura en centímetros.
+     * @param depth       Profundidad física de la figura en centímetros.
+     * @param material    Material del que está hecha la figura (ej: PVC, Resina, Vinilo).
+     * @param franchise   Franquicia o licencia a la que pertenece (ej: Dragon Ball, DC Comics).
+     */
+    public void editFigurineInfo(IDiscount discount, double height, double width, double depth, String material, String franchise) {
+    	super.setDiscount(discount);
+    	this.height = height;
+        this.width = width;
+        this.depth = depth;
+        this.material = material;
+        this.franchise = franchise;
+    }
 }
