@@ -195,7 +195,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      * @return true si los nombres coinciden lógicamente, false en caso contrario.
      */
     public boolean isNamed(String name) {
-        if (this.name != null && this.name.equalsIgnoreCase(name.trim())) {
+        if (this.name != null && this.name.trim().equalsIgnoreCase(name.trim())) {
             return true;
         }
         return false;
