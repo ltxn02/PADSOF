@@ -9,8 +9,23 @@ import utils.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Clase que encapsula la interfaz de usuario por consola para el rol de Empleado (Employee).
+ * Permite gestionar de forma interactiva el inventario (subidas manuales y masivas mediante ficheros),
+ * actualizar el estado de los pedidos de la tienda, tasar productos de segunda mano subidos
+ * por los clientes y validar los intercambios físicos realizados presencialmente.
+ *
+ * @author Iván Sánchez
+ * @version 1.0
+ */
 public class MenuEmpleado {
 
+    /**
+     * Muestra el panel de control principal del empleado y gestiona el bucle
+     * de opciones operativas disponibles para este rol.
+     * * @param empleado El usuario empleado que ha iniciado sesión.
+     * @param scanner  Objeto Scanner compartido para leer las entradas del teclado.
+     */
     public static void mostrarMenu(Employee empleado, Scanner scanner) {
         boolean cerrarSesion = false;
         while (!cerrarSesion) {
@@ -48,6 +63,13 @@ public class MenuEmpleado {
     }
 
     // --- SUBMENÚ: GESTIÓN DE INVENTARIO ---
+
+    /**
+     * Muestra el submenú dedicado a la gestión de inventario, permitiendo elegir
+     * entre una subida manual producto a producto, o una subida masiva por archivo.
+     * * @param empleado El usuario empleado logueado.
+     * @param scanner  Objeto Scanner para la lectura de datos.
+     */
     private static void gestionarInventario(Employee empleado, Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -74,6 +96,13 @@ public class MenuEmpleado {
         }
     }
 
+    /**
+     * Guía al empleado a través de un proceso interactivo para registrar un único
+     * producto nuevo en el catálogo, solicitando todos sus datos específicos según
+     * su tipo (Cómic, Juego o Figura).
+     * * @param empleado El empleado que realiza la subida.
+     * @param scanner  Objeto Scanner para recoger los datos por consola.
+     */
     private static void subidaManual(Employee empleado, Scanner scanner) {
         System.out.println("\n--- SUBIDA MANUAL DE PRODUCTO ---");
         try {
@@ -141,6 +170,12 @@ public class MenuEmpleado {
         }
     }
 
+    /**
+     * Procesa la lectura de un archivo de texto plano (CSV/TXT) suministrado por
+     * el empleado para realizar una carga en bloque (masiva) de productos al catálogo.
+     * * @param empleado El empleado que ejecuta la carga masiva.
+     * @param scanner  Objeto Scanner para recoger la ruta del archivo.
+     */
     private static void subidaMasiva(Employee empleado, Scanner scanner) {
         System.out.println("\n--- SUBIDA MASIVA DE PRODUCTOS ---");
         System.out.print("Ruta del archivo (Pulsa Enter para usar 'fileLoadBulkTest'): ");
@@ -206,6 +241,13 @@ public class MenuEmpleado {
     }
 
     // --- SUBMENÚ: GESTIÓN DE PEDIDOS ---
+
+    /**
+     * Muestra una lista con todos los pedidos realizados por los clientes de la tienda
+     * y permite al empleado cambiar el estado logístico de los mismos (ej: de PENDIENTE a ENVIADO).
+     * * @param empleado El empleado encargado de modificar los estados.
+     * @param scanner  Objeto Scanner para la entrada del usuario.
+     */
     private static void gestionarPedidos(Employee empleado, Scanner scanner) {
         System.out.println("\n--- GESTIÓN DE ESTADO DE PEDIDOS ---");
 
@@ -268,6 +310,14 @@ public class MenuEmpleado {
     }
 
     // --- SUBMENÚ: VALORAR PRODUCTOS SEGUNDA MANO ---
+
+    /**
+     * Muestra todos los productos de segunda mano subidos por los clientes que aún
+     * no tienen una valoración oficial. Permite al empleado tasarlos, estableciendo
+     * su condición física real y su precio de venta en la tienda.
+     * * @param empleado El empleado tasador.
+     * @param scanner  Objeto Scanner para la entrada del usuario.
+     */
     private static void valorarProductosSegundaMano(Employee empleado, Scanner scanner) {
         System.out.println("\n--- VALORAR PRODUCTOS DE SEGUNDA MANO ---");
 
@@ -330,6 +380,15 @@ public class MenuEmpleado {
     }
 
     // --- SUBMENÚ: CONFIRMAR INTERCAMBIOS FÍSICOS ---
+
+    /**
+     * Lista todos los intercambios de productos de segunda mano que han sido acordados
+     * entre dos clientes y se encuentran en la fase de "EN_PROCESO". Permite al empleado
+     * confirmar que los clientes han traído físicamente los productos a la tienda para
+     * hacer efectivo el cambio de propietario.
+     * * @param empleado El empleado encargado de validar la entrega física.
+     * @param scanner  Objeto Scanner para la entrada del usuario.
+     */
     private static void confirmarIntercambios(Employee empleado, Scanner scanner) {
         System.out.println("\n--- CONFIRMAR INTERCAMBIOS FÍSICOS ---");
 
