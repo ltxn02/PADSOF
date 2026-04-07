@@ -2,7 +2,8 @@ JAVAC = javac
 JAVA = java
 SRC_DIR = src
 BIN_DIR = bin
-LIB = lib/TeleChargeAndPaySystem8.jar
+# Al poner lib/* cogerá tanto la pasarela de pago como JUnit
+LIB = lib/*
 MAIN = ui.main
 
 compile:
@@ -11,6 +12,10 @@ compile:
 
 run:
 	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN)
+
+# Nuevo comando para ejecutar los tests en JUnit 5 Standalone
+test: compile
+	$(JAVA) -cp "$(BIN_DIR):$(LIB)" org.junit.platform.console.ConsoleLauncher -c $(CLASS)
 
 clean:
 	rm -rf $(BIN_DIR)/*
