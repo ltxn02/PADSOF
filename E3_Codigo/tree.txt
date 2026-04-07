@@ -1,60 +1,10 @@
 .
 ├── Makefile
 ├── bin
-│   ├── catalog
-│   │   ├── Catalog$1.class
-│   │   ├── Catalog.class
-│   │   ├── Category.class
-│   │   ├── Game.class
-│   │   ├── Item.class
-│   │   ├── NewProduct.class
-│   │   ├── Product.class
-│   │   └── SecondHandProduct.class
-│   ├── discounts
-│   │   ├── Discount.class
-│   │   ├── FixedAmountDiscount.class
-│   │   ├── ICantidad.class
-│   │   ├── IDiscount.class
-│   │   ├── IDiscountFactory.class
-│   │   ├── IRebaja.class
-│   │   ├── IRegalo.class
-│   │   ├── IVolumen.class
-│   │   └── StandardDiscountFactory.class
-│   ├── logic
-│   │   ├── Application.class
-│   │   ├── SistemaRecomendaciones.class
-│   │   └── SistemaRecomendacionesSegundamano.class
-│   ├── transactions
-│   │   ├── Exchange.class
-│   │   ├── ExchangeHistoric.class
-│   │   ├── ExchangeOffer.class
-│   │   ├── Order.class
-│   │   ├── OrderHistoric.class
-│   │   └── ShoppingCart.class
-│   ├── users
-│   │   ├── Client.class
-│   │   ├── Employee$1.class
-│   │   ├── Employee.class
-│   │   ├── Manager.class
-│   │   ├── RegisteredUser.class
-│   │   ├── Staff.class
-│   │   └── User.class
-│   └── utils
-│       ├── AgeRange.class
-│       ├── BaseElement.class
-│       ├── CartItem.class
-│       ├── Condition.class
-│       ├── Discount.class
-│       ├── EmployeeRoles.class
-│       ├── ExchangeOfferStatus.class
-│       ├── ExchangeStatus.class
-│       ├── FixedDiscount.class
-│       ├── ItemType.class
-│       ├── Notification.class
-│       ├── OrderStatus.class
-│       ├── PercentageDiscount.class
-│       ├── Permission.class
-│       └── Review.class
+├── copiaSeguridadDiscounts
+│   ├── Discount.java
+│   ├── FixedDiscount.java
+│   └── PercentageDiscount.java
 ├── diagramaClases2.uxf
 ├── doc
 │   ├── AgeRange.html
@@ -185,7 +135,8 @@
 │   ├── logic
 │   │   ├── Application.java
 │   │   ├── SistemaRecomendaciones.java
-│   │   └── SistemaRecomendacionesSegundamano.java
+│   │   ├── SistemaRecomendacionesSegundamano.java
+│   │   └── StoreStatistics.java
 │   ├── tests
 │   │   ├── Main.java
 │   │   ├── MainDescuentos.java
@@ -214,17 +165,14 @@
 │       ├── BaseElement.java
 │       ├── CartItem.java
 │       ├── Condition.java
-│       ├── Discount.java
 │       ├── EmployeeRoles.java
 │       ├── ExchangeOfferStatus.java
 │       ├── ExchangeStatus.java
-│       ├── FixedDiscount.java
 │       ├── ItemType.java
 │       ├── Notification.java
 │       ├── OrderStatus.java
-│       ├── PercentageDiscount.java
 │       ├── Permission.java
 │       └── Review.java
 └── tree.txt
 
-23 directories, 205 files
+18 directories, 158 files
