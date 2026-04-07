@@ -5,22 +5,25 @@
 │   │   ├── Catalog$1.class
 │   │   ├── Catalog.class
 │   │   ├── Category.class
-│   │   ├── Comic.class
-│   │   ├── Figurine.class
 │   │   ├── Game.class
 │   │   ├── Item.class
 │   │   ├── NewProduct.class
-│   │   ├── Pack.class
 │   │   ├── Product.class
 │   │   └── SecondHandProduct.class
+│   ├── discounts
+│   │   ├── Discount.class
+│   │   ├── FixedAmountDiscount.class
+│   │   ├── ICantidad.class
+│   │   ├── IDiscount.class
+│   │   ├── IDiscountFactory.class
+│   │   ├── IRebaja.class
+│   │   ├── IRegalo.class
+│   │   ├── IVolumen.class
+│   │   └── StandardDiscountFactory.class
 │   ├── logic
 │   │   ├── Application.class
 │   │   ├── SistemaRecomendaciones.class
 │   │   └── SistemaRecomendacionesSegundamano.class
-│   ├── tests
-│   │   ├── Main.class
-│   │   ├── MainIntercambios.class
-│   │   └── test_intercambios.class
 │   ├── transactions
 │   │   ├── Exchange.class
 │   │   ├── ExchangeHistoric.class
@@ -28,16 +31,10 @@
 │   │   ├── Order.class
 │   │   ├── OrderHistoric.class
 │   │   └── ShoppingCart.class
-│   ├── ui
-│   │   ├── Main.class
-│   │   ├── MainIntercambios.class
-│   │   ├── main.class
-│   │   └── test_intercambios.class
 │   ├── users
 │   │   ├── Client.class
 │   │   ├── Employee$1.class
 │   │   ├── Employee.class
-│   │   ├── Guest.class
 │   │   ├── Manager.class
 │   │   ├── RegisteredUser.class
 │   │   ├── Staff.class
@@ -49,6 +46,7 @@
 │       ├── Condition.class
 │       ├── Discount.class
 │       ├── EmployeeRoles.class
+│       ├── ExchangeOfferStatus.class
 │       ├── ExchangeStatus.class
 │       ├── FixedDiscount.class
 │       ├── ItemType.class
@@ -170,12 +168,27 @@
 │   │   ├── Pack.java
 │   │   ├── Product.java
 │   │   └── SecondHandProduct.java
+│   ├── discounts
+│   │   ├── Discount.java
+│   │   ├── FixedAmountDiscount.java
+│   │   ├── GiftDiscount.java
+│   │   ├── ICantidad.java
+│   │   ├── IDiscount.java
+│   │   ├── IDiscountFactory.java
+│   │   ├── IRebaja.java
+│   │   ├── IRegalo.java
+│   │   ├── IVolumen.java
+│   │   ├── PercentageDiscount.java
+│   │   ├── QuantityDiscount.java
+│   │   ├── StandardDiscountFactory.java
+│   │   └── VolumeDiscount.java
 │   ├── logic
 │   │   ├── Application.java
 │   │   ├── SistemaRecomendaciones.java
 │   │   └── SistemaRecomendacionesSegundamano.java
 │   ├── tests
 │   │   ├── Main.java
+│   │   ├── MainDescuentos.java
 │   │   ├── MainIntercambios.java
 │   │   ├── PruebaIntercambioCompleto.java
 │   │   └── test_intercambios.java
@@ -214,4 +227,4 @@
 │       └── Review.java
 └── tree.txt
 
-23 directories, 192 files
+23 directories, 205 files
