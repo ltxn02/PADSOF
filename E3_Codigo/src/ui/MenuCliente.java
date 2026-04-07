@@ -10,8 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Clase que encapsula la interfaz de usuario por consola para el rol de Cliente (Client).
+ * Permite a los usuarios registrados navegar por el catálogo completo, realizar compras
+ * procesando pagos mediante carrito, proponer e interactuar con ofertas de segunda mano,
+ * consultar sus notificaciones y recibir recomendaciones de productos personalizadas.
+ *
+ * @author Iván Sánchez
+ * @version 1.0
+ */
 public class MenuCliente {
 
+    /**
+     * Muestra el panel personal del cliente y gestiona el bucle principal de compra e interacción.
+     * * @param cliente El usuario cliente que ha iniciado sesión.
+     * @param scanner Objeto Scanner compartido para leer las entradas del teclado.
+     */
     public static void mostrarMenu(Client cliente, Scanner scanner) {
         boolean cerrarSesion = false;
         while (!cerrarSesion) {
@@ -58,6 +72,12 @@ public class MenuCliente {
         }
     }
 
+    /**
+     * Muestra el catálogo completo de productos nuevos y permite al cliente
+     * seleccionar artículos y cantidades para añadirlos a su carrito de compras.
+     * * @param cliente El cliente que realiza la compra.
+     * @param scanner Objeto Scanner para la entrada de datos.
+     */
     private static void comprarProducto(Client cliente, Scanner scanner) {
         System.out.println("\n--- CATÁLOGO DE PRODUCTOS ---");
 
@@ -110,6 +130,13 @@ public class MenuCliente {
         }
     }
 
+    /**
+     * Gestiona la interfaz completa de la Tienda de Intercambios.
+     * Permite visualizar productos de otros usuarios, hacer propuestas de intercambio,
+     * responder a ofertas recibidas (Aceptar/Rechazar) y revisar el estado de los productos propios.
+     * * @param c       El cliente que interactúa con la tienda de intercambios.
+     * @param scanner Objeto Scanner para la entrada de datos.
+     */
     private static void intercambiarProductos(Client c, Scanner scanner) {
         ArrayList<SecondHandProduct> productos = Application.getSecondHandProducts();
         List<ExchangeOffer> ofertashechas = Application.getoffersmade(c);
@@ -348,6 +375,11 @@ public class MenuCliente {
         }
     }
 
+    /**
+     * Metodo auxiliar que extrae y devuelve la lista de todos los usuarios registrados
+     * en la aplicación que tienen el rol específico de Cliente.
+     * * @return Lista de objetos {@link Client}.
+     */
     private static ArrayList<Client> todoslosClientes() {
         ArrayList<RegisteredUser> usuarios = Application.getUsers();
         ArrayList<Client> clientes = new ArrayList<>();
@@ -359,6 +391,13 @@ public class MenuCliente {
         return clientes;
     }
 
+    /**
+     * Interactúa con el Sistema de Recomendaciones para sugerir productos afines
+     * al cliente basados en su historial y el de clientes similares. Permite añadir
+     * dichas recomendaciones al carrito de compra al instante.
+     * * @param c       El cliente que solicita las recomendaciones.
+     * @param scanner Objeto Scanner para la entrada de datos.
+     */
     private static void mostrarRecomendaciones(Client c, Scanner scanner) {
         System.out.println("\nPRODUCTOS RECOMENDADOS:");
 
@@ -411,6 +450,12 @@ public class MenuCliente {
         }
     }
 
+    /**
+     * Muestra el resumen del carrito, aplica automáticamente los descuentos globales
+     * por volumen y procesa el pago a través de la pasarela simulada usando una tarjeta.
+     * * @param cliente El cliente propietario del carrito.
+     * @param scanner Objeto Scanner para la entrada de los datos de pago.
+     */
     private static void verCarrito(Client cliente, Scanner scanner) {
         System.out.println(">> Mostrando carrito y procesando pago...");
 
@@ -445,6 +490,12 @@ public class MenuCliente {
         }
     }
 
+    /**
+     * Menú intermedio para que el usuario gestione sus artículos de segunda mano,
+     * pudiendo consultar el estado de su cartera y subir nuevos productos al sistema.
+     * * @param cliente El cliente que visualiza su cartera.
+     * @param scanner Objeto Scanner para la entrada de datos.
+     */
     private static void gestionarCartera(Client cliente, Scanner scanner) {
         boolean volver = false;
         while (!volver) {
@@ -472,6 +523,12 @@ public class MenuCliente {
         }
     }
 
+    /**
+     * Recoge interactivamente los datos de un artículo físico propiedad del cliente
+     * para registrarlo en el sistema. El producto quedará a la espera de tasación por un empleado.
+     * * @param cliente El cliente que quiere vender o intercambiar su artículo.
+     * @param scanner Objeto Scanner para la introducción de datos.
+     */
     private static void subirProductoSegundaMano(Client cliente, Scanner scanner) {
         System.out.println("\n--- SUBIR NUEVO PRODUCTO ---");
 
@@ -510,6 +567,12 @@ public class MenuCliente {
         System.out.println("\n[+] Producto subido con éxito. Un empleado lo tasará pronto.");
     }
 
+    /**
+     * Muestra la bandeja de entrada del cliente, presentando un listado de alertas
+     * (previews) y permitiéndole seleccionar una para leer el mensaje completo.
+     * * @param cliente El cliente cuyas notificaciones se consultan.
+     * @param scanner Objeto Scanner para navegar por la bandeja de entrada.
+     */
     private static void verNotificaciones(Client cliente, Scanner scanner) {
         System.out.println("\n--- MIS NOTIFICACIONES ---");
 
