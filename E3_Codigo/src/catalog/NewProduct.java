@@ -8,7 +8,7 @@ import utils.*;
  * Hereda de {@link Item} y añade toda la lógica necesaria para la gestión de inventario,
  * incluyendo el stock físico real, el stock efectivo (reservado en carritos) y el
  * sistema de reseñas y valoraciones de los usuarios.
- * * @author Iván Sánchez
+ * * @author Iván Sánchez y Taha Ridda
  * @version 2.1
  */
 public abstract class NewProduct extends Item implements java.io.Serializable {
