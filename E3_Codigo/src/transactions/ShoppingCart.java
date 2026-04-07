@@ -6,6 +6,7 @@ import java.util.concurrent.*;
 import utils.*;
 import users.*;
 import catalog.*;
+import discounts.*;
 
 public class ShoppingCart implements java.io.Serializable{
 	private double fullPrice;
@@ -32,9 +33,8 @@ public class ShoppingCart implements java.io.Serializable{
 		CartItem c = null;
 		double oldPrice = 0;
 		
-		// Devuelve el CartItem c correspondiente al producto p
 		if((c = this.cartContains(p)) == null) {
-			c = new CartItem(p, quantity);	// Crea uno nuevo si c no existe
+			c = new CartItem(p, quantity);
 		} else {
 			oldPrice = c.fullPrice();
 			c.orderQuantity(quantity);
@@ -93,27 +93,36 @@ public class ShoppingCart implements java.io.Serializable{
 		int items = (this.cartItems == null) ? 0 : this.cartItems.size();	
 		return items + " items. Total: " + this.fullPrice;
 	}
-	
+
 	public synchronized String shoppingCartView() {
+		double totalReal = this.getPrice();
+
 		StringBuilder sb = new StringBuilder("--- MI CARRITO DE LA COMPRA ---\n");
-		
+
 		if(this.cartItems == null || this.cartItems.isEmpty()) {
 			sb.append("El carrito está vacío...\n");
 			return sb.toString();
 		}
-		
+
 		for(CartItem item: this.cartItems) {
 			sb.append("  " + item + "\n");
 		}
-		
+
+		if (this.gifts != null && !this.gifts.isEmpty()) {
+			for (catalog.Item gift : this.gifts) {
+				sb.append("  1 x " + gift.getName() + " (0,00 €) [REGALO]\n");
+			}
+		}
+
 		sb.append("----------------\n");
-		sb.append("TOTAL: " + String.format("%.2f €", this.fullPrice));
+		sb.append("TOTAL: " + String.format("%.2f €", totalReal));
 		return sb.toString();
 	}
 
-	// NUEVO METODO
 	public synchronized void clearCart() {
 		this.cartItems.clear();
+		this.fullPrice =0;
+		this.gifts.clear();
 	}
 
 	public synchronized List<CartItem> getCartItems() {
@@ -123,19 +132,43 @@ public class ShoppingCart implements java.io.Serializable{
 
 	public synchronized double getPrice() {
 		this.gifts.clear();
-		double finalPrice = this.fullPrice;
+		double totalNeto = 0;
+
+		for (CartItem item : this.cartItems) {
+			NewProduct np = item.getProduct();
+			double subtotalItem = 0;
+
+			if (np instanceof Product) {
+				Product prod = (Product) np;
+				IDiscount desc = prod.getDiscount();
+
+				if (desc != null && desc.isValid() && desc instanceof discounts.ICantidad) {
+					subtotalItem = ((discounts.ICantidad) desc).applyCantidad(prod.getPrice(), item.getQuantity());
+				} else {
+					subtotalItem = prod.getPriceWithDiscount() * item.getQuantity();
+				}
+			} else {
+				subtotalItem = np.getPrice() * item.getQuantity();
+			}
+
+			totalNeto += subtotalItem;
+		}
+
+		this.fullPrice = totalNeto;
+		double totalFinal = totalNeto;
 
 		for (discounts.IVolumen d : globalDiscounts) {
-			if (!d.isExpired()) {
-				finalPrice = d.applyVolumen(finalPrice);
+			if (d instanceof IDiscount && !((IDiscount) d).isExpired()) {
+				totalFinal = d.applyVolumen(totalFinal);
 
-				if (d instanceof discounts.IRegalo) {
-					((discounts.IRegalo) d).aplicarRegalo(this);
+				if (d instanceof IRegalo) {
+					((IRegalo) d).aplicarRegalo(this);
 				}
 			}
 		}
-		return Math.round(finalPrice * 100.0) / 100.0;
+		return Math.round(totalFinal * 100.0) / 100.0;
 	}
+
 	public double getFullPrice() {
 		return this.fullPrice;
 	}

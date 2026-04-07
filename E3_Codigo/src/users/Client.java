@@ -9,8 +9,8 @@ import java.time.*;
 
 public class Client extends RegisteredUser implements java.io.Serializable{
 	private LocalDateTime joiningDate;
-	private ShoppingCart shoppingCart;  // Deja solo este
-	private OrderHistoric myOrders;     // Y deja solo este
+	private ShoppingCart shoppingCart;
+	private OrderHistoric myOrders;
 	private ExchangeHistoric myExchanges;
 	private List<SecondHandProduct> myProducts;
 	private List<Review> myReviews;
@@ -72,7 +72,11 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		Review review = new Review(rating, comment, product, this);
 		this.myReviews.add(review);
 	}
-	
+
+	public ShoppingCart getShoppingCart() {
+		return this.shoppingCart;
+	}
+
 	public void registerSecondHandProduct(String name, String description, String picturePath, ItemType itemType) throws IllegalArgumentException {
 		if(this.productNamedExists(name) == true) {
 			throw new IllegalArgumentException("A product with the same name is already registered in your wallet");
@@ -210,8 +214,7 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		return super.userPreview();
 	}
 	
-	// -- HELPERS ------------------------------------------------------------------
-	
+
 	private <T> String formatListPreview(String listName, Function<T, String> previewFunction, List<T> list) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(listName + ": ");
@@ -278,7 +281,6 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		return this.myExchanges;
 	}
 
-	// NUEVOS MÉTODOS
 
 	public OrderHistoric getOrderHistoric() {
 		return this.myOrders;

@@ -644,7 +644,21 @@ public class main {
     /**
      * Metodo para mostrar el carrito y procesar el pago con la librería del profesor
      */
+    /**
+     * Metodo para mostrar el carrito y procesar el pago con la librería del profesor
+     */
     private static void verCarrito(Client cliente) {
+        System.out.println(">> Mostrando carrito y procesando pago...");
+
+        // --- 1. INYECTAR DESCUENTOS GLOBALES (REGALOS Y BONOS) ---
+        // Recuperamos los descuentos activos de la App y se los pasamos al carrito
+        for (IDiscount descuentoActivo : Application.getGlobalDiscounts()) {
+            if (descuentoActivo instanceof discounts.IVolumen) {
+                cliente.getShoppingCart().addGlobalDiscount((discounts.IVolumen) descuentoActivo);
+            }
+        }
+
+        // 2. Mostrar el ticket (Aquí es donde el ShoppingCart calcula si te toca regalo y lo imprime a 0,00€)
         System.out.println(cliente.viewShoppingCart());
 
         // 3. Preguntamos si quiere tramitar el pedido
@@ -661,16 +675,16 @@ public class main {
         String numeroTarjeta = scanner.nextLine();
 
         System.out.println(">> Conectando con la pasarela de pago...");
-        
+
         String code = cliente.buyCart(numeroTarjeta);
-        
+
         if(code == null) {
-        	System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
+            System.out.println("[!] La compra no se ha podido completar. Revisa tu método de pago.");
         } else {
-        	System.out.println("[+] ¡Compra finalizada con éxito! Tu código de recogida es: " + code);
+            System.out.println("[+] ¡Compra finalizada con éxito! Tu código de recogida es: " + code);
+            cliente.getShoppingCart().clearCart();
         }
     }
-
     /**
      * Submenú para gestionar los productos de segunda mano del cliente
      */

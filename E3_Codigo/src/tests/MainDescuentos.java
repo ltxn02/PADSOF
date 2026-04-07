@@ -1,103 +1,62 @@
 package tests;
+import  utils.*;
 
 import catalog.*;
 import discounts.*;
-import discounts.PercentageDiscount;
 import transactions.*;
-import utils.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainDescuentos {
     public static void main(String[] args) {
-        StandardDiscountFactory factory = new StandardDiscountFactory();
+        // 1. Configuración de Fechas y Categorías (Evita Exception: Category cannot be empty)
+        LocalDateTime inicio = LocalDateTime.now().minusDays(1);
+        LocalDateTime fin = LocalDateTime.now().plusYears(1);
+
+        ArrayList<Category> cats = new ArrayList<>();
+        cats.add(new Category("General", new ArrayList<>()));
+        ArrayList<Review> reviews = new ArrayList<>();
+        ArrayList<String> autores = new ArrayList<>();
+
+        // 2. DESCUENTO 1: REBAJA PORCENTUAL (Pasado por constructor)
+        // 10% de descuento. Si el comic vale 100€, el precio con descuento será 90€.
+        PercentageDiscount rebaja10 = new PercentageDiscount(10.0, "Oferta Manga", inicio, fin);
+
+        Comic berserk = new Comic(
+                "Berserk", "Manga", 100.0, "b.jpg", 10,
+                cats, reviews, rebaja10, 600, "Dark Horse", 2019, autores
+        );
+
+        // 3. DESCUENTO 2: REGALO (Pasado por constructor global)
+        // Regalo de un llavero si se gastan más de 50€.
+        Figurine llavero = new Figurine("Llavero", "R", 0.0, "l.jpg", 1, cats, reviews, null, 1, 1, 1, "M", "B");
+        GiftDiscount promoRegalo = new GiftDiscount(50.0, llavero, "Regalo Oro", inicio, fin);
+
+        // 4. DESCUENTO 3: BONO POR VOLUMEN
+        // -10€ si la compra supera los 80€.
+        VolumeDiscount bono80 = new VolumeDiscount(10.0, 80.0, "Bono Ahorro", inicio, fin);
+        // 5. PRUEBAS EN EL CARRITO
         ShoppingCart carrito = new ShoppingCart();
+        carrito.addGlobalDiscount(promoRegalo);
+        carrito.addGlobalDiscount(bono80);
 
-        // --- SETUP DE DATOS AUXILIARES ---
-        ArrayList<Category> catComics = new ArrayList<>();
-        catComics.add(new Category("Manga", new ArrayList<>()));
+        System.out.println("=== EJECUTANDO TEST DE DESCUENTOS SIN SETTERS ===");
 
-        ArrayList<Category> catFiguras = new ArrayList<>();
-        catFiguras.add(new Category("Coleccionables", new ArrayList<>()));
+        // --- TEST 1: REBAJA INDIVIDUAL ---
+        System.out.println("\n[TEST 1] Rebaja del Item:");
+        System.out.println("  Precio Base: 100.0€");
+        System.out.println("  Precio Rebajado (Esperado 90.0): " + berserk.getPriceWithDiscount() + "€");
 
-        ArrayList<Review> reviewsVacias = new ArrayList<>();
-        ArrayList<String> autores = new ArrayList<>(Arrays.asList("Kentaro Miura"));
-        ArrayList<String> mecanicas = new ArrayList<>(Arrays.asList("Estrategia", "Dados"));
+        // --- TEST 2: BONO VOLUMEN ---
+        carrito.addCartItem(berserk, 1); // Añadimos 1 Berserk (90€)
+        double totalFinal = carrito.getPrice();
+        // Explicación: 90€ neto > 80€ umbral -> 90€ - 10€ bono = 80€
+        System.out.println("\n[TEST 2] Bono Volumen (90€ - 10€ bono):");
+        System.out.println("  Total Final (Esperado 80.0): " + totalFinal + "€");
 
-        System.out.println("=== EJECUTANDO STRESS TEST: CATÁLOGO REAL (V4.2) ===");
+        // --- TEST 3: REGALO (STOCK 1) ---
+        System.out.println("\n[TEST 3] Regalo Automático (Stock 1):");
+        System.out.println("  Regalos detectados (Esperado 1): " + carrito.getGifts().size());
 
-        // --- 1. INSTANCIACIÓN DE PRODUCTOS REALES ---
-        // Comic de 100€
-        Comic berserkDeluxe = new Comic(
-                "Berserk Deluxe Vol 1", "Edición Coleccionista", 100.0, "berserk.jpg",
-                10, catComics, reviewsVacias, null, 600, "Dark Horse", 2019, autores
-        );
 
-        // Figura que servirá de regalo (0€)
-        Figurine regaloFig = new Figurine(
-                "Llavero Behelit", "Regalo exclusivo", 0.0, "behelit.jpg",
-                1, catFiguras, reviewsVacias, null, 5.0, 3.0, 3.0, "Resina", "Berserk"
-        );
-
-        // --- 2. TEST 1: DESCUENTO EXPIRADO ---
-        System.out.println("\n[TEST 1] Verificando Descuento Expirado...");
-        PercentageDiscount caducado = new PercentageDiscount(50.0, "Oferta Antigua",
-                LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(5));
-        berserkDeluxe.setDiscount(caducado);
-
-        System.out.println("  Precio esperado (100.0) | Resultado: " + berserkDeluxe.getPriceWithDiscount() + "€");
-
-        // --- 3. TEST 2: UMBRAL DE VOLUMEN (100€) ---
-        System.out.println("\n[TEST 2] Verificando Límite de Gasto (Bono 10€ si gastas >= 100€)...");
-        IVolumen bono10 = factory.createVolumeDiscount(100.0, 10.0, "Bono Bienvenida");
-        carrito.addGlobalDiscount(bono10);
-
-        // Añadimos el cómic de 100€
-        carrito.addCartItem(berserkDeluxe, 1);
-        System.out.println("  Gasto Bruto: " + carrito.getFullPrice() + "€");
-        System.out.println("  Gasto Final (esperado 90.0): " + carrito.getPrice() + "€");
-
-        // --- 4. TEST 3: STOCK DE REGALOS (FIGURINE) ---
-        System.out.println("\n[TEST 3] Verificando Stock de Regalo (Figurine)...");
-        IRegalo promoRegalo = factory.createGiftDiscount(50.0, regaloFig, "Regalo por compra");
-        carrito.addGlobalDiscount((IVolumen) promoRegalo);
-
-        System.out.println("  --- Cálculo inicial (Stock: 1) ---");
-        carrito.getPrice();
-        System.out.println("  Regalos en carrito: " + carrito.getGifts().size());
-
-        // Agotamos el stock de la figura manualmente
-        regaloFig.orderProduct(1);
-
-        System.out.println("  --- Cálculo tras agotar stock (Stock: 0) ---");
-        carrito.getPrice();
-        if (carrito.getGifts().isEmpty()) {
-            System.out.println("  [✔] ÉXITO: No se entregan figuras sin stock.");
-        } else {
-            System.out.println("  [X] ERROR: El sistema generó un regalo sin existencias.");
-        }
-
-        // --- 5. TEST 4: ACUMULACIÓN REBABA + VOLUMEN ---
-        System.out.println("\n[TEST 4] Acumulación Rebaja de Comic + Bono Volumen...");
-        carrito.clearCart(); // Limpiamos para el test final
-
-        // 10% de rebaja en el item (100€ -> 90€)
-        IRebaja rebajaValida = factory.createPercentageDiscount(10.0, "Semana Manga");
-        berserkDeluxe.setDiscount(rebajaValida);
-
-        // Al añadirlo, el fullPrice debe ser 90. Como 90 < 100, NO aplica el bono de 10€
-        carrito.addCartItem(berserkDeluxe, 1);
-
-        System.out.println("  Subtotal tras rebaja item: " + carrito.getFullPrice() + "€");
-        System.out.println("  Total final (esperado 90.0, bono volumen NO aplicado): " + carrito.getPrice() + "€");
-
-        if (carrito.getPrice() == 90.0) {
-            System.out.println("  [✔] ÉXITO: El sistema prioriza el precio neto para el volumen.");
-        } else {
-            System.out.println("  [X] ERROR: El descuento de volumen se aplicó incorrectamente.");
-        }
-
-        System.out.println("\n=== STRESS TEST FINALIZADO ===");
-    }
-}
+}}

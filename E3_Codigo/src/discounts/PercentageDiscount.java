@@ -37,7 +37,10 @@ public class PercentageDiscount extends Discount implements IRebaja {
      * @author Taha Ridda En Naji
      * @version 3.0
      */
-    @Override public double apply(double p) { return applyRebaja(p); }
+    @Override
+    public double apply(double price) {
+        return price * (1.0 - (this.value / 100.0));
+    }
     /**
      * Obtiene la descripción comercial incluyendo el valor del porcentaje.
      * * @return Cadena informativa (ej. "Rebajas de Verano (-15.0%)").

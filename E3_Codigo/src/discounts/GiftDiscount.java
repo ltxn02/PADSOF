@@ -35,15 +35,19 @@ public class GiftDiscount extends Discount implements IRegalo, IVolumen {
      * @author Taha Ridda En Naji
      * @version 3.0
      */
+
+
+
     @Override
-
-
     public void aplicarRegalo(ShoppingCart cart) {
         if (!isExpired() && cart.getFullPrice() >= minGasto) {
             // Solo añadimos si el regalo es un NewProduct y tiene stock
             if (this.regalo instanceof NewProduct) {
+                // 1. Declaramos la variable pRegalo para que Java sepa qué es
                 NewProduct pRegalo = (NewProduct) this.regalo;
-                if (pRegalo.isEffectiveStockHigher(1)) {
+
+                // 2. Comprobamos que el stock sea mayor que 0
+                if (pRegalo.isEffectiveStockHigher(0)) {
                     cart.addGift(this.regalo);
                 }
             } else {
@@ -52,7 +56,6 @@ public class GiftDiscount extends Discount implements IRegalo, IVolumen {
             }
         }
     }
-
 
     /**
      * Implementación de la interfaz IVolumen. En este tipo de descuento, el precio

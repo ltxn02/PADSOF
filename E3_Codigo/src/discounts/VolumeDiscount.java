@@ -34,7 +34,10 @@ public class VolumeDiscount extends Discount implements IVolumen {
      */
     @Override
     public double applyVolumen(double total) {
-        return (total >= threshold) ? total - value : total;
+        if (total >= this.threshold) {
+            return total - this.value;
+        }
+        return total;
     }
     /**
      * Implementación del método base apply. Para este tipo de descuento,

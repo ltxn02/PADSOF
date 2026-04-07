@@ -27,27 +27,17 @@ public abstract class Product extends NewProduct implements java.io.Serializable
 
     @Override
     public double getPrice() {
-        // 1. Obtenemos el precio original llamando a la clase padre
-        double precioOriginal = super.getPrice();
-
-        // 2. Comprobamos si tiene un descuento y si no está caducado
-        if (this.discount != null && this.discount.isValid()) {
-            // El metodo applyDiscount devuelve cuánto dinero te ahorras (ej. 20% de 50€ = 10€)
-            double rebaja = this.discount.apply(precioOriginal);
-            // El precio final es el original menos la rebaja (50€ - 10€ = 40€)
-            return precioOriginal - rebaja;
-        }
-
-        // Si no hay descuento o está caducado, devolvemos el precio normal
-        return precioOriginal;
+        // 1. getPrice devuelve el precio base inalterado
+        return super.getPrice();
     }
+
     public double getPriceWithDiscount() {
-        if (this.discount == null || this.discount.isExpired()) {
-            return this.getPrice();
+        double precioOriginal = this.getPrice();
+
+        if (this.discount != null && this.discount.isValid()) {
+            return this.discount.apply(precioOriginal);
         }
-        if (this.discount instanceof discounts.IRebaja) {
-            return ((discounts.IRebaja) this.discount).applyRebaja(this.getPrice());
-        }
-        return this.getPrice();
+
+        return precioOriginal;
     }
 }
