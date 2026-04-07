@@ -517,6 +517,7 @@ public class main {
             System.out.println("1.- Gestionar empleados (Alta/Baja/Permisos)");
             System.out.println("2.- Gestionar catálogo (categorías y packs)");
             System.out.println("3.- Gestionar descuentos");
+            System.out.println("4.- Ver estadísticas de la tienda");
             System.out.println("0.- Cerrar sesión");
             System.out.print("Elige una opción: ");
 
@@ -531,6 +532,9 @@ public class main {
                     break;
                 case "3":
                     gestionarDescuentosMenu();
+                    break;
+                case "4":
+                    System.out.println(logic.StoreStatistics.generateStoreReport());
                     break;
                 case "0":
                     cerrarSesion = true;

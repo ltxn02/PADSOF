@@ -88,7 +88,7 @@ public class Employee extends Staff implements java.io.Serializable{
     		throw new IllegalArgumentException("Invalid product, it doesn't exist in the client's wallet");
     	}
     	
-    	product.appraiseSecondHand(c, valuedOn);
+    	product.appraiseSecondHand(this, c, valuedOn);
     }
     
     public void validateExchange(Exchange exchange) throws SecurityException {

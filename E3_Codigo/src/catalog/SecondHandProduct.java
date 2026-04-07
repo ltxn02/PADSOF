@@ -3,6 +3,8 @@ package catalog;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+
+import users.Employee;
 import utils.*;
 import users.Client;
 /**
@@ -15,6 +17,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable{
 	private static int lastSecondHandProductId = 0;
 	private int secondHandId;
 	private boolean isAppraised;
+	private Employee Appraiser;
 	private boolean isOffered;
 	private Client owner;
 	private ItemType itemType;
@@ -46,6 +49,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable{
 		if (this.owner != null) {
 			this.owner.registerSecondHandProduct(this);
 		}
+		this.Appraiser= null;
 	}
 	
 	public SecondHandProduct(String name, String description, String picturePath, ItemType itemType, Client owner) {
@@ -57,12 +61,18 @@ public class SecondHandProduct extends Item implements java.io.Serializable{
 	 * @param c condicion del producto que se valorará
 	 * @param value valor del producto
 	 * */
-	public void appraiseSecondHand(Condition c, double value) {
+	public void appraiseSecondHand(Employee e,Condition c, double value) {
+		if (e.permissions.contains(Permission.EXCH_PRODUCT_APPRAISE)){
 		this.condition = c;
 		this.setPrice(value);
 		this.isAppraised= true;
+		this.Appraiser=e;
+	}}
+
+	public Employee getAppraiser() {
+		return Appraiser;
 	}
-	
+
 	public boolean isOwnedBy(Client owner) {
 		return this.owner == owner;
 	}
@@ -100,7 +110,9 @@ public class SecondHandProduct extends Item implements java.io.Serializable{
 		
 		return sb.toString();
 	}
-	
+	public void registrarAppraiser(Employee e){
+		this.Appraiser= e;
+	}
 	public String toString(){
 		StringBuilder res = new StringBuilder(super.itemInfo());
 		if(isAppraised) {
