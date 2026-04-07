@@ -15,12 +15,40 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 	private String email;
 	private String phoneNumber;
 	private List<Notification> myNotifications;
-	
+
 	public RegisteredUser(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
+		// --- VALIDACIONES DE SEGURIDAD MEDIANTE REGEX ---
+		// DNI: Exactamente 8 números seguidos de una letra (mayúscula o minúscula)
+		if (dni == null || !dni.matches("^[0-9]{8}[A-Za-z]$")) {
+			throw new IllegalArgumentException("DNI inválido. Debe contener 8 dígitos y una letra.");
+		}
+
+		// Teléfono: Exactamente 9 números
+		if (phoneNumber == null || !phoneNumber.matches("^[0-9]{9}$")) {
+			throw new IllegalArgumentException("Teléfono inválido. Debe contener exactamente 9 dígitos numéricos.");
+		}
+
+		// Email: Texto + @ + Texto + . + Texto
+		if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+			throw new IllegalArgumentException("Email inválido. Revisa el formato (ejemplo@dominio.com).");
+		}
+
+		// Fecha de nacimiento: Formato DD/MM/YYYY
+		if (birthdate == null || !birthdate.matches("^([0-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}$")) {
+			throw new IllegalArgumentException("Fecha de nacimiento inválida. Usa el formato DD/MM/YYYY.");
+		}
+
+		// Username y password: Al menos no estar vacíos ni ser espacios en blanco
+		if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+			throw new IllegalArgumentException("El usuario y la contraseña no pueden estar vacíos.");
+		}
+
+		// --- FIN DE VALIDACIONES ---
+
 		this.username = username;
 		this.password = password;
 		this.fullname = fullname;
-		this.dni = dni;
+		this.dni = dni.toUpperCase(); // Guardamos la letra del DNI en mayúscula por convención
 		this.birthdate = birthdate;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
@@ -28,10 +56,10 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		this.userId = RegisteredUser.lastUserId;
 		RegisteredUser.lastUserId++;
 	}
-	
+
 	public boolean login(String username, String password) {
-        return username.equals(this.username) && password.equals(this.password);
-    }
+		return username.equals(this.username) && password.equals(this.password);
+	}
 
 	public String getUsername() {
 		return username;
@@ -50,30 +78,30 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		notification.markAsRead(true);
 		return res;
 	}
-	
+
 	public void change_visibility(Notification notification, boolean visible) {
 		notification.markAs(visible);
 	}
-	
+
 	public String userPreview() {
 		return this.fullname + " (@" + this.username + ")";
 	}
-	
+
 	public String userProfile() {
 		StringBuilder res = new StringBuilder();
-		
+
 		res.append("Nombre: " + this.fullname + "\n");
 		res.append("Usuario: " + this.username + "\n");
 		res.append("Email: " + maskEmail(this.email) + "\n");
 		res.append("Teléfono: " + this.phoneNumber + "\n");
 		res.append("Fecha de nacimiento: " + this.birthdate + "\n");
 		res.append("DNI: " + maskDni(this.dni) + "\n");
-		
+
 		return res.toString();
 	}
-	
-    // -- HELPERS ------------------------------------------------------------------
-	
+
+	// -- HELPERS ------------------------------------------------------------------
+
 	private int countNewNotifications() {
 		int i = 0;
 		for(Notification n: this.myNotifications) {
@@ -83,27 +111,27 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		}
 		return i;
 	}
-	
+
 	private String maskEmail(String email) {
 		if(email == null || !email.contains("@") || email.indexOf("@") <= 1) {
 			return email;
 		}
-		
+
 		int i, atIndex = email.indexOf("@");
 		String aux = "";
-		
+
 		for(i = 1; i < atIndex; i++) {
 			aux += "*";
 		}
-		
+
 		return email.charAt(0) + aux + email.substring(atIndex);
 	}
-	
+
 	private String maskDni(String dni) {
 		if(dni == null || dni.length() < 4) {
 			return dni;
 		}
-		
+
 		return "****" + dni.substring(dni.length() - 4);
 	}
 

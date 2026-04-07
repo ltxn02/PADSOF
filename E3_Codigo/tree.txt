@@ -33,9 +33,21 @@
 │   │   ├── SistemaRecomendacionesSegundamano.class
 │   │   └── StoreStatistics.class
 │   ├── tests
+│   │   ├── CategoryTest.class
+│   │   ├── ComicTest.class
+│   │   ├── FigurineTest.class
+│   │   ├── GameTest.class
+│   │   ├── ItemTest$TestItem.class
+│   │   ├── ItemTest.class
 │   │   ├── Main.class
 │   │   ├── MainDescuentos.class
 │   │   ├── MainIntercambios.class
+│   │   ├── NewProductTest$TestNewProduct.class
+│   │   ├── NewProductTest.class
+│   │   ├── PackTest.class
+│   │   ├── ProductTest$TestDiscount.class
+│   │   ├── ProductTest$TestProduct.class
+│   │   ├── ProductTest.class
 │   │   ├── PruebaIntercambioCompleto.class
 │   │   └── test_intercambios.class
 │   ├── transactions
@@ -179,6 +191,7 @@
 │   ├── TeleChargeAndPaySystem8.jar
 │   ├── junit-platform-console-standalone-1.9.2.jar
 │   └── junit-platform-console-standalone-1.9.2.jar:Zone.Identifier
+├── rongero_data.dat
 ├── src
 │   ├── catalog
 │   │   ├── Catalog.java
@@ -211,9 +224,17 @@
 │   │   ├── SistemaRecomendacionesSegundamano.java
 │   │   └── StoreStatistics.java
 │   ├── tests
+│   │   ├── CategoryTest.java
+│   │   ├── ComicTest.java
+│   │   ├── FigurineTest.java
+│   │   ├── GameTest.java
+│   │   ├── ItemTest.java
 │   │   ├── Main.java
 │   │   ├── MainDescuentos.java
 │   │   ├── MainIntercambios.java
+│   │   ├── NewProductTest.java
+│   │   ├── PackTest.java
+│   │   ├── ProductTest.java
 │   │   ├── PruebaIntercambioCompleto.java
 │   │   └── test_intercambios.java
 │   ├── transactions
@@ -251,4 +272,4 @@
 │       └── Review.java
 └── tree.txt
 
-26 directories, 226 files
+26 directories, 247 files
