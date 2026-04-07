@@ -78,7 +78,7 @@ public class Application {
             // Instanciamos el rango de edad usando tu clase AgeRange
             AgeRange edadCatan = new AgeRange(10, 99);
 
-            Game juego1 = new Game("Catán", "Juego de estrategia y negociación",
+            Game juego1 = new Game("Catan", "Juego de estrategia y negociación",
                     45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
                     4, mecanicas, edadCatan);
 
