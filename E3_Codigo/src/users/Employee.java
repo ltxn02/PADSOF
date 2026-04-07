@@ -5,6 +5,7 @@ import java.io.*;
 import utils.*;
 import transactions.*;
 import catalog.*;
+import discounts.*;
 
 public class Employee extends Staff implements java.io.Serializable{
     private boolean enabled;
@@ -18,12 +19,22 @@ public class Employee extends Staff implements java.io.Serializable{
         this.Rol = new ArrayList<>();
     }
     
-    public void editProduct(NewProduct p, String name, String description, double price, String picturePath, int stock) throws SecurityException {
+    public void editProduct(NewProduct p, String name, String description, double price, String picturePath, int stock, Object...specificArguments) throws SecurityException {
     	if(this.checkPermission(Permission.PRODUCT_EDIT) == false) {
     		throw new SecurityException("Employee " + this.getUsername() + " doesn't have permission to edit products");
     	}
     	p.editProductInfo(name, description, price, picturePath, stock);
-    }
+    	
+    	if(p instanceof Pack) {
+    		this.editPack((Pack)p, specificArguments);
+    	} else if (p instanceof Comic) {
+    		this.editComic((Comic)p, specificArguments);
+    	} else if (p instanceof Game) {
+    		this.editGame((Game)p, specificArguments);
+    	} else if (p instanceof Figurine) {
+    		this.editFigurine((Figurine)p, specificArguments);
+    	}
+    }    
 
     public void loadProduct(Catalog catalog, ItemType itemType, Map<String, Object> data) throws SecurityException {
     	if(this.checkPermission(Permission.PRODUCT_LOAD) == false) {
@@ -175,12 +186,12 @@ public class Employee extends Staff implements java.io.Serializable{
     public void delete_roles(EmployeeRoles Rol){
         this.Rol.remove(Rol);
     }
-
-    public void activateEmployee(){
+    
+    public void activateEmployee() {
         this.enabled = true;
     }
 
-    public void desactivateEmployee(){
+    public void desactivateEmployee() {
         this.enabled = false;
     }
 
@@ -196,5 +207,145 @@ public class Employee extends Staff implements java.io.Serializable{
 
         // 2. Si lo tiene, actualizamos el estado del pedido
         order.setOrderStatus(newStatus);
+    }
+    
+    
+    
+    // -- HELPERS ------------------------------------------------------------------
+    
+    private void editPack(Pack pack, Object...objects) {
+    	try {
+    		Class<?> [] types = new Class<?>[] {
+    			ArrayList.class,	// Tipo del ArrayList en types[-1]
+    			NewProduct.class	// Tipo del primer ArrayList
+    		};
+    		this.validateArguments(objects, types, 1);
+    	
+    		@SuppressWarnings("unchecked")
+    		ArrayList<NewProduct> list = (ArrayList<NewProduct>)objects[0];
+    		
+    		pack.editPackInfo(list);
+    	} catch (Exception e) {
+    		System.err.println("Error editing Pack: " + e.getMessage());
+    	}
+    }
+    
+    private void editComic(Comic comic, Object...objects) {
+    	try {
+    		Class<?> [] types = new Class<?>[] {
+    			IDiscount.class,
+    			Integer.class,
+    			String.class,
+    			Integer.class,
+    			ArrayList.class,
+    			String.class
+    		};
+    		this.validateArguments(objects, types, 5);
+    		
+    		IDiscount discount = (IDiscount)objects[0];
+    		int nPages = (Integer)objects[1];
+    		String publisher = (String)objects[2];
+    		int publicationYear = (Integer)objects[3];
+    		@SuppressWarnings("unchecked")
+    		ArrayList<String> writtenBy = (ArrayList<String>)objects[4];
+    		
+    		comic.editComicInfo(discount, nPages, publisher, publicationYear, writtenBy);
+    	} catch (Exception e) {
+    		System.err.println("Error editing Comic: " + e.getMessage());
+    	}
+    }
+    
+    private void editGame(Game game, Object...objects) {
+    	try {
+    		Class<?> [] types = new Class<?>[] {
+    			IDiscount.class,
+    			Integer.class,
+    			ArrayList.class,	// Tipo del ArrayList en types[-1]
+    			AgeRange.class,
+    			String.class		// Tipo del primer ArrayList
+    		};
+    		this.validateArguments(objects, types, 4);
+    		
+    		IDiscount discount = (IDiscount)objects[0];
+    		int nPlayers = (Integer)objects[1];
+    		@SuppressWarnings("unchecked")
+    		ArrayList<String> mechanics = (ArrayList<String>)objects[2];
+    		AgeRange ageRange = (AgeRange)objects[3];
+    		
+    		game.editGameInfo(discount, nPlayers, mechanics, ageRange);
+    	} catch (Exception e) {
+    		System.err.println("Error editing Game: " + e.getMessage());
+    	}
+    }
+    
+    private void editFigurine(Figurine figurine, Object...objects) {
+    	try {
+    		Class<?> [] types = new Class<?>[] {
+    			IDiscount.class,
+    			Double.class,
+    			Double.class,
+    			Double.class,
+    			String.class,
+    			String.class
+    		};
+    		this.validateArguments(objects, types, 6);
+    		
+    		IDiscount discount = (IDiscount)objects[0];
+    		double height = (Double)objects[1], width = (Double)objects[2], depth = (Double)objects[3];
+    		String material = (String)objects[4], franchise = (String)objects[5];
+    		
+    		figurine.editFigurineInfo(discount, height, width, depth, material, franchise);
+    	} catch (Exception e) {
+    		System.err.println("Error editing Figurine: " + e.getMessage());
+    	}
+    }
+    
+    private void validateArguments(Object[] objects, Class<?>[] expectedTypes, int nParameters) throws IllegalArgumentException {
+    	if(objects.length != nParameters) {
+    		throw new IllegalArgumentException("There must be " + nParameters + " objects");
+    	}
+    	
+    	int j = 0;
+    	for(int i = 0; i < nParameters; i++) {
+    		if(expectedTypes[i] == ArrayList.class) {
+    			j--;
+    			this.checkList(objects[i], expectedTypes[j]);
+    		} else {
+    			this.checkField(objects[i], expectedTypes[i]);
+    		}
+    	}
+    }
+    
+    private <T> ArrayList<T> checkList(Object object, Class<T> expectedType) throws IllegalArgumentException {
+    	if(object == null || expectedType == null) {
+    		throw new IllegalArgumentException("Arguments cannot be null");
+    	}
+    	
+    	try {    		
+    		this.checkField(object, ArrayList.class);
+    		ArrayList<T> newList = new ArrayList<>();
+    		
+    		@SuppressWarnings("unchecked")
+    		ArrayList<?> rawList = (ArrayList<?>)object;
+    		for(Object o: rawList) {
+    			this.checkField(o, expectedType);
+    			newList.add(expectedType.cast(o));
+    		}
+    		return newList;
+    		
+    	} catch (Exception e) {
+    		System.err.println("Error validating list: " + e.getMessage());
+    	}
+    	return null;
+    }
+    
+    private void checkField(Object object, Class<?> expectedType) throws IllegalArgumentException {
+    	if(object == null) {
+    		throw new IllegalArgumentException("Object cannot be null");
+    	}
+    	
+    	if(!expectedType.isInstance(object)) {
+    		throw new IllegalArgumentException("Object must be of " + expectedType + " class");
+    	}
     }
 }

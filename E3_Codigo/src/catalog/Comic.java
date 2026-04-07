@@ -58,7 +58,7 @@ public class Comic extends Product implements java.io.Serializable {
      * @param publicationYear Año original en el que fue publicado.
      * @param writtenBy       Lista con los nombres de los autores principales (guionistas y dibujantes).
      */
-    public void editFigurineInfo(IDiscount discount, int nPages, String publisher, int publicationYear, ArrayList<String> writtenBy) {
+    public void editComicInfo(IDiscount discount, int nPages, String publisher, int publicationYear, ArrayList<String> writtenBy) {
     	super.setDiscount(discount);
     	if (nPages <= 0) {
             this.nPages = 1;

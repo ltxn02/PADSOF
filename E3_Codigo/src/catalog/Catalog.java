@@ -211,47 +211,51 @@ public class Catalog {
 	
 	private void validateData(ItemType itemType, Map<String, Object> data) {
 		// 1. Validate common attributes (obligatory)
-		this.checkField(data, "name", String.class);
-		this.checkField(data, "description", String.class);
-		this.checkField(data, "price", Double.class);
-		this.checkField(data, "picturePath", String.class);
-		this.checkField(data, "stock", Integer.class);
-		if(data.get("categories") != null) {
-			this.checkField(data, "categories", ArrayList.class);
-		}
-		if(data.get("reviews") != null) {
-			this.checkField(data, "reviews", ArrayList.class);
-		}
-		if(data.get("discount") != null) {
-			this.checkField(data, "discount", Discount.class);
-		}
-		
-		switch(itemType) {
-			case COMIC: {
-				checkField(data, "nPages", Integer.class);
-				checkField(data, "publisher", String.class);
-				checkField(data, "publicationYear", Integer.class);
-				checkField(data, "writtenBy", ArrayList.class);
-				break;
+		try {
+			this.checkField(data, "name", String.class);
+			this.checkField(data, "description", String.class);
+			this.checkField(data, "price", Double.class);
+			this.checkField(data, "picturePath", String.class);
+			this.checkField(data, "stock", Integer.class);
+			if(data.get("categories") != null) {
+				this.checkField(data, "categories", ArrayList.class);
 			}
-			case GAME: {
-				checkField(data, "nPlayers", Integer.class);
-				checkField(data, "mechanics", ArrayList.class);
-				checkField(data, "ageRange", AgeRange.class);
-				break;
+			if(data.get("reviews") != null) {
+				this.checkField(data, "reviews", ArrayList.class);
 			}
-			case FIGURINE: {
-				checkField(data, "height", Double.class);
-				checkField(data, "width", Double.class);
-				checkField(data, "depth", Double.class);
-				checkField(data, "material", String.class);
-				checkField(data, "franchise", String.class);
-				break;
+			if(data.get("discount") != null) {
+				this.checkField(data, "discount", Discount.class);
 			}
-			case PACK: {
-				checkField(data, "products", ArrayList.class);
-				break;
+			
+			switch(itemType) {
+				case COMIC: {
+					checkField(data, "nPages", Integer.class);
+					checkField(data, "publisher", String.class);
+					checkField(data, "publicationYear", Integer.class);
+					checkField(data, "writtenBy", ArrayList.class);
+					break;
+				}
+				case GAME: {
+					checkField(data, "nPlayers", Integer.class);
+					checkField(data, "mechanics", ArrayList.class);
+					checkField(data, "ageRange", AgeRange.class);
+					break;
+				}
+				case FIGURINE: {
+					checkField(data, "height", Double.class);
+					checkField(data, "width", Double.class);
+					checkField(data, "depth", Double.class);
+					checkField(data, "material", String.class);
+					checkField(data, "franchise", String.class);
+					break;
+				}
+				case PACK: {
+					checkField(data, "products", ArrayList.class);
+					break;
+				}
 			}
+		} catch (Exception e) {
+			System.err.println("Error validating data: " + e.getMessage());
 		}
 	}
 	

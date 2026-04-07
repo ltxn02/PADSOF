@@ -91,4 +91,20 @@ public class Pack extends NewProduct implements java.io.Serializable {
     public ArrayList<NewProduct> getProducts() {
         return this.products;
     }
+    
+    /**
+     * Sobreescribe el set de productos de un pack.
+     * 
+     * @param newProducts El nuevo array de productos del pack.
+     */
+    public void editPackInfo(ArrayList<NewProduct> newProducts) {
+    	this.clearPack();
+    	for(NewProduct p: newProducts) {
+    		this.addItem(p);
+    	}
+    }
+    
+    private void clearPack() {
+    	this.products.clear();
+    }
 }
