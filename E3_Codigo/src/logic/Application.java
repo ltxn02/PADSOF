@@ -116,7 +116,6 @@ public class Application {
         }
 
         Application.users.put(client.getUsername(), client);
-        System.out.println("User " + client.getUsername() + " registered successfully.");
     }
 
     public static void registerEmployee(Employee employee) throws IOException {
