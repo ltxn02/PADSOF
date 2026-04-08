@@ -1063,22 +1063,18 @@ reviews</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>2320</x>
-      <y>540</y>
+      <y>590</y>
       <w>310</w>
-      <h>180</h>
+      <h>130</h>
     </coordinates>
     <panel_attributes>Discount
 --
-- discountId : int
-- percentage : double
-- type: String
+- value: double
 - description : String
 - from : Date
 - to : Date
-- createdBy : Manager
 --
-+ isValid(today: Date) : boolean
-+ applyDiscount(originalPrice: double) : double
++ isExpired() : boolean
 valign=center
 bg=#c0ffb3</panel_attributes>
     <additional_attributes/>
