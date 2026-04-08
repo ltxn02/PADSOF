@@ -682,9 +682,9 @@ bg=#009936</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>3720</x>
-      <y>520</y>
+      <y>510</y>
       <w>140</w>
-      <h>140</h>
+      <h>150</h>
     </coordinates>
     <panel_attributes>&lt;&lt;enum&gt;&gt;
 Condition
@@ -694,6 +694,8 @@ Condition
 + USO_LIGERO
 + USO_EVIDENTE
 + DAÑADO
+--
++ toString(): String
 valign=center
 bg=#66ff99</panel_attributes>
     <additional_attributes/>
@@ -704,7 +706,7 @@ bg=#66ff99</panel_attributes>
       <x>3540</x>
       <y>520</y>
       <w>140</w>
-      <h>100</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>&lt;&lt;enum&gt;&gt;
 ItemType
@@ -1025,14 +1027,14 @@ r1=condition</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>3550</x>
-      <y>610</y>
+      <y>620</y>
       <w>90</w>
-      <h>120</h>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=1
 r1=itemType</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
