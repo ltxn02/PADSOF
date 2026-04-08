@@ -66,7 +66,6 @@ public class CartItem implements java.io.Serializable{
 	 * </ul>
 	 *
 	 * @param quantity La nueva cantidad deseada.
-	 *                 Debe ser > 0 y <= al stock disponible del producto.
 	 * 
 	 * @throws IllegalArgumentException Si no hay stock suficiente para la cantidad solicitada.
 	 */
@@ -129,10 +128,6 @@ public class CartItem implements java.io.Serializable{
 	
 	/**
 	 * Comprueba si este CartItem está vacío (no contiene unidades).
-	 * 
-	 * Un CartItem se considera vacío cuando su cantidad es 0.
-	 * Los CartItems vacíos se eliminan automáticamente del carrito
-	 * cuando se llama a {@link ShoppingCart#removeCartItem(NewProduct, int)}.
 	 *
 	 * @return {@code true} si quantity == 0, {@code false} en caso contrario.
 	 */
