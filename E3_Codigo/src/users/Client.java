@@ -217,11 +217,11 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 	 *                                  en la cartera del cliente.
 	 */
 	public void registerSecondHandProduct(String name, String description, String picturePath, ItemType itemType) throws IllegalArgumentException {
-		if(this.productNamedExists(name) == true) {
-			throw new IllegalArgumentException("A product with the same name is already registered in your wallet");
-		}
-		SecondHandProduct product = new SecondHandProduct(name, description, picturePath, itemType, this);
-		this.myProducts.add(product);
+	    if(this.productNamedExists(name) == true) {
+	        throw new IllegalArgumentException("A product with the same name is already registered in your wallet");
+	    }
+	    // NO añadir aquí, ya se añade en el constructor de SecondHandProduct
+	    new SecondHandProduct(name, description, picturePath, itemType, this);
 	}
 	
 	/**
@@ -458,7 +458,7 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		
 		sb.append("Se unió el: " + this.joiningDate + "\n");
 		sb.append("--- Resumen de actividad ---\n");
-		sb.append("Carrito: " + String.format("%.2f €", this.shoppingCart.shoppingCartPreview()) + "\n");
+		sb.append("Carrito: " + this.shoppingCart.shoppingCartPreview() + "\n");
 		sb.append(formatListPreview("Pedidos", Order::orderPreview, this.ordersMade));
 		sb.append(formatListPreview("Intercambios", null, this.exchangesMade));
 		sb.append(formatListPreview("Productos de segunda mano", SecondHandProduct::secondHandProductPreview, this.myProducts));

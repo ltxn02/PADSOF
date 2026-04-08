@@ -26,7 +26,6 @@ import utils.*;
  *   <li>Validación y cancelación de intercambios</li>
  * </ul>
  * 
- * @author Test Suite
  * @version 1.0
  */
 public class EmployeeTest {
@@ -379,8 +378,6 @@ public class EmployeeTest {
             testClient
         );
 
-        testClient.registerSecondHandProduct(secondHandProduct);
-
         assertDoesNotThrow(() -> {
             employee.appraiseSecondHandProduct(testClient, secondHandProduct, Condition.MUY_BUENO, 150.0);
         });
@@ -400,8 +397,6 @@ public class EmployeeTest {
             ItemType.GAME,
             testClient
         );
-
-        testClient.registerSecondHandProduct(secondHandProduct);
 
         assertThrows(SecurityException.class, () -> {
             employeeWithoutPermissions.appraiseSecondHandProduct(testClient, secondHandProduct, Condition.MUY_BUENO, 150.0);
@@ -427,8 +422,6 @@ public class EmployeeTest {
             ItemType.GAME,
             otroCliente
         );
-
-        otroCliente.registerSecondHandProduct(secondHandProduct);
 
         assertThrows(IllegalArgumentException.class, () -> {
             employee.appraiseSecondHandProduct(testClient, secondHandProduct, Condition.MUY_BUENO, 150.0);
@@ -473,7 +466,13 @@ public class EmployeeTest {
 
         // Crear un pedido dummy
         ArrayList<CartItem> items = new ArrayList<>();
-        Order order = new Order(testClient, items, 0.0);
+	     // Crear al menos un CartItem válido
+	     NewProduct testProduct = new Comic(
+	         "Test Comic", "Comic", 10.0, "img/comic.jpg", 50,
+	         testCategories, testReviews, null, 200, "Publisher", 2020, new ArrayList<>()
+	     );
+	     items.add(new CartItem(testProduct, 1));
+	     Order order = new Order(testClient, items, 10.0);
 
         assertDoesNotThrow(() -> {
             employee.updateOrderStatus(order, OrderStatus.EN_PREPARACION);
@@ -486,8 +485,13 @@ public class EmployeeTest {
     @Test
     void testActualizarEstadoPedidoSinPermiso() {
         ArrayList<CartItem> items = new ArrayList<>();
-        Order order = new Order(testClient, items, 0.0);
-
+        NewProduct testProduct = new Comic(
+            "Test Comic", "Comic", 10.0, "img/comic.jpg", 50,
+            testCategories, testReviews, null, 200, "Publisher", 2020, new ArrayList<>()
+        );
+        items.add(new CartItem(testProduct, 1));
+        Order order = new Order(testClient, items, 10.0);
+        
         assertThrows(SecurityException.class, () -> {
             employeeWithoutPermissions.updateOrderStatus(order, OrderStatus.EN_PREPARACION);
         });

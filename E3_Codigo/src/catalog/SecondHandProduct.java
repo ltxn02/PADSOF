@@ -103,7 +103,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable{
 		StringBuilder sb = new StringBuilder("  " + super.itemPreview() + " | ");
 		
 		if(this.isAppraised) {
-			sb.append(this.condition + " (" + String.format(".2f €", super.getPrice()));
+			sb.append(this.condition + " (" + String.format("%.2f €", super.getPrice()));
 		} else {
 			sb.append("Pending appraisal");
 		}

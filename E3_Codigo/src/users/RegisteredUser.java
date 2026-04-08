@@ -321,10 +321,10 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 	 *         Si el DNI es nulo, se devuelve sin cambios.
 	 */
 	private String maskDni(String dni) {
-		if(dni == null || dni.length() < 4) {
-			return dni;
-		}
+	    if(dni == null || dni.length() < 5) {
+	        return dni;
+	    }
 
-		return "****" + dni.substring(dni.length() - 4);
+	    return "****" + dni.substring(dni.length() - 5);  // ✅ Toma últimos 5 (5678A)
 	}
 }
