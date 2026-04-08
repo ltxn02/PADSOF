@@ -289,16 +289,16 @@ r1=permissions</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>649</x>
-      <y>693</y>
+      <y>759</y>
       <w>110</w>
-      <h>165</h>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;-&gt;
 m1=*
 r1=myReviews
 m2=1
 r2=postedBy</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -430,10 +430,10 @@ r2=users</panel_attributes>
       <x>649</x>
       <y>33</y>
       <w>1760</w>
-      <h>605</h>
+      <h>561</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>1580.0;10.0;990.0;10.0;990.0;170.0;10.0;170.0;10.0;530.0</additional_attributes>
+    <additional_attributes>1580.0;10.0;990.0;10.0;990.0;170.0;10.0;170.0;10.0;490.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1228,15 +1228,22 @@ bg=#fff176</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>605</x>
-      <y>616</y>
-      <w>187</w>
-      <h>88</h>
+      <y>572</y>
+      <w>374</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>Review
 --
+_- lastReviewId: int_
+- reviewId: int
 - rating : int
 - comment : String
 - product : Product
+--
++ reviewPreview(): String
++ addReviewToProduct(product: NewProduct): void
++ buildString(maxChars: int): String
++ formatInstant(instant: Instant): String
 valign=center
 bg=#fff176</panel_attributes>
     <additional_attributes/>
