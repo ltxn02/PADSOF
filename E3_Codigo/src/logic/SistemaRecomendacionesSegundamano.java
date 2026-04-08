@@ -5,19 +5,31 @@ import utils.*;
 import users.*;
 import catalog.*;
 import transactions.*;
+
 /**
- * Sistema de Recomendacion para productos de segunda mano
- * Este sistema se basa solo en las ofertas hechas, y la similitud entre usuarios
+ * Clase de utilidad que gestiona el motor de recomendaciones para artículos de segunda mano.
+ * A diferencia del sistema estándar, este motor se basa en el histórico de ofertas de intercambio
+ * realizadas y la disponibilidad actual de los productos en el mercado de usados.
  * @author Taha Ridda En Naji
  * @version 3.0
- *
- * */
+ */
 public class SistemaRecomendacionesSegundamano {
 
+    /**
+     * Genera una lista de recomendaciones de productos de segunda mano para un cliente.
+     * El algoritmo prioriza productos disponibles que coincidan con las categorías de ofertas
+     * previas del usuario y productos de dueños con gustos de intercambio similares.
+     *
+     * @param cliente           El {@link Client} que recibirá las recomendaciones.
+     * @param catalogo          Lista global de {@link SecondHandProduct} en el sistema.
+     * @param todosLosClientes  Lista de clientes registrados para el cálculo de similitud.
+     * @return Una {@link ArrayList} de productos de segunda mano ordenados por relevancia.
+     */
     public static ArrayList<SecondHandProduct> obtenerRecomendaciones(Client cliente, ArrayList<SecondHandProduct> catalogo, ArrayList<Client> todosLosClientes) {
         HashMap<SecondHandProduct, Double> puntosTotales = new HashMap<>();
 
         HashSet<SecondHandProduct> misProductos = obtenerMisProductos(cliente);
+
         HashMap<String, Double> perfilInteres = generarPerfilPorIntercambios(cliente);
 
         for (Client otro : todosLosClientes) {
@@ -28,7 +40,6 @@ public class SistemaRecomendacionesSegundamano {
             if (similitud > 0.3) {
                 for (SecondHandProduct p : obtenerMisProductos(otro)) {
                     if (!misProductos.contains(p) && p.isAvailable()) {
-
                         puntosTotales.put(p, puntosTotales.getOrDefault(p, 0.0) + similitud);
                     }
                 }
@@ -46,19 +57,19 @@ public class SistemaRecomendacionesSegundamano {
         }
 
         ArrayList<SecondHandProduct> resultado = new ArrayList<>(puntosTotales.keySet());
-
         resultado.sort((p1, p2) -> Double.compare(puntosTotales.get(p2), puntosTotales.get(p1)));
 
         return resultado;
     }
 
     /**
-     * Calcula la similitud entre dos diferentes clientes basandose en las categorias que interesan a ambos
-     * @author Taha Ridda En Naji
-     * @param c1 cliente al que se le quiere calcular la similitud con otro
-     * @param c2 cliente al que se calcula la similitud con el primero
+     * Calcula el índice de similitud entre dos clientes basándose en la coincidencia
+     * de categorías por las que ambos han mostrado interés en sus ofertas de intercambio.
      *
-     * */
+     * @param c1 Cliente principal.
+     * @param c2 Cliente con el que comparar.
+     * @return Valor decimal que representa el grado de afinidad en intereses de intercambio.
+     */
     private static double calcularSimilitudIntercambio(Client c1, Client c2) {
         HashMap<String, Double> p1 = generarPerfilPorIntercambios(c1);
         HashMap<String, Double> p2 = generarPerfilPorIntercambios(c2);
@@ -71,36 +82,38 @@ public class SistemaRecomendacionesSegundamano {
         if (p1.isEmpty() || p2.isEmpty()) return 0.0;
         return (double) coincidencias / Math.max(p1.size(), p2.size());
     }
-/**
- * Crea un vector basado en el inters por las categorias de los productos por los que el usuario ha hecho ofertas
- * @author Taha Ridda En Naji
- * @param c cliente al que queremos construir su perfil de gustos
- * */
 
+    /**
+     * Construye un perfil de preferencias analizando las categorías
+     * de los productos solicitados en las ofertas de intercambio hechas por el cliente.
+     * Cada coincidencia de categoría incrementa el peso del interés en el perfil.
+     *
+     * @param c El {@link Client} cuyo perfil se desea construir.
+     * @return Un {@link HashMap} con los nombres de categorías y su peso acumulado.
+     */
     private static HashMap<String, Double> generarPerfilPorIntercambios(Client c) {
         HashMap<String, Double> perfil = new HashMap<>();
-            for (ExchangeOffer oferta: c.getOffersMade()) {
-                SecondHandProduct solicitado= oferta.getRequestedProduct();
-                for (Category cat: solicitado.getCategories()) {
-                    perfil.put(cat.getNameCategory(), perfil.getOrDefault(cat.getNameCategory(), 0.0) + 2.0);
-                }
+        for (ExchangeOffer oferta: c.getOffersMade()) {
+            SecondHandProduct solicitado = oferta.getRequestedProduct();
+            for (Category cat: solicitado.getCategories()) {
+                perfil.put(cat.getNameCategory(), perfil.getOrDefault(cat.getNameCategory(), 0.0) + 2.0);
             }
+        }
         return perfil;
     }
 
     /**
-     * Obtiene el conjunto de productos de segunda mano que pertenecen al cliente.
-     * @author Taha Ridda En Naji
-     * @param c El cliente que quiere ver el sistema de recomendaciones asi que recogemos sus productos para excluirlos
-     * Se usa para excluir sus propios productos de las recomendaciones.
+     * Obtiene de forma eficiente el conjunto de productos de segunda mano que
+     * el cliente tiene actualmente en propiedad.
+     * Se utiliza principalmente para filtrar y excluir estos ítems de las recomendaciones.
      *
+     * @param c El {@link Client} propietario.
+     * @return Un {@link HashSet} con los {@link SecondHandProduct} del cliente.
      */
     private static HashSet<SecondHandProduct> obtenerMisProductos(Client c) {
         HashSet<SecondHandProduct> productos = new HashSet<>();
 
-        // Verificamos que el cliente tenga una cartera de productos asignada
         if (c.getCarteraSegundaMano() != null) {
-            // Recorremos la lista de productos de segunda mano del cliente
             for (SecondHandProduct p : c.getCarteraSegundaMano()) {
                 productos.add(p);
             }

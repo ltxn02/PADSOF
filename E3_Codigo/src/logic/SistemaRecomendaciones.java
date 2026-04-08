@@ -5,12 +5,32 @@ import utils.*;
 import users.*;
 import catalog.*;
 import transactions.*;
+
+/**
+ * Clase de utilidad encargada de gestionar la lógica del motor de recomendaciones.
+ * Implementa un sistema híbrido que combina el filtrado basado en contenido
+ * (preferencias de categorías del usuario) y filtrado colaborativo simple
+ * (similitud entre perfiles de clientes).
+ * @author Taha Ridda
+ * @version 2.0
+ */
 public class SistemaRecomendaciones {
 
+    /**
+     * Genera una lista personalizada de productos recomendados para un cliente específico.
+     * El algoritmo evalúa el histórico de compras, las categorías de interés y la
+     * similitud con otros usuarios para puntuar productos del catálogo aún no adquiridos.
+     *
+     * @param cliente           El {@link Client} para quien se generan las recomendaciones.
+     * @param catalogo          Lista completa de {@link NewProduct} disponibles en el sistema.
+     * @param todosLosClientes  Lista de todos los clientes registrados para el análisis de similitud.
+     * @return Una {@link ArrayList} de productos ordenados de mayor a menor relevancia.
+     */
     public static ArrayList<NewProduct> obtenerRecomendaciones(Client cliente, ArrayList<NewProduct> catalogo, ArrayList<Client> todosLosClientes) {
         HashMap<NewProduct, Double> puntosTotales = new HashMap<>();
 
         HashSet<NewProduct> comprados = obtenerComprados(cliente);
+
         HashMap<String, Double> perfilInteres = new HashMap<>();
         for (NewProduct p : comprados) {
             double rating = p.calculateRating();
@@ -56,6 +76,14 @@ public class SistemaRecomendaciones {
         return resultado;
     }
 
+    /**
+     * Calcula el índice de similitud entre dos clientes basándose en la intersección
+     * de sus catálogos de productos comprados.
+     *
+     * @param c1 Primer cliente.
+     * @param c2 Segundo cliente.
+     * @return Valor decimal entre 0.0 y 1.0 que representa la afinidad entre ambos.
+     */
     private static double calcularSimilitudSimple(Client c1, Client c2) {
         HashSet<NewProduct> p1 = obtenerComprados(c1);
         HashSet<NewProduct> p2 = obtenerComprados(c2);
@@ -69,6 +97,13 @@ public class SistemaRecomendaciones {
         return (double) comunes / Math.max(p1.size(), p2.size());
     }
 
+    /**
+     * Extrae de forma única todos los productos comprados por un cliente a través
+     * de su histórico de pedidos.
+     *
+     * @param c El {@link Client} a analizar.
+     * @return Un {@link HashSet} con los productos únicos adquiridos.
+     */
     private static HashSet<NewProduct> obtenerComprados(Client c) {
         HashSet<NewProduct> productos = new HashSet<>();
         if (c.getOrderHistoric() != null) {

@@ -12,10 +12,7 @@ public enum ExchangeOfferStatus {
     RECHAZADA,
     EXPIRADA,
     CANCELADA;
-	/*
-	AÑADIMOS UN ESTADO CANCELADO???
-	 */
-	
+
 	@Override
     public String toString() {
         return this.name();

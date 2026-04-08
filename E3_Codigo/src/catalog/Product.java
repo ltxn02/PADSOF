@@ -8,7 +8,7 @@ import discounts.*;
  * Hereda de {@link NewProduct} y añade la funcionalidad de manejar descuentos
  * personalizados mediante el uso de la interfaz {@link IDiscount}, así como
  * un sistema de identificación única (productId).
- * * @author Iván Sánchez
+ * @author Iván Sánchez
  * @version 2.0
  */
 public abstract class Product extends NewProduct implements java.io.Serializable {

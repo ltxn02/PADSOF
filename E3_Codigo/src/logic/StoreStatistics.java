@@ -6,8 +6,22 @@ import catalog.*;
 import transactions.*;
 import utils.CartItem;
 
+/**
+ * Clase de utilidad encargada de la generación de informes y métricas de rendimiento de la tienda.
+ * Analiza el comportamiento de los usuarios, el volumen de ventas, la actividad de intercambios
+ * y el rendimiento laboral de los empleados mediante el procesamiento de datos globales de la aplicación.
+ * @author Taha Ridda
+ * @version 2.0
+ */
 public class StoreStatistics {
 
+    /**
+     * Genera un reporte detallado en formato de texto con las estadísticas avanzadas de la tienda.
+     * El informe incluye métricas globales de ingresos, rankings de clientes por actividad,
+     * productos más vendidos y un control de productividad de los empleados (tasaciones).
+     *
+     * @return Un {@link String} con el informe formateado listo para ser mostrado por consola o exportado.
+     */
     public static String generateStoreReport() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n=======================================================\n");
@@ -36,7 +50,6 @@ public class StoreStatistics {
                     for (Order o : c.getOrderHistoric().getOrders()) {
                         pedidosCliente++;
                         totalOrders++;
-
                         ingresosTotales += o.getPrice();
 
                         if (o.getItems() != null) {
@@ -68,7 +81,6 @@ public class StoreStatistics {
         sb.append("  Total Pedidos Realizados: ").append(totalOrders).append("\n");
         sb.append("  Total Intercambios Físicos: ").append(totalExchanges).append("\n");
         sb.append("  Ingresos Estimados: ").append(String.format("%.2f €", ingresosTotales)).append("\n\n");
-
 
         sb.append("--- TOP 3 CLIENTES (POR COMPRAS) ---\n");
         List<Map.Entry<Client, Integer>> topClientesCompras = new ArrayList<>(comprasPorCliente.entrySet());

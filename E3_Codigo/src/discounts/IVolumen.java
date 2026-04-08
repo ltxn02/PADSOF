@@ -1,19 +1,22 @@
 package discounts;
+
 /**
  * Interfaz que define el comportamiento de los descuentos basados en el volumen de compra.
- * A diferencia de las rebajas unitarias, estos descuentos se calculan sobre el
- * importe total acumulado en el carrito de la compra, incentivando un mayor gasto total.
- * * @author Taha Ridda En Naji
+ * Extiende de {@link IDiscount} y se especializa en incentivar un mayor gasto total
+ * en la transacción. A diferencia de las rebajas unitarias sobre productos específicos,
+ * estos descuentos se calculan y aplican sobre el importe bruto acumulado en el carrito.
+ * @author Taha Ridda En Naji
  * @version 3.0
  */
 public interface IVolumen extends IDiscount {
+
     /**
-     * Aplica la lógica de descuento sobre el importe total del carrito de la compra.
-     * * @param totalCart El precio total acumulado en el ShoppingCart antes de
-     * aplicar este descuento de volumen.
-     * @return El nuevo importe total tras restar la bonificación por volumen de gasto.
-     * * @author Taha Ridda En Naji
-     * @version 3.0
+     * Aplica la lógica de bonificación sobre el importe total del carrito de la compra.
+     * * Este método procesa el valor acumulado de la orden para deducir una
+     * cantidad fija o porcentual una vez alcanzado un umbral de gasto determinado.
+     * @param totalCart El precio total acumulado en el {@code ShoppingCart} antes de
+     * aplicar la reducción por volumen.
+     * @return El nuevo importe neto total tras restar la bonificación correspondiente.
      */
     double applyVolumen(double totalCart);
 }
