@@ -53,7 +53,6 @@ public class main {
                 case "0":
                     salirApp = true;
                     System.out.println("Guardando datos y cerrando la aplicación... ¡Hasta pronto!");
-                    // Aquí deberíais guardar los datos persistentes (ej. Sistema.guardarDatos())
                     break;
                 default:
                     System.out.println("[!] Opción no válida. Por favor, introduce un número del 0 al 3.");
