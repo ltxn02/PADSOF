@@ -3,7 +3,7 @@ JAVA = java
 SRC_DIR = src
 BIN_DIR = bin
 LIB = lib/TeleChargeAndPaySystem8.jar
-MAIN = rongero.ui.main
+MAIN = ui.main
 
 compile:
 	@mkdir -p $(BIN_DIR)
