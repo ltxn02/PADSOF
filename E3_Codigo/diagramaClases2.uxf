@@ -767,8 +767,8 @@ bg=#006400</panel_attributes>
     <coordinates>
       <x>4032</x>
       <y>1020</y>
-      <w>168</w>
-      <h>144</h>
+      <w>312</w>
+      <h>264</h>
     </coordinates>
     <panel_attributes>Figurine
 --
@@ -777,6 +777,13 @@ bg=#006400</panel_attributes>
 - depth : double
 - material : String
 - franchise : String
+--
++ editFigurineInfo(discount: IDiscount,
+     height: double,
+     width: double,
+     depth: double,
+     material: String,
+     franchise: String): void
 valign=center
 bg=GREEN</panel_attributes>
     <additional_attributes/>
