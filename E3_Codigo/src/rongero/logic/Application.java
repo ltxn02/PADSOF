@@ -44,9 +44,9 @@ public class Application {
     private void inicializarDatosPorDefecto() {
         try {
             // Managers por defecto
-            Manager lidia = new Manager("lidia", "lidia123", "Lidia Martin Teres", "XXXXXXXXX", "01/01/2002", "lidia@rongero.es", "600000000", 10000.00);
-            Manager taha = new Manager("taha", "taha123", "Taha Ridda", "XXXXXXXXX", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
-            Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "XXXXXXXXX", "01/01/2002", "ivan@rongero.es", "600000000", 10000.00);
+            Manager lidia = new Manager("lidia", "lidia123", "Lidia Martin Teres", "XXXXXXXXX", "01/01/2002", "lidia@es", "600000000", 10000.00);
+            Manager taha = new Manager("taha", "taha123", "Taha Ridda", "XXXXXXXXX", "01/01/2002", "taha@es", "600000000", 10000.00);
+            Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "XXXXXXXXX", "01/01/2002", "ivan@es", "600000000", 10000.00);
 
             users.put(lidia.getUsername(), lidia);
             users.put(taha.getUsername(), taha);

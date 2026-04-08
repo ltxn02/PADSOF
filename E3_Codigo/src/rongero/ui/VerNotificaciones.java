@@ -1,4 +1,4 @@
-package rongero.ui;
+package ui;
 
 import model.user.Client;
 import util.Notification;

@@ -1,4 +1,4 @@
-package rongero.ui;
+package ui;
 
 import logic.Application;
 import logic.SistemaRecomendaciones;

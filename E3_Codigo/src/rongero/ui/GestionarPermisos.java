@@ -1,4 +1,4 @@
-package rongero.ui;
+package ui;
 
 import model.user.Employee;
 import util.Permission;

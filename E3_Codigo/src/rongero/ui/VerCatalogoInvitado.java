@@ -1,4 +1,4 @@
-package rongero.ui;
+package ui;
 import logic.Application;
 import model.catalog.NewProduct;
 import java.util.List;
