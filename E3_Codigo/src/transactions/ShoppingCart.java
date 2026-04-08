@@ -25,15 +25,6 @@ import discounts.*;
  * Un servicio ejecutor en background elimina automáticamente los items expirados cada minuto.
  * Esta característica simula carritos reales donde los productos se "reservan" por tiempo limitado.
  * 
- * <h3>Aplicación de descuentos:</h3>
- * El carrito soporta múltiples tipos de descuentos aplicados en cascada:
- * <ul>
- *   <li><strong>Descuentos individuales (Product):</strong> Aplicados automáticamente al precio de cada producto</li>
- *   <li><strong>Descuentos por cantidad (ICantidad):</strong> Ej: "Lleva 3, paga 2"</li>
- *   <li><strong>Descuentos por volumen (IVolumen):</strong> Ej: "-10€ si gastas >80€"</li>
- *   <li><strong>Descuentos con regalo (IRegalo):</strong> Ej: "Lleva X€, consigue un regalo"</li>
- * </ul>
- * 
  * <h3>Thread-safety:</h3>
  * Todos los métodos que modifican o acceden a datos compartidos están sincronizados
  * (synchronized) para evitar condiciones de carrera en entornos multi-hilo.
@@ -99,23 +90,23 @@ public class ShoppingCart implements java.io.Serializable{
 	 * @param quantity La cantidad de unidades a añadir (debe ser > 0).
 	 */
 	public synchronized void addCartItem(NewProduct p, int quantity) {		
-		CartItem c = null;
-		double oldPrice = 0;
-		
-		if((c = this.cartContains(p)) == null) {
-			c = new CartItem(p, quantity);
-		} else {
-			oldPrice = c.fullPrice();
-			try {
-				c.orderQuantity(quantity);
-			} catch (Exception e) {
-				System.err.println("Error ordering cart item: " + e.getMessage());
-			}
-		}
-		
-		this.fullPrice -= oldPrice;
-		this.fullPrice += c.fullPrice();
-		this.cartItems.add(c);
+	    CartItem c = null;
+	    double oldPrice = 0;
+	    
+	    if((c = this.cartContains(p)) == null) {
+	        c = new CartItem(p, quantity);
+	        this.cartItems.add(c);  // ← SOLO AÑADIR SI NO EXISTE
+	    } else {
+	        oldPrice = c.fullPrice();
+	        try {
+	            c.orderQuantity(quantity);
+	        } catch (Exception e) {
+	            System.err.println("Error ordering cart item: " + e.getMessage());
+	        }
+	    }
+	    
+	    this.fullPrice -= oldPrice;
+	    this.fullPrice += c.fullPrice();
 	}
 	
 	/**

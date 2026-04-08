@@ -206,4 +206,20 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
     public double getPrice() {
         return super.getPrice();
     }
+    
+    /**
+     * Obtiene el stock del producto.
+     *
+     * @return El stock del producto.
+     */
+    public double getStock() {
+        return this.stock;
+    }
+    
+    /**
+     * Registra el momento en que este producto es añadido al carrito de un cliente.
+     */
+    public void addedToCart() {
+    	this.registerTime();
+    }
 }

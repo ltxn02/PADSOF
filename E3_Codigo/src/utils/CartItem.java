@@ -33,8 +33,9 @@ public class CartItem implements java.io.Serializable{
 	 *                 Esta cantidad debe tener stock disponible en el producto.
 	 */
 	public CartItem(NewProduct product, int quantity) {
-		this.product = product;
-		this.quantity = quantity;
+	    this.product = product;
+	    this.quantity = quantity;
+	    this.product.addedToCart();
 	}
 	
 	/**

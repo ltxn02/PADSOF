@@ -17,17 +17,6 @@ import java.util.*;
  *   <li>Enmascaramiento de información sensible para privacidad</li>
  * </ul>
  * 
- * <h3>Validaciones de datos:</h3>
- * El constructor realiza validaciones exhaustivas de los datos de entrada mediante expresiones
- * regulares (regex) para garantizar la integridad y consistencia de la información:
- * <ul>
- *   <li><strong>DNI:</strong> Exactamente 8 dígitos + 1 letra (ej: "12345678A")</li>
- *   <li><strong>Teléfono:</strong> Exactamente 9 dígitos (ej: "666123456")</li>
- *   <li><strong>Email:</strong> Formato válido (ej: "usuario@dominio.com")</li>
- *   <li><strong>Fecha nacimiento:</strong> Formato DD/MM/YYYY (ej: "15/03/1995")</li>
- *   <li><strong>Usuario/Contraseña:</strong> No pueden estar vacíos</li>
- * </ul>
- * 
  * <h3>Jerarquía de herencia:</h3>
  * <pre>
  *        User (clase base)

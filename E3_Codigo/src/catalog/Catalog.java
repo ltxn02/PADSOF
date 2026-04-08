@@ -327,14 +327,20 @@ public class Catalog {
 	 * @param p El juego ({@link Game}) a organizar.
 	 */
 	private void organiseGame(Game p) {
-		for(AgeRange age: this.ageRanges) {
-			if(age.containedIn(p.getAgeRange()) == true) {
-				this.gamesByAge.get(age).add(p);
-			}
-		}
-		
-		this.addAgeRange(p.getAgeRange());
-		this.gamesByAge.get(p.getAgeRange()).add(p);
+	    for(AgeRange age: this.ageRanges) {
+	        if(age.containedIn(p.getAgeRange()) == true) {
+	            List<Game> gamesList = this.gamesByAge.get(age);
+	            if(gamesList != null) {  // ← AÑADIR ESTA VALIDACIÓN
+	                gamesList.add(p);
+	            }
+	        }
+	    }
+	    
+	    this.addAgeRange(p.getAgeRange());
+	    List<Game> gamesList = this.gamesByAge.get(p.getAgeRange());
+	    if(gamesList != null) {  // ← AÑADIR ESTA VALIDACIÓN
+	        gamesList.add(p);
+	    }
 	}
 	
 	/**
