@@ -7,7 +7,6 @@ import logic.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import discounts.*;
 
 /**
  * Clase principal que actúa como punto de entrada (Entry Point) a la aplicación Rongero.

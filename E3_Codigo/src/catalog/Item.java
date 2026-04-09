@@ -2,8 +2,11 @@ package catalog;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.ArrayList;
+
 import utils.*;
+import format.TextFormat;
 
 /**
  * Clase abstracta que representa un artículo base (Item) dentro de la tienda.
@@ -20,7 +23,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
     private String description;
     private double price;
     private String picturePath;
-    private ArrayList<Category> categories;
+    private List<Category> categories;
     private Instant lastAddedAt;
 
     /**
@@ -33,7 +36,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      * @param categories  Lista de categorías a las que pertenece.
      * @throws IllegalArgumentException Si el precio introducido es negativo.
      */
-    public Item(String name, String description, double price, String picturePath, ArrayList<Category> categories) {
+    public Item(String name, String description, double price, String picturePath, List<Category> categories) {
         if (price < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
@@ -155,8 +158,8 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      *
      * @return Cadena con el formato: "Nombre (Precio €)"
      */
-    public String itemAuxPreview() {
-        return this.name + " (" + String.format("%.2f €", this.price) + ")";
+    public String toShortString() {
+        return TextFormat.itemShort(name, price);
     }
 
     /**
@@ -164,15 +167,8 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      *
      * @return Cadena formateada con el nombre y un extracto de la descripción.
      */
-    public String itemPreview() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.name + " | ");
-        if(this.description.length() < 15) {
-            sb.append(this.description + " | ");
-        } else {
-            sb.append(this.description.substring(12) + "...");
-        }
-        return sb.toString();
+    public String toBriefString() {
+        return TextFormat.itemBrief(name, description, price);
     }
 
     /**
@@ -181,10 +177,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      * @return Cadena multilínea con el nombre, descripción completa y sus categorías.
      */
     public String itemInfo() {
-        StringBuilder res = new StringBuilder();
-        res.append("\nName: " + this.name + "\n  '" + this.description + "'\n");
-        res.append("  Categories: " + this.categories + "\n");
-        return res.toString();
+        return TextFormat.itemDetailed(name, description, price, categoriesList());
     }
 
     /**
@@ -200,6 +193,14 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
         }
         return false;
     }
+    
+    private List<String> categoriesList() {
+    	List<String> list = new ArrayList<>();
+    	for(Category c: this.categories) {
+    		list.add(c.getNameCategory());
+    	}
+    	return list;
+    }
 
     /**
      * Obtiene la descripción detallada del artículo.
@@ -208,5 +209,9 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      */
     public String getDescription() {
         return description;
+    }
+    
+    protected String priceString() {
+    	return String.format("%.2f €", this.price);
     }
 }

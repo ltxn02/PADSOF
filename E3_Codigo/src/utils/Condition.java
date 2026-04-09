@@ -16,5 +16,4 @@ public enum Condition {
 	public String toString() {
 		return this.name();
 	}
-	
 }

@@ -147,7 +147,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 	 * @return String con información básica y estado de tasación.
 	 */
 	public String secondHandProductPreview() {
-		StringBuilder sb = new StringBuilder("  " + super.itemPreview() + " | ");
+		StringBuilder sb = new StringBuilder("  " + super.toShortString() + " | ");
 
 		if(this.isAppraised) {
 			sb.append(this.condition + " (" + String.format("%.2f €", super.getPrice()));
