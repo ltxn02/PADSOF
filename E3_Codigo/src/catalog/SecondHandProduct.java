@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import users.Employee;
 import utils.*;
 import users.Client;
+import format.TextFormat;
 
 /**
  * Clase que representa un producto de segunda mano (Second Hand) dentro del catálogo.
@@ -147,7 +148,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 	 * @return String con información básica y estado de tasación.
 	 */
 	public String secondHandProductPreview() {
-		StringBuilder sb = new StringBuilder("  " + super.itemPreview() + " | ");
+		StringBuilder sb = new StringBuilder("  " + super.toShortString() + " | ");
 
 		if(this.isAppraised) {
 			sb.append(this.condition + " (" + String.format("%.2f €", super.getPrice()));
@@ -172,7 +173,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 	 */
 	@Override
 	public String toString(){
-		StringBuilder res = new StringBuilder(super.itemInfo());
+		StringBuilder res = new StringBuilder(super.toDetailedString());
 		if(isAppraised) {
 			res.append("\tValued on: " + super.getPrice() + "\n");
 			res.append("\t\tCondition: " + this.condition);
@@ -281,5 +282,26 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 		System.out.println("    > Condición:   " + (this.condition != null ? this.condition : "POR DEFINIR"));
 
 		System.out.println(decoracion + "\n");
+	}
+	
+	
+	
+	
+	
+	public String toDetailedStringBrowse() {
+		return TextFormat.secondHandDetailedBrowser(super.toDetailedString(), this.itemType.toString(), conditionString());
+	}
+	
+	public String toDetailedStringOwner() {
+		return TextFormat.secondHandDetailedOwner(
+				super.toDetailedString(),
+				this.itemType.toString(),
+				(this.isAppraised) 	? conditionString() : "Por definir",
+				(this.isAppraised) 	? "SÍ" : "NO",
+				(this.isOffered) 	? "SÍ (Bloqueado)" : "NO (Disponible)");
+	}
+	
+	private String conditionString() {
+		return this.conditionString().toString();
 	}
 }

@@ -67,7 +67,7 @@ public class Review extends BaseElement implements java.io.Serializable{
             end = this.comment.length();
         }
 
-        sb.append(this.product.itemAuxPreview() + " | ");
+        sb.append(this.product.toShortString() + " | ");
         sb.append(this.rating + " | ");
 
         if(this.comment.length() <= end) {
