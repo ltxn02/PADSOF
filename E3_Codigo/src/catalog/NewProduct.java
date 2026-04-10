@@ -1,6 +1,7 @@
 package catalog;
 
 import java.util.ArrayList;
+import java.util.List;
 import utils.*;
 
 /**
@@ -221,5 +222,9 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
      */
     public void addedToCart() {
     	this.registerTime();
+    }
+    
+    protected List<String> stockString() {
+    	return List.of(Integer.toString(this.stock), Integer.toString(this.effectiveStock));
     }
 }

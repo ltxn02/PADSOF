@@ -157,7 +157,7 @@ public class CartItem implements java.io.Serializable{
 	 */
 	@Override
 	public String toString() {
-		return this.quantity + " x " + this.product.itemAuxPreview();
+		return this.quantity + " x " + this.product.toShortString();
 	}
 	
 	/**

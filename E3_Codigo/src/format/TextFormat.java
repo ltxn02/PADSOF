@@ -57,8 +57,16 @@ public class TextFormat {
 		return sb.toString();
 	}
 	
-	static String invalidOption(User user, int maxOptions) {
-		return "[!] Opción no válida. Por favor, introduce un número del 0 al " + maxOptions + ".";
+	private static String genericErrorMessage() {
+		return "[!] Opción no válida";
+	}
+	
+	static String genericErrorMessage(String str) {
+		return genericErrorMessage() + " " + str;
+	}
+	
+	static String invalidMenuOption(User user, int maxOptions) {
+		return genericErrorMessage() + " Por favor, introduce un número del 0 al " + maxOptions + ".";
 	}
 	
 	static String closeAppMessage() {
@@ -90,6 +98,8 @@ public class TextFormat {
 	// 	que lo necesiten para generar la visualización de productos.
 	// ==============================================================================
 	
+	// GENERIC ITEMS
+	
 	public static String itemShort(String name, double price) {
 		if(price == 0.0) {
 			return name + " (Sin valorar)";
@@ -113,7 +123,7 @@ public class TextFormat {
 	public static String itemDetailed(String name, String description, double price, List<String> categories) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("  " + itemShort(name, price) +  "\n");
+		sb.append("  " + itemShort(name.toUpperCase(), price) +  "\n");
 		sb.append("  > " + description.replace("\n", "\n    ") + "\n");
 		if(categories.isEmpty()) { sb.append("  Sin categorías\n"); }
 		else {
@@ -123,12 +133,22 @@ public class TextFormat {
 		return sb.toString();
 	}
 	
-	public static String secondHandDetailedBrowser(String name, String description, double price, List<String> categories, String condition) {
-		return itemDetailed(name, description, price, categories) + "\n  Condición: ";
+	// SECOND HAND PRODUCTS
+	
+	public static String secondHandDetailedBrowser(String itemString, String itemType, String condition) {
+		return itemString + "\n  Tipo de producto: " + itemType + "\n  Estado del producto: " + condition.toUpperCase();
 	}
 	
+	public static String secondHandDetailedOwner(String itemString, String itemType, String condition, String appraised, String offered) {
+		return secondHandDetailedBrowser(itemString, itemType, condition) + "\n\n  Tasado: " + appraised + "\n  En oferta: " + offered;
+	}
 	
-	static String visibleCatalogProducts(Catalog catalog) {
+	// NEW PRODUCTS EMPLOYEE
+	
+	// public static String newProductDetailEmployee(String itemString, List<String> stock) {}
+	
+	
+	/*static String visibleCatalogProducts(Catalog catalog) {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("--- CATÁLOGO DE PRODUCTOS ---\n");
@@ -137,5 +157,7 @@ public class TextFormat {
 		// a continuación del header.
 		
 		return sb.toString();
-	}
+	}*/
+	
+	
 }

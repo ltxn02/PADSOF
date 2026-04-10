@@ -338,7 +338,7 @@ public class MenuEmpleado {
         for (int i = 0; i < pendientes.size(); i++) {
             SecondHandProduct p = pendientes.get(i);
             System.out.println((i + 1) + ".- " + p.getName() + " | Subido por: " + p.getOwner().getUsername());
-            System.out.println("    Descripción del cliente: " + p.itemPreview());
+            System.out.println("    Descripción del cliente: " + p.toBriefString());
         }
 
         System.out.print("\nElige el número del producto a valorar (o 0 para volver): ");

@@ -14,6 +14,10 @@ public enum Condition {
 	DAÑADO;
 	
 	public String toString() {
-		return this.name();
+		return 	(this == PERFECTO) 		? "Perfecto" :
+				(this == MUY_BUENO) 	? "Muy bueno" :
+				(this == USO_LIGERO) 	? "Uso ligero" :
+				(this == USO_EVIDENTE)	? "Uso evidente" :
+				"Dañado";
 	}
 }

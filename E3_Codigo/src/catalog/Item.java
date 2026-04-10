@@ -23,7 +23,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
     private String description;
     private double price;
     private String picturePath;
-    private List<Category> categories;
+    private ArrayList<Category> categories;
     private Instant lastAddedAt;
 
     /**
@@ -36,7 +36,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      * @param categories  Lista de categorías a las que pertenece.
      * @throws IllegalArgumentException Si el precio introducido es negativo.
      */
-    public Item(String name, String description, double price, String picturePath, List<Category> categories) {
+    public Item(String name, String description, double price, String picturePath, ArrayList<Category> categories) {
         if (price < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
@@ -176,7 +176,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      *
      * @return Cadena multilínea con el nombre, descripción completa y sus categorías.
      */
-    public String itemInfo() {
+    public String toDetailedString() {
         return TextFormat.itemDetailed(name, description, price, categoriesList());
     }
 

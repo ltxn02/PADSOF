@@ -1,9 +1,8 @@
-package ui;
+package format;
 
 import java.util.Scanner;
 
 import transactions.ShoppingCart;
-import format.MenuBuilder;
 
 public class NewMain {
 	private static Scanner scanner = new Scanner(System.in);
@@ -40,7 +39,7 @@ public class NewMain {
 					// exitApp = true;
 					break;
 				default:
-					System.out.println(MenuBuilder.invalidOption(null));
+					System.out.println(MenuBuilder.invalidMenuOption(null));
 			}
 		}
 	}
