@@ -13,6 +13,7 @@ public enum Condition {
 	USO_EVIDENTE,
 	DAÑADO;
 	
+	@Override
 	public String toString() {
 		return 	(this == PERFECTO) 		? "Perfecto" :
 				(this == MUY_BUENO) 	? "Muy bueno" :

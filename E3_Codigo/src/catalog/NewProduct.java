@@ -224,7 +224,7 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
     	this.registerTime();
     }
     
-    protected List<String> stockString() {
+    protected List<String> stockStringList() {
     	return List.of(Integer.toString(this.stock), Integer.toString(this.effectiveStock));
     }
 }

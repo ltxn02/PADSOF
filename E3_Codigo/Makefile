@@ -10,8 +10,8 @@ MAIN = ui.main
 .PHONY: compile run test doc clean
 
 compile:
-	mkdir -p $(BIN_DIR)
-	$(JAVAC) -cp "$(LIB)" -d $(BIN_DIR) $(shell find $(SRC_DIR) -name "*.java")
+	@mkdir -p $(BIN_DIR)
+	@$(JAVAC) -cp "$(LIB)" -d $(BIN_DIR) $(shell find $(SRC_DIR) -name "*.java")
 
 run:
 	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN)
@@ -24,6 +24,12 @@ test: compile
 doc:
 	mkdir -p doc
 	javadoc -Xdoclint:none -d doc -sourcepath $(SRC_DIR) -cp "$(LIB)" -encoding utf8 -docencoding utf8 -charset utf8 $(shell find $(SRC_DIR) -name "*.java")
+
+text_demo: compile
+	@echo "================================"
+	@echo "  Ejecutando TextFormat Demo"
+	@echo "================================"
+	$(JAVA) -cp $(BIN_DIR) format.TextFormatDemo
 
 clean:
 	rm -rf $(BIN_DIR)/*
