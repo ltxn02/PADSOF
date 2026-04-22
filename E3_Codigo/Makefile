@@ -17,6 +17,7 @@ run:
 	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN)
 
 # Nuevo comando para ejecutar los tests en JUnit 5 Standalone
+# 		make test CLASS=tests.<nombreArchivoTest>
 test: compile
 	$(JAVA) -cp "$(BIN_DIR):$(LIB)" org.junit.platform.console.ConsoleLauncher -c $(CLASS)
 
