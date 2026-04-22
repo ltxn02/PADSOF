@@ -1,0 +1,351 @@
+.
+├── Makefile
+├── diagramaClases.pdf
+├── diagramaClases.uxf
+├── diagramaClases2.pdf
+├── diagramaClases2.uxf
+├── doc
+│   ├── AgeRange.html
+│   ├── BaseElement.html
+│   ├── CartItem.html
+│   ├── Category.html
+│   ├── Client.html
+│   ├── Comic.html
+│   ├── Condition.html
+│   ├── Discount.html
+│   ├── Employee.html
+│   ├── EmployeeRoles.html
+│   ├── Exchange.html
+│   ├── ExchangeHistoric.html
+│   ├── ExchangeStatus.html
+│   ├── Exchangeoffer.html
+│   ├── Figurine.html
+│   ├── Game.html
+│   ├── Guest.html
+│   ├── Item.html
+│   ├── ItemType.html
+│   ├── Main.html
+│   ├── Manager.html
+│   ├── NewProduct.html
+│   ├── Notification.html
+│   ├── Order.html
+│   ├── OrderHistoric.html
+│   ├── OrderStatus.html
+│   ├── Permission.html
+│   ├── Product.html
+│   ├── RegisteredUser.html
+│   ├── Review.html
+│   ├── SecondHandProduct.html
+│   ├── ShoppingCart.html
+│   ├── Staff.html
+│   ├── User.html
+│   ├── allclasses-index.html
+│   ├── allpackages-index.html
+│   ├── catalog
+│   │   ├── Catalog.html
+│   │   ├── Category.html
+│   │   ├── Comic.html
+│   │   ├── Figurine.html
+│   │   ├── Game.html
+│   │   ├── Item.html
+│   │   ├── NewProduct.html
+│   │   ├── Pack.html
+│   │   ├── Product.html
+│   │   ├── SecondHandProduct.html
+│   │   ├── package-summary.html
+│   │   └── package-tree.html
+│   ├── copy.svg
+│   ├── discounts
+│   │   ├── Discount.html
+│   │   ├── FixedAmountDiscount.html
+│   │   ├── GiftDiscount.html
+│   │   ├── ICantidad.html
+│   │   ├── IDiscount.html
+│   │   ├── IDiscountFactory.html
+│   │   ├── IRebaja.html
+│   │   ├── IRegalo.html
+│   │   ├── IVolumen.html
+│   │   ├── PercentageDiscount.html
+│   │   ├── QuantityDiscount.html
+│   │   ├── StandardDiscountFactory.html
+│   │   ├── VolumeDiscount.html
+│   │   ├── package-summary.html
+│   │   └── package-tree.html
+│   ├── element-list
+│   ├── help-doc.html
+│   ├── index-all.html
+│   ├── index.html
+│   ├── legal
+│   │   ├── ASSEMBLY_EXCEPTION
+│   │   ├── COPYRIGHT
+│   │   ├── LICENSE
+│   │   ├── dejavufonts.md
+│   │   ├── jquery.md
+│   │   └── jqueryUI.md
+│   ├── link.svg
+│   ├── logic
+│   │   ├── Application.html
+│   │   ├── SistemaRecomendaciones.html
+│   │   ├── SistemaRecomendacionesSegundamano.html
+│   │   ├── StoreStatistics.html
+│   │   ├── package-summary.html
+│   │   └── package-tree.html
+│   ├── member-search-index.js
+│   ├── module-search-index.js
+│   ├── overview-summary.html
+│   ├── overview-tree.html
+│   ├── package-search-index.js
+│   ├── package-summary.html
+│   ├── package-tree.html
+│   ├── resource-files
+│   │   ├── copy.svg
+│   │   ├── fonts
+│   │   │   ├── DejaVuLGCSans-Bold.woff
+│   │   │   ├── DejaVuLGCSans-Bold.woff2
+│   │   │   ├── DejaVuLGCSans-BoldOblique.woff
+│   │   │   ├── DejaVuLGCSans-BoldOblique.woff2
+│   │   │   ├── DejaVuLGCSans-Oblique.woff
+│   │   │   ├── DejaVuLGCSans-Oblique.woff2
+│   │   │   ├── DejaVuLGCSans.woff
+│   │   │   ├── DejaVuLGCSans.woff2
+│   │   │   ├── DejaVuLGCSansMono-Bold.woff
+│   │   │   ├── DejaVuLGCSansMono-Bold.woff2
+│   │   │   ├── DejaVuLGCSansMono-BoldOblique.woff
+│   │   │   ├── DejaVuLGCSansMono-BoldOblique.woff2
+│   │   │   ├── DejaVuLGCSansMono-Oblique.woff
+│   │   │   ├── DejaVuLGCSansMono-Oblique.woff2
+│   │   │   ├── DejaVuLGCSansMono.woff
+│   │   │   ├── DejaVuLGCSansMono.woff2
+│   │   │   ├── DejaVuLGCSerif-Bold.woff
+│   │   │   ├── DejaVuLGCSerif-Bold.woff2
+│   │   │   ├── DejaVuLGCSerif-BoldItalic.woff
+│   │   │   ├── DejaVuLGCSerif-BoldItalic.woff2
+│   │   │   ├── DejaVuLGCSerif-Italic.woff
+│   │   │   ├── DejaVuLGCSerif-Italic.woff2
+│   │   │   ├── DejaVuLGCSerif.woff
+│   │   │   ├── DejaVuLGCSerif.woff2
+│   │   │   └── dejavu.css
+│   │   ├── glass.svg
+│   │   ├── jquery-ui.min.css
+│   │   ├── left.svg
+│   │   ├── link.svg
+│   │   ├── right.svg
+│   │   ├── stylesheet.css
+│   │   └── x.svg
+│   ├── resources
+│   │   ├── glass.png
+│   │   └── x.png
+│   ├── script-dir
+│   │   ├── jquery-3.7.1.min.js
+│   │   ├── jquery-ui.min.css
+│   │   └── jquery-ui.min.js
+│   ├── script-files
+│   │   ├── jquery-3.7.1.min.js
+│   │   ├── jquery-ui.min.js
+│   │   ├── script.js
+│   │   ├── search-page.js
+│   │   └── search.js
+│   ├── script.js
+│   ├── search-page.js
+│   ├── search.html
+│   ├── search.js
+│   ├── serialized-form.html
+│   ├── stylesheet.css
+│   ├── tag-search-index.js
+│   ├── tests
+│   │   ├── CartItemTest.html
+│   │   ├── CatalogTest.html
+│   │   ├── CategoryTest.html
+│   │   ├── ClientTest.html
+│   │   ├── ComicTest.html
+│   │   ├── DiscountTest.html
+│   │   ├── EmployeeTest.html
+│   │   ├── ExchangeHistoricTest.html
+│   │   ├── ExchangeOfferTest.html
+│   │   ├── ExchangeTest.html
+│   │   ├── FigurineTest.html
+│   │   ├── GameTest.html
+│   │   ├── GiftDiscountTest.html
+│   │   ├── GuestTest.html
+│   │   ├── ItemTest.html
+│   │   ├── MainDescuentos.html
+│   │   ├── ManagerTest.html
+│   │   ├── NewProductTest.html
+│   │   ├── PackTest.html
+│   │   ├── PercentageDiscountTest.html
+│   │   ├── ProductTest.html
+│   │   ├── PruebaIntercambioCompleto.html
+│   │   ├── QuantityDiscountTest.html
+│   │   ├── RegisteredUserTest.html
+│   │   ├── SecondHandProductTest.html
+│   │   ├── ShoppingCartTest.html
+│   │   ├── SistemaRecomendacionesSegundamanoTest.html
+│   │   ├── SistemaRecomendacionesTest.html
+│   │   ├── StaffTest.html
+│   │   ├── StandardDiscountFactoryTest.html
+│   │   ├── StoreStatisticsTest.html
+│   │   ├── UserTest.html
+│   │   ├── VolumeDiscountTest.html
+│   │   ├── package-summary.html
+│   │   ├── package-tree.html
+│   │   └── test_intercambios.html
+│   ├── transactions
+│   │   ├── Exchange.html
+│   │   ├── ExchangeHistoric.html
+│   │   ├── ExchangeOffer.html
+│   │   ├── Order.html
+│   │   ├── OrderHistoric.html
+│   │   ├── ShoppingCart.html
+│   │   ├── package-summary.html
+│   │   └── package-tree.html
+│   ├── type-search-index.js
+│   ├── ui
+│   │   ├── MenuCliente.html
+│   │   ├── MenuEmpleado.html
+│   │   ├── MenuGestor.html
+│   │   ├── main.html
+│   │   ├── package-summary.html
+│   │   └── package-tree.html
+│   ├── users
+│   │   ├── Client.html
+│   │   ├── Employee.html
+│   │   ├── Guest.html
+│   │   ├── Manager.html
+│   │   ├── RegisteredUser.html
+│   │   ├── Staff.html
+│   │   ├── User.html
+│   │   ├── package-summary.html
+│   │   └── package-tree.html
+│   └── utils
+│       ├── AgeRange.html
+│       ├── BaseElement.html
+│       ├── CartItem.html
+│       ├── Condition.html
+│       ├── EmployeeRoles.html
+│       ├── ExchangeOfferStatus.html
+│       ├── ExchangeStatus.html
+│       ├── ItemType.html
+│       ├── Notification.html
+│       ├── OrderStatus.html
+│       ├── Permission.html
+│       ├── Review.html
+│       ├── package-summary.html
+│       └── package-tree.html
+├── fileLoadBulkTest
+├── lib
+│   ├── TeleChargeAndPaySystem8.jar
+│   ├── junit-platform-console-standalone-1.9.2.jar
+│   └── junit-platform-console-standalone-1.9.2.jar:Zone.Identifier
+├── lidia
+│   └── ValidationUtils.java
+├── rongero_data.dat
+├── src
+│   ├── catalog
+│   │   ├── Catalog.java
+│   │   ├── Category.java
+│   │   ├── Comic.java
+│   │   ├── Figurine.java
+│   │   ├── Game.java
+│   │   ├── Item.java
+│   │   ├── NewProduct.java
+│   │   ├── Pack.java
+│   │   ├── Product.java
+│   │   └── SecondHandProduct.java
+│   ├── discounts
+│   │   ├── Discount.java
+│   │   ├── FixedAmountDiscount.java
+│   │   ├── GiftDiscount.java
+│   │   ├── ICantidad.java
+│   │   ├── IDiscount.java
+│   │   ├── IDiscountFactory.java
+│   │   ├── IRebaja.java
+│   │   ├── IRegalo.java
+│   │   ├── IVolumen.java
+│   │   ├── PercentageDiscount.java
+│   │   ├── QuantityDiscount.java
+│   │   ├── StandardDiscountFactory.java
+│   │   └── VolumeDiscount.java
+│   ├── format
+│   │   ├── ClientMenu.java
+│   │   ├── MenuBuilder.java
+│   │   ├── MenuOptions.java
+│   │   ├── NewMain.java
+│   │   └── TextFormat.java
+│   ├── logic
+│   │   ├── Application.java
+│   │   ├── SistemaRecomendaciones.java
+│   │   ├── SistemaRecomendacionesSegundamano.java
+│   │   └── StoreStatistics.java
+│   ├── swing
+│   │   └── VentanaLogin.java
+│   ├── tests
+│   │   ├── CartItemTest.java
+│   │   ├── CatalogTest.java
+│   │   ├── CategoryTest.java
+│   │   ├── ClientTest.java
+│   │   ├── ComicTest.java
+│   │   ├── DiscountTest.java
+│   │   ├── EmployeeTest.java
+│   │   ├── ExchangeHistoricTest.java
+│   │   ├── ExchangeOfferTest.java
+│   │   ├── ExchangeTest.java
+│   │   ├── FigurineTest.java
+│   │   ├── GameTest.java
+│   │   ├── GiftDiscountTest.java
+│   │   ├── GuestTest.java
+│   │   ├── ItemTest.java
+│   │   ├── MainDescuentos.java
+│   │   ├── ManagerTest.java
+│   │   ├── NewProductTest.java
+│   │   ├── PackTest.java
+│   │   ├── PercentageDiscountTest.java
+│   │   ├── ProductTest.java
+│   │   ├── PruebaIntercambioCompleto.java
+│   │   ├── QuantityDiscountTest.java
+│   │   ├── RegisteredUserTest.java
+│   │   ├── SecondHandProductTest.java
+│   │   ├── ShoppingCartTest.java
+│   │   ├── SistemaRecomendacionesSegundamanoTest.java
+│   │   ├── SistemaRecomendacionesTest.java
+│   │   ├── StaffTest.java
+│   │   ├── StandardDiscountFactoryTest.java
+│   │   ├── StoreStatisticsTest.java
+│   │   ├── UserTest.java
+│   │   ├── VolumeDiscountTest.java
+│   │   └── test_intercambios.java
+│   ├── transactions
+│   │   ├── Exchange.java
+│   │   ├── ExchangeHistoric.java
+│   │   ├── ExchangeOffer.java
+│   │   ├── Order.java
+│   │   ├── OrderHistoric.java
+│   │   └── ShoppingCart.java
+│   ├── ui
+│   │   ├── Main.java
+│   │   ├── MenuCliente.java
+│   │   ├── MenuEmpleado.java
+│   │   └── MenuGestor.java
+│   ├── users
+│   │   ├── Client.java
+│   │   ├── Employee.java
+│   │   ├── Guest.java
+│   │   ├── Manager.java
+│   │   ├── RegisteredUser.java
+│   │   ├── Staff.java
+│   │   └── User.java
+│   └── utils
+│       ├── AgeRange.java
+│       ├── BaseElement.java
+│       ├── CartItem.java
+│       ├── Condition.java
+│       ├── EmployeeRoles.java
+│       ├── ExchangeOfferStatus.java
+│       ├── ExchangeStatus.java
+│       ├── ItemType.java
+│       ├── Notification.java
+│       ├── OrderStatus.java
+│       ├── Permission.java
+│       └── Review.java
+└── tree.txt
+
+29 directories, 320 files

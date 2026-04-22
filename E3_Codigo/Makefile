@@ -4,20 +4,28 @@ SRC_DIR = src
 BIN_DIR = bin
 # Al poner lib/* cogerá tanto la pasarela de pago como JUnit
 LIB = lib/*
-MAIN = ui.main
+
+# Tus dos puntos de entrada (Consola y GUI)
+MAIN_CONSOLA = ui.main
+MAIN_GUI = gui.VentanaPrincipal
 
 # Esta línea mágica le dice a Make que estos nombres son COMANDOS, no carpetas
-.PHONY: compile run test doc clean
+.PHONY: compile run run-gui test doc clean
 
 compile:
 	mkdir -p $(BIN_DIR)
 	$(JAVAC) -cp "$(LIB)" -d $(BIN_DIR) $(shell find $(SRC_DIR) -name "*.java")
 
-run:
-	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN)
+# Comando para ejecutar la consola antigua
+run: compile
+	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN_CONSOLA)
 
-# Nuevo comando para ejecutar los tests en JUnit 5 Standalone
-# 		make test CLASS=tests.<nombreArchivoTest>
+# Comando NUEVO para ejecutar la interfaz gráfica con Swing
+run-gui: compile
+	$(JAVA) -cp "$(BIN_DIR):$(LIB)" $(MAIN_GUI)
+
+# Comando para ejecutar los tests en JUnit 5 Standalone
+#      make test CLASS=tests.<nombreArchivoTest>
 test: compile
 	$(JAVA) -cp "$(BIN_DIR):$(LIB)" org.junit.platform.console.ConsoleLauncher -c $(CLASS)
 

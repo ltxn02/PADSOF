@@ -1,6 +1,7 @@
 package swing.view;
 import javax.swing.*;
 import java.awt.*;
+
 public class login extends JFrame {
     public VentanaLogin() {
         setTitle("Rongero - Inicio de Sesión");
