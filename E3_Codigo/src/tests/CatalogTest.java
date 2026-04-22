@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import catalog.*;
 import utils.*;
 import discounts.*;
+import products.*;
+import products.catalog.Catalog;
+import products.catalog.Category;
 
 /**
  * Clase de pruebas unitarias para la clase {@link Catalog}.

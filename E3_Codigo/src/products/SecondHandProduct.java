@@ -1,4 +1,4 @@
-package catalog;
+package products;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import users.Employee;
 import utils.*;
 import users.Client;
 import format.TextFormat;
+import products.catalog.Category;
 
 /**
  * Clase que representa un producto de segunda mano (Second Hand) dentro del catálogo.

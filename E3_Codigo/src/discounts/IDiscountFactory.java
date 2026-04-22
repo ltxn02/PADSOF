@@ -1,6 +1,6 @@
 package discounts;
 
-import catalog.Item;
+import products.Item;
 
 /**
  * Interfaz que define la factoría abstracta para la creación centralizada de descuentos.

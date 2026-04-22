@@ -1,8 +1,9 @@
 package ui;
 
 import users.*;
-import catalog.*;
 import logic.*;
+import products.*;
+import products.catalog.Category;
 import discounts.*;
 import java.util.ArrayList;
 import java.util.Scanner;

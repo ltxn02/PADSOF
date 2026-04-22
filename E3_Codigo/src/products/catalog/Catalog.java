@@ -1,7 +1,13 @@
-package catalog;
+package products.catalog;
 import java.util.*;
 import utils.*;
 import discounts.*;
+import products.Comic;
+import products.Figurine;
+import products.Game;
+import products.Item;
+import products.NewProduct;
+import products.Pack;
 
 /**
  * Clase que gestiona el catálogo completo de productos de la tienda.
@@ -12,7 +18,7 @@ import discounts.*;
 public class Catalog {
 	private List<Category> categories;
 	private List<AgeRange> ageRanges;
-	private List<NewProduct> productsOnSale;
+	private List<Item> products;
 	private Map<AgeRange, List<Game>> gamesByAge;
 	
 	/**
@@ -25,10 +31,10 @@ public class Catalog {
 	 * @param ageRanges    Lista de {@link AgeRange} existentes. Si es nulo, se ignora.
 	 * @param products     Lista de {@link NewProduct} existentes. Si es nulo, se ignora.
 	 */
-	public Catalog(ArrayList<Category> categories, ArrayList<AgeRange> ageRanges, ArrayList<NewProduct> products) {
+	public Catalog(ArrayList<Category> categories, ArrayList<AgeRange> ageRanges, ArrayList<Item> products) {
 		this.categories = categories;
 		this.ageRanges = ageRanges;
-		this.productsOnSale = products;
+		this.products = products;
 		this.gamesByAge = new HashMap<>();
 	}
 	
@@ -40,7 +46,30 @@ public class Catalog {
 	 * y {@link #addAgeRange(int, int)}.
 	 */
 	public Catalog() {
-		this(new ArrayList<Category>(), new ArrayList<AgeRange>(), new ArrayList<NewProduct>());
+		this(new ArrayList<Category>(), new ArrayList<AgeRange>(), new ArrayList<Item>());
+	}
+	
+	public void addCategory(String name, List<Item> products) throws IllegalArgumentException {
+		if(name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("New category must have a name");
+		}
+		
+		Category c = this.categoryExists(name);
+		
+		if(c == null) {
+			this.categories.add(new Category(name, products));
+		} else {
+			for(Item item: products) {
+				c.addItem(item);
+			}
+		}
+	}
+	
+	private Category categoryExists(String name) {
+		for(Category c: this.categories) {
+			if(c.isNamed(name)) { return c; }
+		}
+		return null;
 	}
 	
 	/**
@@ -84,7 +113,7 @@ public class Catalog {
 	 * de edad. Esto optimiza las búsquedas posteriores por edad.
 	 */
 	public void organiseGamesByAgeRange() {
-		for(NewProduct p: this.productsOnSale) {
+		for(Item p: this.products) {
 			if(p instanceof Game) {
 				this.organiseGame((Game)p);
 			}
@@ -122,7 +151,7 @@ public class Catalog {
 						@SuppressWarnings("unchecked")
 		                ArrayList<String> authors = (ArrayList<String>) data.get("writtenBy");
 						
-						this.productsOnSale.add(new Comic(
+						this.products.add(new Comic(
 								name, description, price, picturePath, stock, categories, reviews, discount,
 								(Integer) data.get("nPages"),
 								(String) data.get("publisher"),
@@ -134,14 +163,14 @@ public class Catalog {
 						@SuppressWarnings("unchecked")
 		                ArrayList<String> mechanics = (ArrayList<String>) data.get("mechanics");
 						
-						this.productsOnSale.add(new Game(
+						this.products.add(new Game(
 								name, description, price, picturePath, stock, categories, reviews, discount,
 								(Integer) data.get("nPlayers"), mechanics,
 								(AgeRange) data.get("ageRange")));
 						break;
 					}
 					case FIGURINE: {
-						this.productsOnSale.add(new Figurine(
+						this.products.add(new Figurine(
 								name, description, price, picturePath, stock, categories, reviews, discount,
 								(Double) data.get("height"),
 								(Double) data.get("width"),
@@ -154,7 +183,7 @@ public class Catalog {
 						@SuppressWarnings("unchecked")
 		                ArrayList<NewProduct> products = (ArrayList<NewProduct>) data.get("products");
 						
-						this.productsOnSale.add(new Pack(
+						this.products.add(new Pack(
 								name, description, price, picturePath, stock, categories, reviews, products));
 						break;
 					}
@@ -206,9 +235,9 @@ public class Catalog {
 	 * @return Una lista de {@link NewProduct} que están marcados como activos.
 	 *         Si no hay productos visibles, retorna una lista vacía.
 	 */
-	public List<NewProduct> visibleProducts() {
-		List<NewProduct> products = new ArrayList<>();
-		for(NewProduct p: this.productsOnSale) {
+	public List<Item> visibleProducts() {
+		List<Item> products = new ArrayList<>();
+		for(Item p: this.products) {
 			if(p.isActive() == true) {
 				products.add(p);
 			}
@@ -225,8 +254,8 @@ public class Catalog {
 	 * @return Una lista de {@link NewProduct} con todos los productos sin restricciones.
 	 *         Si el catálogo está vacío, retorna una lista vacía.
 	 */
-	public List<NewProduct> allProducts() {
-		return this.productsOnSale;
+	public List<Item> allProducts() {
+		return this.products;
 	}
 	
 	/**
@@ -239,9 +268,9 @@ public class Catalog {
 	 *         y están activos en el catálogo.
 	 *         Si no hay coincidencias, retorna una lista vacía.
 	 */
-	public List<NewProduct> searchProducts(String str) {
-		List<NewProduct> products = new ArrayList<>();
-		for (NewProduct p: this.productsOnSale) {
+	public List<Item> searchProducts(String str) {
+		List<Item> products = new ArrayList<>();
+		for (NewProduct p: this.products) {
 			if(p.contains(str) == true && p.isActive() == true) {
 				products.add(p);
 			}
@@ -353,8 +382,8 @@ public class Catalog {
 	 * 
 	 * @return El {@link NewProduct} encontrado, o {@code null} si no existe.
 	 */
-	private NewProduct productNamed(String name) {
-		for(NewProduct p: this.productsOnSale) {
+	private Item productNamed(String name) {
+		for(Item p: this.products) {
 			if(p.isNamed(name)) {
 				return p;
 			}

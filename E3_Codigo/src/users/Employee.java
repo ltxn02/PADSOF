@@ -4,8 +4,9 @@ import java.util.*;
 import java.io.*;
 import utils.*;
 import transactions.*;
-import catalog.*;
 import discounts.*;
+import products.*;
+import products.catalog.Catalog;
 
 /**
  * Clase que representa a un Empleado (Employee) del sistema de la tienda.

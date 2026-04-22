@@ -5,9 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
-import catalog.*;
 import utils.*;
 import discounts.*;
+import products.*;
+import products.catalog.Category;
 
 public class FigurineTest {
 

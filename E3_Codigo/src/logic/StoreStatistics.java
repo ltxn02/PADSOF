@@ -1,8 +1,9 @@
 package logic;
 
 import java.util.*;
+
+import products.*;
 import users.*;
-import catalog.*;
 import transactions.*;
 import utils.CartItem;
 

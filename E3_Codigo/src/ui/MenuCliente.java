@@ -1,9 +1,9 @@
 package ui;
 
 import users.*;
-import catalog.*;
 import transactions.*;
 import logic.*;
+import products.*;
 import utils.*;
 import discounts.*;
 import java.util.ArrayList;

@@ -1,8 +1,9 @@
 package discounts;
 
-import catalog.*;
 import transactions.ShoppingCart;
 import java.time.LocalDateTime;
+
+import products.*;
 
 /**
  * Clase que representa una promoción de tipo regalo.

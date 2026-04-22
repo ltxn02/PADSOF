@@ -1,8 +1,8 @@
 package transactions;
 
 import utils.*;
+import products.*;
 import users.*;
-import catalog.*;
 
 /**
  * Clase que representa la ejecución física y administrativa de un intercambio de productos.

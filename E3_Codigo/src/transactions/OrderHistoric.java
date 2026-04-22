@@ -1,9 +1,10 @@
 package transactions;
 import utils.*;
 import users.*;
-import catalog.*;
 
 import java.util.ArrayList;
+
+import products.*;
 
 public class OrderHistoric implements java.io.Serializable{
     private ArrayList<Order> orders;

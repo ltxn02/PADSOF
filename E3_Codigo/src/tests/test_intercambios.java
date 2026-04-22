@@ -1,10 +1,11 @@
 package tests;
 import utils.*;
 import users.*;
-import catalog.*;
 import transactions.*;
 import java.time.Duration;
 import java.util.ArrayList;
+
+import products.*;
 
 public class test_intercambios {
 

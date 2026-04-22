@@ -1,4 +1,4 @@
-package catalog;
+package products;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import utils.*;
 import format.TextFormat;
+import products.catalog.Category;
 
 /**
  * Clase abstracta que representa un artículo base (Item) dentro de la tienda.

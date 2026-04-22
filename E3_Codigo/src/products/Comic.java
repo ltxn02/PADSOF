@@ -1,8 +1,9 @@
-package catalog;
+package products;
 
 import java.util.ArrayList;
 import utils.*;
 import discounts.*;
+import products.catalog.Category;
 
 /**
  * Clase que representa un cómic o manga (Comic) dentro del catálogo de productos.

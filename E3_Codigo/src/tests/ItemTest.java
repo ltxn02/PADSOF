@@ -4,10 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import products.*;
+import products.catalog.Category;
+
 import java.time.Duration;
 import java.util.ArrayList;
-
-import catalog.*;
 
 public class ItemTest {
 

@@ -4,9 +4,9 @@ import java.time.Instant;
 import java.util.*;
 import java.util.Random;
 import es.uam.eps.padsof.telecard.*;
+import products.*;
 import utils.*;
 import users.*;
-import catalog.*;
 
 public class Order implements java.io.Serializable{
     private static int lastOrderId = 1;

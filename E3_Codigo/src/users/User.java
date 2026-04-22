@@ -1,7 +1,10 @@
 package users;
 import utils.*;
-import catalog.*;
+
 import java.util.*;
+
+import products.*;
+import products.catalog.Catalog;
 
 /**
  * Clase abstracta que representa un usuario base del sistema.

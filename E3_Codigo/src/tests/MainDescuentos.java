@@ -1,8 +1,8 @@
 package tests;
 import  utils.*;
-
-import catalog.*;
 import discounts.*;
+import products.*;
+import products.catalog.Category;
 import transactions.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

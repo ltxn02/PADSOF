@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import discounts.*;
-import catalog.*;
+import products.*;
+import products.catalog.Category;
 
 public class StandardDiscountFactoryTest {
 

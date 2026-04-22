@@ -5,8 +5,8 @@ import java.time.*;
 import java.util.concurrent.*;
 import utils.*;
 import users.*;
-import catalog.*;
 import discounts.*;
+import products.*;
 
 /**
  * Clase que representa el carrito de compras persistente de un cliente.
@@ -39,7 +39,7 @@ public class ShoppingCart implements java.io.Serializable{
 	private List<CartItem> cartItems;
 	private static Duration timeOnHold = Duration.ofHours(48);
 	private List<discounts.IVolumen> globalDiscounts;
-	private List<catalog.Item> gifts;
+	private List<products.Item> gifts;
 	
 	/**
 	 * Servicio ejecutor para la limpieza automática de items expirados.
@@ -212,7 +212,7 @@ public class ShoppingCart implements java.io.Serializable{
 		}
 
 		if (this.gifts != null && !this.gifts.isEmpty()) {
-			for (catalog.Item gift : this.gifts) {
+			for (products.Item gift : this.gifts) {
 				sb.append("  1 x " + gift.getName() + " (0,00 €) [REGALO]\n");
 			}
 		}
@@ -315,7 +315,7 @@ public class ShoppingCart implements java.io.Serializable{
 	 * @return Un {@code List<Item>} con los artículos regalados.
 	 *         Puede estar vacía si no hay regalos.
 	 */
-	public List<catalog.Item> getGifts() {
+	public List<products.Item> getGifts() {
 		return this.gifts;
 	}
 	
@@ -324,7 +324,7 @@ public class ShoppingCart implements java.io.Serializable{
 	 * 
 	 * @param item El artículo ({@link Item}) a añadir como regalo.
 	 */
-	public void addGift(catalog.Item item) {
+	public void addGift(products.Item item) {
 		if (item != null && !this.gifts.contains(item)) {
 			this.gifts.add(item);
 		}

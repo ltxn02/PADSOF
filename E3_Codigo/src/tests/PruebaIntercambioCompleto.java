@@ -5,10 +5,11 @@
  */
 package tests;
 import users.*;
-import catalog.*;
 import transactions.*;
 import utils.*;
 import java.util.ArrayList;
+
+import products.*;
 public class PruebaIntercambioCompleto {
 
     public static void main(String[] args) {

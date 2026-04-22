@@ -3,11 +3,14 @@ package tests;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import products.*;
+import products.catalog.Category;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import users.*;
-import catalog.*;
 import transactions.*;
 import utils.*;
 

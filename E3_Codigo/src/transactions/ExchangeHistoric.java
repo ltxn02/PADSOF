@@ -2,9 +2,10 @@ package transactions;
 
 import utils.*;
 import users.*;
-import catalog.*;
 
 import java.util.ArrayList;
+
+import products.*;
 
 /**
  * Clase que representa el registro histórico de intercambios de un usuario o del sistema.

@@ -3,9 +3,10 @@ package utils;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+
+import products.*;
 import users.*;
 import transactions.*;
-import catalog.*;
 
 public class Review extends BaseElement implements java.io.Serializable{
     private static int lastReviewId = 1;

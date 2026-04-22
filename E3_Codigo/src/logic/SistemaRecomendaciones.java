@@ -1,9 +1,11 @@
 package logic;
 
 import java.util.*;
+
+import products.*;
+import products.catalog.Category;
 import utils.*;
 import users.*;
-import catalog.*;
 import transactions.*;
 
 /**

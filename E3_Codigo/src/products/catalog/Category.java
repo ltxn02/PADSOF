@@ -1,5 +1,10 @@
-package catalog;
+package products.catalog;
 import java.util.ArrayList;
+import java.util.List;
+
+import products.Item;
+import products.NewProduct;
+import products.SecondHandProduct;
 import utils.*;
 
 /**
@@ -12,10 +17,9 @@ import utils.*;
  * @author Iván Sánchez
  * @version 1.4
  */
-public class Category extends BaseElement implements java.io.Serializable {
+public class Category<T extends Item> extends BaseElement implements java.io.Serializable {
     private String name;
-    private ArrayList<NewProduct> newProductItems;
-    private ArrayList<SecondHandProduct> secondHandItems;
+    private List<T> items;
 
     /**
      * Constructor para inicializar una categoría e insertar una lista inicial de artículos.
@@ -23,15 +27,9 @@ public class Category extends BaseElement implements java.io.Serializable {
      * @param name  Nombre de la categoría (ej: "Juegos de Mesa", "Cómics Manga").
      * @param items Lista inicial de artículos ({@link Item}) que se clasificarán automáticamente.
      */
-    public Category(String name, ArrayList<Item> items) {
+    public Category(String name, ArrayList<T> items) {
         this.name = name;
-        // Inicializamos las listas para evitar NullPointerExceptions
-        this.newProductItems = new ArrayList<>();
-        this.secondHandItems = new ArrayList<>();
-
-        for(Item item: items) {
-            this.addItem(item);
-        }
+        this.items = items != null ? items : new ArrayList<>();
     }
 
     /**
@@ -40,9 +38,7 @@ public class Category extends BaseElement implements java.io.Serializable {
      * @param name Nombre de la nueva categoría.
      */
     public Category(String name) {
-        this.name = name;
-        this.newProductItems = new ArrayList<>();
-        this.secondHandItems = new ArrayList<>(); // Corregido: inicialización que faltaba
+        this(name, null);
     }
 
     /**
@@ -53,17 +49,57 @@ public class Category extends BaseElement implements java.io.Serializable {
      * @param item El artículo ({@link Item}) a añadir.
      * @throws IllegalArgumentException Si el artículo ya existe previamente en esta categoría.
      */
-    public void addItem(Item item) throws IllegalArgumentException {
-        if(this.newProductItems.contains(item) || this.secondHandItems.contains(item)) {
-            throw new IllegalArgumentException("Item already exists in " + this.name);
-        }
-
-        if(item instanceof NewProduct) {
-            this.newProductItems.add((NewProduct)item);
-        } else if (item instanceof SecondHandProduct) {
-            this.secondHandItems.add((SecondHandProduct)item);
+    public void addItem(T item) {							// Override este metodo (??)
+        if (item != null && !this.items.contains(item)) {
+            this.items.add(item);
+        } else if (item instanceof NewProduct) {
+        	(NewProduct)item.
         }
     }
+    
+    public void addItems(List<T> newItems) {
+        if (newItems != null) {
+            for (T item : newItems) {
+                this.addItem(item);
+            }
+        }
+    }
+    
+    public void removeItem(T item) {
+        this.items.remove(item);
+    }
+    
+    public int getItemCount() {
+        return this.items.size();
+    }
+    
+    public boolean isEmpty() {
+        return this.items.isEmpty();
+    }
+    
+    public void clear() {
+        this.items.clear();
+    }
+    
+    public boolean contains(T item) {
+        return this.items.contains(item);
+    }
+    
+    public T getItem(String name) {
+    	for(T item : this.items) {
+    		if(item.isNamed(name)) {
+    			return item;
+    		}
+    	}
+    	return null;
+    }
+    
+    /*public T getItem(int index) {
+        if (index >= 0 && index < this.items.size()) {
+            return this.items.get(index);
+        }
+        return null;
+    }*/
 
     /**
      * Obtiene el nombre actual de la categoría.
@@ -71,7 +107,7 @@ public class Category extends BaseElement implements java.io.Serializable {
      * @return El nombre de la categoría en formato texto.
      */
     public String getNameCategory() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -79,7 +115,11 @@ public class Category extends BaseElement implements java.io.Serializable {
      *
      * @param name El nuevo nombre que se le quiere asignar.
      */
-    public void rename(String name) {
+    public void setNameCategory(String name) {
         this.name = name;
+    }
+    
+    public boolean isNamed(String name) {
+    	return this.name.equalsIgnoreCase(name);
     }
 }

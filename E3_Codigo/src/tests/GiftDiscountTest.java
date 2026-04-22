@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import discounts.GiftDiscount;
-import catalog.*;
+import products.*;
+import products.catalog.Category;
 import transactions.ShoppingCart;
 
 public class GiftDiscountTest {

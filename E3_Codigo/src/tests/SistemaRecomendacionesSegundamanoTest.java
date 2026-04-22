@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import logic.SistemaRecomendacionesSegundamano;
-import catalog.*;
+import products.*;
+import products.catalog.Category;
 import users.*;
 import utils.*;
 

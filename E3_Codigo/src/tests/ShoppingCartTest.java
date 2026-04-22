@@ -6,10 +6,12 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import catalog.*;
 import transactions.*;
 import utils.*;
 import discounts.*;
+import products.*;
+import products.catalog.Category;
+
 import java.time.LocalDateTime;
 
 /**

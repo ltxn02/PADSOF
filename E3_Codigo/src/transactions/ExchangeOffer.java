@@ -4,9 +4,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import products.*;
 import utils.*;
 import users.*;
-import catalog.*;
 
 /**
  * Clase que representa una propuesta formal de trueque entre dos clientes.

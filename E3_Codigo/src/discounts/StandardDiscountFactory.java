@@ -1,7 +1,8 @@
 package discounts;
 
 import java.time.LocalDateTime;
-import catalog.Item;
+
+import products.Item;
 
 /**
  * Implementación estándar de la factoría de descuentos del sistema.

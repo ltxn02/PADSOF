@@ -1,6 +1,8 @@
-package catalog;
+package products;
 
 import java.util.ArrayList;
+
+import products.catalog.Category;
 import utils.*;
 
 /**

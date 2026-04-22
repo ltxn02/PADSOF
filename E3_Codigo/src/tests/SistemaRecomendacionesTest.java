@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logic.SistemaRecomendaciones;
-import catalog.*;
+import products.*;
+import products.catalog.Category;
 import users.*;
 import transactions.*;
 import utils.*;

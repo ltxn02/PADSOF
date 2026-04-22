@@ -1,8 +1,9 @@
-package catalog;
+package products;
 
 import java.util.ArrayList;
 import utils.*;
 import discounts.*;
+import products.catalog.Category;
 
 /**
  * Clase que representa una figura de colección (Figurine) dentro del catálogo de productos.

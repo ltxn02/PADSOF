@@ -1,10 +1,12 @@
 package users;
 import utils.*;
 import transactions.*;
-import catalog.*;
 
 import java.util.*;
 import java.util.function.Function;
+
+import products.*;
+
 import java.time.*;
 
 /**

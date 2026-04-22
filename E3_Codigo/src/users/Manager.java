@@ -1,7 +1,10 @@
 package users;
 import utils.*;
-import catalog.*;
+
 import java.util.ArrayList;
+
+import products.*;
+import products.catalog.Category;
 
 /**
  * Clase que representa a un Gestor (Manager) del sistema de la tienda.

@@ -3,8 +3,9 @@ package utils;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import products.*;
 import transactions.*;
-import catalog.*;
 import users.RegisteredUser;
 
 /**

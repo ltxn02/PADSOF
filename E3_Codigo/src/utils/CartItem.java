@@ -1,7 +1,8 @@
 package utils;
 
-import catalog.NewProduct;
 import java.time.*;
+
+import products.NewProduct;
 
 
 /**

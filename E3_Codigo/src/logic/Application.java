@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import utils.*;
 import users.*;
-import catalog.*;
 import transactions.*;
 import discounts.*;
+import products.*;
+import products.catalog.Category;
 
 public class Application {
     private static HashMap<String, RegisteredUser> users = new HashMap<>();

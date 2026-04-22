@@ -1,9 +1,10 @@
 package ui;
 import utils.*;
 import users.*;
-import catalog.*;
 import transactions.*;
 import logic.*;
+import products.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
