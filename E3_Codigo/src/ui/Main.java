@@ -17,7 +17,7 @@ import java.util.Scanner;
  * @author Iván Sánchez
  * @version 3.0
  */
-public class main {
+public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     /**
