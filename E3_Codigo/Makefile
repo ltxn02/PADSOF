@@ -15,6 +15,7 @@ MAIN_GUI = gui.VentanaPrincipal
 compile:
 	mkdir -p $(BIN_DIR)
 	$(JAVAC) -cp "$(LIB)" -d $(BIN_DIR) $(shell find $(SRC_DIR) -name "*.java")
+	cp -r src/foto $(BIN_DIR)/
 
 # Comando para ejecutar la consola antigua
 run: compile
