@@ -26,11 +26,13 @@ public class VentanaPrincipal extends JFrame {
         panelContenedor = new JPanel(cardLayout);
 
         // --- CREACIÓN DE LAS VISTAS (PANELES) ---
-        // Aquí iremos instanciando nuestros paneles personalizados
+        // 1. Carta de Login
         PanelLogin panelLogin = new PanelLogin(this);
-
-        // Añadimos los paneles al contenedor asignándoles un "nombre" (String) clave
         panelContenedor.add(panelLogin, "LOGIN");
+
+        // 2. Carta de Registro (¡ESTO ES LO NUEVO!)
+        PanelRegistro panelRegistro = new PanelRegistro(this);
+        panelContenedor.add(panelRegistro, "REGISTRO");
 
         // Añadimos el contenedor principal a la ventana
         this.getContentPane().add(panelContenedor);

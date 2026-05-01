@@ -104,6 +104,30 @@ public class PanelLogin extends JPanel {
         gbcForm.insets = new Insets(20, 0, 10, 0);
         panelAzul.add(botonLogin, gbcForm);
 
+        // =========================================================
+        // --- INTERNO FILA 4: REGISTRARSE (NUEVO) ---
+        // =========================================================
+        JButton botonRegistrarse = new JButton("Registrarse");
+        botonRegistrarse.setFont(new Font("Arial", Font.PLAIN, 12)); // Letra más pequeña
+        botonRegistrarse.setForeground(Color.WHITE); // Letras blancas
+
+        // Hacemos que parezca un texto normal y no un botón feo
+        botonRegistrarse.setContentAreaFilled(false);
+        botonRegistrarse.setBorderPainted(false);
+        botonRegistrarse.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Cursor de mano al pasar por encima
+
+        gbcForm.gridy = 4; // Fila 4 (debajo de ENTRAR)
+        gbcForm.fill = GridBagConstraints.NONE; // Evitamos que se estire como el otro botón
+        gbcForm.anchor = GridBagConstraints.EAST; // Lo pegamos a la derecha
+        gbcForm.insets = new Insets(0, 0, 0, 0); // Quitamos márgenes extra
+        panelAzul.add(botonRegistrarse, gbcForm);
+
+        // Le añadimos el evento real para cambiar de pantalla
+        botonRegistrarse.addActionListener(e -> {
+            ventanaPadre.mostrarPantalla("REGISTRO");
+        });
+        // =========================================================
+
         // 3. AÑADIMOS EL CUADRO AZUL AL PANEL PRINCIPAL (Fila 1)
         gbcMain.gridy = 1;
         this.add(panelAzul, gbcMain);
