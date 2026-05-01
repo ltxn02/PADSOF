@@ -1,6 +1,132 @@
 .
 ├── Makefile
 ├── bin
+│   ├── catalog
+│   │   ├── Catalog$1.class
+│   │   ├── Catalog.class
+│   │   ├── Category.class
+│   │   ├── Comic.class
+│   │   ├── Figurine.class
+│   │   ├── Game.class
+│   │   ├── Item.class
+│   │   ├── NewProduct.class
+│   │   ├── Pack.class
+│   │   ├── Product.class
+│   │   └── SecondHandProduct.class
+│   ├── discounts
+│   │   ├── Discount.class
+│   │   ├── FixedAmountDiscount.class
+│   │   ├── GiftDiscount.class
+│   │   ├── ICantidad.class
+│   │   ├── IDiscount.class
+│   │   ├── IDiscountFactory.class
+│   │   ├── IRebaja.class
+│   │   ├── IRegalo.class
+│   │   ├── IVolumen.class
+│   │   ├── PercentageDiscount.class
+│   │   ├── QuantityDiscount.class
+│   │   ├── StandardDiscountFactory.class
+│   │   └── VolumeDiscount.class
+│   ├── foto
+│   │   ├── logoHorizontal.png
+│   │   └── logoVertical.png
+│   ├── gui
+│   │   ├── PanelInicio.class
+│   │   ├── PanelLogin$1.class
+│   │   ├── PanelLogin.class
+│   │   ├── PanelRegistro$1.class
+│   │   ├── PanelRegistro.class
+│   │   ├── VentanaPrincipal$1.class
+│   │   └── VentanaPrincipal.class
+│   ├── logic
+│   │   ├── Application.class
+│   │   ├── SistemaRecomendaciones.class
+│   │   ├── SistemaRecomendacionesSegundamano.class
+│   │   └── StoreStatistics.class
+│   ├── swing
+│   │   └── view
+│   │       └── login.class
+│   ├── tests
+│   │   ├── CartItemTest.class
+│   │   ├── CatalogTest.class
+│   │   ├── CategoryTest.class
+│   │   ├── ClientTest.class
+│   │   ├── ComicTest.class
+│   │   ├── DiscountTest$TestDiscount.class
+│   │   ├── DiscountTest.class
+│   │   ├── EmployeeTest.class
+│   │   ├── ExchangeHistoricTest.class
+│   │   ├── ExchangeOfferTest.class
+│   │   ├── ExchangeTest.class
+│   │   ├── FigurineTest.class
+│   │   ├── GameTest.class
+│   │   ├── GiftDiscountTest$MockProduct.class
+│   │   ├── GiftDiscountTest.class
+│   │   ├── GuestTest.class
+│   │   ├── ItemTest$TestItem.class
+│   │   ├── ItemTest.class
+│   │   ├── MainDescuentos.class
+│   │   ├── ManagerTest.class
+│   │   ├── NewProductTest$TestNewProduct.class
+│   │   ├── NewProductTest.class
+│   │   ├── PackTest.class
+│   │   ├── PercentageDiscountTest.class
+│   │   ├── ProductTest$TestDiscount.class
+│   │   ├── ProductTest$TestProduct.class
+│   │   ├── ProductTest.class
+│   │   ├── PruebaIntercambioCompleto.class
+│   │   ├── QuantityDiscountTest.class
+│   │   ├── RegisteredUserTest.class
+│   │   ├── SecondHandProductTest.class
+│   │   ├── ShoppingCartTest.class
+│   │   ├── SistemaRecomendacionesSegundamanoTest$TestSHProduct.class
+│   │   ├── SistemaRecomendacionesSegundamanoTest.class
+│   │   ├── SistemaRecomendacionesTest$TestCartItem.class
+│   │   ├── SistemaRecomendacionesTest$TestProduct.class
+│   │   ├── SistemaRecomendacionesTest.class
+│   │   ├── StaffTest.class
+│   │   ├── StandardDiscountFactoryTest$TestProduct.class
+│   │   ├── StandardDiscountFactoryTest.class
+│   │   ├── StoreStatisticsTest$TestCartItem.class
+│   │   ├── StoreStatisticsTest$TestProduct.class
+│   │   ├── StoreStatisticsTest.class
+│   │   ├── UserTest.class
+│   │   ├── VolumeDiscountTest.class
+│   │   └── test_intercambios.class
+│   ├── transactions
+│   │   ├── Exchange.class
+│   │   ├── ExchangeHistoric.class
+│   │   ├── ExchangeOffer.class
+│   │   ├── Order.class
+│   │   ├── OrderHistoric.class
+│   │   └── ShoppingCart.class
+│   ├── ui
+│   │   ├── MenuCliente.class
+│   │   ├── MenuEmpleado.class
+│   │   ├── MenuGestor.class
+│   │   └── main.class
+│   ├── users
+│   │   ├── Client.class
+│   │   ├── Employee$1.class
+│   │   ├── Employee.class
+│   │   ├── Guest.class
+│   │   ├── Manager.class
+│   │   ├── RegisteredUser.class
+│   │   ├── Staff.class
+│   │   └── User.class
+│   └── utils
+│       ├── AgeRange.class
+│       ├── BaseElement.class
+│       ├── CartItem.class
+│       ├── Condition.class
+│       ├── EmployeeRoles.class
+│       ├── ExchangeOfferStatus.class
+│       ├── ExchangeStatus.class
+│       ├── ItemType.class
+│       ├── Notification.class
+│       ├── OrderStatus.class
+│       ├── Permission.class
+│       └── Review.class
 ├── diagramaClases.pdf
 ├── diagramaClases.uxf
 ├── diagramaClases2.pdf
@@ -265,9 +391,12 @@
 │   │   ├── StandardDiscountFactory.java
 │   │   └── VolumeDiscount.java
 │   ├── foto
+│   │   ├── logoCarritoProvisional.png
 │   │   ├── logoHorizontal.png
+│   │   ├── logoPerfilProvisional.png
 │   │   └── logoVertical.png
 │   ├── gui
+│   │   ├── PanelInicio.java
 │   │   ├── PanelLogin.java
 │   │   ├── PanelRegistro.java
 │   │   └── VentanaPrincipal.java
@@ -349,4 +478,4 @@
 │       └── Review.java
 └── tree.txt
 
-31 directories, 319 files
+43 directories, 436 files

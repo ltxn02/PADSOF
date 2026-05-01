@@ -141,8 +141,8 @@ public class PanelLogin extends JPanel {
         String pass = new String(campoPassword.getPassword());
         try {
             RegisteredUser usuario = Application.login(user, pass);
-            JOptionPane.showMessageDialog(this, "Bienvenido " + usuario.getUsername());
-            ventanaPadre.mostrarPantalla("CATALOGO");
+            ventanaPadre.mostrarPantalla("INICIO");
+
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
         }

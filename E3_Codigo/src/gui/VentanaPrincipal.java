@@ -34,6 +34,10 @@ public class VentanaPrincipal extends JFrame {
         PanelRegistro panelRegistro = new PanelRegistro(this);
         panelContenedor.add(panelRegistro, "REGISTRO");
 
+        // 3. Carta de Inicio (Catálogo principal)
+        PanelInicio panelInicio = new PanelInicio(this);
+        panelContenedor.add(panelInicio, "INICIO");
+
         // Añadimos el contenedor principal a la ventana
         this.getContentPane().add(panelContenedor);
     }
