@@ -81,11 +81,43 @@ public class Application {
             Game juego1 = new Game("Catan", "Juego de estrategia y negociación",
                     45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
                     4, mecanicas, edadCatan);
+            Game juego2 = new Game("Catan1", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego3 = new Game("Catan11", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego4 = new Game("Catan4", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego5 = new Game("Catan5", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego6 = new Game("Catan16", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego7 = new Game("Catan7", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego8 = new Game("Catan8", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
+            Game juego9 = new Game("Catan91", "Juego de estrategia y negociación",
+                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
+                    4, mecanicas, edadCatan);
 
             // Añadimos los productos a nuestro catálogo
             catalog.add(comic1);
             catalog.add(figura1);
             catalog.add(juego1);
+            catalog.add(juego2);
+            catalog.add(juego3);
+            catalog.add(juego4);
+            catalog.add(juego5);
+            catalog.add(juego6);
+            catalog.add(juego7);
+            catalog.add(juego8);
+            catalog.add(juego9);
             globalCategories.add(catComic);
 
             System.out.println("[Sistema] Catálogo inicializado con 3 productos por defecto.");
