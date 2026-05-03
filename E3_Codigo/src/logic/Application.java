@@ -1,6 +1,8 @@
 package logic;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import utils.*;
@@ -39,108 +41,68 @@ public class Application {
 
         // 2. INICIALIZACIÓN DE PRODUCTOS POR DEFECTO
         try {
-            // Preparamos lista vacía para reseñas (nadie ha comentado aún)
             ArrayList<Review> emptyReviews = new ArrayList<>();
-
-            // Creamos las categorías (su constructor pide un ArrayList<Item>)
             ArrayList<Item> emptyItems = new ArrayList<>();
+
             Category catComic = new Category("Cómics y manga", emptyItems);
             Category catFigura = new Category("Figuras de colección", emptyItems);
             Category catJuego = new Category("Juegos de mesa", emptyItems);
 
-            // --- PRODUCTO 1: CÓMIC ---
-            ArrayList<Category> comicCategories = new ArrayList<>();
-            comicCategories.add(catComic);
+            ArrayList<Category> comicCategories = new ArrayList<>(Arrays.asList(catComic));
+            ArrayList<Category> figuraCategories = new ArrayList<>(Arrays.asList(catFigura));
+            ArrayList<Category> juegoCategories = new ArrayList<>(Arrays.asList(catJuego));
 
-            ArrayList<String> autores = new ArrayList<>();
-            autores.add("Eiichiro Oda");
+            // --- 10 CÓMICS (Con ArrayList<String> para imágenes) ---
+            catalog.add(new Comic("One Piece Vol. 1", "El inicio de la gran aventura de Luffy.", 7.95, new ArrayList<>(Arrays.asList("src/imgProductos/op1.jpg")), 50, comicCategories, emptyReviews, null, 208, "Planeta Cómic", 1997, new ArrayList<>(Arrays.asList("Eiichiro Oda"))));
+            catalog.add(new Comic("Dragon Ball Vol. 1", "Goku conoce a Bulma y comienza la búsqueda.", 8.50, new ArrayList<>(Arrays.asList("src/imgProductos/db1.jpg")), 40, comicCategories, emptyReviews, null, 192, "Planeta Cómic", 1984, new ArrayList<>(Arrays.asList("Akira Toriyama"))));
+            catalog.add(new Comic("Tintín en el Tíbet", "Tintín viaja al Himalaya en busca de Chang.", 14.90, new ArrayList<>(Arrays.asList("src/imgProductos/tintin.jpg")), 25, comicCategories, emptyReviews, null, 64, "Juventud", 1960, new ArrayList<>(Arrays.asList("Hergé"))));
+            catalog.add(new Comic("Batman: Año Uno", "Bruce Wayne regresa a Gotham para ser Batman.", 18.00, new ArrayList<>(Arrays.asList("src/imgProductos/batman.jpg")), 15, comicCategories, emptyReviews, null, 144, "ECC Ediciones", 1987, new ArrayList<>(Arrays.asList("Frank Miller"))));
+            catalog.add(new Comic("Naruto Vol. 1", "Un joven ninja busca el reconocimiento de su aldea.", 7.50, new ArrayList<>(Arrays.asList("src/imgProductos/naruto1.jpg")), 60, comicCategories, emptyReviews, null, 192, "Planeta Cómic", 1999, new ArrayList<>(Arrays.asList("Masashi Kishimoto"))));
+            catalog.add(new Comic("Spiderman: Kraven", "Kraven intenta derrotar definitivamente a la araña.", 22.00, new ArrayList<>(Arrays.asList("src/imgProductos/spiderman.jpg")), 10, comicCategories, emptyReviews, null, 160, "Panini Comics", 1987, new ArrayList<>(Arrays.asList("J.M. DeMatteis"))));
+            catalog.add(new Comic("Akira Vol. 1", "En Neo-Tokyo, experimentos secretos cambian todo.", 25.00, new ArrayList<>(Arrays.asList("src/imgProductos/akira1.jpg")), 20, comicCategories, emptyReviews, null, 360, "Norma Editorial", 1982, new ArrayList<>(Arrays.asList("Katsuhiro Otomo"))));
+            catalog.add(new Comic("Watchmen", "Obra maestra sobre la moralidad de los héroes.", 35.00, new ArrayList<>(Arrays.asList("src/imgProductos/watchmen.jpg")), 12, comicCategories, emptyReviews, null, 416, "DC Comics", 1986, new ArrayList<>(Arrays.asList("Alan Moore"))));
+            catalog.add(new Comic("Death Note Vol. 1", "Un cuaderno capaz de matar con solo escribir un nombre.", 8.00, new ArrayList<>(Arrays.asList("src/imgProductos/deathnote1.jpg")), 45, comicCategories, emptyReviews, null, 200, "Norma Editorial", 2003, new ArrayList<>(Arrays.asList("Tsugumi Ohba"))));
+            catalog.add(new Comic("Berserk Vol. 1", "Guts busca venganza en un mundo de fantasía oscura.", 10.00, new ArrayList<>(Arrays.asList("src/imgProductos/berserk1.jpg")), 30, comicCategories, emptyReviews, null, 224, "Panini Comics", 1989, new ArrayList<>(Arrays.asList("Kentaro Miura"))));
 
-            Comic comic1 = new Comic("One Piece Vol. 1", "El inicio de la aventura de Luffy",
-                    7.99, "img/onepiece1.jpg", 50, comicCategories, emptyReviews, null,
-                    208, "Planeta Cómic", 1997, autores);
+            // --- 10 FIGURAS (Con ArrayList<String> para imágenes) ---
+            catalog.add(new Figurine("Figura Gon Freecss", "Gon en pose de batalla de Hunter x Hunter.", 45.00, new ArrayList<>(Arrays.asList("src/imgProductos/gon.jpg")), 10, figuraCategories, emptyReviews, null, 15.0, 5.0, 5.0, "PVC", "Banpresto"));
+            catalog.add(new Figurine("Funko Pop Zoro", "Zoro Roronoa con sus tres katanas.", 16.99, new ArrayList<>(Arrays.asList("src/imgProductos/zoro_pop.jpg")), 25, figuraCategories, emptyReviews, null, 10.0, 6.0, 6.0, "Vinilo", "Funko"));
+            catalog.add(new Figurine("Figura Eren Titán", "Eren en su imponente forma de Titán de Ataque.", 89.00, new ArrayList<>(Arrays.asList("src/imgProductos/eren.jpg")), 5, figuraCategories, emptyReviews, null, 25.0, 15.0, 15.0, "Resina", "Good Smile"));
+            catalog.add(new Figurine("Nendoroid Link", "Link de BOTW con múltiples accesorios.", 55.00, new ArrayList<>(Arrays.asList("src/imgProductos/link.jpg")), 8, figuraCategories, emptyReviews, null, 10.0, 4.0, 4.0, "ABS", "Good Smile"));
+            catalog.add(new Figurine("Figura Nezuko", "Nezuko saliendo de su caja protectora.", 39.90, new ArrayList<>(Arrays.asList("src/imgProductos/nezuko.jpg")), 15, figuraCategories, emptyReviews, null, 12.0, 7.0, 7.0, "PVC", "Sega"));
+            catalog.add(new Figurine("Funko Pop Iron Man", "Tony Stark con armadura Mark 85.", 15.00, new ArrayList<>(Arrays.asList("src/imgProductos/ironman.jpg")), 30, figuraCategories, emptyReviews, null, 10.0, 6.0, 6.0, "Vinilo", "Funko"));
+            catalog.add(new Figurine("Figura Darth Vader", "Lord Sith con capa de tela y gran detalle.", 120.00, new ArrayList<>(Arrays.asList("src/imgProductos/vader.jpg")), 3, figuraCategories, emptyReviews, null, 30.0, 12.0, 10.0, "PVC", "Hot Toys"));
+            catalog.add(new Figurine("Figura Sailor Moon", "Usagi Tsukino con su báculo lunar.", 42.00, new ArrayList<>(Arrays.asList("src/imgProductos/sailormoon.jpg")), 12, figuraCategories, emptyReviews, null, 18.0, 6.0, 6.0, "PVC", "Bandai"));
+            catalog.add(new Figurine("Figura Geralt Rivia", "El brujo cazando un monstruo.", 65.00, new ArrayList<>(Arrays.asList("src/imgProductos/geralt.jpg")), 7, figuraCategories, emptyReviews, null, 24.0, 10.0, 10.0, "PVC", "Dark Horse"));
+            catalog.add(new Figurine("Funko Pop Pikachu", "El Pokémon eléctrico en formato Pop.", 14.50, new ArrayList<>(Arrays.asList("src/imgProductos/pikachu.jpg")), 40, figuraCategories, emptyReviews, null, 10.0, 5.0, 5.0, "Vinilo", "Funko"));
 
-            // --- PRODUCTO 2: FIGURA ---
-            ArrayList<Category> figuraCategories = new ArrayList<>();
-            figuraCategories.add(catFigura);
+            // --- 10 JUEGOS (Con ArrayList<String> para imágenes y objeto AgeRange) ---
+            catalog.add(new Game("Catan", "Estrategia y negociación en la isla.", 45.00, new ArrayList<>(Arrays.asList("src/imgProductos/catan.jpg")), 20, juegoCategories, emptyReviews, null, 4, new ArrayList<>(Arrays.asList("Gestión")), new AgeRange(10, 99)));
+            catalog.add(new Game("Dixit", "Juego de interpretación y arte onírico.", 32.00, new ArrayList<>(Arrays.asList("src/imgProductos/dixit.jpg")), 15, juegoCategories, emptyReviews, null, 6, new ArrayList<>(Arrays.asList("Cartas")), new AgeRange(8, 99)));
+            catalog.add(new Game("Carcassonne", "Construye la Francia medieval con losetas.", 28.00, new ArrayList<>(Arrays.asList("src/imgProductos/carcassonne.jpg")), 25, juegoCategories, emptyReviews, null, 5, new ArrayList<>(Arrays.asList("Losetas")), new AgeRange(7, 99)));
+            catalog.add(new Game("Exploding Kittens", "Ruleta rusa con gatos explosivos.", 20.00, new ArrayList<>(Arrays.asList("src/imgProductos/kittens.jpg")), 50, juegoCategories, emptyReviews, null, 5, new ArrayList<>(Arrays.asList("Azar")), new AgeRange(7, 99)));
+            catalog.add(new Game("Pandemic", "Cooperativo para salvar al mundo de virus.", 40.00, new ArrayList<>(Arrays.asList("src/imgProductos/pandemic.jpg")), 12, juegoCategories, emptyReviews, null, 4, new ArrayList<>(Arrays.asList("Cooperación")), new AgeRange(10, 99)));
+            catalog.add(new Game("Zombicide", "Sobrevive a la horda zombi con amigos.", 95.00, new ArrayList<>(Arrays.asList("src/imgProductos/zombicide.jpg")), 6, juegoCategories, emptyReviews, null, 6, new ArrayList<>(Arrays.asList("Dados")), new AgeRange(14, 99)));
+            catalog.add(new Game("Aventureros Tren", "Crea rutas ferroviarias por Europa.", 44.00, new ArrayList<>(Arrays.asList("src/imgProductos/tren.jpg")), 18, juegoCategories, emptyReviews, null, 5, new ArrayList<>(Arrays.asList("Rutas")), new AgeRange(8, 99)));
+            catalog.add(new Game("Risk", "El clásico de conquista militar mundial.", 35.00, new ArrayList<>(Arrays.asList("src/imgProductos/risk.jpg")), 22, juegoCategories, emptyReviews, null, 6, new ArrayList<>(Arrays.asList("Dados")), new AgeRange(10, 99)));
+            catalog.add(new Game("Cluedo", "Resuelve el misterio del asesinato.", 29.90, new ArrayList<>(Arrays.asList("src/imgProductos/cluedo.jpg")), 20, juegoCategories, emptyReviews, null, 6, new ArrayList<>(Arrays.asList("Deducción")), new AgeRange(8, 99)));
+            catalog.add(new Game("Uno", "Quedate sin cartas antes que los demás.", 10.00, new ArrayList<>(Arrays.asList("src/imgProductos/uno.jpg")), 100, juegoCategories, emptyReviews, null, 10, new ArrayList<>(Arrays.asList("Cartas")), new AgeRange(6, 99)));
 
-            Figurine figura1 = new Figurine("Figura Goku", "Figura de colección 15cm",
-                    35.50, "img/goku.jpg", 15, figuraCategories, emptyReviews, null,
-                    15.0, 5.0, 5.0, "PVC", "Anime");
-
-            // --- PRODUCTO 3: JUEGO DE MESA ---
-            ArrayList<Category> juegoCategories = new ArrayList<>();
-            juegoCategories.add(catJuego);
-
-            ArrayList<String> mecanicas = new ArrayList<>();
-            mecanicas.add("Gestión de recursos");
-            mecanicas.add("Tirar dados");
-
-            // Instanciamos el rango de edad usando tu clase AgeRange
-            AgeRange edadCatan = new AgeRange(10, 99);
-
-            Game juego1 = new Game("Catan", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego2 = new Game("Catan1", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego3 = new Game("Catan11", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego4 = new Game("Catan4", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego5 = new Game("Catan5", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego6 = new Game("Catan16", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego7 = new Game("Catan7", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego8 = new Game("Catan8", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-            Game juego9 = new Game("Catan91", "Juego de estrategia y negociación",
-                    45.00, "img/catan.jpg", 30, juegoCategories, emptyReviews, null,
-                    4, mecanicas, edadCatan);
-
-            // Añadimos los productos a nuestro catálogo
-            catalog.add(comic1);
-            catalog.add(figura1);
-            catalog.add(juego1);
-            catalog.add(juego2);
-            catalog.add(juego3);
-            catalog.add(juego4);
-            catalog.add(juego5);
-            catalog.add(juego6);
-            catalog.add(juego7);
-            catalog.add(juego8);
-            catalog.add(juego9);
-            globalCategories.add(catComic);
-
-            System.out.println("[Sistema] Catálogo inicializado con 3 productos por defecto.");
+            globalCategories.addAll(Arrays.asList(catComic, catFigura, catJuego));
+            System.out.println("[Sistema] Catálogo inicializado con 30 productos reales.");
 
         } catch (Exception e) {
             System.err.println("Error al crear los productos por defecto: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    // ------------------------------------------------
 
+    // --- RESTO DE MÉTODOS DE LA CLASE (Login, Registro, Persistencia, etc.) ---
     public static RegisteredUser login(String username, String password) throws IOException {
         RegisteredUser user = Application.users.get(username);
-
-        if (user == null) {
+        if (user == null || !(user.login(username, password))) {
             throw new IOException("Incorrect username or password.");
         }
-
-        if (!(user.login(username, password))) {
-            throw new IOException("Incorrect username or password.");
-        }
-
-        System.out.println("[+] Se ha iniciado correctamente con el usuario " + username);
         return user;
     }
 
@@ -148,7 +110,6 @@ public class Application {
         if (users.containsKey(client.getUsername())) {
             throw new IOException("El nombre de usuario ya está en uso.");
         }
-
         Application.users.put(client.getUsername(), client);
     }
 
@@ -157,57 +118,19 @@ public class Application {
             throw new IOException("El nombre de usuario ya está en uso.");
         }
         users.put(employee.getUsername(), employee);
-        System.out.println("[+] Empleado " + employee.getUsername() + " registrado en el sistema.");
     }
 
-    public static ArrayList<NewProduct> getCatalog() {
-        return catalog;
-    }
+    public static ArrayList<NewProduct> getCatalog() { return catalog; }
+    public static ArrayList<RegisteredUser> getUsers() { return new ArrayList<>(users.values()); }
+    public static ArrayList<SecondHandProduct> getSecondHandProducts() { return secondHandProducts; }
+    public static List<ExchangeOffer> getoffersmade(Client c){ return new ArrayList<>(c.getOffersMade()); }
+    public static List<ExchangeOffer> getoffersreceived(Client c){ return new ArrayList<>(c.obtenerMisOfertasRecibidos()); }
+    public static void addSecondHandProduct(SecondHandProduct p) { secondHandProducts.add(p); }
+    public static ArrayList<Category> getGlobalCategories() { return globalCategories; }
+    public static void addCategory(Category c) { globalCategories.add(c); }
+    public static ArrayList<IDiscount> getGlobalDiscounts() { return globalDiscounts; }
+    public static void addDiscount(IDiscount d) { globalDiscounts.add(d); }
 
-    public static ArrayList<RegisteredUser> getUsers() {
-        return new ArrayList<>(users.values());
-    }
-
-    public static ArrayList<SecondHandProduct> getSecondHandProducts() {
-        return secondHandProducts;
-    }
-
-    public static List<ExchangeOffer> getoffersmade(Client c){
-        List<ExchangeOffer> ofertas = new ArrayList<>();
-        for (ExchangeOffer o: c.getOffersMade()) {
-            ofertas.add(o);
-        }
-        return ofertas;
-    }
-    public static List<ExchangeOffer> getoffersreceived(Client c){
-        List<ExchangeOffer> ofertas = new ArrayList<>();
-        for (ExchangeOffer o: c.obtenerMisOfertasRecibidos()) {
-            ofertas.add(o);
-        }
-        return ofertas;
-    }
-
-    public static void addSecondHandProduct(SecondHandProduct p) {
-        secondHandProducts.add(p);
-    }
-
-    public static ArrayList<Category> getGlobalCategories() {
-        return globalCategories;
-    }
-
-    public static void addCategory(Category c) {
-        globalCategories.add(c);
-    }
-
-    public static ArrayList<IDiscount> getGlobalDiscounts() {
-        return globalDiscounts;
-    }
-
-    public static void addDiscount(IDiscount d) {
-        globalDiscounts.add(d);
-    }
-
-    // --- PERSISTENCIA DE DATOS ---
     public static void guardarDatos(String rutaArchivo) {
         try (java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(new java.io.FileOutputStream(rutaArchivo))) {
             oos.writeObject(users);
@@ -216,20 +139,15 @@ public class Application {
             oos.writeObject(catalog);
             oos.writeObject(globalCategories);
             oos.writeObject(globalDiscounts);
-            System.out.println("[Sistema] Datos guardados correctamente en " + rutaArchivo);
         } catch (java.io.IOException e) {
-            System.out.println("[!] Error al guardar los datos: " + e.getMessage());
+            System.out.println("[!] Error al guardar: " + e.getMessage());
         }
     }
 
     @SuppressWarnings("unchecked")
     public static void cargarDatos(String rutaArchivo) {
         java.io.File archivo = new java.io.File(rutaArchivo);
-        if (!archivo.exists()) {
-            System.out.println("[Sistema] No se encontró archivo de guardado previo. Iniciando con datos por defecto.");
-            return;
-        }
-
+        if (!archivo.exists()) return;
         try (java.io.ObjectInputStream ois = new java.io.ObjectInputStream(new java.io.FileInputStream(rutaArchivo))) {
             users = (java.util.HashMap<String, RegisteredUser>) ois.readObject();
             notifications = (java.util.HashMap<String, Notification>) ois.readObject();
@@ -237,9 +155,8 @@ public class Application {
             catalog = (java.util.ArrayList<NewProduct>) ois.readObject();
             globalCategories = (java.util.ArrayList<Category>) ois.readObject();
             globalDiscounts = (java.util.ArrayList<IDiscount>) ois.readObject();
-            System.out.println("[Sistema] Datos cargados correctamente desde " + rutaArchivo);
         } catch (java.io.IOException | ClassNotFoundException e) {
-            System.out.println("[!] Error al cargar los datos: " + e.getMessage());
+            System.out.println("[!] Error al cargar: " + e.getMessage());
         }
     }
 }

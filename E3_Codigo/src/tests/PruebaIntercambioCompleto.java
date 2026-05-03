@@ -21,13 +21,13 @@ public class PruebaIntercambioCompleto {
             Client ivan = new Client("Ivan_R7", "Ivan", "Rodriguez", "3333", "23/07/1990", "ivan@mail.com", "888999000");
 
 
-            SecondHandProduct switchOled = new SecondHandProduct("Switch OLED", "Consola Nintendo", "img1.jpg", 320.0, true, ItemType.GAME, Condition.PERFECTO, taha);
-            SecondHandProduct zelda = new SecondHandProduct("Zelda BOTW", "Juego Switch", "img2.jpg", 45.0, true, ItemType.GAME, Condition.MUY_BUENO, taha);
+            SecondHandProduct switchOled = new SecondHandProduct("Switch OLED", "Consola Nintendo", new ArrayList<>(), 320.0, true, ItemType.GAME, Condition.PERFECTO, taha);
+            SecondHandProduct zelda = new SecondHandProduct("Zelda BOTW", "Juego Switch", new ArrayList<>(), 45.0, true, ItemType.GAME, Condition.MUY_BUENO, taha);
 
-            SecondHandProduct ps5 = new SecondHandProduct("PS5 Slim", "Consola Sony", "img3.jpg", 450.0, true, ItemType.GAME, Condition.PERFECTO, lidia);
-            SecondHandProduct eldenRing = new SecondHandProduct("Elden Ring", "Juego PS5", "img4.jpg", 50.0, true, ItemType.GAME, Condition.MUY_BUENO, lidia);
+            SecondHandProduct ps5 = new SecondHandProduct("PS5 Slim", "Consola Sony", new ArrayList<>(), 450.0, true, ItemType.GAME, Condition.PERFECTO, lidia);
+            SecondHandProduct eldenRing = new SecondHandProduct("Elden Ring", "Juego PS5", new ArrayList<>(), 50.0, true, ItemType.GAME, Condition.MUY_BUENO, lidia);
 
-            SecondHandProduct steamDeck = new SecondHandProduct("Steam Deck", "PC Portátil", "img5.jpg", 400.0, true, ItemType.GAME, Condition.USO_LIGERO, ivan);
+            SecondHandProduct steamDeck = new SecondHandProduct("Steam Deck", "PC Portátil", new ArrayList<>(), 400.0, true, ItemType.GAME, Condition.USO_LIGERO, ivan);
 
             System.out.println("--- ESTADO INICIAL: PRODUCTOS CREADOS Y ASIGNADOS ---");
 

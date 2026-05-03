@@ -35,7 +35,7 @@ public class Comic extends Product implements java.io.Serializable {
      * @param publicationYear Año original en el que fue publicado.
      * @param writtenBy       Lista con los nombres de los autores principales (guionistas y dibujantes).
      */
-    public Comic(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount, int nPages, String publisher, int publicationYear, ArrayList<String> writtenBy) {
+    public Comic(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount, int nPages, String publisher, int publicationYear, ArrayList<String> writtenBy) {
         super(name, description, price, image, stock, categories, reviews, discount);
 
         // Validación del número de páginas: no puede ser 0 o negativo

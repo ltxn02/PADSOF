@@ -22,15 +22,15 @@ public class PackTest {
         categoriasValidas.add(catPacks);
 
         // Instanciamos productos de prueba para meterlos en el pack
-        comic1 = new Comic("Spiderman", "Cómic", 10.0, "img.jpg", 5,
+        comic1 = new Comic("Spiderman", "Cómic", 10.0, new ArrayList<>(), 5,
                 categoriasValidas, new ArrayList<Review>(), null,
                 100, "Marvel", 2000, new ArrayList<String>());
 
-        juego1 = new Game("Monopoly", "Juego", 20.0, "img.jpg", 5,
+        juego1 = new Game("Monopoly", "Juego", 20.0, new ArrayList<>(), 5,
                 categoriasValidas, new ArrayList<Review>(), null,
                 4, new ArrayList<String>(), new AgeRange(8, 99));
 
-        figura1 = new Figurine("Batman", "Figura", 15.0, "img.jpg", 5,
+        figura1 = new Figurine("Batman", "Figura", 15.0, new ArrayList<>(), 5,
                 categoriasValidas, new ArrayList<Review>(), null,
                 15.0, 5.0, 5.0, "PVC", "DC");
     }
@@ -41,7 +41,7 @@ public class PackTest {
         items.add(comic1);
         items.add(juego1);
 
-        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, "pack.jpg", 10,
+        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, new ArrayList<>(), 10,
                 categoriasValidas, new ArrayList<Review>(), items);
 
         assertEquals(2, miPack.getProducts().size());
@@ -54,7 +54,7 @@ public class PackTest {
         itemsIncompletos.add(comic1);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new Pack("Pack Fallido", "No funciona", 10.0, "pack.jpg", 10,
+            new Pack("Pack Fallido", "No funciona", 10.0, new ArrayList<>(), 10,
                     categoriasValidas, new ArrayList<Review>(), itemsIncompletos);
         });
     }
@@ -64,7 +64,7 @@ public class PackTest {
         ArrayList<NewProduct> items = new ArrayList<>();
         items.add(comic1);
         items.add(juego1);
-        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, "pack.jpg", 10,
+        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, new ArrayList<>(), 10,
                 categoriasValidas, new ArrayList<Review>(), items);
 
         boolean añadido = miPack.addItem(figura1);
@@ -80,7 +80,7 @@ public class PackTest {
         ArrayList<NewProduct> items = new ArrayList<>();
         items.add(comic1);
         items.add(juego1);
-        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, "pack.jpg", 10,
+        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, new ArrayList<>(), 10,
                 categoriasValidas, new ArrayList<Review>(), items);
 
         boolean borrado = miPack.removeItem(comic1);
@@ -95,7 +95,7 @@ public class PackTest {
         items.add(comic1);
         items.add(juego1);
         items.add(figura1); // Aquí tenemos 3 productos
-        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, "pack.jpg", 10,
+        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, new ArrayList<>(), 10,
                 categoriasValidas, new ArrayList<Review>(), items);
 
         boolean borrado = miPack.removeItem(comic1);
@@ -109,7 +109,7 @@ public class PackTest {
         ArrayList<NewProduct> itemsIniciales = new ArrayList<>();
         itemsIniciales.add(comic1);
         itemsIniciales.add(juego1);
-        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, "pack.jpg", 10,
+        Pack miPack = new Pack("Pack Diversión", "Un pack", 25.0, new ArrayList<>(), 10,
                 categoriasValidas, new ArrayList<Review>(), itemsIniciales);
 
         // Preparamos la nueva lista

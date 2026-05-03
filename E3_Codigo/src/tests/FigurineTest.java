@@ -23,7 +23,7 @@ public class FigurineTest {
 
     @Test
     void testCrearFigurineValida() {
-        Figurine figura = new Figurine("Goku Super Saiyan", "Figura de alta calidad", 59.99, "goku.jpg", 15,
+        Figurine figura = new Figurine("Goku Super Saiyan", "Figura de alta calidad", 59.99, new ArrayList<>(), 15,
                 categoriasValidas, new ArrayList<Review>(), null,
                 25.5, 10.0, 8.5, "PVC", "Dragon Ball Z");
 
@@ -36,7 +36,7 @@ public class FigurineTest {
     @Test
     void testCrearFigurineDimensionesInvalidas_Altura() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Figurine("Vegeta", "Figura estropeada", 45.0, "vegeta.jpg", 5,
+            new Figurine("Vegeta", "Figura estropeada", 45.0, new ArrayList<>(), 5,
                     categoriasValidas, new ArrayList<Review>(), null,
                     -10.0, 5.0, 5.0, "Resina", "Dragon Ball Z");
         });
@@ -45,7 +45,7 @@ public class FigurineTest {
     @Test
     void testCrearFigurineDimensionesInvalidas_Anchura() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Figurine("Luffy", "Figura", 30.0, "luffy.jpg", 10,
+            new Figurine("Luffy", "Figura", 30.0, new ArrayList<>(), 10,
                     categoriasValidas, new ArrayList<Review>(), null,
                     15.0, -2.0, 5.0, "Plástico", "One Piece");
         });
@@ -53,7 +53,7 @@ public class FigurineTest {
 
     @Test
     void testEditFigurineInfo() {
-        Figurine figura = new Figurine("Iron Man", "Figura articulada", 80.0, "ironman.jpg", 20,
+        Figurine figura = new Figurine("Iron Man", "Figura articulada", 80.0, new ArrayList<>(), 20,
                 categoriasValidas, new ArrayList<Review>(), null,
                 30.0, 12.0, 10.0, "Metal", "Marvel");
 

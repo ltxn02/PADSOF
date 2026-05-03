@@ -539,7 +539,8 @@ public class MenuCliente {
         String descripcion = scanner.nextLine();
 
         System.out.print("Ruta de la foto (ej. img/manga.jpg): ");
-        String foto = scanner.nextLine();
+        ArrayList<String> foto =new ArrayList<>();
+        foto.add(scanner.nextLine());
 
         System.out.println("Tipo de producto (1. COMIC, 2. GAME, 3. FIGURINE): ");
         String tipoInput = scanner.nextLine();

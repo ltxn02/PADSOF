@@ -20,11 +20,11 @@ public class test_intercambios {
 
         ivan.add_permisions(Permission.EXCH_VALIDATE);
 
-        SecondHandProduct ps5 = new SecondHandProduct("PS5", "Sony", "f1", 450, true, ItemType.GAME, Condition.PERFECTO, taha);
-        SecondHandProduct switchOled = new SecondHandProduct( "Switch", "Nint", "f2", 300, true, ItemType.GAME, Condition.MUY_BUENO, lidia);
-        SecondHandProduct iphone = new SecondHandProduct( "iPhone 13", "Apple", "f3", 600, true, ItemType.GAME, Condition.MUY_BUENO, ana);
-        SecondHandProduct portatil = new SecondHandProduct( "HP Victus", "HP", "f4", 700, true, ItemType.FIGURINE, Condition.PERFECTO, carlos);
-        SecondHandProduct cascos = new SecondHandProduct( "Sony WH", "Audio", "f5", 150, true, ItemType.GAME, Condition.DAÑADO, martin);
+        SecondHandProduct ps5 = new SecondHandProduct("PS5", "Sony", new ArrayList<>(), 450, true, ItemType.GAME, Condition.PERFECTO, taha);
+        SecondHandProduct switchOled = new SecondHandProduct( "Switch", "Nint", new ArrayList<>(), 300, true, ItemType.GAME, Condition.MUY_BUENO, lidia);
+        SecondHandProduct iphone = new SecondHandProduct( "iPhone 13", "Apple", new ArrayList<>(), 600, true, ItemType.GAME, Condition.MUY_BUENO, ana);
+        SecondHandProduct portatil = new SecondHandProduct( "HP Victus", "HP", new ArrayList<>(), 700, true, ItemType.FIGURINE, Condition.PERFECTO, carlos);
+        SecondHandProduct cascos = new SecondHandProduct( "Sony WH", "Audio", new ArrayList<>(), 150, true, ItemType.GAME, Condition.DAÑADO, martin);
         
         ArrayList<SecondHandProduct> loteAna = new ArrayList<>();
         loteAna.add(iphone);

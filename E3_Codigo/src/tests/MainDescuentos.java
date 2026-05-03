@@ -23,13 +23,13 @@ public class MainDescuentos {
         PercentageDiscount rebaja10 = new PercentageDiscount(10.0, "Oferta Manga", inicio, fin);
 
         Comic berserk = new Comic(
-                "Berserk", "Manga", 100.0, "b.jpg", 10,
+                "Berserk", "Manga", 100.0, new ArrayList<>(), 10,
                 cats, reviews, rebaja10, 600, "Dark Horse", 2019, autores
         );
 
         // 3. DESCUENTO 2: REGALO (Pasado por constructor global)
         // Regalo de un llavero si se gastan más de 50€.
-        Figurine llavero = new Figurine("Llavero", "R", 0.0, "l.jpg", 1, cats, reviews, null, 1, 1, 1, "M", "B");
+        Figurine llavero = new Figurine("Llavero", "R", 0.0, new ArrayList<>(), 1, cats, reviews, null, 1, 1, 1, "M", "B");
         GiftDiscount promoRegalo = new GiftDiscount(50.0, llavero, "Regalo Oro", inicio, fin);
 
         // 4. DESCUENTO 3: BONO POR VOLUMEN

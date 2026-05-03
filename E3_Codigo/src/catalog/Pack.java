@@ -31,7 +31,7 @@ public class Pack extends NewProduct implements java.io.Serializable {
      * @param initialProducts Lista inicial de productos que conforman el pack.
      * @throws IllegalArgumentException Si la lista de productos iniciales es nula o contiene menos de 2 elementos.
      */
-    public Pack(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, ArrayList<NewProduct> initialProducts) {
+    public Pack(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, ArrayList<NewProduct> initialProducts) {
         // 1. Llamamos al constructor de la clase padre (NewProduct)
         super(name, description, price, image, stock, categories, reviews);
 

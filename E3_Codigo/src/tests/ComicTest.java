@@ -30,7 +30,7 @@ public class ComicTest {
 
     @Test
     void testCrearComicValido() {
-        Comic comic = new Comic("Spiderman", "Origen de Spiderman", 15.50, "spidey.jpg", 10,
+        Comic comic = new Comic("Spiderman", "Origen de Spiderman", 15.50, new ArrayList<>(), 10,
                 categoriasValidas, new ArrayList<Review>(), null,
                 30, "Marvel", 1962, autores);
 
@@ -43,7 +43,7 @@ public class ComicTest {
     @Test
     void testCrearComicPaginasInvalidas() {
         assertDoesNotThrow(() -> {
-            new Comic("Batman", "Año Uno", 20.0, "batman.jpg", 5,
+            new Comic("Batman", "Año Uno", 20.0, new ArrayList<>(), 5,
                     categoriasValidas, new ArrayList<Review>(), null,
                     -5, "DC Comics", 1987, autores);
         });
@@ -53,7 +53,7 @@ public class ComicTest {
     void testCrearComicStockNegativo() {
         // El stock negativo (-10) debe hacer saltar la validación de la clase padre (NewProduct)
         assertThrows(IllegalArgumentException.class, () -> {
-            new Comic("Iron Man", "El demonio en una botella", 18.0, "iron.jpg", -10,
+            new Comic("Iron Man", "El demonio en una botella", 18.0, new ArrayList<>(), -10,
                     categoriasValidas, new ArrayList<Review>(), null,
                     120, "Marvel", 1979, autores);
         });
@@ -61,7 +61,7 @@ public class ComicTest {
 
     @Test
     void testEditComicInfo() {
-        Comic comic = new Comic("X-Men", "Días del futuro pasado", 25.0, "xmen.jpg", 15,
+        Comic comic = new Comic("X-Men", "Días del futuro pasado", 25.0, new ArrayList<>(), 15,
                 categoriasValidas, new ArrayList<Review>(), null,
                 150, "Marvel", 1981, autores);
 

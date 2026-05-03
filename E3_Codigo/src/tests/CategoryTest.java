@@ -21,11 +21,11 @@ public class CategoryTest {
         categorias.add(catPrueba);
 
         // 2. Ahora sí, le pasamos la lista con 1 categoría a los cómics
-        comic1 = new Comic("Spiderman", "Cómic de Spiderman", 10.0, "img.jpg", 5,
+        comic1 = new Comic("Spiderman", "Cómic de Spiderman", 10.0, new ArrayList<>(), 5,
                 categorias, new ArrayList<Review>(), null,
                 100, "Marvel", 2000, new ArrayList<String>());
 
-        comic2 = new Comic("Batman", "Cómic de Batman", 12.0, "img2.jpg", 3,
+        comic2 = new Comic("Batman", "Cómic de Batman", 12.0, new ArrayList<>(), 3,
                 categorias, new ArrayList<Review>(), null,
                 120, "DC", 2005, new ArrayList<String>());
     }

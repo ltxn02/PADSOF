@@ -19,11 +19,11 @@ public class ItemTest {
      * instanciarla y probar la lógica interna que has programado en Item.java.
      */
     class TestItem extends Item {
-        public TestItem(String name, String description, double price, String picturePath, ArrayList<Category> categories) {
+        public TestItem(String name, String description, double price, ArrayList<String> picturePath, ArrayList<Category> categories) {
             super(name, description, price, picturePath, categories);
         }
 
-        public TestItem(String name, String description, double price, String picturePath) {
+        public TestItem(String name, String description, double price, ArrayList<String> picturePath) {
             super(name, description, price, picturePath);
         }
 
@@ -41,7 +41,7 @@ public class ItemTest {
 
     @Test
     void testConstructorYGettersBasicos() {
-        TestItem item = new TestItem("Espada Maestra", "Espada del héroe", 500.0, "espada.jpg");
+        TestItem item = new TestItem("Espada Maestra", "Espada del héroe", 500.0, new ArrayList<>());
 
         assertEquals("Espada Maestra", item.getName());
         assertEquals("Espada del héroe", item.getDescription());
@@ -53,13 +53,13 @@ public class ItemTest {
     void testPrecioNegativoLanzaExcepcion() {
         // Tu código en la línea 32 de Item.java protege contra precios negativos
         assertThrows(IllegalArgumentException.class, () -> {
-            new TestItem("Pocion", "Cura 50PV", -10.0, "pocion.jpg");
+            new TestItem("Pocion", "Cura 50PV", -10.0, new ArrayList<>());
         });
     }
 
     @Test
     void testAddCategory() {
-        TestItem item = new TestItem("Escudo", "Escudo de madera", 15.0, "escudo.jpg");
+        TestItem item = new TestItem("Escudo", "Escudo de madera", 15.0, new ArrayList<>());
 
         // Añadimos la categoría la primera vez (debe funcionar)
         assertDoesNotThrow(() -> {
@@ -75,7 +75,7 @@ public class ItemTest {
 
     @Test
     void testIsNamedFlexible() {
-        TestItem item = new TestItem("   Gema Roja   ", "Brilla mucho", 100.0, "gema.jpg");
+        TestItem item = new TestItem("   Gema Roja   ", "Brilla mucho", 100.0, new ArrayList<>());
 
         // Tu método isNamed ignora mayúsculas y espacios sobrantes (línea 174)
         assertTrue(item.isNamed("gema ROJA"));
@@ -85,7 +85,7 @@ public class ItemTest {
 
     @Test
     void testEdicionSegura() {
-        TestItem item = new TestItem("Arco", "Arco simple", 30.0, "arco.jpg");
+        TestItem item = new TestItem("Arco", "Arco simple", 30.0, new ArrayList<>());
 
         // Editamos pasando un null en el nombre y un precio negativo (tu método debe ignorarlos)
         item.testEdit(null, "Arco reforzado", -5.0, null);
@@ -101,7 +101,7 @@ public class ItemTest {
 
     @Test
     void testTemporizadores() throws InterruptedException {
-        TestItem item = new TestItem("Reloj", "Mide el tiempo", 5.0, "reloj.jpg");
+        TestItem item = new TestItem("Reloj", "Mide el tiempo", 5.0, new ArrayList<>());
 
         item.testRegisterTime();
 

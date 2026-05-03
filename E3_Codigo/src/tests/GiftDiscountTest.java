@@ -17,7 +17,7 @@ public class GiftDiscountTest {
             super(name,
                     "Descripción de regalo",
                     0.0,
-                    "img_path",
+                    new ArrayList<>(),
                     100,
                     new ArrayList<>(List.of(new Category("Regalos", new ArrayList<>()))),
                     new ArrayList<>(),

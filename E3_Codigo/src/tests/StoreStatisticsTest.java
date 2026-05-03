@@ -37,7 +37,7 @@ public class StoreStatisticsTest {
 
     class TestProduct extends Product {
         public TestProduct(String name, double price, ArrayList<Category> categorias) {
-            super(name, "Desc", price, "img.png", 100, categorias, new ArrayList<>(), null);
+            super(name, "Desc", price, new ArrayList<>(), 100, categorias, new ArrayList<>(), null);
         }
     }
 
@@ -63,7 +63,7 @@ public class StoreStatisticsTest {
         listaCategorias.add(categoriaTest);
 
         pConsola = new TestProduct("Nintendo Switch", 300.0, listaCategorias);
-        shpTasado = new SecondHandProduct("Zelda Antiguo", "Viejo", "img.png", ItemType.GAME, clienteNormal);
+        shpTasado = new SecondHandProduct("Zelda Antiguo", "Viejo", new ArrayList<>(), ItemType.GAME, clienteNormal);
 
         List<CartItem> itemsTop = new ArrayList<>();
         itemsTop.add(new TestCartItem(pConsola, 2));

@@ -316,7 +316,7 @@ public class EmployeeTest {
             "Test Comic",
             "Comic",
             10.0,
-            "img/comic.jpg",
+                new ArrayList<>(),
             50,
             testCategories,
             testReviews,
@@ -343,7 +343,7 @@ public class EmployeeTest {
             "Test",
             "Comic",
             10.0,
-            "img/comic.jpg",
+                new ArrayList<>(),
             50,
             testCategories,
             testReviews,
@@ -373,7 +373,7 @@ public class EmployeeTest {
         SecondHandProduct secondHandProduct = new SecondHandProduct(
             "Test Product",
             "Second hand product",
-            "img/product.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             testClient
         );
@@ -393,7 +393,7 @@ public class EmployeeTest {
         SecondHandProduct secondHandProduct = new SecondHandProduct(
             "Test",
             "Product",
-            "img/product.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             testClient
         );
@@ -418,7 +418,7 @@ public class EmployeeTest {
         SecondHandProduct secondHandProduct = new SecondHandProduct(
             "Test",
             "Product",
-            "img/product.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             otroCliente
         );
@@ -468,7 +468,7 @@ public class EmployeeTest {
         ArrayList<CartItem> items = new ArrayList<>();
 	     // Crear al menos un CartItem válido
 	     NewProduct testProduct = new Comic(
-	         "Test Comic", "Comic", 10.0, "img/comic.jpg", 50,
+	         "Test Comic", "Comic", 10.0, new ArrayList<>(), 50,
 	         testCategories, testReviews, null, 200, "Publisher", 2020, new ArrayList<>()
 	     );
 	     items.add(new CartItem(testProduct, 1));
@@ -486,7 +486,7 @@ public class EmployeeTest {
     void testActualizarEstadoPedidoSinPermiso() {
         ArrayList<CartItem> items = new ArrayList<>();
         NewProduct testProduct = new Comic(
-            "Test Comic", "Comic", 10.0, "img/comic.jpg", 50,
+            "Test Comic", "Comic", 10.0, new ArrayList<>(), 50,
             testCategories, testReviews, null, 200, "Publisher", 2020, new ArrayList<>()
         );
         items.add(new CartItem(testProduct, 1));

@@ -19,7 +19,7 @@ public class NewProductTest {
      * los métodos de gestión de stock, reservas y reseñas.
      */
     class TestNewProduct extends NewProduct {
-        public TestNewProduct(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
+        public TestNewProduct(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
             super(name, description, price, image, stock, categories, reviews);
         }
     }
@@ -35,17 +35,17 @@ public class NewProductTest {
     @Test
     void testConstructorLanzaExcepciones() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new TestNewProduct("Ratón", "Ratón USB", 15.0, "img.png", -5, categoriasValidas, reviewsVacias);
+            new TestNewProduct("Ratón", "Ratón USB", 15.0, new ArrayList<>(), -5, categoriasValidas, reviewsVacias);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new TestNewProduct("Teclado", "Teclado mecánico", 50.0, "img.png", 10, new ArrayList<Category>(), reviewsVacias);
+            new TestNewProduct("Teclado", "Teclado mecánico", 50.0, new ArrayList<>(), 10, new ArrayList<Category>(), reviewsVacias);
         });
     }
 
     @Test
     void testGestionDeStockFisico() {
-        TestNewProduct producto = new TestNewProduct("Monitor", "Pantalla 24", 150.0, "img.png", 10, categoriasValidas, reviewsVacias);
+        TestNewProduct producto = new TestNewProduct("Monitor", "Pantalla 24", 150.0, new ArrayList<>(), 10, categoriasValidas, reviewsVacias);
 
         // Aumentamos el stock
         producto.increaseStock(5);
@@ -68,7 +68,7 @@ public class NewProductTest {
 
     @Test
     void testGestionDeStockEfectivo() {
-        TestNewProduct producto = new TestNewProduct("Cascos", "Auriculares", 30.0, "img.png", 20, categoriasValidas, reviewsVacias);
+        TestNewProduct producto = new TestNewProduct("Cascos", "Auriculares", 30.0, new ArrayList<>(), 20, categoriasValidas, reviewsVacias);
 
         // Forzamos el stock efectivo a ser bajo para la prueba (simulando que alguien reservó)
         // Ya que el stock real no actualiza el efectivo en el constructor
@@ -90,7 +90,7 @@ public class NewProductTest {
 
     @Test
     void testContainsMetodoBusqueda() {
-        TestNewProduct producto = new TestNewProduct("Auriculares Sony ZX", "Buenos bajos", 40.0, "img.png", 10, categoriasValidas, reviewsVacias);
+        TestNewProduct producto = new TestNewProduct("Auriculares Sony ZX", "Buenos bajos", 40.0, new ArrayList<>(), 10, categoriasValidas, reviewsVacias);
 
         assertTrue(producto.contains("sony"));
         assertTrue(producto.contains("AURICULARES"));

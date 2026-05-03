@@ -421,7 +421,8 @@ public class MenuGestor {
         System.out.print("Unidades de este pack en stock (ej: 10): ");
         int stock = Integer.parseInt(scanner.nextLine());
         System.out.print("Ruta de la imagen (ej: img/pack.jpg): ");
-        String image = scanner.nextLine();
+        ArrayList<String> image = new ArrayList<>();
+        image.add(scanner.nextLine());
 
         ArrayList<Category> categoriasPack = new ArrayList<>();
         for (NewProduct np : productosDelPack) {

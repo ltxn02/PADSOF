@@ -222,7 +222,7 @@ public class Manager extends Staff implements java.io.Serializable {
      * @throws IllegalArgumentException Si {@code initialProducts} contiene menos de 2 productos
      *                                  o alguno de los parámetros requeridos es nulo.
      */
-    public Pack createPack(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, ArrayList<NewProduct> initialProducts) {
+    public Pack createPack(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, ArrayList<NewProduct> initialProducts) {
     	Pack pack = new Pack(name, description, price, image, stock, categories, reviews, initialProducts);
     	return pack;
     }

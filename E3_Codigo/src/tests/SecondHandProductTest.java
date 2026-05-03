@@ -24,10 +24,10 @@ public class SecondHandProductTest {
     @Test
     void testConstructorYRestricciones() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new SecondHandProduct("Pack Consola", "Lote", "img.png", 100.0, false, ItemType.PACK, Condition.MUY_BUENO, owner);
+            new SecondHandProduct("Pack Consola", "Lote", new ArrayList<>(), 100.0, false, ItemType.PACK, Condition.MUY_BUENO, owner);
         });
 
-        SecondHandProduct producto = new SecondHandProduct("GameBoy", "Clásica", "gb.png", ItemType.GAME, owner);
+        SecondHandProduct producto = new SecondHandProduct("GameBoy", "Clásica", new ArrayList<>(), ItemType.GAME, owner);
         assertNotNull(producto);
         assertFalse(producto.isAppraised());
         assertEquals(owner, producto.getOwner());
@@ -35,7 +35,7 @@ public class SecondHandProductTest {
 
     @Test
     void testProcesoDeTasacion() {
-        SecondHandProduct producto = new SecondHandProduct("Zelda NES", "Cartucho solo", "zelda.png", ItemType.COMIC, owner);
+        SecondHandProduct producto = new SecondHandProduct("Zelda NES", "Cartucho solo", new ArrayList<>(), ItemType.COMIC, owner);
 
         double valorTasado = 45.0;
         producto.appraiseSecondHand(appraiser, Condition.PERFECTO, valorTasado);
@@ -48,7 +48,7 @@ public class SecondHandProductTest {
 
     @Test
     void testDisponibilidadYBloqueo() {
-        SecondHandProduct producto = new SecondHandProduct("PS2", "Usada", "ps2.png", ItemType.GAME, owner);
+        SecondHandProduct producto = new SecondHandProduct("PS2", "Usada", new ArrayList<>(), ItemType.GAME, owner);
 
         assertTrue(producto.isAvailable());
 

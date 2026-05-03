@@ -14,8 +14,10 @@ public class StandardDiscountFactoryTest {
     private StandardDiscountFactory factory;
 
     class TestProduct extends Product {
+
         public TestProduct(String name, ArrayList<Category> categorias) {
-            super(name, "Regalo", 0.0, "img.png", 100, categorias, new ArrayList<>(), null);
+
+            super(name, "Regalo", 0.0, new ArrayList<>(), 100, categorias, new ArrayList<>(), null);
         }
     }
 

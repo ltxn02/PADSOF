@@ -29,7 +29,7 @@ public abstract class Product extends NewProduct implements java.io.Serializable
      * @param reviews     Lista de valoraciones o reseñas hechas por los usuarios.
      * @param discount    Descuento aplicable al producto (interfaz IDiscount). Puede ser null si no tiene rebaja.
      */
-    public Product(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount) {
+    public Product(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount) {
         super(name, description, price, image, stock, categories, reviews);
         this.discount = discount;
         this.productId = Product.lastProductId;

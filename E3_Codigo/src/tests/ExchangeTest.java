@@ -27,8 +27,8 @@ public class ExchangeTest {
         receptor = new Client("user_recep", "pass2", "Luis Receptor", "22222222B", "02/02/1990", "luis@mail.com", "600222222");
         empleadoValidador = new Employee("emp_val", "pass3", "Empleado Validador", "33333333C", "03/03/1980", "emp@mail.com", "600333333", 1500.0, true);
 
-        productoPedido = new SecondHandProduct("Zelda N64", "Clásico", "img1.png", ItemType.GAME, receptor);
-        productoOfrecido = new SecondHandProduct("Mario Kart", "Como nuevo", "img2.png", ItemType.GAME, ofertante);
+        productoPedido = new SecondHandProduct("Zelda N64", "Clásico", new ArrayList<>(), ItemType.GAME, receptor);
+        productoOfrecido = new SecondHandProduct("Mario Kart", "Como nuevo", new ArrayList<>(), ItemType.GAME, ofertante);
 
         ArrayList<SecondHandProduct> ofrecidos = new ArrayList<>();
         ofrecidos.add(productoOfrecido);

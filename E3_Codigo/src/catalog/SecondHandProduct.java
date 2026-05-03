@@ -26,6 +26,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 	private ItemType itemType;
 	private Condition condition;
 	private LocalDateTime dateadded;
+	private ArrayList<String> foto = new ArrayList<>();
 
 	/**
 	 * Constructor completo para inicializar un producto de segunda mano.
@@ -41,7 +42,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 	 * @param owner       Cliente que pone el producto a disposición de la tienda.
 	 * @throws IllegalArgumentException si el itemType es un PACK.
 	 */
-	public SecondHandProduct(String name, String description, String picturePath, double price, boolean isAppraised, ItemType itemType, Condition condition, Client owner) {
+	public SecondHandProduct(String name, String description, ArrayList<String> picturePath, double price, boolean isAppraised, ItemType itemType, Condition condition, Client owner) {
 		super(name, description, price, picturePath);
 		if(itemType == ItemType.PACK) {
 			throw new IllegalArgumentException("Invalid item type, a second hand product cannot be a pack");
@@ -54,7 +55,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 		this.dateadded = LocalDateTime.now();
 		this.secondHandId = SecondHandProduct.lastSecondHandProductId;
 		SecondHandProduct.lastSecondHandProductId++;
-
+		this.foto= picturePath;
 		if (this.owner != null) {
 			this.owner.registerSecondHandProduct(this);
 		}
@@ -70,7 +71,7 @@ public class SecondHandProduct extends Item implements java.io.Serializable {
 	 * @param itemType    Tipo de ítem.
 	 * @param owner       Cliente propietario.
 	 */
-	public SecondHandProduct(String name, String description, String picturePath, ItemType itemType, Client owner) {
+	public SecondHandProduct(String name, String description, ArrayList<String> picturePath, ItemType itemType, Client owner) {
 		this(name, description, picturePath, 0, false, itemType, null, owner);
 	}
 

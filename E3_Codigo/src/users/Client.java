@@ -216,7 +216,7 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 	 * @throws IllegalArgumentException Si ya existe un producto con el mismo nombre
 	 *                                  en la cartera del cliente.
 	 */
-	public void registerSecondHandProduct(String name, String description, String picturePath, ItemType itemType) throws IllegalArgumentException {
+	public void registerSecondHandProduct(String name, String description, ArrayList<String> picturePath, ItemType itemType) throws IllegalArgumentException {
 	    if(this.productNamedExists(name) == true) {
 	        throw new IllegalArgumentException("A product with the same name is already registered in your wallet");
 	    }

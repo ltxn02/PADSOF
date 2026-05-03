@@ -33,7 +33,7 @@ public class SistemaRecomendacionesTest {
      * Clase auxiliar (Mock) para poder instanciar Product, ya que es abstracta.
      */
     class TestProduct extends Product {
-        public TestProduct(String name, String description, double price, String image, int stock, ArrayList<Category> categories) {
+        public TestProduct(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories) {
             super(name, description, price, image, stock, categories, new ArrayList<>(), null);
         }
     }
@@ -58,9 +58,9 @@ public class SistemaRecomendacionesTest {
         ArrayList<Category> catsL = new ArrayList<>(); catsL.add(catLibros);
         ArrayList<Category> catsJ = new ArrayList<>(); catsJ.add(catJuegos);
 
-        pQuijote = new TestProduct("El Quijote", "Libro clásico", 20.0, "q.png", 10, catsL);
-        pHamlet = new TestProduct("Hamlet", "Teatro", 15.0, "h.png", 10, catsL);
-        pEldenRing = new TestProduct("Elden Ring", "RPG", 60.0, "er.png", 10, catsJ);
+        pQuijote = new TestProduct("El Quijote", "Libro clásico", 20.0, new ArrayList<>(), 10, catsL);
+        pHamlet = new TestProduct("Hamlet", "Teatro", 15.0, new ArrayList<>(), 10, catsL);
+        pEldenRing = new TestProduct("Elden Ring", "RPG", 60.0, new ArrayList<>(), 10, catsJ);
 
         catalogo.add(pQuijote);
         catalogo.add(pHamlet);

@@ -92,7 +92,7 @@ public class ClientTest {
     @Test
     void testAnadirProductoAlCarrito() {
         Comic comic = new Comic(
-            "Test Comic 1", "Desc", 10.0, "img/1.jpg", 100,
+            "Test Comic 1", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         
@@ -107,11 +107,11 @@ public class ClientTest {
     @Test
     void testAnadirMultiplesProductosDiferentesAlCarrito() {
         Comic comic = new Comic(
-            "Comic Test", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic Test", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         Game game = new Game(
-            "Game Test", "Desc", 45.0, "img/2.jpg", 50,
+            "Game Test", "Desc", 45.0, new ArrayList<>(), 50,
             testCategories, testReviews, null, 4, new ArrayList<>(), new AgeRange(10, 99)
         );
         
@@ -125,7 +125,7 @@ public class ClientTest {
     @Test
     void testEliminarProductoDelCarrito() {
         Comic comic = new Comic(
-            "Comic to Remove", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic to Remove", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         
@@ -140,7 +140,7 @@ public class ClientTest {
     @Test
     void testEliminarTodoDelCarrito() {
         Comic comic = new Comic(
-            "Comic All Remove", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic All Remove", "Desc", 10.0,  new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         
@@ -154,11 +154,11 @@ public class ClientTest {
     @Test
     void testVaciarCarrito() {
         Comic comic = new Comic(
-            "Comic", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         Game game = new Game(
-            "Game", "Desc", 45.0, "img/2.jpg", 50,
+            "Game", "Desc", 45.0, new ArrayList<>(), 50,
             testCategories, testReviews, null, 4, new ArrayList<>(), new AgeRange(10, 99)
         );
         
@@ -188,7 +188,7 @@ public class ClientTest {
         testClient.registerSecondHandProduct(
             "Nintendo Switch Original",
             "Consola usada perfecta",
-            "img/switch.jpg",
+                new ArrayList<>(),
             ItemType.GAME
         );
         
@@ -202,7 +202,7 @@ public class ClientTest {
         testClient.registerSecondHandProduct(
             "PS5",
             "Consola nueva",
-            "img/ps5.jpg",
+                new ArrayList<>(),
             ItemType.GAME
         );
 
@@ -211,7 +211,7 @@ public class ClientTest {
             testClient.registerSecondHandProduct(
                 "PS5",
                 "Otra PS5",
-                "img/ps5_2.jpg",
+                    new ArrayList<>(),
                 ItemType.GAME
             );
         }, "No debe permitir dos productos con el mismo nombre");
@@ -226,7 +226,7 @@ public class ClientTest {
             testClient.registerSecondHandProduct(
                 nombre,
                 "Descripción de " + nombre,
-                "img/" + nombre + ".jpg",
+                    new ArrayList<>(),
                 ItemType.COMIC
             );
         }
@@ -242,7 +242,7 @@ public class ClientTest {
         SecondHandProduct product = new SecondHandProduct(
             "Xbox One",
             "Consola usada",
-            "img/xbox.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             testClient
         );
@@ -257,7 +257,7 @@ public class ClientTest {
         SecondHandProduct product = new SecondHandProduct(
             "producto_unico",
             "Descripción",
-            "img/prod.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             testClient
         );
@@ -273,7 +273,7 @@ public class ClientTest {
         SecondHandProduct product = new SecondHandProduct(
             "Producto Verificable",
             "Desc",
-            "img/prod.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             testClient
         );
@@ -287,7 +287,7 @@ public class ClientTest {
         SecondHandProduct myProduct = new SecondHandProduct(
             "Mi Producto",
             "Desc",
-            "img/mine.jpg",
+                new ArrayList<>(),
             ItemType.GAME,
             testClient
         );
@@ -295,7 +295,7 @@ public class ClientTest {
         SecondHandProduct otherProduct = new SecondHandProduct(
             "Su Producto",
             "Desc",
-            "img/other.jpg",
+                new ArrayList<>(),
             ItemType.COMIC,
             otherClient
         );
@@ -342,7 +342,7 @@ public class ClientTest {
     @Test
     void testDosCientesNoCompartenCarrito() {
         Comic comic = new Comic(
-            "Comic", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         
@@ -355,7 +355,7 @@ public class ClientTest {
 
     @Test
     void testDosCientesNoCompartenProductosSegundaMano() {
-        testClient.registerSecondHandProduct("Mi Producto", "Desc", "img/1.jpg", ItemType.GAME);
+        testClient.registerSecondHandProduct("Mi Producto", "Desc", new ArrayList<>(), ItemType.GAME);
         
         assertTrue(testClient.getCarteraSegundaMano().size() > 0);
         assertEquals(0, otherClient.getCarteraSegundaMano().size(),
@@ -374,7 +374,7 @@ public class ClientTest {
     @Test
     void testNoSePuedeResenaProductoNoComprado() {
         Comic comic = new Comic(
-            "Comic no comprado", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic no comprado", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         
@@ -390,10 +390,10 @@ public class ClientTest {
     @Test
     void testCrearOfertaIntercambio() {
         SecondHandProduct productMio = new SecondHandProduct(
-            "Mi Producto", "Desc", "img/1.jpg", ItemType.GAME, testClient
+            "Mi Producto", "Desc", new ArrayList<>(), ItemType.GAME, testClient
         );
         SecondHandProduct productOtro = new SecondHandProduct(
-            "Producto del Otro", "Desc", "img/2.jpg", ItemType.COMIC, otherClient
+            "Producto del Otro", "Desc", new ArrayList<>(), ItemType.COMIC, otherClient
         );
 
         assertDoesNotThrow(() -> {
@@ -406,10 +406,10 @@ public class ClientTest {
     @Test
     void testNoSePuedeHacerOfertaConProductoAjeno() {
         SecondHandProduct productOtro1 = new SecondHandProduct(
-            "Producto de Otro 1", "Desc", "img/1.jpg", ItemType.GAME, otherClient
+            "Producto de Otro 1", "Desc", new ArrayList<>(), ItemType.GAME, otherClient
         );
         SecondHandProduct productOtro2 = new SecondHandProduct(
-            "Producto de Otro 2", "Desc", "img/2.jpg", ItemType.COMIC, otherClient
+            "Producto de Otro 2", "Desc", new ArrayList<>(), ItemType.COMIC, otherClient
         );
 
         // Intento ofrecer algo que no es mío
@@ -421,10 +421,10 @@ public class ClientTest {
     @Test
     void testClientePuedeRecibirOferta() {
         SecondHandProduct productMio = new SecondHandProduct(
-            "Mi Producto", "Desc", "img/1.jpg", ItemType.GAME, testClient
+            "Mi Producto", "Desc", new ArrayList<>(), ItemType.GAME, testClient
         );
         SecondHandProduct productOtro = new SecondHandProduct(
-            "Producto del Otro", "Desc", "img/2.jpg", ItemType.COMIC, otherClient
+            "Producto del Otro", "Desc", new ArrayList<>(), ItemType.COMIC, otherClient
         );
 
         ExchangeOffer offer = new ExchangeOffer(
@@ -447,7 +447,7 @@ public class ClientTest {
     @Test
     void testVerCarritoFormatoTexto() {
         Comic comic = new Comic(
-            "Comic", "Desc", 10.0, "img/1.jpg", 100,
+            "Comic", "Desc", 10.0, new ArrayList<>(), 100,
             testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
         );
         testClient.addToCart(comic, 1);
@@ -458,7 +458,7 @@ public class ClientTest {
 
     @Test
     void testVerProductosSegundaMano() {
-        testClient.registerSecondHandProduct("Producto", "Desc", "img/1.jpg", ItemType.GAME);
+        testClient.registerSecondHandProduct("Producto", "Desc", new ArrayList<>(), ItemType.GAME);
         
         String view = testClient.viewMyProducts();
         assertNotNull(view);
@@ -484,7 +484,7 @@ public class ClientTest {
             testClient.registerSecondHandProduct(
                 "Producto " + i,
                 "Descripción " + i,
-                "img/prod" + i + ".jpg",
+                    new ArrayList<>(),
                 ItemType.GAME
             );
         }
@@ -498,7 +498,7 @@ public class ClientTest {
         Comic[] comics = new Comic[5];
         for (int i = 0; i < 5; i++) {
             comics[i] = new Comic(
-                "Comic " + i, "Desc " + i, 10.0 + i, "img/" + i + ".jpg", 100,
+                "Comic " + i, "Desc " + i, 10.0 + i, new ArrayList<>(), 100,
                 testCategories, testReviews, null, 200, "Pub", 2020, new ArrayList<>()
             );
             testClient.addToCart(comics[i], 1);

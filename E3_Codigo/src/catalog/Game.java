@@ -32,7 +32,7 @@ public class Game extends Product implements java.io.Serializable{
      * @param ageRange    Rango de edad recomendado para jugar.
      * @throws IllegalArgumentException Si el número de jugadores (nPlayers) es menor que 1.
      */
-    public Game(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
+    public Game(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews, IDiscount discount, int nPlayers, ArrayList<String> mechanics, AgeRange ageRange) {
         super(name, description, price, image, stock, categories, reviews, discount);
         if (nPlayers < 1) {
             throw new IllegalArgumentException("Argumentos inválidos: El número de jugadores no puede ser menor a 1");

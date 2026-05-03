@@ -36,7 +36,7 @@ public class SistemaRecomendacionesSegundamanoTest {
         private ArrayList<Category> categorias = new ArrayList<>();
 
         public TestSHProduct(String name, ItemType type, Client owner, Category cat) {
-            super(name, "Descripción de prueba", "img.png", type, owner);
+            super(name, "Descripción de prueba", new ArrayList<>(), type, owner);
             this.categorias.add(cat);
         }
 

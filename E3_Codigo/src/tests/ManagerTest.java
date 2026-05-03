@@ -55,14 +55,15 @@ public class ManagerTest {
         // 3. Crear lista de reseñas y productos para packs
         testReviews = new ArrayList<>();
         testProducts = new ArrayList<>();
+        ArrayList<String> foto = new ArrayList<String>();
 
         // Crear productos de prueba para packs
         Comic comic = new Comic(
             "Test Comic",
             "Comic de prueba",
             10.0,
-            "img/comic.jpg",
-            100,
+            foto,
+                100,
             testCategories,
             testReviews,
             null,
@@ -76,7 +77,7 @@ public class ManagerTest {
             "Test Game",
             "Juego de prueba",
             45.0,
-            "img/game.jpg",
+            foto,
             50,
             testCategories,
             testReviews,
@@ -359,11 +360,13 @@ public class ManagerTest {
     @Test
     void testAnadirItemACategoria() {
         Category categoria = manager.createCategory("Cómics");
+        ArrayList<String> foto = new ArrayList<String>();
+
         Comic comic = new Comic(
             "Test Comic 2",
             "Otro comic",
             15.0,
-            "img/comic2.jpg",
+            foto,
             50,
             testCategories,
             testReviews,
@@ -411,11 +414,13 @@ public class ManagerTest {
      */
     @Test
     void testCrearPack() {
+        ArrayList<String> foto = new ArrayList<String>();
+
         Pack pack = manager.createPack(
             "Test Pack",
             "Pack de prueba",
             50.0,
-            "img/pack.jpg",
+            foto,
             20,
             testCategories,
             testReviews,
@@ -432,6 +437,8 @@ public class ManagerTest {
      */
     @Test
     void testCrearPackConUnProducto() {
+        ArrayList<String> foto = new ArrayList<String>();
+
         ArrayList<NewProduct> unProducto = new ArrayList<>();
         unProducto.add(testProducts.get(0));
 
@@ -440,7 +447,7 @@ public class ManagerTest {
                 "Invalid Pack",
                 "Solo un producto",
                 20.0,
-                "img/pack.jpg",
+                foto,
                 10,
                 testCategories,
                 testReviews,
@@ -454,11 +461,13 @@ public class ManagerTest {
      */
     @Test
     void testCrearPackConMultiplesProductos() {
+        ArrayList<String> foto = new ArrayList<String>();
+
         Pack pack = manager.createPack(
             "Multi Pack",
             "Pack con múltiples productos",
             80.0,
-            "img/multipack.jpg",
+            foto,
             15,
             testCategories,
             testReviews,
@@ -478,6 +487,8 @@ public class ManagerTest {
      */
     @Test
     void testMultiplesOperacionesSeguidas() {
+        ArrayList<String> foto = new ArrayList<String>();
+
         // Crear empleado
         Employee emp = manager.createEmployeeAccount(
             "emp_multi", "pass", "Multi Employee", "77777777I", "05/05/1995",
@@ -498,7 +509,7 @@ public class ManagerTest {
             "Multi Pack",
             "Pack múltiple",
             75.0,
-            "img/multipack.jpg",
+            foto,
             10,
             testCategories,
             testReviews,

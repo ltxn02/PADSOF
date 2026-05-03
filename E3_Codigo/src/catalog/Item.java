@@ -17,6 +17,7 @@ import utils.*;
  */
 public abstract class Item extends BaseElement implements java.io.Serializable {
     private String name;
+    private ArrayList<String> fotos;
     private String description;
     private double price;
     private String picturePath;
@@ -33,14 +34,14 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      * @param categories  Lista de categorías a las que pertenece.
      * @throws IllegalArgumentException Si el precio introducido es negativo.
      */
-    public Item(String name, String description, double price, String picturePath, ArrayList<Category> categories) {
+    public Item(String name, String description, double price, ArrayList<String> picturePath, ArrayList<Category> categories) {
         if (price < 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
         this.price = price;
         this.name = name;
         this.description = description;
-        this.picturePath = picturePath;
+        this.fotos = picturePath;
         this.categories = categories;
         this.lastAddedAt = null;
     }
@@ -53,7 +54,7 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
      * @param price       Precio base en euros.
      * @param picturePath Ruta relativa de la imagen.
      */
-    public Item(String name, String description, double price, String picturePath) {
+    public Item(String name, String description, double price, ArrayList<String> picturePath) {
         this(name, description, price, picturePath, new ArrayList<Category>());
     }
 
@@ -199,6 +200,10 @@ public abstract class Item extends BaseElement implements java.io.Serializable {
             return true;
         }
         return false;
+    }
+
+    public ArrayList<String> getFotos() {
+        return fotos;
     }
 
     /**

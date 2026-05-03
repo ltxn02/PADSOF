@@ -387,7 +387,7 @@ public class GuestTest {
         assertEquals(0, c1.getCarteraSegundaMano().size());
         assertEquals(0, c2.getCarteraSegundaMano().size());
 
-        c1.registerSecondHandProduct("Producto A", "Desc", "img/a.jpg", ItemType.GAME);
+        c1.registerSecondHandProduct("Producto A", "Desc", new ArrayList<>(), ItemType.GAME);
 
         assertEquals(1, c1.getCarteraSegundaMano().size());
         assertEquals(0, c2.getCarteraSegundaMano().size(),

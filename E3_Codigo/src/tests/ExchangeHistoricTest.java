@@ -22,8 +22,8 @@ public class ExchangeHistoricTest {
         Client c1 = new Client("cliente1", "pass", "Juan", "11111111A", "01/01/1990", "a@mail.com", "600111111");
         Client c2 = new Client("cliente2", "pass", "Luis", "22222222B", "01/01/1990", "b@mail.com", "600222222");
 
-        SecondHandProduct p1 = new SecondHandProduct("Juego 1", "Desc", "img.png", ItemType.GAME, c1);
-        SecondHandProduct p2 = new SecondHandProduct("Juego 2", "Desc", "img.png", ItemType.GAME, c2);
+        SecondHandProduct p1 = new SecondHandProduct("Juego 1", "Desc", new ArrayList<>(), ItemType.GAME, c1);
+        SecondHandProduct p2 = new SecondHandProduct("Juego 2", "Desc", new ArrayList<>(), ItemType.GAME, c2);
 
         ArrayList<SecondHandProduct> ofrecidos1 = new ArrayList<>();
         ofrecidos1.add(p1);
@@ -31,8 +31,8 @@ public class ExchangeHistoricTest {
         oferta1.aceptaroferta();
         intercambio1 = new Exchange(oferta1);
 
-        SecondHandProduct p3 = new SecondHandProduct("Juego 3", "Desc", "img.png", ItemType.GAME, c1);
-        SecondHandProduct p4 = new SecondHandProduct("Juego 4", "Desc", "img.png", ItemType.GAME, c2);
+        SecondHandProduct p3 = new SecondHandProduct("Juego 3", "Desc", new ArrayList<>(), ItemType.GAME, c1);
+        SecondHandProduct p4 = new SecondHandProduct("Juego 4", "Desc", new ArrayList<>(), ItemType.GAME, c2);
 
         ArrayList<SecondHandProduct> ofrecidos2 = new ArrayList<>();
         ofrecidos2.add(p3);

@@ -28,7 +28,7 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
      * @param reviews     Lista inicial de reseñas del producto.
      * @throws IllegalArgumentException Si el stock inicial es negativo o si la lista de categorías está vacía.
      */
-    public NewProduct(String name, String description, double price, String image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
+    public NewProduct(String name, String description, double price, ArrayList<String> image, int stock, ArrayList<Category> categories, ArrayList<Review> reviews) {
         super(name, description, price, image, categories);
         if (stock < 0) {
             throw new IllegalArgumentException("Stock cannot be negative");
@@ -48,7 +48,7 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
      * @param image       Ruta relativa de la imagen.
      * @param stock       Cantidad de unidades en stock.
      */
-    public NewProduct(String name, String description, double price, String image, int stock) {
+    public NewProduct(String name, String description, double price, ArrayList<String> image, int stock) {
         this(name, description, price, image, stock, new ArrayList<Category>(), new ArrayList<Review>());
     }
 

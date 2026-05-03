@@ -33,7 +33,7 @@ public class GameTest {
 
     @Test
     void testCrearGameValido() {
-        Game juego = new Game("Catán", "Juego de comercio y construcción", 45.0, "catan.jpg", 20,
+        Game juego = new Game("Catán", "Juego de comercio y construcción", 45.0, new ArrayList<>(), 20,
                 categoriasValidas, new ArrayList<Review>(), null,
                 4, mecanicas, rangoEdad);
 
@@ -49,7 +49,7 @@ public class GameTest {
     void testCrearGameJugadoresInvalidos() {
         // Tu código lanza IllegalArgumentException si nPlayers < 1
         assertThrows(IllegalArgumentException.class, () -> {
-            new Game("Solitario Malo", "Juego injugable", 10.0, "solitario.jpg", 5,
+            new Game("Solitario Malo", "Juego injugable", 10.0, new ArrayList<>(), 5,
                     categoriasValidas, new ArrayList<Review>(), null,
                     0, mecanicas, rangoEdad); // Le pasamos 0 jugadores, ¡debe fallar!
         });
@@ -57,7 +57,7 @@ public class GameTest {
 
     @Test
     void testEditGameInfo() {
-        Game juego = new Game("Catán", "Juego de comercio", 45.0, "catan.jpg", 20,
+        Game juego = new Game("Catán", "Juego de comercio", 45.0, new ArrayList<>(), 20,
                 categoriasValidas, new ArrayList<Review>(), null,
                 4, mecanicas, rangoEdad);
 
