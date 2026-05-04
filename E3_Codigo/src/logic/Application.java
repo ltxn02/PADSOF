@@ -52,7 +52,7 @@ public class Application {
             ArrayList<Category> figuraCategories = new ArrayList<>(Arrays.asList(catFigura));
             ArrayList<Category> juegoCategories = new ArrayList<>(Arrays.asList(catJuego));
 
-            // --- 10 CÓMICS (Con ArrayList<String> para imágenes) ---
+            // --- 10 CÓMICS ---
             catalog.add(new Comic("One Piece Vol. 1", "El inicio de la gran aventura de Luffy.", 7.95, new ArrayList<>(Arrays.asList("src/imgProductos/op1.jpg")), 50, comicCategories, emptyReviews, null, 208, "Planeta Cómic", 1997, new ArrayList<>(Arrays.asList("Eiichiro Oda"))));
             catalog.add(new Comic("Dragon Ball Vol. 1", "Goku conoce a Bulma y comienza la búsqueda.", 8.50, new ArrayList<>(Arrays.asList("src/imgProductos/db1.jpg")), 40, comicCategories, emptyReviews, null, 192, "Planeta Cómic", 1984, new ArrayList<>(Arrays.asList("Akira Toriyama"))));
             catalog.add(new Comic("Tintín en el Tíbet", "Tintín viaja al Himalaya en busca de Chang.", 14.90, new ArrayList<>(Arrays.asList("src/imgProductos/tintin.jpg")), 25, comicCategories, emptyReviews, null, 64, "Juventud", 1960, new ArrayList<>(Arrays.asList("Hergé"))));
@@ -64,7 +64,7 @@ public class Application {
             catalog.add(new Comic("Death Note Vol. 1", "Un cuaderno capaz de matar con solo escribir un nombre.", 8.00, new ArrayList<>(Arrays.asList("src/imgProductos/deathnote1.jpg")), 45, comicCategories, emptyReviews, null, 200, "Norma Editorial", 2003, new ArrayList<>(Arrays.asList("Tsugumi Ohba"))));
             catalog.add(new Comic("Berserk Vol. 1", "Guts busca venganza en un mundo de fantasía oscura.", 10.00, new ArrayList<>(Arrays.asList("src/imgProductos/berserk1.jpg")), 30, comicCategories, emptyReviews, null, 224, "Panini Comics", 1989, new ArrayList<>(Arrays.asList("Kentaro Miura"))));
 
-            // --- 10 FIGURAS (Con ArrayList<String> para imágenes) ---
+            // --- 10 FIGURAS ---
             catalog.add(new Figurine("Figura Gon Freecss", "Gon en pose de batalla de Hunter x Hunter.", 45.00, new ArrayList<>(Arrays.asList("src/imgProductos/gon.jpg")), 10, figuraCategories, emptyReviews, null, 15.0, 5.0, 5.0, "PVC", "Banpresto"));
             catalog.add(new Figurine("Funko Pop Zoro", "Zoro Roronoa con sus tres katanas.", 16.99, new ArrayList<>(Arrays.asList("src/imgProductos/zoro_pop.jpg")), 25, figuraCategories, emptyReviews, null, 10.0, 6.0, 6.0, "Vinilo", "Funko"));
             catalog.add(new Figurine("Figura Eren Titán", "Eren en su imponente forma de Titán de Ataque.", 89.00, new ArrayList<>(Arrays.asList("src/imgProductos/eren.jpg")), 5, figuraCategories, emptyReviews, null, 25.0, 15.0, 15.0, "Resina", "Good Smile"));
@@ -76,7 +76,7 @@ public class Application {
             catalog.add(new Figurine("Figura Geralt Rivia", "El brujo cazando un monstruo.", 65.00, new ArrayList<>(Arrays.asList("src/imgProductos/geralt.jpg")), 7, figuraCategories, emptyReviews, null, 24.0, 10.0, 10.0, "PVC", "Dark Horse"));
             catalog.add(new Figurine("Funko Pop Pikachu", "El Pokémon eléctrico en formato Pop.", 14.50, new ArrayList<>(Arrays.asList("src/imgProductos/pikachu.jpg")), 40, figuraCategories, emptyReviews, null, 10.0, 5.0, 5.0, "Vinilo", "Funko"));
 
-            // --- 10 JUEGOS (Con ArrayList<String> para imágenes y objeto AgeRange) ---
+            // --- 10 JUEGOS ---
             catalog.add(new Game("Catan", "Estrategia y negociación en la isla.", 45.00, new ArrayList<>(Arrays.asList("src/imgProductos/catan.jpg")), 20, juegoCategories, emptyReviews, null, 4, new ArrayList<>(Arrays.asList("Gestión")), new AgeRange(10, 99)));
             catalog.add(new Game("Dixit", "Juego de interpretación y arte onírico.", 32.00, new ArrayList<>(Arrays.asList("src/imgProductos/dixit.jpg")), 15, juegoCategories, emptyReviews, null, 6, new ArrayList<>(Arrays.asList("Cartas")), new AgeRange(8, 99)));
             catalog.add(new Game("Carcassonne", "Construye la Francia medieval con losetas.", 28.00, new ArrayList<>(Arrays.asList("src/imgProductos/carcassonne.jpg")), 25, juegoCategories, emptyReviews, null, 5, new ArrayList<>(Arrays.asList("Losetas")), new AgeRange(7, 99)));
@@ -94,6 +94,43 @@ public class Application {
         } catch (Exception e) {
             System.err.println("Error al crear los productos por defecto: " + e.getMessage());
             e.printStackTrace();
+        }
+
+        // =========================================================
+        // 3. INICIALIZACIÓN DE INTERCAMBIOS POR DEFECTO (PRUEBAS)
+        // =========================================================
+        try {
+            // a) Creamos un par de clientes "falsos" para que sean los dueños
+            Client cliente1 = new Client("Gon67", "pass", "Gon Freecss", "11111111A", "05/05/2005", "gon@mail.com", "600111222");
+            Client cliente2 = new Client("asus09", "pass", "Asus Gamer", "22222222B", "10/10/2000", "asus@mail.com", "600333444");
+            Client cliente3 = new Client("akatsuki9", "pass", "Itachi Uchiha", "33333333C", "09/06/1998", "itachi@mail.com", "600555666");
+
+            users.put(cliente1.getUsername(), cliente1);
+            users.put(cliente2.getUsername(), cliente2);
+            users.put(cliente3.getUsername(), cliente3);
+
+            // c) Creamos los productos de Segunda Mano usando ArrayList
+            SecondHandProduct sh1 = new SecondHandProduct(
+                    "Figura Killua (HXH)", "Figura de la guerra con las hormigas",
+                    new ArrayList<>(Arrays.asList("gon.jpg")), 100.0, true, ItemType.FIGURINE, Condition.PERFECTO, cliente1);
+
+            SecondHandProduct sh2 = new SecondHandProduct(
+                    "Funko de Po (Kung Fu Panda)", "Tercera película",
+                    new ArrayList<>(Arrays.asList("pikachu.jpg")), 15.0, true, ItemType.FIGURINE, Condition.USO_LIGERO, cliente2);
+
+            SecondHandProduct sh3 = new SecondHandProduct(
+                    "Manga Naruto volumen 23", "Edición antigua Glénat",
+                    new ArrayList<>(Arrays.asList("naruto1.jpg")), 21.0, true, ItemType.COMIC, Condition.USO_EVIDENTE, cliente3);
+
+            // d) Los añadimos a la lista global de intercambios de la aplicación
+            secondHandProducts.add(sh1);
+            secondHandProducts.add(sh2);
+            secondHandProducts.add(sh3);
+
+            System.out.println("[Sistema] Intercambios de prueba inicializados.");
+
+        } catch (Exception e) {
+            System.err.println("Error al crear intercambios por defecto: " + e.getMessage());
         }
     }
 

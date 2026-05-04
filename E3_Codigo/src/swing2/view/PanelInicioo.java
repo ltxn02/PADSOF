@@ -247,6 +247,7 @@ public class PanelInicioo extends JPanel {
 
         btnInicio.addActionListener(e -> { marcarActivo(btnInicio); cargarMasVendidos(); });
         btnProductos.addActionListener(e -> { marcarActivo(btnProductos); cargarCatalogoORecomendados(); });
+        btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS"));
 
         nav.add(crearPanelLogo());
         nav.add(btnInicio);
@@ -310,17 +311,91 @@ public class PanelInicioo extends JPanel {
     }
 
     private JPanel crearPanelUsuario(RegisteredUser user) {
-        JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 22));
+        // Ajustamos un poco el margen vertical (de 22 a 15) para que los botones cuadren mejor
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         p.setOpaque(false);
+
         if (user == null) {
             JButton b = new JButton("Iniciar Sesión");
             b.addActionListener(e -> ventana.mostrarPantalla("LOGIN"));
             p.add(b);
         } else {
-            JLabel l = new JLabel("Hola, " + user.getUsername());
-            l.setForeground(Color.WHITE);
-            l.setFont(new Font("Arial", Font.BOLD, 14));
-            p.add(l);
+            // ==========================================
+            // Botón Mi Perfil
+            // ==========================================
+            JButton btnPerfil = new JButton();
+            btnPerfil.setContentAreaFilled(false);
+            btnPerfil.setBorderPainted(false);
+            btnPerfil.setFocusPainted(false);
+            btnPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            // Técnicas antibalas para la ruta (igual que en los productos)
+            String[] rutasPerfil = {
+                    "E3_Codigo/src/foto/logoPerfil.png",
+                    "src/foto/logoPerfil.png",
+                    "../src/foto/logoPerfil.png"
+            };
+
+            File fPerfil = null;
+            for (String ruta : rutasPerfil) {
+                File f = new File(ruta);
+                if (f.exists()) {
+                    fPerfil = f;
+                    break;
+                }
+            }
+
+            if (fPerfil != null && fPerfil.exists()) {
+                ImageIcon iconPerfil = new ImageIcon(fPerfil.getAbsolutePath());
+                Image imgPerfil = iconPerfil.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+                btnPerfil.setIcon(new ImageIcon(imgPerfil));
+            } else {
+                btnPerfil.setText("Perfil"); // Si falla, ponemos texto simple en vez de un emoji para evitar el "cuadrado"
+                btnPerfil.setFont(new Font("Arial", Font.BOLD, 14));
+                btnPerfil.setForeground(Color.WHITE);
+            }
+
+            // ==========================================
+            // Botón Carrito
+            // ==========================================
+            JButton btnCarrito = new JButton();
+            btnCarrito.setContentAreaFilled(false);
+            btnCarrito.setBorderPainted(false);
+            btnCarrito.setFocusPainted(false);
+            btnCarrito.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            String[] rutasCarrito = {
+                    "E3_Codigo/src/foto/logoCarritoProvisional.png",
+                    "src/foto/logoCarritoProvisional.png",
+                    "../src/foto/logoCarritoProvisional.png"
+            };
+
+            File fCarrito = null;
+            for (String ruta : rutasCarrito) {
+                File f = new File(ruta);
+                if (f.exists()) {
+                    fCarrito = f;
+                    break;
+                }
+            }
+
+            if (fCarrito != null && fCarrito.exists()) {
+                ImageIcon iconCarrito = new ImageIcon(fCarrito.getAbsolutePath());
+                Image imgCarrito = iconCarrito.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+                btnCarrito.setIcon(new ImageIcon(imgCarrito));
+            } else {
+                btnCarrito.setText("Carrito"); // Texto de seguridad
+                btnCarrito.setFont(new Font("Arial", Font.BOLD, 14));
+                btnCarrito.setForeground(Color.WHITE);
+            }
+
+            // Eventos provisionales
+            btnPerfil.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Perfil de " + user.getUsername()));
+            btnCarrito.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Tu carrito de compra"));
+
+            // Añadimos los botones al panel
+            p.add(btnPerfil);
+            p.add(btnCarrito);
         }
         return p;
     }

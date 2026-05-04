@@ -25,6 +25,7 @@ public class VentanaPrincipa extends JFrame {
         // Al inicio, cargamos las pantallas base.
         // PanelInicioo recibe 'null' porque empezamos como Invitados (Guest).
         contenedor.add(new PanelInicioo(this, usuarioLogueado), "INICIO");
+        contenedor.add(new PanelIntercambios(this, usuarioLogueado), "INTERCAMBIOS");
         contenedor.add(new PanelLoginn(this), "LOGIN");
         contenedor.add(new PanelRegistro(this), "REGISTRO");
         add(contenedor);
@@ -50,6 +51,7 @@ public class VentanaPrincipa extends JFrame {
         // 2. Añadimos el nuevo panel con el usuario actualizado
         // Si el usuario es Client, CatalogoController activará las recomendaciones.
         contenedor.add(new PanelInicioo(this, usuarioLogueado), "INICIO");
+        contenedor.add(new PanelIntercambios(this, usuarioLogueado), "INTERCAMBIOS");
 
         // 3. Forzamos a la UI a actualizarse
         contenedor.revalidate();
