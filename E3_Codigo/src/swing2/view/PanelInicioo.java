@@ -249,7 +249,7 @@ public class PanelInicioo extends JPanel {
         btnProductos.addActionListener(e -> { marcarActivo(btnProductos); cargarCatalogoORecomendados(); });
         btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS"));
 
-        nav.add(crearPanelLogo());
+        nav.add(PanelInicioo.crearPanelLogo());
         nav.add(btnInicio);
         nav.add(btnProductos);
         nav.add(btnIntercambios);
@@ -291,8 +291,9 @@ public class PanelInicioo extends JPanel {
         super.paintComponent(g);
         if (imagenFondo != null) g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
     }
-
-    private JPanel crearPanelLogo() {
+    
+    // CAMBIADA VISIBILIDAD DEL MÉTODO DE private A public static
+    public static JPanel crearPanelLogo() {
         JPanel p = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
