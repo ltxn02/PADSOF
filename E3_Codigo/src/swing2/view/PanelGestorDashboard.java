@@ -137,7 +137,7 @@ public class PanelGestorDashboard extends JPanel {
 			);
 			if (confirma == JOptionPane.YES_OPTION) {
 				ventanaPadre.cambiarSesion(null);
-				ventanaPadre.mostrarPantalla("LOGIN");
+				ventanaPadre.mostrarPantalla("INICIO");
 			}
 		});
 		return btnLogout;

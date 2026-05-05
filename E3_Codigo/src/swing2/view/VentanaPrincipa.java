@@ -1,10 +1,14 @@
 package swing2.view;
 
-import logic.Application;
-import users.RegisteredUser;
+import java.awt.CardLayout;
+import java.awt.Component;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import logic.Application;
+import users.*;
 
 public class VentanaPrincipa extends JFrame {
     private CardLayout cardLayout = new CardLayout();
@@ -12,6 +16,10 @@ public class VentanaPrincipa extends JFrame {
 
     // El "Estado" de la aplicación: quién está usando el programa
     private RegisteredUser usuarioLogueado = null;
+    
+    // Referencias a paneles
+    private PanelInicioo panelCliente = null;
+    private PanelGestorDashboard panelGestor = null;
 
     public VentanaPrincipa() {
         // Carga inicial de datos desde el archivo binario
@@ -21,13 +29,19 @@ public class VentanaPrincipa extends JFrame {
         setSize(1400, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
+        
+        // Paneles principales
+        panelCliente = new PanelInicioo(this, usuarioLogueado);
+        panelGestor = new PanelGestorDashboard(this, null);
+        
         // Al inicio, cargamos las pantallas base.
         // PanelInicioo recibe 'null' porque empezamos como Invitados (Guest).
-        contenedor.add(new PanelInicioo(this, usuarioLogueado), "INICIO");
+        contenedor.add(panelCliente, "INICIO");
         contenedor.add(new PanelIntercambios(this, usuarioLogueado), "INTERCAMBIOS");
         contenedor.add(new PanelLoginn(this), "LOGIN");
         contenedor.add(new PanelRegistro(this), "REGISTRO");
+        contenedor.add(panelGestor, "GESTOR");
+        
         add(contenedor);
         setVisible(true);
     }
@@ -38,27 +52,55 @@ public class VentanaPrincipa extends JFrame {
      */
     public void cambiarSesion(RegisteredUser nuevoUsuario) {
         this.usuarioLogueado = nuevoUsuario;
-
-        // 1. Eliminamos la versión anterior del panel de inicio
-        Component[] componentes = contenedor.getComponents();
-        for (Component c : componentes) {
-            // Buscamos el panel de inicio para reemplazarlo
-            if (c instanceof PanelInicioo) {
-                contenedor.remove(c);
+        
+        if (nuevoUsuario == null) {
+        	mostrarPantalla("LOGIN");
+        } else if (nuevoUsuario instanceof Manager) {
+        	Component[] componentes = contenedor.getComponents();
+        	for (Component c : componentes) {
+        		if (c instanceof PanelGestorDashboard) {
+        			contenedor.remove(c);
+        			break;
+        		}
+        	}
+        	
+        	// Crear nuevo panel con el manager
+        	panelGestor = new PanelGestorDashboard(this, (Manager)nuevoUsuario);
+        	contenedor.add(panelGestor, "GESTOR");
+        	
+        	contenedor.revalidate();
+        	contenedor.repaint();
+        	
+        	mostrarPantalla("GESTOR");
+        } else if (nuevoUsuario instanceof Employee) {
+        	// ========================================================
+            // USUARIO ES EMPLEADO → Por ahora, mostrar INICIO
+            // ========================================================
+            // (Puedes crear un panel especial para empleados después)
+        	mostrarPantalla("INICIO");
+        } else if (nuevoUsuario instanceof Client) {
+            // ===== ES CLIENTE =====
+            // Remover los paneles INICIOO e INTERCAMBIOS anteriores
+            Component[] componentes = contenedor.getComponents();
+            for (Component c : componentes) {
+                if (c instanceof PanelInicioo || c instanceof PanelIntercambios) {
+                    contenedor.remove(c);
+                }
             }
+
+            // Crear NUEVOS paneles con el cliente actualizado
+            panelCliente = new PanelInicioo(this, nuevoUsuario);
+            contenedor.add(panelCliente, "INICIO");
+            contenedor.add(new PanelIntercambios(this, nuevoUsuario), "INTERCAMBIOS");
+
+            // Actualizar UI
+            contenedor.revalidate();
+            contenedor.repaint();
+
+            // Mostrar panel de cliente
+            mostrarPantalla("INICIO");
         }
-
-        // 2. Añadimos el nuevo panel con el usuario actualizado
-        // Si el usuario es Client, CatalogoController activará las recomendaciones.
-        contenedor.add(new PanelInicioo(this, usuarioLogueado), "INICIO");
-        contenedor.add(new PanelIntercambios(this, usuarioLogueado), "INTERCAMBIOS");
-
-        // 3. Forzamos a la UI a actualizarse
-        contenedor.revalidate();
-        contenedor.repaint();
-
-        // 4. Volvemos a la pantalla principal
-        mostrarPantalla("INICIO");
+        
     }
 
     /**
