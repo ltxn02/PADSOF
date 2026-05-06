@@ -1,11 +1,15 @@
-package swing2.view;
+package swing2.view.gestor;
 
 import javax.swing.*;
+
+import swing2.view.PanelInicioo;
+import swing2.view.VentanaPrincipa;
+
 import java.awt.*;
 import users.Manager;
 import users.RegisteredUser;
 
-public class PanelGestorDashboard extends JPanel {
+public class PanelDashboard extends JPanel {
 	private VentanaPrincipa ventanaPadre;
 	private CardLayout layoutContenido;
 	private JPanel panelContenido;
@@ -23,7 +27,7 @@ public class PanelGestorDashboard extends JPanel {
 	private static final Color COLOR_MENU_ACTIVO = Color.WHITE;
 	private static final Color COLOR_TEXTO_ACTIVO = new Color(34, 50, 83);
 	
-	public PanelGestorDashboard (VentanaPrincipa ventanaPadre, Manager usuarioActual) {
+	public PanelDashboard (VentanaPrincipa ventanaPadre, Manager usuarioActual) {
 		this.ventanaPadre = ventanaPadre;
 		this.usuarioActual = usuarioActual;
 		this.setLayout(new BorderLayout(0, 0));
@@ -42,7 +46,7 @@ public class PanelGestorDashboard extends JPanel {
 		panelContenido.add(crearPanelPrueba("ESTADÍSTICAS"), "ESTADISTICAS");
 		panelContenido.add(crearPanelPrueba("DESCUENTOS"), "DESCUENTOS");
 		panelContenido.add(crearPanelPrueba("PRODUCTOS"), "PRODUCTOS");
-		panelContenido.add(new PanelGestorEmpleados(ventanaPadre), "EMPLEADOS");
+		panelContenido.add(new PanelGestionEmpleados(ventanaPadre), "EMPLEADOS");
 		//panelContenido.add(crearPanelPrueba("EMPLEADOS"), "EMPLEADOS");
 		panelContenido.add(crearPanelPrueba("PEDIDOS"), "PEDIDOS");
 		
@@ -202,7 +206,7 @@ public class PanelGestorDashboard extends JPanel {
     /**
 	 * Main para pruebas del panel
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			JFrame frame = new JFrame("Prueba - Gestor Dashboard");
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -216,11 +220,11 @@ public class PanelGestorDashboard extends JPanel {
 			Manager gestorPrueba = null; // null para pruebas sin datos
 			
 			// Añadir el panel
-			frame.add(new PanelGestorDashboard(ventana, gestorPrueba));
+			frame.add(new PanelDashboard(ventana, gestorPrueba));
 			frame.setVisible(true);
 			
 			System.out.println("✅ Panel Gestor Dashboard cargado");
 			System.out.println("   Prueba: Haz clic en los botones");
 		});
-	}
+	}*/
 }

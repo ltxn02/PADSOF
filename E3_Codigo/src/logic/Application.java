@@ -35,6 +35,37 @@ public class Application {
             users.put(empleadoDefecto.getUsername(), empleadoDefecto);
 
             System.out.println("[Sistema] Cuentas de gestor y empleado creadas por defecto.");
+            
+            // ========================================================
+            // 11 EMPLEADOS ADICIONALES PARA PRUEBAS
+            // ========================================================
+            Employee emp1 = new Employee("mgarcia", "12345", "María García López", "45678901A", "15/03/1990", "maria.garcia@rongero.es", "612345678", 1400.00, true);
+            Employee emp2 = new Employee("cmartinez", "12345", "Carlos Martínez Ruiz", "12345678B", "22/07/1988", "carlos.martinez@rongero.es", "623456789", 1500.00, true);
+            Employee emp3 = new Employee("efernandez", "12345", "Elena Fernández Sánchez", "87654321C", "08/11/1992", "elena.fernandez@rongero.es", "634567890", 1350.00, true);
+            Employee emp4 = new Employee("jlopez", "12345", "Juan López Díaz", "23456789D", "30/05/1995", "juan.lopez@rongero.es", "645678901", 1300.00, true);
+            Employee emp5 = new Employee("rjimenez", "12345", "Rosa Jiménez Moreno", "56789012E", "14/01/1991", "rosa.jimenez@rongero.es", "656789012", 1400.00, true);
+            Employee emp6 = new Employee("arodriguez", "12345", "Antonio Rodríguez Pérez", "34567890F", "09/09/1987", "antonio.rodriguez@rongero.es", "667890123", 1600.00, true);
+            Employee emp7 = new Employee("lsanchez", "12345", "Laura Sánchez Torres", "78901234G", "27/04/1993", "laura.sanchez@rongero.es", "678901234", 1380.00, true);
+            Employee emp8 = new Employee("fgonzalez", "12345", "Francisco González Herrera", "90123456H", "11/12/1989", "francisco.gonzalez@rongero.es", "689012345", 1450.00, true);
+            Employee emp9 = new Employee("iramirez", "12345", "Isabel Ramírez Castro", "01234567I", "19/06/1994", "isabel.ramirez@rongero.es", "690123456", 1320.00, true);
+            Employee emp10 = new Employee("pvazquez", "12345", "Pedro Vázquez López", "67890123J", "03/10/1986", "pedro.vazquez@rongero.es", "691234567", 1550.00, true);
+            Employee emp11 = new Employee("snunez", "12345", "Sofía Núñez Gómez", "89012345K", "25/02/1996", "sofia.nunez@rongero.es", "692345678", 1300.00, true);
+
+            users.put(emp1.getUsername(), emp1);
+            users.put(emp2.getUsername(), emp2);
+            users.put(emp3.getUsername(), emp3);
+            users.put(emp4.getUsername(), emp4);
+            users.put(emp5.getUsername(), emp5);
+            users.put(emp6.getUsername(), emp6);
+            users.put(emp7.getUsername(), emp7);
+            users.put(emp8.getUsername(), emp8);
+            users.put(emp9.getUsername(), emp9);
+            users.put(emp10.getUsername(), emp10);
+            users.put(emp11.getUsername(), emp11);
+
+            System.out.println("[Sistema] 11 empleados adicionales creados para pruebas.");
+
+            
         } catch (Exception e) {
             System.err.println("Error al crear usuarios por defecto: " + e.getMessage());
         }

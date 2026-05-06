@@ -29,7 +29,7 @@ public class PanelRegistro extends JPanel {
 
         // Filas alineadas (DNI y Correo ahora estarán en línea perfecta)
         agregarFilaFormulario("Nombre Completo:", txtNombre = new JTextField(15), null, g, r++);
-        agregarFilaFormulario("F. Nacimiento (AAAA-MM-DD):", txtFecha = new JTextField(15), null, g, r++);
+        agregarFilaFormulario("F. Nacimiento (DD/MM/AAAA):", txtFecha = new JTextField(15), null, g, r++);
         agregarFilaFormulario("DNI (8 nms + letra):", txtDni = new JTextField(15), null, g, r++);
         agregarFilaFormulario("Nombre Usuario:", txtUser = new JTextField(15), null, g, r++);
         agregarFilaFormulario("Correo Electrónico:", txtEmail = new JTextField(15), null, g, r++);

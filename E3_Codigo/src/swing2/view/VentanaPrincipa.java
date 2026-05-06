@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import logic.Application;
+import swing2.view.gestor.PanelDashboard;
 import users.*;
 
 public class VentanaPrincipa extends JFrame {
@@ -19,7 +20,7 @@ public class VentanaPrincipa extends JFrame {
     
     // Referencias a paneles
     private PanelInicioo panelCliente = null;
-    private PanelGestorDashboard panelGestor = null;
+    private PanelDashboard panelGestor = null;
 
     public VentanaPrincipa() {
         // Carga inicial de datos desde el archivo binario
@@ -32,7 +33,7 @@ public class VentanaPrincipa extends JFrame {
         
         // Paneles principales
         panelCliente = new PanelInicioo(this, usuarioLogueado);
-        panelGestor = new PanelGestorDashboard(this, null);
+        panelGestor = new PanelDashboard(this, null);
         
         // Al inicio, cargamos las pantallas base.
         // PanelInicioo recibe 'null' porque empezamos como Invitados (Guest).
@@ -62,14 +63,14 @@ public class VentanaPrincipa extends JFrame {
         } else if (nuevoUsuario instanceof Manager) {
         	Component[] componentes = contenedor.getComponents();
         	for (Component c : componentes) {
-        		if (c instanceof PanelGestorDashboard) {
+        		if (c instanceof PanelDashboard) {
         			contenedor.remove(c);
         			break;
         		}
         	}
         	
         	// Crear nuevo panel con el manager
-        	panelGestor = new PanelGestorDashboard(this, (Manager)nuevoUsuario);
+        	panelGestor = new PanelDashboard(this, (Manager)nuevoUsuario);
         	contenedor.add(panelGestor, "GESTOR");
         	
         	contenedor.revalidate();

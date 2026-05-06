@@ -1,4 +1,4 @@
-package swing2.controller;
+package swing2.controller.gestor;
 
 import logic.Application;
 import users.RegisteredUser;
@@ -6,7 +6,8 @@ import users.Staff;
 import users.Employee;
 import users.Manager;
 import swing2.view.VentanaPrincipa;
-import swing2.view.PanelGestorEmpleados;
+import swing2.view.gestor.PanelGestionEmpleados;
+
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 
@@ -16,9 +17,9 @@ import java.util.ArrayList;
  */
 public class GestorEmpleadoController {
     private VentanaPrincipa ventana;
-    private PanelGestorEmpleados panel;
+    private PanelGestionEmpleados panel;
 
-    public GestorEmpleadoController(VentanaPrincipa ventana, PanelGestorEmpleados panel) {
+    public GestorEmpleadoController(VentanaPrincipa ventana, PanelGestionEmpleados panel) {
         this.ventana = ventana;
         this.panel = panel;
     }
