@@ -137,6 +137,22 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		return username;
 	}
 	
+	public String getFullname() {
+		return this.fullname;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+	
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
+	
+	public String getMaskedDni() {
+		return maskDni(this.dni);
+	}
+	
 	/**
 	 * Obtiene una vista de las notificaciones en la bandeja de entrada del usuario.
 	 * 

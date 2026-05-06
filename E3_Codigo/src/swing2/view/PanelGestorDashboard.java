@@ -42,7 +42,8 @@ public class PanelGestorDashboard extends JPanel {
 		panelContenido.add(crearPanelPrueba("ESTADÍSTICAS"), "ESTADISTICAS");
 		panelContenido.add(crearPanelPrueba("DESCUENTOS"), "DESCUENTOS");
 		panelContenido.add(crearPanelPrueba("PRODUCTOS"), "PRODUCTOS");
-		panelContenido.add(crearPanelPrueba("EMPLEADOS"), "EMPLEADOS");
+		panelContenido.add(new PanelGestorEmpleados(ventanaPadre), "EMPLEADOS");
+		//panelContenido.add(crearPanelPrueba("EMPLEADOS"), "EMPLEADOS");
 		panelContenido.add(crearPanelPrueba("PEDIDOS"), "PEDIDOS");
 		
 		/*

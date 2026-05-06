@@ -59,4 +59,11 @@ public abstract class Staff extends RegisteredUser implements java.io.Serializab
         super(username, password, fullname, dni, birthdate, email, phoneNumber);
         this.salary = salary;
     }
+    
+    /**
+	 * Obtiene el salario del empleado especificado.
+	 */
+    public double getSalary() {
+    	return this.salary;
+    }
 }
