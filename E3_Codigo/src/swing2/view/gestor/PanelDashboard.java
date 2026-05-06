@@ -200,31 +200,4 @@ public class PanelDashboard extends JPanel {
     private void mostrarSeccion(String nombreSeccion) {
     	layoutContenido.show(panelContenido, nombreSeccion);
     }
-    
-    
-    
-    /**
-	 * Main para pruebas del panel
-	 */
-	/*public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			JFrame frame = new JFrame("Prueba - Gestor Dashboard");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setSize(1400, 750);
-			frame.setLocationRelativeTo(null);
-			
-			// Crear un mock de VentanaPrincipa
-			VentanaPrincipa ventana = new VentanaPrincipa() {};
-			
-			// Crear gestor de prueba
-			Manager gestorPrueba = null; // null para pruebas sin datos
-			
-			// Añadir el panel
-			frame.add(new PanelDashboard(ventana, gestorPrueba));
-			frame.setVisible(true);
-			
-			System.out.println("✅ Panel Gestor Dashboard cargado");
-			System.out.println("   Prueba: Haz clic en los botones");
-		});
-	}*/
 }

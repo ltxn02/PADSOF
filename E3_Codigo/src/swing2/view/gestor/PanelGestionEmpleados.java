@@ -5,6 +5,7 @@ import java.awt.*;
 
 import swing2.controller.gestor.GestorEmpleadoController;
 import swing2.view.VentanaPrincipa;
+import users.Staff;
 
 /**
  * Panel contenedor para gestión de empleados.
@@ -21,6 +22,7 @@ public class PanelGestionEmpleados extends JPanel {
 	// === PANELES ===
 	private PanelListaEmpleados panelListado;
 	private PanelAnadirEmpleado panelAñadir;
+	private PanelDetallesEmpleado panelDetalles;
 	
 	// === COLORES ===
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
@@ -38,10 +40,12 @@ public class PanelGestionEmpleados extends JPanel {
 		// Crear los paneles
 		panelListado = new PanelListaEmpleados(this, ctrl);
 		panelAñadir = new PanelAnadirEmpleado(ventanaPadre, this);
+		panelDetalles = new PanelDetallesEmpleado(this);
 		
 		// Agregar ambos paneles al contenedor interno
 		contenedorInterno.add(panelListado, "LISTADO");
 		contenedorInterno.add(panelAñadir, "AÑADIR");
+		contenedorInterno.add(panelDetalles, "DETALLES");
 		
 		// El panel principal es el contenedor interno
 		this.setLayout(new BorderLayout());
@@ -64,5 +68,13 @@ public class PanelGestionEmpleados extends JPanel {
 	 */
 	public void mostrarAnadirEmpleado() {
 		layoutInterno.show(contenedorInterno, "AÑADIR");
+	}
+	
+	/**
+	 * Mostrar detalles de un empleado
+	 */
+	public void mostrarDetalles(Staff empleado) {
+		panelDetalles.mostrarDetalles(empleado);
+		layoutInterno.show(contenedorInterno, "DETALLES");
 	}
 }

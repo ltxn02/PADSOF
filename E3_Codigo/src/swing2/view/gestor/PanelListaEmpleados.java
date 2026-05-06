@@ -132,7 +132,7 @@ public class PanelListaEmpleados extends JPanel {
 	 * ========================================================
 	 */
 	private void crearTabla() {
-		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Estado", ""};
+		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Estado", "Ver detalles"};
 		
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
@@ -170,7 +170,7 @@ public class PanelListaEmpleados extends JPanel {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int fila = tabla.rowAtPoint(evt.getPoint());
 				int columna = tabla.columnAtPoint(evt.getPoint());
-				if (fila >= 0 && columna == 1) {	// Columna "Usuario"
+				if (fila >= 0 && columna == 5) {	// Columna "Usuario"
 					verDetallesEmpleado(fila);
 				}
 			}
@@ -248,7 +248,7 @@ public class PanelListaEmpleados extends JPanel {
 			Staff empleado = empleadosActuales.get(i);
 			String estado = null;
 			if (empleado instanceof Employee) {
-				estado = ((Employee)empleado).isEnabled() ? "Alta" : "Baja";
+				estado = ((Employee)empleado).isEnabled() ? "Activo" : "Inactivo";
 			} else {
 				estado = "Activo";
 			}
@@ -259,7 +259,7 @@ public class PanelListaEmpleados extends JPanel {
 					empleado.getEmail(),
 					empleado.getPhoneNumber(),
 					estado,
-					"Ver más"
+					">"
 			};
 			
 			modeloTabla.addRow(fila);
@@ -311,14 +311,8 @@ public class PanelListaEmpleados extends JPanel {
 		int inicio = paginaActual * empleadosPorPagina;
 		Staff empleado = empleadosActuales.get(inicio + fila);
 		
-		String detalles = ctrl.obtenerDetallesEmpleado(empleado);
-		
-		JOptionPane.showMessageDialog(
-				this,
-				detalles,
-				"Detalles del empleado",
-				JOptionPane.INFORMATION_MESSAGE
-		);
+		// Mostrar el panel de detalles
+		panelPadre.mostrarDetalles(empleado);
 	}
 	
 	/**

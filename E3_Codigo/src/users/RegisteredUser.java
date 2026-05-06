@@ -153,6 +153,14 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		return maskDni(this.dni);
 	}
 	
+	public String getBirthdate() {
+		return this.birthdate;
+	}
+	
+	public int getUserId() {
+		return this.userId;
+	}
+	
 	/**
 	 * Obtiene una vista de las notificaciones en la bandeja de entrada del usuario.
 	 * 

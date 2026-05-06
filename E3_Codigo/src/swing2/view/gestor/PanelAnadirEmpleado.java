@@ -98,7 +98,7 @@ public class PanelAnadirEmpleado extends JPanel {
 		JToggleButton btn = new JToggleButton("Ver");
 		btn.setPreferredSize(new Dimension(45, 25));
 		btn.setFont(new Font("Arial", Font.PLAIN, 10));
-		btn.addActionListener(e -> campo.setEchoChar(btn.isSelected() ? (char)0 : '*'));
+		btn.addActionListener(e -> campo.setEchoChar(btn.isSelected() ? (char)0 : '·'));
 		return btn;
 	}
 	
