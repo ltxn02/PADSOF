@@ -6,7 +6,9 @@ import swing2.view.PanelRegistro;
 import users.Client;
 import utils.Notification;
 import users.RegisteredUser;
-
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,12 +22,63 @@ public class RegistroController {
         this.panel = panel;
     }
 
+    /**
+     * Algoritmo oficial de validación de DNI español
+     */
+    private boolean validarDniAlgoritmo(String dni) {
+        // Formato básico: 8 números y 1 letra (sin guiones ni espacios)
+        if (dni == null || !dni.matches("^[0-9]{8}[A-Z]$")) {
+            return false;
+        }
+
+        try {
+            String numerosStr = dni.substring(0, 8);
+            char letraUsuario = dni.charAt(8);
+
+            // Cálculo del resto
+            int numeroDni = Integer.parseInt(numerosStr);
+            int resto = numeroDni % 23;
+
+            // Tabla de letras oficial
+            String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+            char letraCorrecta = letras.charAt(resto);
+
+            return letraUsuario == letraCorrecta;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void procesarRegistro(String nombre, String fechaStr, String dni, String user, String email, String tlf, String pass, String confirmPass) {
 
         // 1. Validaciones básicas de campos vacíos
         if (nombre.trim().isEmpty() || user.trim().isEmpty() || dni.trim().isEmpty() ||
                 email.trim().isEmpty() || pass.isEmpty() || tlf.trim().isEmpty() || fechaStr.trim().isEmpty()) {
             JOptionPane.showMessageDialog(panel, "Todos los campos son obligatorios.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // Dentro de procesarRegistro en RegistroController.java
+
+// 1. Convertir la fechaStr (DD-MM-AAAA) a un objeto LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            LocalDate fechaNacimiento = LocalDate.parse(fechaStr.trim(), formatter);
+            LocalDate hoy = LocalDate.now();
+
+            // 2. Calcular la edad
+            int edad = Period.between(fechaNacimiento, hoy).getYears();
+
+            // 3. Comprobar contra la edad permitida en Application
+            int edadPermitida = Application.getEdadMinimaRegistro();
+
+            if (edad < edadPermitida) {
+                JOptionPane.showMessageDialog(panel,
+                        "Lo sentimos, debes tener al menos " + edadPermitida + " años para registrarte.",
+                        "Edad insuficiente", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(panel, "Formato de fecha incorrecto (DD-MM-AAAA).", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -35,24 +88,31 @@ public class RegistroController {
             return;
         }
 
-        // 3. INTENTO DE REGISTRO
+        // --- 3. NUEVA VALIDACIÓN DE DNI (ALGORITMO) ---
+        String dniLimpio = dni.trim().toUpperCase();
+        if (!validarDniAlgoritmo(dniLimpio)) {
+            JOptionPane.showMessageDialog(panel,
+                    "El DNI introducido no es válido.\nRecuerde: 8 números y la letra correspondiente (sin espacios).",
+                    "DNI Inválido", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 4. INTENTO DE REGISTRO
         try {
-            // Enviamos la fecha tal cual la escribe el usuario (DD-MM-AAAA)
-            // No usamos LocalDate.parse aquí para no chocar con la validación interna de Client
             Client nuevoCliente = new Client(
                     user.trim(),
                     pass,
                     nombre.trim(),
-                    dni.trim(),
-                    fechaStr.trim(), // Se envía como String para que Client lo valide
+                    dniLimpio, // Usamos el DNI ya validado y en mayúsculas
+                    fechaStr.trim(),
                     email.trim(),
                     tlf.trim()
             );
 
-            // Intentamos registrar
+            // Intentamos registrar en la lógica de la aplicación
             Application.registerClient(nuevoCliente);
 
-            // --- Lógica de Notificación (Sincronizada con tu main) ---
+            // Lógica de Notificación
             ArrayList<RegisteredUser> destinatarios = new ArrayList<>();
             destinatarios.add(nuevoCliente);
             Notification bienvenida = new Notification("¡Bienvenido a Rongero! Disfruta de la experiencia.", destinatarios);
@@ -61,14 +121,10 @@ public class RegistroController {
             mostrarConfirmacionExito();
 
         } catch (IllegalArgumentException e) {
-            // Si la fecha, DNI o Email están mal según la lógica interna, saltará aquí
-            // El mensaje dirá exactamente qué formato espera (ej: "Date must be DD-MM-AAAA")
             JOptionPane.showMessageDialog(panel, "ERROR DE VALIDACIÓN: " + e.getMessage(), "Datos incorrectos", JOptionPane.ERROR_MESSAGE);
         } catch (IOException e) {
-            // Error de usuario duplicado
             JOptionPane.showMessageDialog(panel, "ERROR: " + e.getMessage(), "Usuario duplicado", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            // Error genérico para cualquier otro fallo
             JOptionPane.showMessageDialog(panel, "Error inesperado: " + e.getMessage());
             e.printStackTrace();
         }

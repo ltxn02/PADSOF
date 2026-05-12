@@ -18,7 +18,7 @@ public class Application {
     private static ArrayList<NewProduct> catalog = new ArrayList<>();
     private static ArrayList<Category> globalCategories = new ArrayList<>();
     private static ArrayList<IDiscount> globalDiscounts = new ArrayList<>();
-
+    private static int EdadMinimaRegistro = 12;
     // --- BLOQUE DE INICIALIZACIÓN ESTÁTICA ---
     static {
         // 1. INICIALIZACIÓN DE USUARIOS POR DEFECTO
@@ -164,6 +164,17 @@ public class Application {
             System.err.println("Error al crear intercambios por defecto: " + e.getMessage());
         }
     }
+
+    public static int getEdadMinimaRegistro() {
+        return EdadMinimaRegistro;
+    }
+    public boolean setEdadMinimaRegistro(int edad) {
+        if (edad > 0 && edad <= 99){
+            EdadMinimaRegistro = edad;
+        return true;
+    } return false;
+    }
+
 
     // --- RESTO DE MÉTODOS DE LA CLASE (Login, Registro, Persistencia, etc.) ---
     public static RegisteredUser login(String username, String password) throws IOException {

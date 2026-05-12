@@ -120,6 +120,7 @@ public class VentanaPrincipa extends JFrame {
     }
 
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.uiScale", "1.0");
         // Ejecución segura en el hilo de eventos de Swing
         SwingUtilities.invokeLater(() -> new VentanaPrincipa());
     }
