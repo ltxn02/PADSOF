@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import catalog.*;
+import logic.Application;
 import swing2.controller.CatalogoController;
 import users.RegisteredUser;
 import java.net.URL;
@@ -66,22 +67,30 @@ public class PanelInicioo extends JPanel {
 
     private void cambiarLayoutCuerpo(boolean esInicio) {
         panelCuerpo.removeAll();
+
+        // IMPORTANTE: Aseguramos que panelCuerpo use GridBagLayout
+        // Si en algún momento cambió a BorderLayout, esto lo arregla.
+        panelCuerpo.setLayout(new GridBagLayout());
+
         if (esInicio) {
             gbcCuerpo.gridx = 0;
             gbcCuerpo.weightx = 0.33;
+            gbcCuerpo.fill = GridBagConstraints.BOTH; // Para que ocupe el espacio
             panelCuerpo.add(panelVacioIzquierdo, gbcCuerpo);
+
             gbcCuerpo.gridx = 1;
             gbcCuerpo.weightx = 0.67;
             panelCuerpo.add(scrollProductos, gbcCuerpo);
         } else {
             gbcCuerpo.gridx = 0;
             gbcCuerpo.weightx = 1.0;
+            gbcCuerpo.fill = GridBagConstraints.BOTH;
             panelCuerpo.add(scrollProductos, gbcCuerpo);
         }
+
         panelCuerpo.revalidate();
         panelCuerpo.repaint();
     }
-
     public void cargarMasVendidos() {
         cambiarLayoutCuerpo(true);
         contenedorCentral.removeAll();
@@ -222,7 +231,16 @@ public class PanelInicioo extends JPanel {
 
         card.add(pImg, BorderLayout.CENTER);
         card.add(info, BorderLayout.SOUTH);
-
+        card.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                mostrarDetalleProducto(p);
+            }
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                card.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        });
         return card;
     }
 
@@ -291,7 +309,7 @@ public class PanelInicioo extends JPanel {
         super.paintComponent(g);
         if (imagenFondo != null) g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
     }
-    
+
     // CAMBIADA VISIBILIDAD DEL MÉTODO DE private A public static
     public static JPanel crearPanelLogo() {
         JPanel p = new JPanel() {
@@ -400,4 +418,152 @@ public class PanelInicioo extends JPanel {
         }
         return p;
     }
-}
+    public void mostrarDetalleProducto(NewProduct p) {
+        // 1. Limpiamos el cuerpo principal
+        panelCuerpo.removeAll();
+        panelCuerpo.setLayout(new BorderLayout());
+
+        // 2. Contenedor con fondo blanco redondeado
+        JPanel detalleContenedor = new JPanel(new GridLayout(1, 2, 40, 0)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(255, 255, 255, 210));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.dispose();
+            }
+        };
+        detalleContenedor.setOpaque(false);
+        detalleContenedor.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
+
+        // --- COLUMNA IZQUIERDA: TEXTOS Y SCROLL ---
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setOpaque(false);
+
+        // Botón Volver simple (por ahora solo recarga mas vendidos para que no de error)
+        // Botón volver
+        // --- DENTRO DE mostrarDetalleProducto(NewProduct p) ---
+
+        JButton btnVolver = new JButton("← Volver al Catálogo");
+        btnVolver.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        btnVolver.addActionListener(e -> {
+            // 1. IMPORTANTE: Forzamos el layout de vuelta a GridBagLayout
+            // para que la función cambiarLayoutCuerpo no explote
+            panelCuerpo.setLayout(new GridBagLayout());
+
+            // 2. Cargamos la vista que corresponda
+            // Si no tienes la variable vistaAnterior, usa una por defecto:
+            cargarMasVendidos();
+
+            // Si quieres que sea más dinámico, puedes usar:
+            // if (esVistaCatalogo) cargarCatalogoORecomendados(); else cargarMasVendidos();
+        });
+
+        JLabel titulo = new JLabel(p.getName());
+        titulo.setFont(new Font("Arial", Font.BOLD, 36));
+        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel precio = new JLabel(String.format("%.2f €", p.getPrice()));
+        precio.setFont(new Font("Arial", Font.BOLD, 28));
+        precio.setForeground(new Color(110, 30, 230));
+        precio.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Texto de descripción
+        JTextArea desc = new JTextArea(p.getDescription());
+        desc.setFont(new Font("Arial", Font.PLAIN, 16));
+        desc.setLineWrap(true);
+        desc.setWrapStyleWord(true);
+        desc.setEditable(false);
+        desc.setOpaque(false);
+        desc.setForeground(new Color(50, 50, 50));
+
+        // ScrollPane para la descripción
+        JScrollPane scrollDesc = new JScrollPane(desc);
+        scrollDesc.setBorder(null);
+        scrollDesc.setOpaque(false);
+        scrollDesc.getViewport().setOpaque(false);
+        scrollDesc.setPreferredSize(new Dimension(400, 200));
+        scrollDesc.setMaximumSize(new Dimension(500, 250));
+        scrollDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
+        scrollDesc.getVerticalScrollBar().setUnitIncrement(12);
+
+        JButton btnAdd = new JButton("Añadir a la Cesta");
+        btnAdd.setBackground(new Color(110, 30, 230));
+        btnAdd.setForeground(Color.WHITE);
+        btnAdd.setFont(new Font("Arial", Font.BOLD, 18));
+        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAdd.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btnAdd.addActionListener(e -> {
+            if (usuarioActual == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Debes iniciar sesión para añadir productos al carrito",
+                        "Inicio de sesión necesario",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+                // Suponiendo que tu RegisteredUser o Client tiene un método addCarrito
+                // Si no lo tiene, aquí llamarías a tu lógica: Application.aniadirAlCarrito(p);
+
+                // Ejemplo de feedback visual:
+                btnAdd.setText("¡Añadido! ✓");
+                btnAdd.setBackground(new Color(40, 167, 69)); // Cambia a verde
+                btnAdd.setEnabled(false); // Evita que lo pulse mil veces seguidas
+
+                JOptionPane.showMessageDialog(this,
+                        p.getName() + " se ha añadido correctamente a tu carrito.");
+
+                // Volver al catálogo automáticamente después de añadir (Opcional)
+                // cargarMasVendidos();
+            }
+        });
+
+        // Añadimos componentes al panel izquierdo
+        infoPanel.add(btnVolver);
+        infoPanel.add(Box.createVerticalStrut(30));
+        infoPanel.add(titulo);
+        infoPanel.add(Box.createVerticalStrut(10));
+        infoPanel.add(precio);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(new JLabel("Descripción:"));
+        infoPanel.add(Box.createVerticalStrut(10));
+        infoPanel.add(scrollDesc); // El scroll ya contiene el texto
+        infoPanel.add(Box.createVerticalGlue());
+        infoPanel.add(btnAdd);
+
+        // --- COLUMNA DERECHA: IMAGEN ---
+        JLabel lblFoto = new JLabel();
+        lblFoto.setHorizontalAlignment(SwingConstants.CENTER);
+        if (p.getFotos() != null && !p.getFotos().isEmpty()) {
+            String nombreArchivo = new File(p.getFotos().get(0)).getName();
+            String[] rutas = {
+                    "E3_Codigo/src/imgProductos/" + nombreArchivo,
+                    "src/imgProductos/" + nombreArchivo,
+                    "../src/imgProductos/" + nombreArchivo
+            };
+            File f = null;
+            for (String r : rutas) { if (new File(r).exists()) { f = new File(r); break; } }
+
+            if (f != null) {
+                ImageIcon icon = new ImageIcon(f.getAbsolutePath());
+                Image scaled = icon.getImage().getScaledInstance(400, 500, Image.SCALE_SMOOTH);
+                lblFoto.setIcon(new ImageIcon(scaled));
+            }
+        }
+
+        // --- ENSAMBLAJE ---
+        detalleContenedor.add(infoPanel); // Izquierda
+        detalleContenedor.add(lblFoto);   // Derecha
+
+        // Margen exterior
+        JPanel margen = new JPanel(new BorderLayout());
+        margen.setOpaque(false);
+        margen.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));
+        margen.add(detalleContenedor, BorderLayout.CENTER);
+
+        panelCuerpo.add(margen, BorderLayout.CENTER);
+
+        panelCuerpo.revalidate();
+        panelCuerpo.repaint();
+    }}

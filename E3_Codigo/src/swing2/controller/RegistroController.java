@@ -26,7 +26,7 @@ public class RegistroController {
      * Algoritmo oficial de validación de DNI español
      */
     private boolean validarDniAlgoritmo(String dni) {
-        // Formato básico: 8 números y 1 letra (sin guiones ni espacios)
+        
         if (dni == null || !dni.matches("^[0-9]{8}[A-Z]$")) {
             return false;
         }
@@ -35,11 +35,11 @@ public class RegistroController {
             String numerosStr = dni.substring(0, 8);
             char letraUsuario = dni.charAt(8);
 
-            // Cálculo del resto
+            
             int numeroDni = Integer.parseInt(numerosStr);
             int resto = numeroDni % 23;
 
-            // Tabla de letras oficial
+            
             String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
             char letraCorrecta = letras.charAt(resto);
 
@@ -51,24 +51,24 @@ public class RegistroController {
 
     public void procesarRegistro(String nombre, String fechaStr, String dni, String user, String email, String tlf, String pass, String confirmPass) {
 
-        // 1. Validaciones básicas de campos vacíos
+        
         if (nombre.trim().isEmpty() || user.trim().isEmpty() || dni.trim().isEmpty() ||
                 email.trim().isEmpty() || pass.isEmpty() || tlf.trim().isEmpty() || fechaStr.trim().isEmpty()) {
             JOptionPane.showMessageDialog(panel, "Todos los campos son obligatorios.", "Campos incompletos", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        // Dentro de procesarRegistro en RegistroController.java
+        
 
-// 1. Convertir la fechaStr (DD-MM-AAAA) a un objeto LocalDate
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try {
             LocalDate fechaNacimiento = LocalDate.parse(fechaStr.trim(), formatter);
             LocalDate hoy = LocalDate.now();
 
-            // 2. Calcular la edad
+            
             int edad = Period.between(fechaNacimiento, hoy).getYears();
 
-            // 3. Comprobar contra la edad permitida en Application
+            
             int edadPermitida = Application.getEdadMinimaRegistro();
 
             if (edad < edadPermitida) {
@@ -82,13 +82,13 @@ public class RegistroController {
             return;
         }
 
-        // 2. Validación de coincidencia de contraseña
+        
         if (!pass.equals(confirmPass)) {
             JOptionPane.showMessageDialog(panel, "Las contraseñas no coinciden.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // --- 3. NUEVA VALIDACIÓN DE DNI (ALGORITMO) ---
+        
         String dniLimpio = dni.trim().toUpperCase();
         if (!validarDniAlgoritmo(dniLimpio)) {
             JOptionPane.showMessageDialog(panel,
@@ -97,22 +97,22 @@ public class RegistroController {
             return;
         }
 
-        // 4. INTENTO DE REGISTRO
+        
         try {
             Client nuevoCliente = new Client(
                     user.trim(),
                     pass,
                     nombre.trim(),
-                    dniLimpio, // Usamos el DNI ya validado y en mayúsculas
+                    dniLimpio, 
                     fechaStr.trim(),
                     email.trim(),
                     tlf.trim()
             );
 
-            // Intentamos registrar en la lógica de la aplicación
+            
             Application.registerClient(nuevoCliente);
 
-            // Lógica de Notificación
+            
             ArrayList<RegisteredUser> destinatarios = new ArrayList<>();
             destinatarios.add(nuevoCliente);
             Notification bienvenida = new Notification("¡Bienvenido a Rongero! Disfruta de la experiencia.", destinatarios);

@@ -25,7 +25,7 @@ public class LoginController {
         try {
             RegisteredUser usuario = Application.login(user, pass);
             if (usuario != null) {
-                // Notificamos el éxito para que el Inicio se regenere con recomendaciones
+                
                 ventana.cambiarSesion(usuario);
                 panel.limpiarCampos();
             } else {

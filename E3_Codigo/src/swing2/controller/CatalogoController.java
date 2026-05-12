@@ -22,13 +22,13 @@ public class CatalogoController {
             return new ArrayList<>();
         }
 
-        // Creamos una copia para no alterar el orden original del catálogo en la App
+        
         ArrayList<NewProduct> copiaMezclada = new ArrayList<>(todos);
 
-        // Mezclamos la lista para que la sección de "Inicio" parezca dinámica
+        
         Collections.shuffle(copiaMezclada);
 
-        // Devolvemos un máximo de 6 productos para no saturar la vista inicial
+        
         int limite = Math.min(copiaMezclada.size(), 6);
         return new ArrayList<>(copiaMezclada.subList(0, limite));
     }
@@ -44,9 +44,9 @@ public class CatalogoController {
             return new ArrayList<>();
         }
 
-        // REGLA: Solo si es CLIENTE se activa el recomendador
+        
         if (usuario instanceof Client) {
-            // Filtramos la lista global de usuarios para obtener solo los Clientes
+            
             ArrayList<Client> listaClientes = new ArrayList<>();
             ArrayList<RegisteredUser> todosLosUsuarios = Application.getUsers();
 
@@ -58,11 +58,11 @@ public class CatalogoController {
                 }
             }
 
-            // Retorna la lista personalizada mediante el algoritmo de recomendaciones
+            
             return SistemaRecomendaciones.obtenerRecomendaciones((Client) usuario, catalogoCompleto, listaClientes);
         }
 
-        // Si no está logueado o es empleado/gestor, mostramos el catálogo completo
+        
         return catalogoCompleto;
     }
 }
