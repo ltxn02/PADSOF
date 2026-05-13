@@ -21,7 +21,7 @@ public class VentanaPrincipa extends JFrame {
     // Referencias a paneles
     private PanelInicioo panelCliente = null;
     private PanelDashboard panelGestor = null;
-
+    private PanelCarrito panelCarrito = null;
     public VentanaPrincipa() {
         // Carga inicial de datos desde el archivo binario
         Application.cargarDatos("rongero_data.dat");
@@ -112,6 +112,32 @@ public class VentanaPrincipa extends JFrame {
      * Cambia la visibilidad entre los paneles del CardLayout.
      */
     public void mostrarPantalla(String nombre) {
+        if (nombre.equals("CARRITO")) {
+            // 1. Eliminar el panel de carrito anterior si existe
+            Component[] componentes = contenedor.getComponents();
+            for (Component c : componentes) {
+                if (c instanceof PanelCarrito) {
+                    contenedor.remove(c);
+                    break;
+                }
+            }
+
+            // 2. Comprobar que el usuario sea Cliente y tenga carrito
+            if (usuarioLogueado instanceof Client) {
+                Client cliente = (Client) usuarioLogueado;
+                // Creamos el panel pasando el ShoppingCart del objeto Client
+                panelCarrito = new PanelCarrito(cliente.getShoppingCart(), this);
+                contenedor.add(panelCarrito, "CARRITO");
+            } else {
+                // Si por error alguien intenta entrar sin ser cliente
+                cardLayout.show(contenedor, "LOGIN");
+                return;
+            }
+        }
+
+        // Refrescar y mostrar
+        contenedor.revalidate();
+        contenedor.repaint();
         cardLayout.show(contenedor, nombre);
     }
 

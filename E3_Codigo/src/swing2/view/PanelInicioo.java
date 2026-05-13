@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import catalog.*;
 import logic.Application;
 import swing2.controller.CatalogoController;
+import users.Client;
 import users.RegisteredUser;
 import java.net.URL;
 
@@ -195,16 +196,19 @@ public class PanelInicioo extends JPanel {
         btnConfirmar.addActionListener(e -> {
             int cantidad = (int) spinner.getValue();
 
-            // --- LLAMADA A TU LÓGICA DE NEGOCIO ---
-            // Ejemplo: miControlador.aniadirAlCarrito(p, cantidad, usuarioActual);
+            // Verificamos que el usuario sea cliente para acceder a su carrito
+            if (usuarioActual instanceof Client) {
+                Client cliente = (Client) usuarioActual;
+                // LLAMADA REAL: Se añade al objeto persistente en el usuario
+                cliente.getShoppingCart().addCartItem(p, cantidad);
 
-            dialog.dispose(); // Cerrar ventana
+                dialog.dispose();
 
-            // Feedback visual bonito
-            JOptionPane.showMessageDialog(this,
-                    "Has añadido " + cantidad + " unidad(es) de:\n" + p.getName(),
-                    "Producto añadido",
-                    JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "¡Añadido! " + cantidad + "x " + p.getName() + " al carrito.",
+                        "Producto añadido",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         });
 
         pBoton.add(btnConfirmar);
@@ -561,7 +565,7 @@ public class PanelInicioo extends JPanel {
 
             // Eventos provisionales
             btnPerfil.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Perfil de " + user.getUsername()));
-            btnCarrito.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Tu carrito de compra"));
+            btnCarrito.addActionListener(e -> ventana.mostrarPantalla("CARRITO"));
 
             // Añadimos los botones al panel
             p.add(btnPerfil);
