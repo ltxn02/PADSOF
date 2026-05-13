@@ -564,7 +564,7 @@ public class PanelInicioo extends JPanel {
             }
 
             // Eventos provisionales
-            btnPerfil.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Perfil de " + user.getUsername()));
+            btnPerfil.addActionListener(e -> ventana.mostrarPantalla("PERFIL"));
             btnCarrito.addActionListener(e -> ventana.mostrarPantalla("CARRITO"));
 
             // Añadimos los botones al panel

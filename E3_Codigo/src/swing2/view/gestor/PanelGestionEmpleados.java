@@ -40,7 +40,7 @@ public class PanelGestionEmpleados extends JPanel {
 		// Crear los paneles
 		panelListado = new PanelListaEmpleados(this, ctrl);
 		panelAñadir = new PanelAnadirEmpleado(ventanaPadre, this);
-		panelDetalles = new PanelDetallesEmpleado(this);
+		panelDetalles = new PanelDetallesEmpleado(this, ctrl);
 		
 		// Agregar ambos paneles al contenedor interno
 		contenedorInterno.add(panelListado, "LISTADO");

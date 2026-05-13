@@ -1,12 +1,16 @@
 package swing2.view.gestor;
 
 import javax.swing.*;
+
+import swing2.controller.gestor.GestorEmpleadoController;
+
 import java.awt.*;
 import users.Staff;
 import users.Employee;
 
 public class PanelDetallesEmpleado extends JPanel {
 	private PanelGestionEmpleados panelPadre;
+	private GestorEmpleadoController ctrl;
 	private Staff empleado;
 	
 	// COLORES
@@ -14,8 +18,9 @@ public class PanelDetallesEmpleado extends JPanel {
 	private static final Color COLOR_PANEL_INFO = new Color(40, 80, 140);
 	private static final Color COLOR_LABEL = new Color(187, 192, 199);
 	
-	public PanelDetallesEmpleado(PanelGestionEmpleados panelPadre) {
+	public PanelDetallesEmpleado(PanelGestionEmpleados panelPadre, GestorEmpleadoController ctrl) {
 		this.panelPadre = panelPadre;
+		this.ctrl = ctrl;
 		
 		this.setLayout(new BorderLayout(10, 10));
 		this.setBackground(COLOR_FONDO);
@@ -99,18 +104,18 @@ public class PanelDetallesEmpleado extends JPanel {
 		panel.add(seccion2);
 		panel.add(Box.createVerticalStrut(20));
 		
-		// 3.- INFORMACIÓN LABORAL
-		JPanel seccion3 = crearSeccion("INFORMACIÓN LABORAL");
-		seccion3.add(crearFilaInfo("Salario mensual:", "€" + String.format(".%2f", empleado.getSalary())));
-		
-		String estado = "Inactivo";
-		if (empleado instanceof Employee) {
-			estado = ((Employee)empleado).isEnabled() ? "Activo" : "Inactivo";
-		}
-		seccion3.add(crearFilaInfo("Estado:", estado));
-		
-		panel.add(seccion3);
-		panel.add(Box.createVerticalStrut(20));
+		// ===== SECCIÓN 3: INFORMACIÓN LABORAL =====
+	    JPanel seccion3 = crearSeccion("INFORMACIÓN LABORAL");
+	    seccion3.add(crearFilaInfo("Salario Mensual:", "€" + String.format("%.2f", empleado.getSalary())));
+	    
+	    // === ESTADO CON RADIO BUTTONS ===
+	    if (empleado instanceof Employee) {
+	        Employee emp = (Employee) empleado;
+	        seccion3.add(crearFilaEstado("Estado:", emp.isEnabled()));
+	    }
+	    
+	    panel.add(seccion3);
+	    panel.add(Box.createVerticalStrut(20));
 		
 		// 4.- DETALLES ADICIONALES
 		JPanel seccion4 = crearSeccion("DETALLES ADICIONALES");
@@ -205,5 +210,49 @@ public class PanelDetallesEmpleado extends JPanel {
 		barra.add(btnVolver);
 		
 		return barra;
+	}
+	
+	// FILA DE ESTADO
+	private JPanel crearFilaEstado(String etiqueta, boolean activo) {
+	    JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 5));
+	    fila.setOpaque(false);
+	    fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+	    fila.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    
+	    // Etiqueta
+	    JLabel lblEtiqueta = new JLabel(etiqueta);
+	    lblEtiqueta.setForeground(COLOR_LABEL);
+	    lblEtiqueta.setFont(new Font("Arial", Font.BOLD, 11));
+	    lblEtiqueta.setPreferredSize(new Dimension(180, 25));
+	    
+	    // Botones de radio
+	    JRadioButton btnActivo = new JRadioButton("Activo");
+	    btnActivo.setForeground(Color.WHITE);
+	    btnActivo.setOpaque(false);
+	    btnActivo.setFont(new Font("Arial", Font.PLAIN, 12));
+	    
+	    JRadioButton btnInactivo = new JRadioButton("Inactivo");
+	    btnInactivo.setForeground(Color.WHITE);
+	    btnInactivo.setOpaque(false);
+	    btnInactivo.setFont(new Font("Arial", Font.PLAIN, 12));
+	    
+	    // Grupo excluyente
+	    ButtonGroup grupo = new ButtonGroup();
+	    grupo.add(btnActivo);
+	    grupo.add(btnInactivo);
+	    
+	    // Seleccionar según estado
+	    if (activo) {
+	        btnActivo.setSelected(true);
+	    } else {
+	        btnInactivo.setSelected(true);
+	    }
+	    
+	    // Agregar al panel
+	    fila.add(lblEtiqueta);
+	    fila.add(btnActivo);
+	    fila.add(btnInactivo);
+	    
+	    return fila;
 	}
 }

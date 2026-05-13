@@ -149,6 +149,18 @@ public class VentanaPrincipa extends JFrame {
                 cardLayout.show(contenedor, "LOGIN");
                 return;
             }
+        } else if (nombre.equals("PERFIL")) {
+            // Limpiamos el anterior para que los datos se refresquen
+            Component[] componentes = contenedor.getComponents();
+            for (Component c : componentes) {
+                if (c instanceof PanelPerfil) {
+                    contenedor.remove(c);
+                    break;
+                }
+            }
+            // Añadimos el nuevo panel de perfil
+            PanelPerfil pPerfil = new PanelPerfil(usuarioLogueado, this);
+            contenedor.add(pPerfil, "PERFIL");
         }
 
         // Refrescar y mostrar

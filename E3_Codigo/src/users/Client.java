@@ -3,7 +3,9 @@ import utils.*;
 import transactions.*;
 import catalog.*;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.Function;
 import java.time.*;
 
@@ -41,6 +43,7 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 	private List<Exchange> exchangesMade;
 	private List<ExchangeOffer> offersMade;
 	private List<ExchangeOffer> offersReceived;
+	private String foto;
 	
 	/**
 	 * Constructor para crear una nueva cuenta de cliente en el sistema.
@@ -57,6 +60,20 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 	 * @param email          Dirección de correo electrónico (ej: "juan@email.com").
 	 * @param phoneNumber    Número de teléfono de contacto (ej: "666123456").
 	 */
+	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber, String foto) {
+		super(username, password, fullname, dni, birthdate, email, phoneNumber, foto);
+		this.joiningDate = LocalDateTime.now();
+		this.shoppingCart = new ShoppingCart();
+		this.myOrders = new OrderHistoric();
+		this.myExchanges = new ExchangeHistoric();
+		this.myProducts = new ArrayList<>();
+		this.myReviews = new ArrayList<>();
+		this.ordersMade = new ArrayList<>();
+		this.exchangesMade = new ArrayList<>();
+		this.offersMade = new ArrayList<>();
+		this.offersReceived = new ArrayList<>();
+	}
+
 	public Client(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber) {
 		super(username, password, fullname, dni, birthdate, email, phoneNumber);
 		this.joiningDate = LocalDateTime.now();
@@ -70,7 +87,8 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		this.offersMade = new ArrayList<>();
 		this.offersReceived = new ArrayList<>();
 	}
-	
+
+
 	/**
 	 * Añade un producto al carrito de compras del cliente.
 	 * 

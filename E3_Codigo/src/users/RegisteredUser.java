@@ -47,6 +47,7 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 	private String email;
 	private String phoneNumber;
 	private List<Notification> myNotifications;
+	private String foto;
 	
 	/**
 	 * Constructor para crear un nuevo usuario registrado en el sistema.
@@ -110,7 +111,53 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		this.userId = RegisteredUser.lastUserId;
 		RegisteredUser.lastUserId++;
 	}
-	
+
+	public RegisteredUser(String username, String password, String fullname, String dni, String birthdate, String email, String phoneNumber, String foto) {
+		// --- VALIDACIONES DE SEGURIDAD MEDIANTE REGEX ---
+		// DNI: Exactamente 8 números seguidos de una letra (mayúscula o minúscula)
+		if (dni == null || !dni.matches("^[0-9]{8}[A-Za-z]$")) {
+			throw new IllegalArgumentException("DNI inválido. Debe contener 8 dígitos y una letra.");
+		}
+
+		if(foto.isEmpty()){
+			foto = "foto.png";
+		}
+		// Teléfono: Exactamente 9 números
+		if (phoneNumber == null || !phoneNumber.matches("^[0-9]{9}$")) {
+			throw new IllegalArgumentException("Teléfono inválido. Debe contener exactamente 9 dígitos numéricos.");
+		}
+
+		// Email: Texto + @ + Texto + . + Texto
+		if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+			throw new IllegalArgumentException("Email inválido. Revisa el formato (ejemplo@dominio.com).");
+		}
+
+		// Fecha de nacimiento: Formato DD/MM/YYYY
+		if (birthdate == null || !birthdate.matches("^([0-2][0-9]|3[0-1])/(0[1-9]|1[0-2])/[0-9]{4}$")) {
+			throw new IllegalArgumentException("Fecha de nacimiento inválida. Usa el formato DD/MM/YYYY.");
+		}
+
+		// Username y password: Al menos no estar vacíos ni ser espacios en blanco
+		if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+			throw new IllegalArgumentException("El usuario y la contraseña no pueden estar vacíos.");
+		}
+
+		// --- FIN DE VALIDACIONES ---
+
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.dni = dni.toUpperCase(); // Guardamos la letra del DNI en mayúscula por convención
+		this.birthdate = birthdate;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.myNotifications = new ArrayList<>();
+		this.userId = RegisteredUser.lastUserId;
+		this.foto = foto;
+		RegisteredUser.lastUserId++;
+	}
+
+
 	/**
 	 * Autentica al usuario verificando sus credenciales (usuario y contraseña).
 	 * 
@@ -160,7 +207,9 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 	public int getUserId() {
 		return this.userId;
 	}
-	
+
+	public String getFoto() { return foto; }
+
 	/**
 	 * Obtiene una vista de las notificaciones en la bandeja de entrada del usuario.
 	 * 
