@@ -74,12 +74,12 @@ public class PanelInicioo extends JPanel {
 
         if (esInicio) {
             gbcCuerpo.gridx = 0;
-            gbcCuerpo.weightx = 0.33;
+            gbcCuerpo.weightx = 0.19;
             gbcCuerpo.fill = GridBagConstraints.BOTH; // Para que ocupe el espacio
             panelCuerpo.add(panelVacioIzquierdo, gbcCuerpo);
-
+            panelCuerpo.add(crearPanelPublicitario(), gbcCuerpo);
             gbcCuerpo.gridx = 1;
-            gbcCuerpo.weightx = 0.67;
+            gbcCuerpo.weightx = 0.81;
             panelCuerpo.add(scrollProductos, gbcCuerpo);
         } else {
             gbcCuerpo.gridx = 0;
@@ -122,6 +122,7 @@ public class PanelInicioo extends JPanel {
     }
 
     private JPanel crearTarjeta(NewProduct p) {
+        // 1. Configuración de la Tarjeta
         JPanel card = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -134,94 +135,97 @@ public class PanelInicioo extends JPanel {
         };
         card.setLayout(new BorderLayout());
         card.setOpaque(false);
-        card.setPreferredSize(new Dimension(200, 420));
-        card.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        card.setPreferredSize(new Dimension(240, 420));
+        card.setMinimumSize(new Dimension(200, 400));
 
+        int padding = 15;
+        card.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
+
+        // --- PANEL DE IMAGEN (Contenedor del Badge y la Foto) ---
         JPanel pImg = new JPanel(null);
         pImg.setOpaque(false);
-        pImg.setPreferredSize(new Dimension(180, 190));
 
-        // --- GESTIÓN DE IMAGEN CON RUTA ABSOLUTA ---
+        // --- BADGE ---
+        JLabel badge = new JLabel("", SwingConstants.CENTER);
+        if (p instanceof Game) badge.setText("GAME");
+        else if (p instanceof Comic) badge.setText("COMIC");
+        else badge.setText("FIGURINE");
+
+        int bWidth = 75;
+        int bHeight = 25;
+        badge.setSize(bWidth, bHeight);
+        badge.setOpaque(true);
+        badge.setBackground(Color.WHITE);
+        badge.setForeground(Color.BLACK);
+        badge.setFont(new Font("Arial", Font.BOLD, 10));
+
+        // --- LABEL DE IMAGEN ---
         JLabel imgLabel = new JLabel();
-        imgLabel.setBounds(23, 5, 210, 350);
         imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        // --- TU LÓGICA ORIGINAL DE FOTOS (RESTAURADA) ---
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
-            String pathOriginal = p.getFotos().get(0);
-            String nombreArchivo = new File(pathOriginal).getName();
-
-            // Le damos a Java las 3 rutas donde es posible que estés ejecutando el programa
+            String nombreArchivo = new File(p.getFotos().get(0)).getName();
             String[] posiblesRutas = {
-                    "E3_Codigo/src/imgProductos/" + nombreArchivo, // Si el IDE se lanza desde PADSOF (Tu caso actual)
-                    "src/imgProductos/" + nombreArchivo,           // Si se lanza desde la terminal en E3_Codigo
-                    "../src/imgProductos/" + nombreArchivo         // Si se lanza desde la carpeta bin
+                    "E3_Codigo/src/imgProductos/" + nombreArchivo,
+                    "src/imgProductos/" + nombreArchivo,
+                    "../src/imgProductos/" + nombreArchivo
             };
 
             File f = null;
-            // Buscamos cuál de las 3 rutas es la correcta
             for (String ruta : posiblesRutas) {
                 File fPrueba = new File(ruta);
                 if (fPrueba.exists()) {
-                    f = fPrueba; // ¡Lo encontramos!
+                    f = fPrueba;
                     break;
                 }
             }
 
             if (f != null && f.exists()) {
                 ImageIcon icon = new ImageIcon(f.getAbsolutePath());
-                if (icon.getImageLoadStatus() == MediaTracker.COMPLETE || icon.getIconWidth() > 0) {
-                    Image scaled = icon.getImage().getScaledInstance(210, 340, Image.SCALE_SMOOTH);
-                    imgLabel.setIcon(new ImageIcon(scaled));
-                    imgLabel.setText(""); // Ocultamos el texto
-                } else {
-                    imgLabel.setText("Error lectura");
-                    imgLabel.setForeground(Color.ORANGE);
-                }
+                // Escalamos la imagen (210x340 es un buen tamaño base)
+                Image scaled = icon.getImage().getScaledInstance(210, 340, Image.SCALE_SMOOTH);
+                imgLabel.setIcon(new ImageIcon(scaled));
             } else {
                 imgLabel.setText("No existe");
                 imgLabel.setForeground(Color.RED);
             }
-        } else {
-            imgLabel.setText("Sin foto");
-            imgLabel.setForeground(Color.GRAY);
         }
 
-        // Badge (Etiqueta de tipo)
-        JLabel badge = new JLabel("", SwingConstants.CENTER);
-        if(p instanceof Game) badge.setText("GAME");
-        else if(p instanceof Comic) badge.setText("COMIC");
-        else badge.setText("FIGURINE");
+        // --- EL LISTENER PARA EL MOVIMIENTO DINÁMICO ---
+        pImg.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent e) {
+                // El badge persigue el borde derecho
+                badge.setLocation(pImg.getWidth() - bWidth, 0);
+                // La imagen ocupa todo el panel disponible
+                imgLabel.setBounds(0, 0, pImg.getWidth(), pImg.getHeight());
+            }
+        });
 
-        badge.setBounds(100, 10, 75, 25);
-        badge.setOpaque(true);
-        badge.setBackground(Color.WHITE);
-        badge.setForeground(Color.BLACK);
-        badge.setFont(new Font("Arial", Font.BOLD, 10));
+        pImg.add(badge, 0); // Badge arriba
+        pImg.add(imgLabel); // Foto detrás
 
-        pImg.add(badge);
-        pImg.add(imgLabel);
-
-        // Info inferior (Nombre, Precio y Botón)
+        // --- INFO INFERIOR ---
         JPanel info = new JPanel(new GridLayout(2, 1, 0, 5));
         info.setOpaque(false);
 
         JLabel name = new JLabel(p.getName());
         name.setForeground(Color.WHITE);
-        name.setFont(new Font("Arial", Font.BOLD, 13));
+        name.setFont(new Font("Arial", Font.BOLD, 14));
 
         JPanel priceRow = new JPanel(new BorderLayout());
         priceRow.setOpaque(false);
 
         JLabel price = new JLabel(String.format("%.2f€", p.getPrice()));
-        price.setForeground(Color.WHITE);
+        price.setForeground(new Color(180, 160, 255));
         price.setFont(new Font("Arial", Font.BOLD, 18));
 
         JButton btnAdd = new JButton("Añadir");
-        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnAdd.setBackground(new Color(110, 30, 230));
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setFocusPainted(false);
-        btnAdd.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         priceRow.add(price, BorderLayout.WEST);
         priceRow.add(btnAdd, BorderLayout.EAST);
@@ -231,17 +235,64 @@ public class PanelInicioo extends JPanel {
 
         card.add(pImg, BorderLayout.CENTER);
         card.add(info, BorderLayout.SOUTH);
+
+        // Eventos de clic
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 mostrarDetalleProducto(p);
             }
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                card.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
         });
+
         return card;
+    }
+
+    private JPanel crearPanelPublicitario() {
+        // 1. Contenedor principal del lado izquierdo
+        JPanel panelPubli = new JPanel(new BorderLayout());
+        panelPubli.setOpaque(false);
+        panelPubli.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
+
+        // 2. Label con recorte redondeado para la imagen
+        JLabel labelFoto = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Creamos un área de recorte con esquinas redondeadas (30px)
+                Shape clip = new java.awt.geom.RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.setClip(clip);
+
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+        };
+        labelFoto.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // 3. Cargar la imagen desde src/imgProductos/foto.jpg
+        String path = "src/foto/foto2.png";
+        File f = new File(path);
+
+        // Si no la encuentra ahí, buscamos en la ruta alternativa por si acaso
+        if (!f.exists()) {
+            f = new File("E3_Codigo/src/foto/foto2.png");
+        }
+
+        if (f.exists()) {
+            ImageIcon icon = new ImageIcon(f.getAbsolutePath());
+            // Escalamos la imagen (350 de ancho es perfecto para el tercio izquierdo)
+            // El 800 de alto lo ajustará Java según el contenedor
+            Image imgEscalada = icon.getImage().getScaledInstance(350, 800, Image.SCALE_SMOOTH);
+            labelFoto.setIcon(new ImageIcon(imgEscalada));
+        } else {
+            labelFoto.setText("Falta foto.jpg");
+            labelFoto.setForeground(Color.GRAY);
+            labelFoto.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        }
+
+        panelPubli.add(labelFoto, BorderLayout.CENTER);
+        return panelPubli;
     }
 
     private void configurarPlaceholder(JLabel l, String txt) {
