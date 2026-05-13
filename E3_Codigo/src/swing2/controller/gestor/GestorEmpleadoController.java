@@ -242,4 +242,57 @@ public class GestorEmpleadoController {
             return false;
         }
     }
+    
+    /**
+     * Cambiar el estado de un empleado (Activo/Inactivo)
+     */
+    public boolean cambiarEstadoEmpleado(Staff empleado, boolean activo) {
+        try {
+            if (empleado instanceof Employee) {
+                Employee emp = (Employee) empleado;
+                
+                if (activo) {
+                    emp.activateEmployee();
+                    JOptionPane.showMessageDialog(
+                        panel,
+                        "✅ Empleado " + emp.getUsername() + " activado correctamente.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                } else {
+                    emp.desactivateEmployee();
+                    JOptionPane.showMessageDialog(
+                        panel,
+                        "❌ Empleado " + emp.getUsername() + " desactivado correctamente.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+                
+                // Guardar cambios
+                Application.guardarDatos("rongero_data.dat");
+                return true;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                panel,
+                "❌ Error al cambiar estado: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Obtener el estado actual de un empleado
+     */
+    public boolean obtenerEstadoEmpleado(Staff empleado) {
+        if (empleado instanceof Employee) {
+            return ((Employee) empleado).isEnabled();
+        }
+        return false;
+    }
 }
