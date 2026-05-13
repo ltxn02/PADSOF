@@ -28,6 +28,9 @@ public class PanelProductosEmpleado extends JPanel {
     private CardLayout cardLayoutCentral;
     private JPanel panelContenedorCentral;
 
+    // VARIABLE CLAVE: Guarda el producto que el empleado acaba de buscar
+    private NewProduct productoSeleccionadoParaSubida = null;
+
     public PanelProductosEmpleado(VentanaPrincipa ventana, Employee empleado) {
         this.ventana = ventana;
         this.empleadoActual = empleado;
@@ -42,10 +45,11 @@ public class PanelProductosEmpleado extends JPanel {
         panelContenedorCentral = new JPanel(cardLayoutCentral);
         panelContenedorCentral.setOpaque(false);
 
-        // Añadimos las TRES "cartas" (vistas)
+        // Añadimos las CUATRO "cartas" (vistas)
         panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
         panelContenedorCentral.add(crearPanelOpcionesSubida(), "OPCIONES_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirExistente(), "SUBIR_EXISTENTE");
+        panelContenedorCentral.add(crearPanelCantidadSubida(), "CANTIDAD_SUBIDA"); // NUEVA PANTALLA
 
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
@@ -104,11 +108,10 @@ public class PanelProductosEmpleado extends JPanel {
 
         ArrayList<NewProduct> catalogo = Application.getCatalog();
         if (catalogo != null) {
-            // BORRAMOS EL int fakeId = 90800;
             for (NewProduct p : catalogo) {
                 pnlFilas.add(Box.createRigidArea(new Dimension(0, 10)));
 
-                // Sacamos el ID real comprobando que sea un Product
+                // Sacamos el ID real
                 int idReal = 0;
                 if (p instanceof catalog.Product) {
                     idReal = ((catalog.Product) p).getProductId();
@@ -160,7 +163,6 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnExistente = crearBotonBlanco("Subir un producto existente");
         JButton btnNuevo = crearBotonBlanco("Crear producto nuevo");
 
-        // EVENTO: Ir a la nueva pantalla
         btnExistente.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "SUBIR_EXISTENTE"));
         btnNuevo.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Formulario en blanco"));
 
@@ -186,24 +188,21 @@ public class PanelProductosEmpleado extends JPanel {
     // ==========================================
     private JPanel crearPanelSubirExistente() {
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setOpaque(true); // Ocultar el fondo dorado general
+        wrapper.setOpaque(true);
         wrapper.setBackground(COLOR_FONDO_NAV);
 
-        // Cabecera dorada
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
-        pnlBanner.setBackground(COLOR_ACTIVO); // Color dorado
+        pnlBanner.setBackground(COLOR_ACTIVO);
         JLabel lblTitulo = new JLabel("Subida Manual de un producto existente");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
 
-        // Contenedor principal azul
         JPanel pnlCentro = new JPanel();
         pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.Y_AXIS));
         pnlCentro.setOpaque(false);
         pnlCentro.setBorder(new EmptyBorder(50, 40, 20, 40));
 
-        // 1. Buscador
         JPanel pnlBusqueda = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         pnlBusqueda.setOpaque(false);
         JLabel lblBuscar = new JLabel("Buscar producto por ID:");
@@ -212,38 +211,38 @@ public class PanelProductosEmpleado extends JPanel {
 
         JTextField txtId = new JTextField(12);
         txtId.setFont(new Font("Arial", Font.BOLD, 20));
-        // Quitamos bordes para que quede como un bloque blanco
         txtId.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         pnlBusqueda.add(lblBuscar);
         pnlBusqueda.add(txtId);
 
-        // 2. Resultado
         JPanel pnlResultado = new JPanel(new BorderLayout());
         pnlResultado.setOpaque(false);
         pnlResultado.setMaximumSize(new Dimension(1000, 80));
 
-        // 3. Botón Siguiente
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBoton.setOpaque(false);
         JButton btnSiguiente = crearBotonDorado("Siguiente");
-        btnSiguiente.setVisible(false); // Oculto al inicio
+        btnSiguiente.setVisible(false);
 
-        btnSiguiente.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Ir al paso de añadir stock"));
+        // AL PULSAR SIGUIENTE PASAMOS A LA PANTALLA DE CANTIDAD
+        btnSiguiente.addActionListener(e -> {
+            cardLayoutCentral.show(panelContenedorCentral, "CANTIDAD_SUBIDA");
+        });
+
         pnlBoton.add(btnSiguiente);
 
-        // LOGICA DE BÚSQUEDA (Se activa al pulsar Enter)
         txtId.addActionListener(e -> {
             String texto = txtId.getText().trim();
             pnlResultado.removeAll();
             btnSiguiente.setVisible(false);
+            productoSeleccionadoParaSubida = null; // Reseteamos por si acaso
 
             try {
                 int idBuscado = Integer.parseInt(texto);
                 ArrayList<NewProduct> catalogo = Application.getCatalog();
                 NewProduct encontrado = null;
 
-                // Buscamos el producto que tenga exactamente ese ID real
                 if (catalogo != null) {
                     for (NewProduct p : catalogo) {
                         if (p instanceof catalog.Product && ((catalog.Product) p).getProductId() == idBuscado) {
@@ -254,12 +253,15 @@ public class PanelProductosEmpleado extends JPanel {
                 }
 
                 if (encontrado != null) {
+                    // GUARDAMOS EL PRODUCTO ENCONTRADO EN LA VARIABLE GLOBAL
+                    productoSeleccionadoParaSubida = encontrado;
+
                     pnlResultado.add(crearFilaProducto(encontrado, idBuscado), BorderLayout.CENTER);
-                    btnSiguiente.setVisible(true); // Aparece el botón dorado
+                    btnSiguiente.setVisible(true);
                 } else {
                     JLabel lblError = new JLabel("No se ha encontrado un producto con el ID " + idBuscado);
                     lblError.setFont(new Font("Arial", Font.BOLD, 16));
-                    lblError.setForeground(new Color(255, 100, 100)); // Rojo suave
+                    lblError.setForeground(new Color(255, 100, 100));
                     lblError.setHorizontalAlignment(SwingConstants.CENTER);
                     pnlResultado.add(lblError, BorderLayout.CENTER);
                 }
@@ -275,7 +277,6 @@ public class PanelProductosEmpleado extends JPanel {
             pnlResultado.repaint();
         });
 
-        // Ensamblaje vertical
         pnlCentro.add(pnlBusqueda);
         pnlCentro.add(Box.createRigidArea(new Dimension(0, 40)));
         pnlCentro.add(pnlResultado);
@@ -287,6 +288,87 @@ public class PanelProductosEmpleado extends JPanel {
 
         return wrapper;
     }
+
+    // ==========================================
+    // VISTA 4: PREGUNTAR CANTIDAD Y ACTUALIZAR STOCK (NUEVO)
+    // ==========================================
+    private JPanel crearPanelCantidadSubida() {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(true);
+        wrapper.setBackground(COLOR_FONDO_NAV);
+
+        // Cabecera dorada
+        JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
+        pnlBanner.setBackground(COLOR_ACTIVO);
+        JLabel lblTitulo = new JLabel("Subida Manual de un producto existente");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
+        lblTitulo.setForeground(new Color(30, 45, 80));
+        pnlBanner.add(lblTitulo);
+
+        // Contenedor central
+        JPanel pnlCentro = new JPanel();
+        pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.Y_AXIS));
+        pnlCentro.setOpaque(false);
+        pnlCentro.setBorder(new EmptyBorder(80, 40, 20, 40));
+
+        // Input "Cuantas unidades..."
+        JPanel pnlInput = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
+        pnlInput.setOpaque(false);
+        JLabel lblPregunta = new JLabel("Cuantas unidades quieres subir:");
+        lblPregunta.setFont(new Font("Arial", Font.PLAIN, 24));
+        lblPregunta.setForeground(Color.WHITE);
+
+        JTextField txtCantidad = new JTextField(8);
+        txtCantidad.setFont(new Font("Arial", Font.BOLD, 20));
+        txtCantidad.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        pnlInput.add(lblPregunta);
+        pnlInput.add(txtCantidad);
+
+        // Botón Siguiente (Guardar)
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pnlBoton.setOpaque(false);
+        pnlBoton.setBorder(new EmptyBorder(60, 0, 0, 0));
+        JButton btnGuardar = crearBotonDorado("Siguiente");
+
+        btnGuardar.addActionListener(e -> {
+            try {
+                int cantidad = Integer.parseInt(txtCantidad.getText().trim());
+                if (cantidad <= 0) {
+                    JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor que 0.", "Cantidad inválida", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (productoSeleccionadoParaSubida != null) {
+                    // SUMAMOS EL STOCK REAL AL PRODUCTO
+                    productoSeleccionadoParaSubida.increaseStock(cantidad);
+
+                    JOptionPane.showMessageDialog(this, "Se han añadido " + cantidad + " unidades correctamente al stock.", "Stock Actualizado", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Limpiamos el cuadro de texto para la próxima vez
+                    txtCantidad.setText("");
+                    productoSeleccionadoParaSubida = null;
+
+                    // FORZAMOS LA RECARGA DE LA TABLA PARA VER EL NUEVO STOCK
+                    panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
+                    cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, introduzca un número entero válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        pnlBoton.add(btnGuardar);
+
+        pnlCentro.add(pnlInput);
+        pnlCentro.add(pnlBoton);
+
+        wrapper.add(pnlBanner, BorderLayout.NORTH);
+        wrapper.add(pnlCentro, BorderLayout.CENTER);
+
+        return wrapper;
+    }
+
 
     // ==========================================
     // MÉTODOS DE DISEÑO DE BOTONES Y FILAS
@@ -400,7 +482,7 @@ public class PanelProductosEmpleado extends JPanel {
         btn.setFont(new Font("Arial", Font.BOLD, 18));
         btn.setForeground(new Color(30, 45, 80));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setBorder(new EmptyBorder(12, 50, 12, 50)); // Botón grande
+        btn.setBorder(new EmptyBorder(12, 50, 12, 50));
         return btn;
     }
 
@@ -438,8 +520,11 @@ public class PanelProductosEmpleado extends JPanel {
         btnIntercambios = crearBotonNav("Intercambios", false);
         btnPedidos = crearBotonNav("Pedidos", false);
 
-        // EVENTO IMPORTANTE: Al pulsar "Productos" volvemos a mostrar la tabla
-        btnProductos.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS"));
+        // EVENTO: Al pulsar "Productos" forzamos recarga y volvemos a la tabla
+        btnProductos.addActionListener(e -> {
+            panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
+            cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
+        });
 
         nav.add(crearPanelLogo());
         nav.add(btnProductos);
