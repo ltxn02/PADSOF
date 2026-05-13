@@ -149,6 +149,33 @@ public class PanelListaEmpleados extends JPanel {
 		tabla.setSelectionBackground(new Color(100, 150, 255));
 		tabla.setGridColor(new Color(200, 200, 200));
 		
+		tabla.setRowHeight(35);  // ← Aumentar altura
+		tabla.setIntercellSpacing(new Dimension(0, 1));  // ← Espaciado
+		tabla.setShowGrid(true);  // ← Mostrar líneas
+
+		// Aplicar renderer alternado
+		for (int i = 0; i < tabla.getColumnCount(); i++) {
+		    tabla.getColumnModel().getColumn(i).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+		        @Override
+		        public Component getTableCellRendererComponent(JTable table, Object value, 
+		                                                       boolean isSelected, boolean hasFocus, 
+		                                                       int row, int column) {
+		            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		            
+		            if (!isSelected) {
+		                if (row % 2 == 0) {
+		                    this.setBackground(new Color(245, 245, 245));
+		                } else {
+		                    this.setBackground(Color.WHITE);
+		                }
+		            }
+		            
+		            this.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		            return this;
+		        }
+		    });
+		}
+		
 		// Personalizar header
 		JTableHeader header = tabla.getTableHeader();
 		header.setBackground(COLOR_HEADER);
