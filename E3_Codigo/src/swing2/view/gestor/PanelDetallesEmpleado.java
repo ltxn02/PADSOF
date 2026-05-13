@@ -226,12 +226,12 @@ public class PanelDetallesEmpleado extends JPanel {
 	    lblEtiqueta.setPreferredSize(new Dimension(180, 25));
 	    
 	    // Botones de radio
-	    JRadioButton btnActivo = new JRadioButton("Activo");
+	    JRadioButton btnActivo = new JRadioButton("✅ Activo");
 	    btnActivo.setForeground(Color.WHITE);
 	    btnActivo.setOpaque(false);
 	    btnActivo.setFont(new Font("Arial", Font.PLAIN, 12));
 	    
-	    JRadioButton btnInactivo = new JRadioButton("Inactivo");
+	    JRadioButton btnInactivo = new JRadioButton("❌ Inactivo");
 	    btnInactivo.setForeground(Color.WHITE);
 	    btnInactivo.setOpaque(false);
 	    btnInactivo.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -248,6 +248,21 @@ public class PanelDetallesEmpleado extends JPanel {
 	        btnInactivo.setSelected(true);
 	    }
 	    
+	    // ===== AGREGAR LISTENERS =====
+	    btnActivo.addActionListener(e -> {
+	        boolean exito = ctrl.cambiarEstadoEmpleado(empleado, true);
+	        if (exito) {
+	            mostrarDetalles(empleado);  // Refrescar
+	        }
+	    });
+	    
+	    btnInactivo.addActionListener(e -> {
+	        boolean exito = ctrl.cambiarEstadoEmpleado(empleado, false);
+	        if (exito) {
+	            mostrarDetalles(empleado);  // Refrescar
+	        }
+	    });
+	    
 	    // Agregar al panel
 	    fila.add(lblEtiqueta);
 	    fila.add(btnActivo);
@@ -255,4 +270,6 @@ public class PanelDetallesEmpleado extends JPanel {
 	    
 	    return fila;
 	}
+	
+	
 }
