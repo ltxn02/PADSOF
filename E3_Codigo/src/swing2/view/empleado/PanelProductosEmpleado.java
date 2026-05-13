@@ -1,20 +1,22 @@
 package swing2.view.empleado;
 
-import catalog.NewProduct;
+import catalog.Category;
 import catalog.Comic;
 import catalog.Figurine;
 import catalog.Game;
+import catalog.NewProduct;
 import logic.Application;
 import swing2.view.VentanaPrincipa;
 import users.Employee;
+import utils.AgeRange;
+import utils.Review;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class PanelProductosEmpleado extends JPanel {
     private VentanaPrincipa ventana;
@@ -28,34 +30,50 @@ public class PanelProductosEmpleado extends JPanel {
     private CardLayout cardLayoutCentral;
     private JPanel panelContenedorCentral;
 
-    // VARIABLE CLAVE: Guarda el producto que el empleado acaba de buscar
     private NewProduct productoSeleccionadoParaSubida = null;
+
+    // ==============================================================
+    // VARIABLES GLOBALES PARA CREACIÓN DE NUEVO PRODUCTO
+    // ==============================================================
+    private JTextField txtNuevoNombre, txtNuevoPrecio, txtNuevoStock;
+    private JTextArea txtNuevoDesc;
+    private JList<String> listNuevoCategorias;
+    private String rutaImagenSeleccionada = null;
+
+    // Componentes del paso 2 (Específicos)
+    private JComboBox<String> comboTipoProducto;
+    private CardLayout cardLayoutEspecifico;
+    private JPanel panelDinamicoEspecifico;
+
+    private JTextField txtComicPages, txtComicPublisher, txtComicYear, txtComicAuthors;
+    private JTextField txtFigHeight, txtFigWidth, txtFigDepth, txtFigMaterial, txtFigFranchise;
+    private JTextField txtGamePlayers, txtGameMechanics, txtGameAgeMin, txtGameAgeMax;
 
     public PanelProductosEmpleado(VentanaPrincipa ventana, Employee empleado) {
         this.ventana = ventana;
         this.empleadoActual = empleado;
         this.setLayout(new BorderLayout());
-        this.setBackground(new Color(230, 215, 160)); // Fondo dorado principal
+        this.setBackground(new Color(230, 215, 160));
 
-        // 1. Barra de Navegación superior
         setupBarraSuperior();
 
-        // 2. Configuración del CardLayout
         cardLayoutCentral = new CardLayout();
         panelContenedorCentral = new JPanel(cardLayoutCentral);
         panelContenedorCentral.setOpaque(false);
 
-        // Añadimos las CUATRO "cartas" (vistas)
+        // Añadimos las SEIS "cartas" (vistas)
         panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
         panelContenedorCentral.add(crearPanelOpcionesSubida(), "OPCIONES_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirExistente(), "SUBIR_EXISTENTE");
-        panelContenedorCentral.add(crearPanelCantidadSubida(), "CANTIDAD_SUBIDA"); // NUEVA PANTALLA
+        panelContenedorCentral.add(crearPanelCantidadSubida(), "CANTIDAD_SUBIDA");
+        panelContenedorCentral.add(crearPanelSubirNuevo(), "CREAR_NUEVO");
+        panelContenedorCentral.add(crearPanelSubirNuevoEspecifico(), "CREAR_NUEVO_ESPECIFICO");
 
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
 
     // ==========================================
-    // VISTA 1: LA TABLA CON LOS BOTONES
+    // VISTA 1: LA TABLA
     // ==========================================
     private JPanel crearPanelTablaProductos() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -110,13 +128,10 @@ public class PanelProductosEmpleado extends JPanel {
         if (catalogo != null) {
             for (NewProduct p : catalogo) {
                 pnlFilas.add(Box.createRigidArea(new Dimension(0, 10)));
-
-                // Sacamos el ID real
                 int idReal = 0;
                 if (p instanceof catalog.Product) {
                     idReal = ((catalog.Product) p).getProductId();
                 }
-
                 pnlFilas.add(crearFilaProducto(p, idReal));
             }
         }
@@ -134,7 +149,7 @@ public class PanelProductosEmpleado extends JPanel {
     }
 
     // ==========================================
-    // VISTA 2: EL CUADRO AZUL DE SUBIDA MANUAL
+    // VISTA 2: EL CUADRO AZUL
     // ==========================================
     private JPanel crearPanelOpcionesSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -164,7 +179,7 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnNuevo = crearBotonBlanco("Crear producto nuevo");
 
         btnExistente.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "SUBIR_EXISTENTE"));
-        btnNuevo.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Formulario en blanco"));
+        btnNuevo.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "CREAR_NUEVO"));
 
         pnlBotones.add(btnExistente);
         pnlBotones.add(btnNuevo);
@@ -184,7 +199,7 @@ public class PanelProductosEmpleado extends JPanel {
     }
 
     // ==========================================
-    // VISTA 3: BUSCADOR DE PRODUCTO EXISTENTE
+    // VISTA 3: BUSCADOR
     // ==========================================
     private JPanel crearPanelSubirExistente() {
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -225,7 +240,6 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnSiguiente = crearBotonDorado("Siguiente");
         btnSiguiente.setVisible(false);
 
-        // AL PULSAR SIGUIENTE PASAMOS A LA PANTALLA DE CANTIDAD
         btnSiguiente.addActionListener(e -> {
             cardLayoutCentral.show(panelContenedorCentral, "CANTIDAD_SUBIDA");
         });
@@ -236,7 +250,7 @@ public class PanelProductosEmpleado extends JPanel {
             String texto = txtId.getText().trim();
             pnlResultado.removeAll();
             btnSiguiente.setVisible(false);
-            productoSeleccionadoParaSubida = null; // Reseteamos por si acaso
+            productoSeleccionadoParaSubida = null;
 
             try {
                 int idBuscado = Integer.parseInt(texto);
@@ -253,9 +267,7 @@ public class PanelProductosEmpleado extends JPanel {
                 }
 
                 if (encontrado != null) {
-                    // GUARDAMOS EL PRODUCTO ENCONTRADO EN LA VARIABLE GLOBAL
                     productoSeleccionadoParaSubida = encontrado;
-
                     pnlResultado.add(crearFilaProducto(encontrado, idBuscado), BorderLayout.CENTER);
                     btnSiguiente.setVisible(true);
                 } else {
@@ -290,14 +302,13 @@ public class PanelProductosEmpleado extends JPanel {
     }
 
     // ==========================================
-    // VISTA 4: PREGUNTAR CANTIDAD Y ACTUALIZAR STOCK (NUEVO)
+    // VISTA 4: ACTUALIZAR STOCK
     // ==========================================
     private JPanel crearPanelCantidadSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
         wrapper.setBackground(COLOR_FONDO_NAV);
 
-        // Cabecera dorada
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
         JLabel lblTitulo = new JLabel("Subida Manual de un producto existente");
@@ -305,13 +316,11 @@ public class PanelProductosEmpleado extends JPanel {
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
 
-        // Contenedor central
         JPanel pnlCentro = new JPanel();
         pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.Y_AXIS));
         pnlCentro.setOpaque(false);
         pnlCentro.setBorder(new EmptyBorder(80, 40, 20, 40));
 
-        // Input "Cuantas unidades..."
         JPanel pnlInput = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         pnlInput.setOpaque(false);
         JLabel lblPregunta = new JLabel("Cuantas unidades quieres subir:");
@@ -325,11 +334,10 @@ public class PanelProductosEmpleado extends JPanel {
         pnlInput.add(lblPregunta);
         pnlInput.add(txtCantidad);
 
-        // Botón Siguiente (Guardar)
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(60, 0, 0, 0));
-        JButton btnGuardar = crearBotonDorado("Siguiente");
+        JButton btnGuardar = crearBotonDorado("Guardar Stock");
 
         btnGuardar.addActionListener(e -> {
             try {
@@ -340,16 +348,11 @@ public class PanelProductosEmpleado extends JPanel {
                 }
 
                 if (productoSeleccionadoParaSubida != null) {
-                    // SUMAMOS EL STOCK REAL AL PRODUCTO
                     productoSeleccionadoParaSubida.increaseStock(cantidad);
-
                     JOptionPane.showMessageDialog(this, "Se han añadido " + cantidad + " unidades correctamente al stock.", "Stock Actualizado", JOptionPane.INFORMATION_MESSAGE);
-
-                    // Limpiamos el cuadro de texto para la próxima vez
                     txtCantidad.setText("");
                     productoSeleccionadoParaSubida = null;
 
-                    // FORZAMOS LA RECARGA DE LA TABLA PARA VER EL NUEVO STOCK
                     panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
                     cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
                 }
@@ -369,10 +372,344 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    // ==========================================
+    // VISTA 5: FORMULARIO PRODUCTO NUEVO (PASO 1)
+    // ==========================================
+    private JPanel crearPanelSubirNuevo() {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(true);
+        wrapper.setBackground(COLOR_FONDO_NAV);
+
+        JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
+        pnlBanner.setBackground(COLOR_ACTIVO);
+        JLabel lblTitulo = new JLabel("Subida Manual de un producto nuevo (Paso 1/2)");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
+        lblTitulo.setForeground(new Color(30, 45, 80));
+        pnlBanner.add(lblTitulo);
+
+        JPanel pnlCentro = new JPanel(new GridLayout(1, 2, 40, 0));
+        pnlCentro.setOpaque(false);
+        pnlCentro.setBorder(new EmptyBorder(20, 60, 0, 60));
+
+        // IZQUIERDA
+        JPanel pnlForm = new JPanel(new GridBagLayout());
+        pnlForm.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        gbc.weightx = 1.0;
+
+        int row = 0;
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Nombre del producto:"), gbc);
+        txtNuevoNombre = new JTextField();
+        txtNuevoNombre.setFont(new Font("Arial", Font.BOLD, 16));
+        txtNuevoNombre.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        gbc.gridy = row++; pnlForm.add(txtNuevoNombre, gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Descripción:"), gbc);
+        txtNuevoDesc = new JTextArea(4, 20);
+        txtNuevoDesc.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtNuevoDesc.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        txtNuevoDesc.setLineWrap(true);
+        txtNuevoDesc.setWrapStyleWord(true);
+        gbc.gridy = row++; pnlForm.add(new JScrollPane(txtNuevoDesc), gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Precio (€):"), gbc);
+        txtNuevoPrecio = new JTextField();
+        txtNuevoPrecio.setFont(new Font("Arial", Font.BOLD, 16));
+        txtNuevoPrecio.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        gbc.gridy = row++; pnlForm.add(txtNuevoPrecio, gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Stock inicial:"), gbc);
+        txtNuevoStock = new JTextField();
+        txtNuevoStock.setFont(new Font("Arial", Font.BOLD, 16));
+        txtNuevoStock.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        gbc.gridy = row++; pnlForm.add(txtNuevoStock, gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Categorías (Mantén Ctrl para seleccionar varias):"), gbc);
+        ArrayList<catalog.Category> categoriasBD = Application.getGlobalCategories();
+        String[] catNombres = new String[categoriasBD.size()];
+        for(int i = 0; i < categoriasBD.size(); i++) catNombres[i] = categoriasBD.get(i).getNameCategory();
+
+        listNuevoCategorias = new JList<>(catNombres);
+        listNuevoCategorias.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        listNuevoCategorias.setFont(new Font("Arial", Font.PLAIN, 14));
+        JScrollPane scrollCat = new JScrollPane(listNuevoCategorias);
+        scrollCat.setPreferredSize(new Dimension(200, 60));
+        gbc.gridy = row++; pnlForm.add(scrollCat, gbc);
+
+        // DERECHA
+        JPanel pnlImage = new JPanel();
+        pnlImage.setLayout(new BoxLayout(pnlImage, BoxLayout.Y_AXIS));
+        pnlImage.setOpaque(false);
+        pnlImage.setBorder(new EmptyBorder(80, 0, 0, 0));
+
+        JButton btnUpload = new JButton("<html><center><b style='font-size:20px'>+</b><br>Subir Imagen</center></html>");
+        btnUpload.setBackground(new Color(0, 110, 255));
+        btnUpload.setForeground(Color.WHITE);
+        btnUpload.setFocusPainted(false);
+        btnUpload.setFont(new Font("Arial", Font.BOLD, 16));
+        btnUpload.setBorder(new EmptyBorder(25, 60, 25, 60));
+        btnUpload.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUpload.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel lblRutaImg = new JLabel("Ninguna imagen seleccionada");
+        lblRutaImg.setForeground(Color.LIGHT_GRAY);
+        lblRutaImg.setFont(new Font("Arial", Font.ITALIC, 14));
+        lblRutaImg.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblRutaImg.setBorder(new EmptyBorder(15,0,0,0));
+
+        btnUpload.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir") + "/src/imgProductos");
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                rutaImagenSeleccionada = "src/imgProductos/" + selectedFile.getName(); // Guardamos ruta relativa
+                lblRutaImg.setText("Imagen lista: " + selectedFile.getName());
+                lblRutaImg.setForeground(new Color(100, 255, 100));
+            }
+        });
+
+        pnlImage.add(btnUpload);
+        pnlImage.add(lblRutaImg);
+
+        pnlCentro.add(pnlForm);
+        pnlCentro.add(pnlImage);
+
+        // BOTONERA
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pnlBoton.setOpaque(false);
+        pnlBoton.setBorder(new EmptyBorder(10, 0, 30, 0));
+
+        JButton btnSiguiente = crearBotonDorado("Siguiente Paso");
+        btnSiguiente.addActionListener(e -> {
+            if(txtNuevoNombre.getText().trim().isEmpty() || txtNuevoPrecio.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, completa los campos principales.");
+                return;
+            }
+            cardLayoutCentral.show(panelContenedorCentral, "CREAR_NUEVO_ESPECIFICO");
+        });
+        pnlBoton.add(btnSiguiente);
+
+        wrapper.add(pnlBanner, BorderLayout.NORTH);
+        wrapper.add(pnlCentro, BorderLayout.CENTER);
+        wrapper.add(pnlBoton, BorderLayout.SOUTH);
+
+        return wrapper;
+    }
 
     // ==========================================
-    // MÉTODOS DE DISEÑO DE BOTONES Y FILAS
+    // VISTA 6: FORMULARIO ESPECÍFICO (PASO 2)
     // ==========================================
+    private JPanel crearPanelSubirNuevoEspecifico() {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(true);
+        wrapper.setBackground(COLOR_FONDO_NAV);
+
+        JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
+        pnlBanner.setBackground(COLOR_ACTIVO);
+        JLabel lblTitulo = new JLabel("Especificaciones del producto (Paso 2/2)");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
+        lblTitulo.setForeground(new Color(30, 45, 80));
+        pnlBanner.add(lblTitulo);
+
+        JPanel pnlCentro = new JPanel();
+        pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.Y_AXIS));
+        pnlCentro.setOpaque(false);
+        pnlCentro.setBorder(new EmptyBorder(30, 100, 20, 100));
+
+        // Selector de tipo
+        JPanel pnlCombo = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pnlCombo.setOpaque(false);
+        pnlCombo.add(crearLabelBlanco("Tipo de Producto: "));
+
+        comboTipoProducto = new JComboBox<>(new String[]{"CÓMIC", "FIGURA", "JUEGO"});
+        comboTipoProducto.setFont(new Font("Arial", Font.BOLD, 16));
+        pnlCombo.add(comboTipoProducto);
+
+        pnlCentro.add(pnlCombo);
+        pnlCentro.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Paneles dinámicos según el tipo
+        cardLayoutEspecifico = new CardLayout();
+        panelDinamicoEspecifico = new JPanel(cardLayoutEspecifico);
+        panelDinamicoEspecifico.setOpaque(false);
+
+        panelDinamicoEspecifico.add(crearFormComic(), "CÓMIC");
+        panelDinamicoEspecifico.add(crearFormFigurine(), "FIGURA");
+        panelDinamicoEspecifico.add(crearFormGame(), "JUEGO");
+
+        comboTipoProducto.addActionListener(e -> {
+            cardLayoutEspecifico.show(panelDinamicoEspecifico, (String) comboTipoProducto.getSelectedItem());
+        });
+
+        pnlCentro.add(panelDinamicoEspecifico);
+
+        // Botonera final
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+        pnlBoton.setOpaque(false);
+        pnlBoton.setBorder(new EmptyBorder(20, 0, 30, 0));
+
+        JButton btnAtras = crearBotonBlanco("Atrás");
+        btnAtras.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "CREAR_NUEVO"));
+
+        JButton btnFinal = crearBotonDorado("Crear y Guardar Producto");
+        btnFinal.addActionListener(e -> procesarCreacionProducto());
+
+        pnlBoton.add(btnAtras);
+        pnlBoton.add(btnFinal);
+
+        wrapper.add(pnlBanner, BorderLayout.NORTH);
+        wrapper.add(pnlCentro, BorderLayout.CENTER);
+        wrapper.add(pnlBoton, BorderLayout.SOUTH);
+
+        return wrapper;
+    }
+
+    // Formularios específicos
+    private JPanel crearFormComic() {
+        JPanel grid = new JPanel(new GridLayout(4, 2, 10, 15));
+        grid.setOpaque(false);
+        grid.add(crearLabelBlanco("Número de páginas:")); grid.add(txtComicPages = new JTextField());
+        grid.add(crearLabelBlanco("Editorial:")); grid.add(txtComicPublisher = new JTextField());
+        grid.add(crearLabelBlanco("Año de publicación:")); grid.add(txtComicYear = new JTextField());
+        grid.add(crearLabelBlanco("Autores (separados por coma):")); grid.add(txtComicAuthors = new JTextField());
+
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.setOpaque(false);
+        wrap.add(grid, BorderLayout.NORTH);
+        return wrap;
+    }
+
+    private JPanel crearFormFigurine() {
+        JPanel grid = new JPanel(new GridLayout(5, 2, 10, 15));
+        grid.setOpaque(false);
+        grid.add(crearLabelBlanco("Altura (cm):")); grid.add(txtFigHeight = new JTextField());
+        grid.add(crearLabelBlanco("Anchura (cm):")); grid.add(txtFigWidth = new JTextField());
+        grid.add(crearLabelBlanco("Profundidad (cm):")); grid.add(txtFigDepth = new JTextField());
+        grid.add(crearLabelBlanco("Material:")); grid.add(txtFigMaterial = new JTextField());
+        grid.add(crearLabelBlanco("Franquicia:")); grid.add(txtFigFranchise = new JTextField());
+
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.setOpaque(false);
+        wrap.add(grid, BorderLayout.NORTH);
+        return wrap;
+    }
+
+    private JPanel crearFormGame() {
+        JPanel grid = new JPanel(new GridLayout(4, 2, 10, 15));
+        grid.setOpaque(false);
+        grid.add(crearLabelBlanco("Número de Jugadores:")); grid.add(txtGamePlayers = new JTextField());
+        grid.add(crearLabelBlanco("Mecánicas (separadas por coma):")); grid.add(txtGameMechanics = new JTextField());
+        grid.add(crearLabelBlanco("Edad Mínima recomendada:")); grid.add(txtGameAgeMin = new JTextField());
+        grid.add(crearLabelBlanco("Edad Máxima recomendada:")); grid.add(txtGameAgeMax = new JTextField());
+
+        JPanel wrap = new JPanel(new BorderLayout());
+        wrap.setOpaque(false);
+        wrap.add(grid, BorderLayout.NORTH);
+        return wrap;
+    }
+
+    // ==========================================
+    // LÓGICA DE CREACIÓN FINAL
+    // ==========================================
+    private void procesarCreacionProducto() {
+        try {
+            // 1. Lectura de campos generales
+            String nombre = txtNuevoNombre.getText().trim();
+            String desc = txtNuevoDesc.getText().trim();
+            double precio = Double.parseDouble(txtNuevoPrecio.getText().trim());
+            int stock = Integer.parseInt(txtNuevoStock.getText().trim());
+
+            // 2. Extracción de Categorías
+            ArrayList<Category> catGlobales = Application.getGlobalCategories();
+            ArrayList<Category> categoriasElegidas = new ArrayList<>();
+            for (String catName : listNuevoCategorias.getSelectedValuesList()) {
+                for (Category c : catGlobales) {
+                    if (c.getNameCategory().equals(catName)) {
+                        categoriasElegidas.add(c);
+                        break;
+                    }
+                }
+            }
+
+            if (categoriasElegidas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Selecciona al menos una categoría en el paso 1.");
+                return;
+            }
+
+            // 3. Extracción de la Imagen
+            ArrayList<String> fotos = new ArrayList<>();
+            if (rutaImagenSeleccionada != null) {
+                fotos.add(rutaImagenSeleccionada);
+            } else {
+                fotos.add("src/imgProductos/foto.png"); // Imagen por defecto si no suben nada
+            }
+
+            // 4. Instanciación del producto específico
+            String tipoElegido = (String) comboTipoProducto.getSelectedItem();
+            NewProduct nuevoProd = null;
+
+            if (tipoElegido.equals("CÓMIC")) {
+                int pages = Integer.parseInt(txtComicPages.getText().trim());
+                String pub = txtComicPublisher.getText().trim();
+                int year = Integer.parseInt(txtComicYear.getText().trim());
+                ArrayList<String> authors = new ArrayList<>(Arrays.asList(txtComicAuthors.getText().split(",")));
+                nuevoProd = new Comic(nombre, desc, precio, fotos, stock, categoriasElegidas, new ArrayList<Review>(), null, pages, pub, year, authors);
+            }
+            else if (tipoElegido.equals("FIGURA")) {
+                double h = Double.parseDouble(txtFigHeight.getText().trim());
+                double w = Double.parseDouble(txtFigWidth.getText().trim());
+                double d = Double.parseDouble(txtFigDepth.getText().trim());
+                String mat = txtFigMaterial.getText().trim();
+                String fran = txtFigFranchise.getText().trim();
+                nuevoProd = new Figurine(nombre, desc, precio, fotos, stock, categoriasElegidas, new ArrayList<Review>(), null, h, w, d, mat, fran);
+            }
+            else if (tipoElegido.equals("JUEGO")) {
+                int play = Integer.parseInt(txtGamePlayers.getText().trim());
+                ArrayList<String> mech = new ArrayList<>(Arrays.asList(txtGameMechanics.getText().split(",")));
+                int minAge = Integer.parseInt(txtGameAgeMin.getText().trim());
+                int maxAge = Integer.parseInt(txtGameAgeMax.getText().trim());
+                AgeRange ageRange = new AgeRange(minAge, maxAge);
+                nuevoProd = new Game(nombre, desc, precio, fotos, stock, categoriasElegidas, new ArrayList<Review>(), null, play, mech, ageRange);
+            }
+
+            // 5. Guardado y limpieza
+            if (nuevoProd != null) {
+                Application.getCatalog().add(nuevoProd);
+                JOptionPane.showMessageDialog(this, "¡Producto '" + nombre + "' creado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                // Limpiar campos generales para la próxima vez
+                txtNuevoNombre.setText("");
+                txtNuevoDesc.setText("");
+                txtNuevoPrecio.setText("");
+                txtNuevoStock.setText("");
+                rutaImagenSeleccionada = null;
+
+                // Volvemos a la tabla refrescándola
+                panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
+                cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
+            }
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Comprueba los campos numéricos (precio, stock, años, medidas...). Solo deben contener números.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error Lógico", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    // ==========================================
+    // MÉTODOS AUXILIARES
+    // ==========================================
+    private JLabel crearLabelBlanco(String texto) {
+        JLabel l = new JLabel(texto);
+        l.setForeground(Color.WHITE);
+        l.setFont(new Font("Arial", Font.BOLD, 18));
+        l.setBorder(new EmptyBorder(8, 0, 5, 0));
+        return l;
+    }
+
     private JPanel crearFilaProducto(NewProduct p, int id) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -470,7 +807,7 @@ public class PanelProductosEmpleado extends JPanel {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(COLOR_ACTIVO); // Dorado
+                g2.setColor(COLOR_ACTIVO);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 35, 35);
                 g2.dispose();
                 super.paintComponent(g);
@@ -486,9 +823,6 @@ public class PanelProductosEmpleado extends JPanel {
         return btn;
     }
 
-    // ==========================================
-    // CARGA DE IMAGEN MINIATURA Y NAVEGACIÓN
-    // ==========================================
     private void cargarImagenPequena(NewProduct p, JLabel imgLabel) {
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
             String nombreArchivo = new File(p.getFotos().get(0)).getName();
@@ -520,7 +854,6 @@ public class PanelProductosEmpleado extends JPanel {
         btnIntercambios = crearBotonNav("Intercambios", false);
         btnPedidos = crearBotonNav("Pedidos", false);
 
-        // EVENTO: Al pulsar "Productos" forzamos recarga y volvemos a la tabla
         btnProductos.addActionListener(e -> {
             panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
             cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
