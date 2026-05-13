@@ -80,4 +80,12 @@ public abstract class Product extends NewProduct implements java.io.Serializable
 
         return precioOriginal;
     }
+
+    /**
+     * Obtiene el identificador único del producto.
+     * @return El ID del producto.
+     */
+    public int getProductId() {
+        return this.productId;
+    }
 }
