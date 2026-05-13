@@ -121,6 +121,103 @@ public class PanelInicioo extends JPanel {
         contenedorCentral.repaint();
     }
 
+    private void abrirSelectorCantidad(NewProduct p) {
+        // 1. COMPROBACIÓN DE SESIÓN (Seguridad)
+        // Cambia 'usuarioActual' por tu variable de sesión o controlador
+        if (usuarioActual == null) {
+            JOptionPane.showMessageDialog(this,
+                    "¡Atención! Debes iniciar sesión para poder comprar productos.",
+                    "Sesión no iniciada",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2. CREACIÓN DEL DIÁLOGO PERSONALIZADO
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Seleccionar Cantidad");
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.getContentPane().setBackground(new Color(15, 45, 105)); // Azul a juego con la tarjeta
+        dialog.setLayout(new BorderLayout(10, 10));
+
+        // --- PANEL INFO (Nombre y Precio) ---
+        JPanel pInfo = new JPanel(new GridLayout(2, 1, 5, 5));
+        pInfo.setOpaque(false);
+        pInfo.setBorder(BorderFactory.createEmptyBorder(20, 25, 10, 25));
+
+        JLabel lblNombre = new JLabel(p.getName());
+        lblNombre.setForeground(Color.WHITE);
+        lblNombre.setFont(new Font("Arial", Font.BOLD, 16));
+        lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel lblPrecio = new JLabel(String.format("Precio unitario: %.2f€", p.getPrice()));
+        lblPrecio.setForeground(new Color(180, 160, 255));
+        lblPrecio.setHorizontalAlignment(SwingConstants.CENTER);
+
+        pInfo.add(lblNombre);
+        pInfo.add(lblPrecio);
+
+        // --- PANEL CENTRAL (Selector de Cantidad) ---
+        JPanel pCant = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        pCant.setOpaque(false);
+
+        JLabel lblTxt = new JLabel("Indica la cantidad:");
+        lblTxt.setForeground(Color.WHITE);
+        lblTxt.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        // Configuración del Spinner (Valor inicial 1, Min 1, Max 99, Salto 1)
+        SpinnerModel model = new SpinnerNumberModel(1, 1, 99, 1);
+        JSpinner spinner = new JSpinner(model);
+        spinner.setPreferredSize(new Dimension(60, 30));
+
+        // Estilizar el campo de texto del spinner
+        JComponent editor = spinner.getEditor();
+        JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
+        textField.setColumns(3);
+
+        pCant.add(lblTxt);
+        pCant.add(spinner);
+
+        // --- PANEL BOTÓN (Confirmación) ---
+        JPanel pBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pBoton.setOpaque(false);
+        pBoton.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+
+        JButton btnConfirmar = new JButton("Confirmar y Añadir");
+        btnConfirmar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnConfirmar.setBackground(new Color(110, 30, 230));
+        btnConfirmar.setForeground(Color.WHITE);
+        btnConfirmar.setFont(new Font("Arial", Font.BOLD, 13));
+        btnConfirmar.setFocusPainted(false);
+        btnConfirmar.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+
+        // Lógica al pulsar Confirmar
+        btnConfirmar.addActionListener(e -> {
+            int cantidad = (int) spinner.getValue();
+
+            // --- LLAMADA A TU LÓGICA DE NEGOCIO ---
+            // Ejemplo: miControlador.aniadirAlCarrito(p, cantidad, usuarioActual);
+
+            dialog.dispose(); // Cerrar ventana
+
+            // Feedback visual bonito
+            JOptionPane.showMessageDialog(this,
+                    "Has añadido " + cantidad + " unidad(es) de:\n" + p.getName(),
+                    "Producto añadido",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        pBoton.add(btnConfirmar);
+
+        // Ensamblar todo en el diálogo
+        dialog.add(pInfo, BorderLayout.NORTH);
+        dialog.add(pCant, BorderLayout.CENTER);
+        dialog.add(pBoton, BorderLayout.SOUTH);
+
+        dialog.pack();
+        dialog.setLocationRelativeTo(this); // Centrar respecto al panel principal
+        dialog.setVisible(true);
+    }
     private JPanel crearTarjeta(NewProduct p) {
         // 1. Configuración de la Tarjeta
         JPanel card = new JPanel() {
@@ -226,6 +323,9 @@ public class PanelInicioo extends JPanel {
         btnAdd.setForeground(Color.WHITE);
         btnAdd.setFocusPainted(false);
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAdd.addActionListener(e -> {
+            abrirSelectorCantidad(p); // Abrimos el diálogo bonito
+        });
 
         priceRow.add(price, BorderLayout.WEST);
         priceRow.add(btnAdd, BorderLayout.EAST);
@@ -548,28 +648,8 @@ public class PanelInicioo extends JPanel {
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnAdd.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnAdd.addActionListener(e -> {
-            if (usuarioActual == null) {
-                JOptionPane.showMessageDialog(this,
-                        "Debes iniciar sesión para añadir productos al carrito",
-                        "Inicio de sesión necesario",
-                        JOptionPane.WARNING_MESSAGE);
-            } else {
-                // Suponiendo que tu RegisteredUser o Client tiene un método addCarrito
-                // Si no lo tiene, aquí llamarías a tu lógica: Application.aniadirAlCarrito(p);
-
-                // Ejemplo de feedback visual:
-                btnAdd.setText("¡Añadido! ✓");
-                btnAdd.setBackground(new Color(40, 167, 69)); // Cambia a verde
-                btnAdd.setEnabled(false); // Evita que lo pulse mil veces seguidas
-
-                JOptionPane.showMessageDialog(this,
-                        p.getName() + " se ha añadido correctamente a tu carrito.");
-
-                // Volver al catálogo automáticamente después de añadir (Opcional)
-                // cargarMasVendidos();
-            }
+            abrirSelectorCantidad(p); // Reutilizamos la misma ventana bonita
         });
-
         // Añadimos componentes al panel izquierdo
         infoPanel.add(btnVolver);
         infoPanel.add(Box.createVerticalStrut(30));
