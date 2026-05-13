@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import logic.Application;
+import swing2.view.empleado.PanelProductosEmpleado;
 import swing2.view.gestor.PanelDashboard;
 import users.*;
 
@@ -78,11 +79,26 @@ public class VentanaPrincipa extends JFrame {
         	
         	mostrarPantalla("GESTOR");
         } else if (nuevoUsuario instanceof Employee) {
-        	// ========================================================
-            // USUARIO ES EMPLEADO → Por ahora, mostrar INICIO
             // ========================================================
-            // (Puedes crear un panel especial para empleados después)
-        	mostrarPantalla("INICIO");
+            // USUARIO ES EMPLEADO
+            // ========================================================
+            Component[] componentes = contenedor.getComponents();
+            for (Component c : componentes) {
+                if (c instanceof PanelProductosEmpleado) {
+                    contenedor.remove(c);
+                    break;
+                }
+            }
+
+            // Creamos y añadimos el nuevo panel de administrador
+            PanelProductosEmpleado panelEmp = new PanelProductosEmpleado(this, (Employee) nuevoUsuario);
+            contenedor.add(panelEmp, "PRODUCTOS_EMPLEADO");
+
+            contenedor.revalidate();
+            contenedor.repaint();
+
+            mostrarPantalla("PRODUCTOS_EMPLEADO");
+
         } else if (nuevoUsuario instanceof Client) {
             // ===== ES CLIENTE =====
             // Remover los paneles INICIOO e INTERCAMBIOS anteriores
