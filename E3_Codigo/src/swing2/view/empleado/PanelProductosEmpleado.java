@@ -13,7 +13,6 @@ import utils.Review;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -27,27 +26,29 @@ public class PanelProductosEmpleado extends JPanel {
     private final Color COLOR_FONDO_NAV = new Color(26, 26, 75, 200);
     private final Color COLOR_ACTIVO = new Color(220, 200, 140);
 
-    // Gestor de "cartas" para el panel central
     private CardLayout cardLayoutCentral;
     private JPanel panelContenedorCentral;
 
     private NewProduct productoSeleccionadoParaSubida = null;
 
-    // Variables globales para la creación manual
+    // Variables Creación
     private JTextField txtNuevoNombre, txtNuevoPrecio, txtNuevoStock;
     private JTextArea txtNuevoDesc;
     private JList<String> listNuevoCategorias;
     private String rutaImagenSeleccionada = null;
-    private String rutaArchivoCSVSeleccionado = null; // Variable para el archivo CSV/TXT
+    private String rutaArchivoCSVSeleccionado = null;
 
-    // Componentes del paso 2 (Específicos)
     private JComboBox<String> comboTipoProducto;
     private CardLayout cardLayoutEspecifico;
     private JPanel panelDinamicoEspecifico;
-
     private JTextField txtComicPages, txtComicPublisher, txtComicYear, txtComicAuthors;
     private JTextField txtFigHeight, txtFigWidth, txtFigDepth, txtFigMaterial, txtFigFranchise;
     private JTextField txtGamePlayers, txtGameMechanics, txtGameAgeMin, txtGameAgeMax;
+
+    // Variables Edición (Simplificadas)
+    private String rutaImagenEdicion = null;
+    private JTextField txtEditNombre, txtEditPrecio, txtEditStock;
+    private JTextArea txtEditDesc;
 
     public PanelProductosEmpleado(VentanaPrincipa ventana, Employee empleado) {
         this.ventana = ventana;
@@ -61,20 +62,19 @@ public class PanelProductosEmpleado extends JPanel {
         panelContenedorCentral = new JPanel(cardLayoutCentral);
         panelContenedorCentral.setOpaque(false);
 
-        // Añadimos TODAS las "cartas" (vistas)
         panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
         panelContenedorCentral.add(crearPanelOpcionesSubida(), "OPCIONES_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirExistente(), "SUBIR_EXISTENTE");
         panelContenedorCentral.add(crearPanelCantidadSubida(), "CANTIDAD_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirNuevo(), "CREAR_NUEVO");
         panelContenedorCentral.add(crearPanelSubirNuevoEspecifico(), "CREAR_NUEVO_ESPECIFICO");
-        panelContenedorCentral.add(crearPanelSubirArchivo(), "SUBIR_ARCHIVO"); // NUEVA PANTALLA
+        panelContenedorCentral.add(crearPanelSubirArchivo(), "SUBIR_ARCHIVO");
 
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
 
     // ==========================================
-    // VISTA 1: LA TABLA
+    // VISTA 1: LA TABLA (CON FILAS CLICKABLES)
     // ==========================================
     private JPanel crearPanelTablaProductos() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -88,7 +88,6 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnSubirArchivo = crearBotonAzul("Subir desde un archivo");
 
         btnSubirManual.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "OPCIONES_SUBIDA"));
-        // CONECTAMOS EL NUEVO BOTÓN
         btnSubirArchivo.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "SUBIR_ARCHIVO"));
 
         pnlAcciones.add(btnSubirManual);
@@ -134,7 +133,7 @@ public class PanelProductosEmpleado extends JPanel {
                 if (p instanceof catalog.Product) {
                     idReal = ((catalog.Product) p).getProductId();
                 }
-                pnlFilas.add(crearFilaProducto(p, idReal));
+                pnlFilas.add(crearFilaProductoInteractiva(p, idReal));
             }
         }
 
@@ -150,15 +149,228 @@ public class PanelProductosEmpleado extends JPanel {
         return panel;
     }
 
+    private JPanel crearFilaProductoInteractiva(NewProduct p, int id) {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(false);
+        wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+
+        JPanel fila = new JPanel(new GridLayout(1, 7, 10, 0)) {
+            Color bgColor = Color.WHITE;
+            {
+                addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent e) {
+                        Component[] comps = panelContenedorCentral.getComponents();
+                        for (Component c : comps) {
+                            if ("EDITAR_PRODUCTO".equals(c.getName())) {
+                                panelContenedorCentral.remove(c);
+                            }
+                        }
+                        JPanel panelEdicion = crearPanelEditarProducto(p, id);
+                        panelEdicion.setName("EDITAR_PRODUCTO");
+                        panelContenedorCentral.add(panelEdicion, "EDITAR_PRODUCTO");
+                        cardLayoutCentral.show(panelContenedorCentral, "EDITAR_PRODUCTO");
+                    }
+                    public void mouseEntered(java.awt.event.MouseEvent e) {
+                        bgColor = new Color(235, 245, 255);
+                        setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        repaint();
+                    }
+                    public void mouseExited(java.awt.event.MouseEvent e) {
+                        bgColor = Color.WHITE;
+                        repaint();
+                    }
+                });
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(bgColor);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.dispose();
+            }
+        };
+        fila.setOpaque(false);
+        fila.setBorder(new EmptyBorder(5, 20, 5, 20));
+
+        fila.add(crearLabelFila(String.valueOf(id)));
+        String nombre = p.getName().length() > 20 ? p.getName().substring(0, 17) + "..." : p.getName();
+        fila.add(crearLabelFila(nombre));
+
+        String tipo = "Desconocido", marca = "-";
+        if (p instanceof Comic) { tipo = "Cómic"; marca = "Editorial"; }
+        else if (p instanceof Figurine) { tipo = "Figura"; marca = "Franquicia"; }
+        else if (p instanceof Game) { tipo = "Juego"; marca = "Mecánica"; }
+
+        fila.add(crearLabelFila(tipo));
+        fila.add(crearLabelFila(marca));
+        fila.add(crearLabelFila(String.valueOf((int)p.getStock())));
+
+        JLabel lblFoto = new JLabel("", SwingConstants.CENTER);
+        cargarImagenPequena(p, lblFoto);
+        fila.add(lblFoto);
+        fila.add(crearLabelFila(String.format("%.2f€", p.getPrice())));
+
+        wrapper.add(fila, BorderLayout.CENTER);
+        return wrapper;
+    }
+
     // ==========================================
-    // NUEVA VISTA 7: SUBIR DESDE UN ARCHIVO
+    // NUEVA VISTA 8: EDICIÓN DE PRODUCTO
     // ==========================================
+    private JPanel crearPanelEditarProducto(NewProduct p, int id) {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(true);
+        wrapper.setBackground(COLOR_FONDO_NAV); // Fondo azul oscuro
+
+        // Cabecera dorada
+        JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
+        pnlBanner.setBackground(COLOR_ACTIVO);
+        JLabel lblTitulo = new JLabel("Editar Producto - ID: " + id);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
+        lblTitulo.setForeground(new Color(30, 45, 80));
+        pnlBanner.add(lblTitulo);
+
+        // Centro dividido en dos columnas
+        JPanel pnlCentro = new JPanel(new GridLayout(1, 2, 40, 0));
+        pnlCentro.setOpaque(false);
+        pnlCentro.setBorder(new EmptyBorder(40, 60, 0, 60));
+
+        // --- COLUMNA IZQUIERDA: DATOS GENERALES ---
+        JPanel pnlForm = new JPanel(new GridBagLayout());
+        pnlForm.setOpaque(false);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 0, 5, 0);
+        gbc.weightx = 1.0;
+
+        int row = 0;
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Nombre del producto ✏️:"), gbc);
+        txtEditNombre = new JTextField(p.getName());
+        txtEditNombre.setFont(new Font("Arial", Font.BOLD, 16));
+        txtEditNombre.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        gbc.gridy = row++; pnlForm.add(txtEditNombre, gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Descripción ✏️:"), gbc);
+        String descActual = "";
+        try { descActual = p.getDescription(); } catch (Exception ignored) {}
+        txtEditDesc = new JTextArea(descActual, 5, 20);
+        txtEditDesc.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtEditDesc.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        txtEditDesc.setLineWrap(true);
+        txtEditDesc.setWrapStyleWord(true);
+        gbc.gridy = row++; pnlForm.add(new JScrollPane(txtEditDesc), gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Precio (€) ✏️:"), gbc);
+        txtEditPrecio = new JTextField(String.valueOf(p.getPrice()));
+        txtEditPrecio.setFont(new Font("Arial", Font.BOLD, 16));
+        txtEditPrecio.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        gbc.gridy = row++; pnlForm.add(txtEditPrecio, gbc);
+
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Stock ✏️:"), gbc);
+        txtEditStock = new JTextField(String.valueOf((int)p.getStock()));
+        txtEditStock.setFont(new Font("Arial", Font.BOLD, 16));
+        txtEditStock.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
+        gbc.gridy = row++; pnlForm.add(txtEditStock, gbc);
+
+        // --- COLUMNA DERECHA: IMAGEN (SOLAMENTE) ---
+        JPanel pnlDerecha = new JPanel();
+        pnlDerecha.setLayout(new BoxLayout(pnlDerecha, BoxLayout.Y_AXIS));
+        pnlDerecha.setOpaque(false);
+        pnlDerecha.setBorder(new EmptyBorder(30, 0, 0, 0));
+
+        JButton btnUpload = new JButton("Cambiar Imagen");
+        btnUpload.setBackground(new Color(0, 110, 255));
+        btnUpload.setForeground(Color.WHITE);
+        btnUpload.setFocusPainted(false);
+        btnUpload.setFont(new Font("Arial", Font.BOLD, 16));
+        btnUpload.setBorder(new EmptyBorder(15, 30, 15, 30));
+        btnUpload.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnUpload.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel lblRutaImg = new JLabel("Imagen actual mantenida");
+        lblRutaImg.setForeground(Color.LIGHT_GRAY);
+        lblRutaImg.setFont(new Font("Arial", Font.ITALIC, 14));
+        lblRutaImg.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblRutaImg.setBorder(new EmptyBorder(10,0,20,0));
+
+        btnUpload.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir") + "/src/imgProductos");
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                rutaImagenEdicion = "src/imgProductos/" + fileChooser.getSelectedFile().getName();
+                lblRutaImg.setText("Nueva imagen: " + fileChooser.getSelectedFile().getName());
+                lblRutaImg.setForeground(new Color(100, 255, 100));
+            }
+        });
+
+        pnlDerecha.add(btnUpload);
+        pnlDerecha.add(lblRutaImg);
+
+        pnlCentro.add(pnlForm);
+        pnlCentro.add(pnlDerecha);
+
+        // ¡CLAVE AQUÍ! Hacemos que el ScrollPane sea transparente para que se vea el fondo azul oscuro
+        JScrollPane scrollCentro = new JScrollPane(pnlCentro);
+        scrollCentro.setOpaque(false);
+        scrollCentro.getViewport().setOpaque(false);
+        scrollCentro.setBorder(null);
+
+        // BOTONERA INFERIOR
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
+        pnlBoton.setOpaque(false);
+        pnlBoton.setBorder(new EmptyBorder(20, 0, 30, 0));
+
+        JButton btnCancelar = crearBotonBlanco("Cancelar");
+        btnCancelar.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS"));
+
+        JButton btnGuardar = crearBotonDorado("Guardar Cambios");
+        btnGuardar.addActionListener(e -> procesarEdicionProducto(p));
+
+        pnlBoton.add(btnCancelar);
+        pnlBoton.add(btnGuardar);
+
+        wrapper.add(pnlBanner, BorderLayout.NORTH);
+        wrapper.add(scrollCentro, BorderLayout.CENTER);
+        wrapper.add(pnlBoton, BorderLayout.SOUTH);
+
+        return wrapper;
+    }
+
+    private void procesarEdicionProducto(NewProduct p) {
+        try {
+            String nombre = txtEditNombre.getText().trim();
+            String desc = txtEditDesc.getText().trim();
+            double precio = Double.parseDouble(txtEditPrecio.getText().trim());
+            int stock = Integer.parseInt(txtEditStock.getText().trim());
+
+            String imgFinal = (rutaImagenEdicion != null) ? rutaImagenEdicion : (p.getFotos() != null && !p.getFotos().isEmpty() ? p.getFotos().get(0) : "src/imgProductos/foto.png");
+
+            // En lugar de pasar por Employee (que exige todos los datos específicos),
+            // actualizamos directamente los datos generales para no perder nada.
+            p.editProductInfo(nombre, desc, precio, imgFinal, stock);
+
+            JOptionPane.showMessageDialog(this, "Producto actualizado correctamente.");
+            rutaImagenEdicion = null;
+
+            // Refrescar tabla
+            panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
+            cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al editar. Revisa los campos numéricos.\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // ==========================================
+    // RESTO DE VISTAS
+    // ==========================================
+
     private JPanel crearPanelSubirArchivo() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
         wrapper.setBackground(COLOR_FONDO_NAV);
 
-        // Cabecera dorada
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
         JLabel lblTitulo = new JLabel("Subir desde un archivo");
@@ -166,26 +378,22 @@ public class PanelProductosEmpleado extends JPanel {
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
 
-        // Centro (Icono, Botón elegir, Label)
         JPanel pnlCentro = new JPanel();
         pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.Y_AXIS));
         pnlCentro.setOpaque(false);
         pnlCentro.setBorder(new EmptyBorder(80, 40, 20, 40));
 
-        // Icono gigante simulado con texto
         JLabel lblIcono = new JLabel("📄", SwingConstants.CENTER);
         lblIcono.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 80));
         lblIcono.setForeground(Color.WHITE);
         lblIcono.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Etiqueta donde mostraremos el archivo
         JLabel lblRutaArchivo = new JLabel("Ningún archivo seleccionado");
         lblRutaArchivo.setForeground(Color.LIGHT_GRAY);
         lblRutaArchivo.setFont(new Font("Arial", Font.ITALIC, 14));
         lblRutaArchivo.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblRutaArchivo.setBorder(new EmptyBorder(15, 0, 15, 0));
 
-        // Botón blanco de "Elegir Archivos"
         JButton btnElegir = crearBotonBlanco("ELEGIR ARCHIVOS  ▼");
         btnElegir.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnElegir.addActionListener(e -> {
@@ -201,43 +409,27 @@ public class PanelProductosEmpleado extends JPanel {
                 File selectedFile = fileChooser.getSelectedFile();
                 rutaArchivoCSVSeleccionado = selectedFile.getAbsolutePath();
                 lblRutaArchivo.setText("Archivo listo: " + selectedFile.getName());
-                lblRutaArchivo.setForeground(new Color(100, 255, 100)); // Verde clarito
+                lblRutaArchivo.setForeground(new Color(100, 255, 100));
             }
         });
 
-        // Botón Dorado Siguiente
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(40, 0, 0, 0));
 
         JButton btnSiguiente = crearBotonDorado("Siguiente");
         btnSiguiente.addActionListener(e -> {
-            // 1. Validamos que haya seleccionado algo
             if (rutaArchivoCSVSeleccionado == null) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un archivo primero.", "Archivo no seleccionado", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
             try {
-                // =========================================================
-                // LÓGICA TEMPORAL DE CARGA MASIVA PARA LA UI
-                // Lee el CSV y los mete directamente en Application.getCatalog()
-                // =========================================================
                 int productosAñadidos = procesarCargaMasivaLocal(rutaArchivoCSVSeleccionado);
-
                 if (productosAñadidos > 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "¡Carga masiva completada con éxito!\nSe han añadido " + productosAñadidos + " productos nuevos al catálogo.",
-                            "Carga Exitosa",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "¡Carga masiva completada con éxito!\nSe han añadido " + productosAñadidos + " productos nuevos al catálogo.", "Carga Exitosa", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "El archivo fue leído, pero no se encontró ningún producto válido o el formato es incorrecto.",
-                            "Aviso",
-                            JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "El archivo fue leído, pero no se encontró ningún producto válido.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
-
-                // Limpiamos y volvemos a la tabla automáticamente
                 rutaArchivoCSVSeleccionado = null;
                 lblRutaArchivo.setText("Ningún archivo seleccionado");
                 lblRutaArchivo.setForeground(Color.LIGHT_GRAY);
@@ -264,10 +456,6 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
-    /**
-     * Método auxiliar temporal para procesar el CSV sin depender de la clase Catalog de tus compañeros.
-     * Lee la línea, instancia el producto y lo mete en el ArrayList de Application.
-     */
     private int procesarCargaMasivaLocal(String filePath) throws java.io.IOException {
         int contador = 0;
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(filePath))) {
@@ -284,7 +472,6 @@ public class PanelProductosEmpleado extends JPanel {
                     int stock = Integer.parseInt(data[4]);
                     ArrayList<String> fotos = new ArrayList<>(Arrays.asList(data[5]));
 
-                    // Asignamos una categoría genérica por defecto para evitar nulos
                     ArrayList<Category> cats = new ArrayList<>();
                     if (!Application.getGlobalCategories().isEmpty()) {
                         cats.add(Application.getGlobalCategories().get(0));
@@ -314,9 +501,6 @@ public class PanelProductosEmpleado extends JPanel {
         return contador;
     }
 
-    // ==========================================
-    // VISTA 2: EL CUADRO AZUL
-    // ==========================================
     private JPanel crearPanelOpcionesSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -364,9 +548,6 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // ==========================================
-    // VISTA 3: BUSCADOR
-    // ==========================================
     private JPanel crearPanelSubirExistente() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -467,9 +648,6 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // ==========================================
-    // VISTA 4: ACTUALIZAR STOCK
-    // ==========================================
     private JPanel crearPanelCantidadSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -538,9 +716,6 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // ==========================================
-    // VISTA 5: FORMULARIO PRODUCTO NUEVO (PASO 1)
-    // ==========================================
     private JPanel crearPanelSubirNuevo() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -557,7 +732,6 @@ public class PanelProductosEmpleado extends JPanel {
         pnlCentro.setOpaque(false);
         pnlCentro.setBorder(new EmptyBorder(20, 60, 0, 60));
 
-        // IZQUIERDA
         JPanel pnlForm = new JPanel(new GridBagLayout());
         pnlForm.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -578,7 +752,9 @@ public class PanelProductosEmpleado extends JPanel {
         txtNuevoDesc.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         txtNuevoDesc.setLineWrap(true);
         txtNuevoDesc.setWrapStyleWord(true);
-        gbc.gridy = row++; pnlForm.add(new JScrollPane(txtNuevoDesc), gbc);
+
+        JScrollPane scrollDesc = new JScrollPane(txtNuevoDesc);
+        gbc.gridy = row++; pnlForm.add(scrollDesc, gbc);
 
         gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Precio (€):"), gbc);
         txtNuevoPrecio = new JTextField();
@@ -604,7 +780,6 @@ public class PanelProductosEmpleado extends JPanel {
         scrollCat.setPreferredSize(new Dimension(200, 60));
         gbc.gridy = row++; pnlForm.add(scrollCat, gbc);
 
-        // DERECHA
         JPanel pnlImage = new JPanel();
         pnlImage.setLayout(new BoxLayout(pnlImage, BoxLayout.Y_AXIS));
         pnlImage.setOpaque(false);
@@ -642,7 +817,11 @@ public class PanelProductosEmpleado extends JPanel {
         pnlCentro.add(pnlForm);
         pnlCentro.add(pnlImage);
 
-        // BOTONERA
+        JScrollPane scrollCentro = new JScrollPane(pnlCentro);
+        scrollCentro.setOpaque(false);
+        scrollCentro.getViewport().setOpaque(false);
+        scrollCentro.setBorder(null);
+
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(10, 0, 30, 0));
@@ -658,15 +837,12 @@ public class PanelProductosEmpleado extends JPanel {
         pnlBoton.add(btnSiguiente);
 
         wrapper.add(pnlBanner, BorderLayout.NORTH);
-        wrapper.add(pnlCentro, BorderLayout.CENTER);
+        wrapper.add(scrollCentro, BorderLayout.CENTER);
         wrapper.add(pnlBoton, BorderLayout.SOUTH);
 
         return wrapper;
     }
 
-    // ==========================================
-    // VISTA 6: FORMULARIO ESPECÍFICO (PASO 2)
-    // ==========================================
     private JPanel crearPanelSubirNuevoEspecifico() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -684,7 +860,6 @@ public class PanelProductosEmpleado extends JPanel {
         pnlCentro.setOpaque(false);
         pnlCentro.setBorder(new EmptyBorder(30, 100, 20, 100));
 
-        // Selector de tipo
         JPanel pnlCombo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlCombo.setOpaque(false);
         pnlCombo.add(crearLabelBlanco("Tipo de Producto: "));
@@ -696,7 +871,6 @@ public class PanelProductosEmpleado extends JPanel {
         pnlCentro.add(pnlCombo);
         pnlCentro.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Paneles dinámicos según el tipo
         cardLayoutEspecifico = new CardLayout();
         panelDinamicoEspecifico = new JPanel(cardLayoutEspecifico);
         panelDinamicoEspecifico.setOpaque(false);
@@ -711,7 +885,6 @@ public class PanelProductosEmpleado extends JPanel {
 
         pnlCentro.add(panelDinamicoEspecifico);
 
-        // Botonera final
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(20, 0, 30, 0));
@@ -732,7 +905,6 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // Formularios específicos
     private JPanel crearFormComic() {
         JPanel grid = new JPanel(new GridLayout(4, 2, 10, 15));
         grid.setOpaque(false);
@@ -776,18 +948,13 @@ public class PanelProductosEmpleado extends JPanel {
         return wrap;
     }
 
-    // ==========================================
-    // LÓGICA DE CREACIÓN FINAL
-    // ==========================================
     private void procesarCreacionProducto() {
         try {
-            // 1. Lectura de campos generales
             String nombre = txtNuevoNombre.getText().trim();
             String desc = txtNuevoDesc.getText().trim();
             double precio = Double.parseDouble(txtNuevoPrecio.getText().trim());
             int stock = Integer.parseInt(txtNuevoStock.getText().trim());
 
-            // 2. Extracción de Categorías
             ArrayList<Category> catGlobales = Application.getGlobalCategories();
             ArrayList<Category> categoriasElegidas = new ArrayList<>();
             for (String catName : listNuevoCategorias.getSelectedValuesList()) {
@@ -804,15 +971,13 @@ public class PanelProductosEmpleado extends JPanel {
                 return;
             }
 
-            // 3. Extracción de la Imagen
             ArrayList<String> fotos = new ArrayList<>();
             if (rutaImagenSeleccionada != null) {
                 fotos.add(rutaImagenSeleccionada);
             } else {
-                fotos.add("src/imgProductos/foto.png"); // Imagen por defecto si no suben nada
+                fotos.add("src/imgProductos/foto.png");
             }
 
-            // 4. Instanciación del producto específico
             String tipoElegido = (String) comboTipoProducto.getSelectedItem();
             NewProduct nuevoProd = null;
 
@@ -823,7 +988,7 @@ public class PanelProductosEmpleado extends JPanel {
                 ArrayList<String> authors = new ArrayList<>(Arrays.asList(txtComicAuthors.getText().split(",")));
                 nuevoProd = new Comic(nombre, desc, precio, fotos, stock, categoriasElegidas, new ArrayList<Review>(), null, pages, pub, year, authors);
             }
-            else if (tipoElegido.equals("FIGURA")) {
+            else if (tipoElegido.equals("FIGURINE")) {
                 double h = Double.parseDouble(txtFigHeight.getText().trim());
                 double w = Double.parseDouble(txtFigWidth.getText().trim());
                 double d = Double.parseDouble(txtFigDepth.getText().trim());
@@ -840,19 +1005,16 @@ public class PanelProductosEmpleado extends JPanel {
                 nuevoProd = new Game(nombre, desc, precio, fotos, stock, categoriasElegidas, new ArrayList<Review>(), null, play, mech, ageRange);
             }
 
-            // 5. Guardado y limpieza
             if (nuevoProd != null) {
                 Application.getCatalog().add(nuevoProd);
                 JOptionPane.showMessageDialog(this, "¡Producto '" + nombre + "' creado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 
-                // Limpiar campos generales para la próxima vez
                 txtNuevoNombre.setText("");
                 txtNuevoDesc.setText("");
                 txtNuevoPrecio.setText("");
                 txtNuevoStock.setText("");
                 rutaImagenSeleccionada = null;
 
-                // Volvemos a la tabla refrescándola
                 panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
                 cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
             }
@@ -864,10 +1026,6 @@ public class PanelProductosEmpleado extends JPanel {
         }
     }
 
-
-    // ==========================================
-    // MÉTODOS AUXILIARES
-    // ==========================================
     private JLabel crearLabelBlanco(String texto) {
         JLabel l = new JLabel(texto);
         l.setForeground(Color.WHITE);
