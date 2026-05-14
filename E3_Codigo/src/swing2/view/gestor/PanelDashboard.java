@@ -6,6 +6,7 @@ import swing2.view.PanelInicioo;
 import swing2.view.VentanaPrincipa;
 import swing2.view.gestor.descuentos.PanelGestionDescuentos;
 import swing2.view.gestor.empleados.PanelGestionEmpleados;
+import swing2.view.gestor.productos.PanelGestionProductos;
 
 import java.awt.*;
 import users.Manager;
@@ -47,20 +48,9 @@ public class PanelDashboard extends JPanel {
 		// Agregar los paneles de contenido
 		panelContenido.add(crearPanelPrueba("ESTADÍSTICAS"), "ESTADISTICAS");
 		panelContenido.add(new PanelGestionDescuentos(ventanaPadre), "DESCUENTOS");
-		//panelContenido.add(crearPanelPrueba("DESCUENTOS"), "DESCUENTOS");
-		panelContenido.add(crearPanelPrueba("PRODUCTOS"), "PRODUCTOS");
+		panelContenido.add(new PanelGestionProductos(ventanaPadre), "PRODUCTOS");
 		panelContenido.add(new PanelGestionEmpleados(ventanaPadre), "EMPLEADOS");
-		//panelContenido.add(crearPanelPrueba("EMPLEADOS"), "EMPLEADOS");
 		panelContenido.add(crearPanelPrueba("PEDIDOS"), "PEDIDOS");
-		
-		/*
-		// Descomentar cuando tengas los paneles reales:
-		panelContenido.add(new PanelGestorEstadisticas(ventanaPadre), "ESTADISTICAS");
-		panelContenido.add(new PanelGestorDescuentos(ventanaPadre), "DESCUENTOS");
-		panelContenido.add(new PanelGestorProductos(ventanaPadre), "PRODUCTOS");
-		panelContenido.add(new PanelGestorEmpleados(ventanaPadre), "EMPLEADOS");
-		panelContenido.add(new PanelGestorPedidos(ventanaPadre), "PEDIDOS");
-		*/
 		
 		this.add(panelContenido, BorderLayout.CENTER);
 		
@@ -86,7 +76,7 @@ public class PanelDashboard extends JPanel {
 		btnPedidos = crearBotonMenu("PEDIDOS");
 		
 		// Agregar listeners a los botones
-		btnEstadisticas.addActionListener(e -> { marcarActivo(btnEstadisticas); mostrarSeccion("ESTADÍSTICAS"); });
+		btnEstadisticas.addActionListener(e -> { marcarActivo(btnEstadisticas); mostrarSeccion("ESTADISTICAS"); });
 		btnDescuentos.addActionListener(e -> { marcarActivo(btnDescuentos); mostrarSeccion("DESCUENTOS"); });
 		btnProductos.addActionListener(e -> { marcarActivo(btnProductos); mostrarSeccion("PRODUCTOS"); });
 		btnEmpleados.addActionListener(e -> { marcarActivo(btnEmpleados); mostrarSeccion("EMPLEADOS"); });
@@ -160,7 +150,7 @@ public class PanelDashboard extends JPanel {
     private void marcarInactivo(JButton... btns) {
     	for(JButton b : btns) {
     		b.setBackground(COLOR_MENU_NORMAL);
-        	b.setForeground(COLOR_TEXTO_NORMAL);
+         	b.setForeground(COLOR_TEXTO_NORMAL);
     	}
     }
     
