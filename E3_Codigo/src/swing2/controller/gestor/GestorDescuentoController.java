@@ -8,7 +8,7 @@ import users.Employee;
 import users.Manager;
 import utils.Permission;
 import swing2.view.VentanaPrincipa;
-import swing2.view.gestor.PanelGestionEmpleados;
+import swing2.view.gestor.PanelGestionDescuentos;
 
 import javax.swing.JOptionPane;
 
@@ -18,11 +18,11 @@ import java.util.ArrayList;
  * Controlador para gestionar empleados.
  * Separa la lógica de negocio de la interfaz gráfica.
  */
-public class GestorEmpleadoController {
+public class GestorDescuentoController {
     private VentanaPrincipa ventana;
-    private PanelGestionEmpleados panel;
+    private PanelGestionDescuentos panel;
 
-    public GestorEmpleadoController(VentanaPrincipa ventana, PanelGestionEmpleados panel) {
+    public GestorDescuentoController(VentanaPrincipa ventana, PanelGestionDescuentos panel) {
         this.ventana = ventana;
         this.panel = panel;
     }
@@ -30,7 +30,7 @@ public class GestorEmpleadoController {
     /**
      * Obtener lista de todos los empleados (excluyendo managers)
      */
-    public ArrayList<Staff> obtenerEmpleados() {
+    public ArrayList<Staff> obtenerDescuentos() {
         ArrayList<Staff> empleados = new ArrayList<>();
         
         // Obtener todos los usuarios de Application

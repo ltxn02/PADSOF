@@ -1,6 +1,7 @@
 package swing2.view.gestor;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -52,12 +53,22 @@ public class PanelListaEmpleados extends JPanel {
 		JPanel barraSuperior = crearBarraSuperior();
 		this.add(barraSuperior, BorderLayout.NORTH);
 		
-		// 2.- Tabla con scroll
+		// 2.- Tabla con scroll (más pequeña y centrada)
 		crearTabla();
 		scrollPane = new JScrollPane(tabla);
 		scrollPane.setBackground(COLOR_FONDO);
 		scrollPane.getViewport().setBackground(COLOR_FONDO);
-		this.add(scrollPane, BorderLayout.CENTER);
+		
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
+
+		scrollPane.setPreferredSize(new Dimension(900, 420));
+
+		JPanel panelTablaCentrada = new JPanel(new GridBagLayout());
+		panelTablaCentrada.setOpaque(false);
+		panelTablaCentrada.add(scrollPane);
+
+		this.add(panelTablaCentrada, BorderLayout.CENTER);
 		
 		// 3.- Barra de paginación (abajo)
 		JPanel barraPaginacion = crearBarraPaginacion();
@@ -73,57 +84,85 @@ public class PanelListaEmpleados extends JPanel {
 	 * ========================================================
 	 */
 	private JPanel crearBarraSuperior() {
-		JPanel barra = new JPanel(new BorderLayout(10, 0));
-		barra.setBackground(COLOR_FONDO);
-		barra.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
-		
-		// --- LADO IZQUIERDO: Búsqueda ---
-		JPanel panelBusqueda = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-		panelBusqueda.setOpaque(false);
-		
-		JLabel labelBusqueda = new JLabel("🔍︎ Buscar empleados");
-		labelBusqueda.setBackground(Color.WHITE);
-		labelBusqueda.setForeground(new Color(187, 192, 199));
-		labelBusqueda.setFont(new Font("Arial", Font.BOLD, 12));
-		
-		campoBusqueda = new JTextField(25);
-		campoBusqueda.setPreferredSize(new Dimension(250, 30));
-		campoBusqueda.setFont(new Font("Arial", Font.PLAIN, 12));
-		
-		// Evento búsqueda en tiempo real
-		campoBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
-			@Override
-			public void keyReleased(java.awt.event.KeyEvent evt) {
-				buscarEmpleados(campoBusqueda.getText());
-				paginaActual = 0;
-				actualizarTabla();
-				actualizarPaginacion();
-			}
-		});
-		
-		panelBusqueda.add(labelBusqueda);
-		panelBusqueda.add(campoBusqueda);
-		
-		// --- LADO DERECHO: Botón "Añadir empleado" ---
-		JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-		panelBotones.setOpaque(false);
-		
-		JButton btnAnadir = new JButton("+ Añadir empleado");
-		btnAnadir.setPreferredSize(new Dimension(180, 35));
-		btnAnadir.setBackground(Color.WHITE);
-		btnAnadir.setForeground(COLOR_FONDO);
-		btnAnadir.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 12));
-		btnAnadir.setBorder(null);
-		btnAnadir.setFocusPainted(false);
-		btnAnadir.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btnAnadir.addActionListener(e -> panelPadre.mostrarAnadirEmpleado());
-		
-		panelBotones.add(btnAnadir);
-		
-		barra.add(panelBusqueda, BorderLayout.WEST);
-		barra.add(panelBotones, BorderLayout.EAST);
-		
-		return barra;
+	    // Contenedor invisible para centrar
+	    JPanel contenedor = new JPanel(new GridBagLayout());
+	    contenedor.setOpaque(false);
+
+	    // Barra real con mismo ancho que la tabla
+	    JPanel barra = new JPanel(new BorderLayout(10, 0));
+	    barra.setBackground(COLOR_FONDO);
+	    barra.setPreferredSize(new Dimension(900, 40)); // MISMO ANCHO QUE LA TABLA
+
+	    // --- Búsqueda ---
+	    JPanel panelBusqueda = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+	    panelBusqueda.setOpaque(false);
+
+	    campoBusqueda = new JTextField();
+	    aplicarPlaceholder();
+	    campoBusqueda.setPreferredSize(new Dimension(500, 35));
+	    campoBusqueda.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+	    campoBusqueda.addFocusListener(new java.awt.event.FocusAdapter() {
+	        @Override
+	        public void focusGained(java.awt.event.FocusEvent e) {
+	            if (campoBusqueda.getText().equals("Buscar empleados")) {
+	                campoBusqueda.setText("");
+	                campoBusqueda.setForeground(Color.BLACK);
+	                campoBusqueda.setFont(new Font("Arial", Font.PLAIN, 12));
+	            }
+	        }
+
+	        @Override
+	        public void focusLost(java.awt.event.FocusEvent e) {
+	            if (campoBusqueda.getText().trim().isEmpty()) {
+	                campoBusqueda.setText("Buscar empleados");
+	                campoBusqueda.setForeground(Color.GRAY);
+	                campoBusqueda.setFont(new Font("Arial", Font.ITALIC, 12));
+	            }
+	        }
+	    });
+
+	    campoBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+	        @Override
+	        public void keyReleased(java.awt.event.KeyEvent evt) {
+	            String texto = campoBusqueda.getText();
+	            if (texto.equals("Buscar empleados")) return;
+	            buscarEmpleados(texto);
+	            paginaActual = 0;
+	            actualizarTabla();
+	            actualizarPaginacion();
+	        }
+	    });
+
+	    panelBusqueda.add(campoBusqueda);
+
+	    // --- Botón añadir ---
+	    JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+	    panelBotones.setOpaque(false);
+
+	    JButton btnAnadir = new JButton("+ Añadir empleado");
+	    btnAnadir.setPreferredSize(new Dimension(180, 35));
+	    btnAnadir.setBackground(Color.WHITE);
+	    btnAnadir.setForeground(COLOR_FONDO);
+	    btnAnadir.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 14));
+	    btnAnadir.setBorder(null);
+	    btnAnadir.setFocusPainted(false);
+	    btnAnadir.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	    btnAnadir.addActionListener(e -> panelPadre.mostrarAnadirEmpleado());
+
+	    panelBotones.add(btnAnadir);
+
+	    barra.add(panelBusqueda, BorderLayout.WEST);
+	    barra.add(panelBotones, BorderLayout.EAST);
+
+	    contenedor.add(barra);
+	    return contenedor;
+	}
+	
+	private void aplicarPlaceholder() {
+	    campoBusqueda.setText("Buscar empleados");
+	    campoBusqueda.setForeground(Color.GRAY);
+	    campoBusqueda.setFont(new Font("Arial", Font.BOLD, 14));
 	}
 	
 	/**
@@ -132,7 +171,7 @@ public class PanelListaEmpleados extends JPanel {
 	 * ========================================================
 	 */
 	private void crearTabla() {
-		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Estado", "Ver detalles"};
+		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Estado", "Detalles"};
 		
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
@@ -141,55 +180,70 @@ public class PanelListaEmpleados extends JPanel {
 			}
 		};
 		
-		tabla = new JTable(modeloTabla);
+		tabla = new JTable(modeloTabla);  // ✅ Primero crear la tabla
+		
 		tabla.setBackground(Color.WHITE);
 		tabla.setForeground(Color.BLACK);
-		tabla.setFont(new Font("Arial", Font.PLAIN, 11));
-		tabla.setRowHeight(30);
+		tabla.setFont(new Font("Arial", Font.PLAIN, 12));
 		tabla.setSelectionBackground(new Color(100, 150, 255));
-		tabla.setGridColor(new Color(200, 200, 200));
 		
-		tabla.setRowHeight(35);  // ← Aumentar altura
+		tabla.setRowHeight(37);  // ← Aumentar altura
 		tabla.setIntercellSpacing(new Dimension(0, 1));  // ← Espaciado
-		tabla.setShowGrid(true);  // ← Mostrar líneas
+		tabla.setShowGrid(false);
+		tabla.setBorder(null);
 
-		// Aplicar renderer alternado
-		for (int i = 0; i < tabla.getColumnCount(); i++) {
-		    tabla.getColumnModel().getColumn(i).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
-		        @Override
-		        public Component getTableCellRendererComponent(JTable table, Object value, 
-		                                                       boolean isSelected, boolean hasFocus, 
-		                                                       int row, int column) {
-		            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		            
-		            if (!isSelected) {
-		                if (row % 2 == 0) {
-		                    this.setBackground(new Color(245, 245, 245));
-		                } else {
-		                    this.setBackground(Color.WHITE);
-		                }
-		            }
-		            
-		            this.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-		            return this;
+		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value,
+		                                                   boolean isSelected, boolean hasFocus,
+		                                                   int row, int column) {
+		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+		        if (!isSelected) {
+		            setBackground(row % 2 == 0 ? new Color(219, 219, 219) : Color.WHITE);
 		        }
-		    });
+		        setForeground(Color.BLACK);
+		        setHorizontalAlignment(SwingConstants.CENTER); // ✅ todo centrado
+		        return this;
+		    }
+		};
+
+		for (int i = 0; i < tabla.getColumnCount(); i++) {
+		    tabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
 		}
 		
 		// Personalizar header
 		JTableHeader header = tabla.getTableHeader();
-		header.setBackground(COLOR_HEADER);
-		header.setForeground(Color.WHITE);
-		header.setFont(new Font("Arial", Font.BOLD, 12));
+		header.setPreferredSize(new Dimension(header.getWidth(), 40));
+		header.setBackground(Color.WHITE);
+		header.setForeground(new Color(105, 103, 99));
+		header.setFont(new Font("Arial", Font.BOLD, 16));
 		header.setReorderingAllowed(false);
+
+		header.setDefaultRenderer(new DefaultTableCellRenderer() {
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value,
+		                                                   boolean isSelected, boolean hasFocus,
+		                                                   int row, int column) {
+		        JLabel lbl = (JLabel) super.getTableCellRendererComponent(
+		                table, value, isSelected, hasFocus, row, column);
+		        lbl.setHorizontalAlignment(SwingConstants.CENTER);
+		        lbl.setOpaque(true);
+		        lbl.setBackground(Color.WHITE);
+		        lbl.setForeground(new Color(105, 103, 99));
+		        lbl.setFont(new Font("Arial", Font.BOLD, 16));
+		        lbl.setBorder(null);
+		        return lbl;
+		    }
+		});
 		
 		// Ajustar ancho de columnas
-		tabla.getColumnModel().getColumn(0).setPreferredWidth(150);	// Nombre
-		tabla.getColumnModel().getColumn(1).setPreferredWidth(100);	// Usuario
-		tabla.getColumnModel().getColumn(2).setPreferredWidth(150);	// Correo
+		tabla.getColumnModel().getColumn(0).setPreferredWidth(200);	// Nombre
+		tabla.getColumnModel().getColumn(1).setPreferredWidth(150);	// Usuario
+		tabla.getColumnModel().getColumn(2).setPreferredWidth(200);	// Correo
 		tabla.getColumnModel().getColumn(3).setPreferredWidth(100);	// Teléfono
-		tabla.getColumnModel().getColumn(4).setPreferredWidth(80);	// Estado
-		tabla.getColumnModel().getColumn(5).setPreferredWidth(80); 	// Más
+		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);	// Estado
+		tabla.getColumnModel().getColumn(5).setPreferredWidth(100); // Más
 		
 		// EVENTO: Click en una fila para ver detalles
 		tabla.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -286,7 +340,7 @@ public class PanelListaEmpleados extends JPanel {
 					empleado.getEmail(),
 					empleado.getPhoneNumber(),
 					estado,
-					">"
+					"Ver más"
 			};
 			
 			modeloTabla.addRow(fila);
@@ -349,7 +403,7 @@ public class PanelListaEmpleados extends JPanel {
 	 */
 	
 	public void limpiarBusqueda() {
-		campoBusqueda.setText("");
+		aplicarPlaceholder();
 		paginaActual = 0;
 		cargarEmpleados();
 	}
