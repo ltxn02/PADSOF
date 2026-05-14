@@ -13,6 +13,7 @@ import utils.Review;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -32,13 +33,12 @@ public class PanelProductosEmpleado extends JPanel {
 
     private NewProduct productoSeleccionadoParaSubida = null;
 
-    // ==============================================================
-    // VARIABLES GLOBALES PARA CREACIÓN DE NUEVO PRODUCTO
-    // ==============================================================
+    // Variables globales para la creación manual
     private JTextField txtNuevoNombre, txtNuevoPrecio, txtNuevoStock;
     private JTextArea txtNuevoDesc;
     private JList<String> listNuevoCategorias;
     private String rutaImagenSeleccionada = null;
+    private String rutaArchivoCSVSeleccionado = null; // Variable para el archivo CSV/TXT
 
     // Componentes del paso 2 (Específicos)
     private JComboBox<String> comboTipoProducto;
@@ -61,13 +61,14 @@ public class PanelProductosEmpleado extends JPanel {
         panelContenedorCentral = new JPanel(cardLayoutCentral);
         panelContenedorCentral.setOpaque(false);
 
-        // Añadimos las SEIS "cartas" (vistas)
+        // Añadimos TODAS las "cartas" (vistas)
         panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
         panelContenedorCentral.add(crearPanelOpcionesSubida(), "OPCIONES_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirExistente(), "SUBIR_EXISTENTE");
         panelContenedorCentral.add(crearPanelCantidadSubida(), "CANTIDAD_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirNuevo(), "CREAR_NUEVO");
         panelContenedorCentral.add(crearPanelSubirNuevoEspecifico(), "CREAR_NUEVO_ESPECIFICO");
+        panelContenedorCentral.add(crearPanelSubirArchivo(), "SUBIR_ARCHIVO"); // NUEVA PANTALLA
 
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
@@ -87,7 +88,8 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnSubirArchivo = crearBotonAzul("Subir desde un archivo");
 
         btnSubirManual.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "OPCIONES_SUBIDA"));
-        btnSubirArchivo.addActionListener(e -> JOptionPane.showMessageDialog(this, "Próximamente: Selector CSV/TXT"));
+        // CONECTAMOS EL NUEVO BOTÓN
+        btnSubirArchivo.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "SUBIR_ARCHIVO"));
 
         pnlAcciones.add(btnSubirManual);
         pnlAcciones.add(btnSubirArchivo);
@@ -146,6 +148,170 @@ public class PanelProductosEmpleado extends JPanel {
         panel.add(pnlTabla, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    // ==========================================
+    // NUEVA VISTA 7: SUBIR DESDE UN ARCHIVO
+    // ==========================================
+    private JPanel crearPanelSubirArchivo() {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setOpaque(true);
+        wrapper.setBackground(COLOR_FONDO_NAV);
+
+        // Cabecera dorada
+        JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
+        pnlBanner.setBackground(COLOR_ACTIVO);
+        JLabel lblTitulo = new JLabel("Subir desde un archivo");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
+        lblTitulo.setForeground(new Color(30, 45, 80));
+        pnlBanner.add(lblTitulo);
+
+        // Centro (Icono, Botón elegir, Label)
+        JPanel pnlCentro = new JPanel();
+        pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.Y_AXIS));
+        pnlCentro.setOpaque(false);
+        pnlCentro.setBorder(new EmptyBorder(80, 40, 20, 40));
+
+        // Icono gigante simulado con texto
+        JLabel lblIcono = new JLabel("📄", SwingConstants.CENTER);
+        lblIcono.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 80));
+        lblIcono.setForeground(Color.WHITE);
+        lblIcono.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Etiqueta donde mostraremos el archivo
+        JLabel lblRutaArchivo = new JLabel("Ningún archivo seleccionado");
+        lblRutaArchivo.setForeground(Color.LIGHT_GRAY);
+        lblRutaArchivo.setFont(new Font("Arial", Font.ITALIC, 14));
+        lblRutaArchivo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblRutaArchivo.setBorder(new EmptyBorder(15, 0, 15, 0));
+
+        // Botón blanco de "Elegir Archivos"
+        JButton btnElegir = crearBotonBlanco("ELEGIR ARCHIVOS  ▼");
+        btnElegir.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnElegir.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
+            fileChooser.setDialogTitle("Selecciona un archivo CSV o TXT");
+
+            javax.swing.filechooser.FileNameExtensionFilter filter =
+                    new javax.swing.filechooser.FileNameExtensionFilter("Archivos de texto (*.csv, *.txt)", "csv", "txt");
+            fileChooser.setFileFilter(filter);
+
+            int result = fileChooser.showOpenDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                rutaArchivoCSVSeleccionado = selectedFile.getAbsolutePath();
+                lblRutaArchivo.setText("Archivo listo: " + selectedFile.getName());
+                lblRutaArchivo.setForeground(new Color(100, 255, 100)); // Verde clarito
+            }
+        });
+
+        // Botón Dorado Siguiente
+        JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pnlBoton.setOpaque(false);
+        pnlBoton.setBorder(new EmptyBorder(40, 0, 0, 0));
+
+        JButton btnSiguiente = crearBotonDorado("Siguiente");
+        btnSiguiente.addActionListener(e -> {
+            // 1. Validamos que haya seleccionado algo
+            if (rutaArchivoCSVSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecciona un archivo primero.", "Archivo no seleccionado", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            try {
+                // =========================================================
+                // LÓGICA TEMPORAL DE CARGA MASIVA PARA LA UI
+                // Lee el CSV y los mete directamente en Application.getCatalog()
+                // =========================================================
+                int productosAñadidos = procesarCargaMasivaLocal(rutaArchivoCSVSeleccionado);
+
+                if (productosAñadidos > 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "¡Carga masiva completada con éxito!\nSe han añadido " + productosAñadidos + " productos nuevos al catálogo.",
+                            "Carga Exitosa",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "El archivo fue leído, pero no se encontró ningún producto válido o el formato es incorrecto.",
+                            "Aviso",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+
+                // Limpiamos y volvemos a la tabla automáticamente
+                rutaArchivoCSVSeleccionado = null;
+                lblRutaArchivo.setText("Ningún archivo seleccionado");
+                lblRutaArchivo.setForeground(Color.LIGHT_GRAY);
+
+                panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
+                cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al intentar cargar el archivo: " + ex.getMessage(), "Fallo en la carga", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        pnlBoton.add(btnSiguiente);
+
+        pnlCentro.add(lblIcono);
+        pnlCentro.add(Box.createRigidArea(new Dimension(0, 20)));
+        pnlCentro.add(btnElegir);
+        pnlCentro.add(lblRutaArchivo);
+        pnlCentro.add(pnlBoton);
+
+        wrapper.add(pnlBanner, BorderLayout.NORTH);
+        wrapper.add(pnlCentro, BorderLayout.CENTER);
+
+        return wrapper;
+    }
+
+    /**
+     * Método auxiliar temporal para procesar el CSV sin depender de la clase Catalog de tus compañeros.
+     * Lee la línea, instancia el producto y lo mete en el ArrayList de Application.
+     */
+    private int procesarCargaMasivaLocal(String filePath) throws java.io.IOException {
+        int contador = 0;
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] data = line.split(";");
+
+                try {
+                    String tipo = data[0].toUpperCase();
+                    String nombre = data[1];
+                    String desc = data[2];
+                    double precio = Double.parseDouble(data[3]);
+                    int stock = Integer.parseInt(data[4]);
+                    ArrayList<String> fotos = new ArrayList<>(Arrays.asList(data[5]));
+
+                    // Asignamos una categoría genérica por defecto para evitar nulos
+                    ArrayList<Category> cats = new ArrayList<>();
+                    if (!Application.getGlobalCategories().isEmpty()) {
+                        cats.add(Application.getGlobalCategories().get(0));
+                    }
+
+                    NewProduct nuevo = null;
+                    if (tipo.equals("COMIC")) {
+                        nuevo = new Comic(nombre, desc, precio, fotos, stock, cats, new ArrayList<Review>(), null,
+                                Integer.parseInt(data[6]), data[7], Integer.parseInt(data[8]), new ArrayList<>(Arrays.asList(data[9].split(","))));
+                    } else if (tipo.equals("FIGURINE")) {
+                        nuevo = new Figurine(nombre, desc, precio, fotos, stock, cats, new ArrayList<Review>(), null,
+                                Double.parseDouble(data[6]), Double.parseDouble(data[7]), Double.parseDouble(data[8]), data[9], data[10]);
+                    } else if (tipo.equals("GAME")) {
+                        nuevo = new Game(nombre, desc, precio, fotos, stock, cats, new ArrayList<Review>(), null,
+                                Integer.parseInt(data[6]), new ArrayList<>(Arrays.asList(data[7].split(","))), AgeRange.stringToAgeRange(data[8]));
+                    }
+
+                    if (nuevo != null) {
+                        Application.getCatalog().add(nuevo);
+                        contador++;
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error procesando línea CSV: " + line);
+                }
+            }
+        }
+        return contador;
     }
 
     // ==========================================
@@ -464,7 +630,7 @@ public class PanelProductosEmpleado extends JPanel {
             int result = fileChooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File selectedFile = fileChooser.getSelectedFile();
-                rutaImagenSeleccionada = "src/imgProductos/" + selectedFile.getName(); // Guardamos ruta relativa
+                rutaImagenSeleccionada = "src/imgProductos/" + selectedFile.getName();
                 lblRutaImg.setText("Imagen lista: " + selectedFile.getName());
                 lblRutaImg.setForeground(new Color(100, 255, 100));
             }
