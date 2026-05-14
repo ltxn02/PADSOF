@@ -8,7 +8,7 @@ import users.Employee;
 import users.Manager;
 import utils.Permission;
 import swing2.view.VentanaPrincipa;
-import swing2.view.gestor.PanelGestionEmpleados;
+import swing2.view.gestor.empleados.PanelGestionEmpleados;
 
 import javax.swing.JOptionPane;
 

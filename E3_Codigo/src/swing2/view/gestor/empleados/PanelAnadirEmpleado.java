@@ -1,4 +1,4 @@
-package swing2.view.gestor;
+package swing2.view.gestor.empleados;
 
 import swing2.controller.gestor.GestorEmpleadoController;
 import swing2.view.VentanaPrincipa;

@@ -1,21 +1,21 @@
 package swing2.controller.gestor;
 
 import logic.Application;
-import users.RegisteredUser;
-import users.Staff;
-import utils.EmployeeRoles;
-import users.Employee;
+import discounts.*;
+import catalog.Category;
+import catalog.NewProduct;
+import catalog.Product;
 import users.Manager;
-import utils.Permission;
 import swing2.view.VentanaPrincipa;
-import swing2.view.gestor.PanelGestionDescuentos;
+import swing2.view.gestor.descuentos.PanelGestionDescuentos;
 
 import javax.swing.JOptionPane;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * Controlador para gestionar empleados.
+ * Controlador para gestionar descuentos de la tienda.
  * Separa la lógica de negocio de la interfaz gráfica.
  */
 public class GestorDescuentoController {
@@ -28,45 +28,33 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener lista de todos los empleados (excluyendo managers)
+     * Obtener lista de todos los descuentos globales
      */
-    public ArrayList<Staff> obtenerDescuentos() {
-        ArrayList<Staff> empleados = new ArrayList<>();
+    public ArrayList<IDiscount> obtenerDescuentos() {
+        ArrayList<IDiscount> descuentos = new ArrayList<>();
+        ArrayList<IDiscount> globales = Application.getGlobalDiscounts();
         
-        // Obtener todos los usuarios de Application
-        ArrayList<RegisteredUser> todosLosUsuarios = Application.getUsers();
-        
-        if (todosLosUsuarios != null) {
-            for (RegisteredUser usuario : todosLosUsuarios) {
-                // Filtrar solo los que son Staff pero NO Manager
-                if (usuario instanceof Staff && !(usuario instanceof Manager)) {
-                    empleados.add((Staff) usuario);
-                }
-            }
+        if (globales != null) {
+            descuentos.addAll(globales);
         }
         
-        return empleados;
+        return descuentos;
     }
 
     /**
-     * Buscar empleados por término
+     * Buscar descuentos por término
      */
-    public ArrayList<Staff> buscarEmpleados(ArrayList<Staff> empleadosBase, String termino) {
-        ArrayList<Staff> resultados = new ArrayList<>();
+    public ArrayList<IDiscount> buscarDescuentos(ArrayList<IDiscount> descuentosBase, String termino) {
+        ArrayList<IDiscount> resultados = new ArrayList<>();
         String terminoMinuscula = termino.toLowerCase().trim();
 
-        // Si el término está vacío, devolver todos
         if (terminoMinuscula.isEmpty()) {
-            return new ArrayList<>(empleadosBase);
+            return new ArrayList<>(descuentosBase);
         }
 
-        // Buscar en diferentes campos
-        for (Staff empleado : empleadosBase) {
-            if (empleado.getFullname().toLowerCase().contains(terminoMinuscula) ||
-                empleado.getUsername().toLowerCase().contains(terminoMinuscula) ||
-                empleado.getEmail().toLowerCase().contains(terminoMinuscula) ||
-                empleado.getPhoneNumber().contains(terminoMinuscula)) {
-                resultados.add(empleado);
+        for (IDiscount desc : descuentosBase) {
+            if (desc.getDescription().toLowerCase().contains(terminoMinuscula)) {
+                resultados.add(desc);
             }
         }
 
@@ -74,275 +62,372 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Crear un nuevo empleado
-     * @return true si se crea exitosamente, false si hay error
+     * Obtener el tipo de descuento como string
      */
+    public String obtenerTipoDescuento(IDiscount desc) {
+        if (desc instanceof PercentageDiscount) {
+            return "Rebaja %";
+        } else if (desc instanceof VolumeDiscount) {
+            return "Volumen €";
+        } else if (desc instanceof GiftDiscount) {
+            return "Regalo";
+        } else if (desc instanceof QuantityDiscount) {
+            return "Cantidad X×Y";
+        }
+        return "Desconocido";
+    }
+
     /**
-     * Crear un nuevo empleado
-     * @return true si se crea exitosamente, false si hay error
+     * Obtener el porcentaje del descuento (si aplica)
      */
-    public boolean crearEmpleado(String nombre, String fecha, String dni, String usuario, 
-                                  String email, String telefono, String password, 
-                                  String confirmPassword, double salario) {
+    public String obtenerPorcentaje(IDiscount desc) {
+        if (desc instanceof PercentageDiscount) {
+            PercentageDiscount pd = (PercentageDiscount) desc;
+            return String.format("%.1f%%", pd.getValue());
+        }
+        return "N/A";
+    }
+
+    /**
+     * Obtener la categoría del producto al que se aplica (si aplica)
+     */
+    public String obtenerCategoria(IDiscount desc) {
+        // Los descuentos globales (Volumen, Regalo) no aplican a categorías específicas
+        // Los descuentos de producto (Rebaja %, Cantidad X×Y) se aplican a productos específicos
         
-        // ===== VALIDACIONES =====
-        if (nombre == null || nombre.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El nombre es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+        if (desc instanceof PercentageDiscount) {
+            // Buscar el producto que tiene este descuento
+            for (NewProduct p : Application.getCatalog()) {
+                if (p instanceof Product) {
+                    Product prod = (Product) p;
+                    if (prod.getDiscount() == desc) {
+                        // Retornar la primera categoría del producto
+                        if (prod.getCategories() != null && !prod.getCategories().isEmpty()) {
+                            return prod.getCategories().get(0).getNameCategory();
+                        }
+                    }
+                }
+            }
+        } else if (desc instanceof QuantityDiscount) {
+            // Buscar el producto que tiene este descuento
+            for (NewProduct p : Application.getCatalog()) {
+                if (p instanceof Product) {
+                    Product prod = (Product) p;
+                    if (prod.getDiscount() == desc) {
+                        if (prod.getCategories() != null && !prod.getCategories().isEmpty()) {
+                            return prod.getCategories().get(0).getNameCategory();
+                        }
+                    }
+                }
+            }
+        } else if (desc instanceof GiftDiscount) {
+            return "Todos los productos";
+        } else if (desc instanceof VolumeDiscount) {
+            return "Carrito completo";
         }
+        
+        return "N/A";
+    }
 
-        if (usuario == null || usuario.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El usuario es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+    /**
+     * Obtener información adicional del descuento
+     */
+    public String obtenerDetalles(IDiscount desc) {
+        StringBuilder sb = new StringBuilder();
+        
+        if (desc instanceof PercentageDiscount) {
+            PercentageDiscount pd = (PercentageDiscount) desc;
+            sb.append("Tipo: Rebaja Porcentual\n");
+            sb.append("Descuento: ").append(String.format("%.1f%%", pd.getValue())).append("\n");
+            
+            // Encontrar el producto
+            for (NewProduct p : Application.getCatalog()) {
+                if (p instanceof Product) {
+                    Product prod = (Product) p;
+                    if (prod.getDiscount() == desc) {
+                        sb.append("Producto: ").append(prod.getName()).append("\n");
+                        if (!prod.getCategories().isEmpty()) {
+                            sb.append("Categoría: ").append(prod.getCategories().get(0).getNameCategory()).append("\n");
+                        }
+                        break;
+                    }
+                }
+            }
+            
+        } else if (desc instanceof VolumeDiscount) {
+            VolumeDiscount vd = (VolumeDiscount) desc;
+            sb.append("Tipo: Descuento por Volumen\n");
+            sb.append("Gasto mínimo: €").append(String.format("%.2f", vd.getThreshold())).append("\n");
+            sb.append("Descuento: €").append(String.format("%.2f", vd.getValue())).append("\n");
+            sb.append("Aplicable: Carrito completo\n");
+            
+        } else if (desc instanceof GiftDiscount) {
+            GiftDiscount gd = (GiftDiscount) desc;
+            sb.append("Tipo: Regalo\n");
+            sb.append("Gasto mínimo: €").append(String.format("%.2f", gd.getMinGasto())).append("\n");
+            sb.append("Regalo: ").append(gd.getRegalo().getName()).append("\n");
+            
+        } else if (desc instanceof QuantityDiscount) {
+            QuantityDiscount qd = (QuantityDiscount) desc;
+            sb.append("Tipo: Descuento por Cantidad\n");
+            sb.append("Promoción: Lleva ").append(qd.getBuyX()).append(" paga ").append(qd.getPayY()).append("\n");
+            
+            // Encontrar el producto
+            for (NewProduct p : Application.getCatalog()) {
+                if (p instanceof Product) {
+                    Product prod = (Product) p;
+                    if (prod.getDiscount() == desc) {
+                        sb.append("Producto: ").append(prod.getName()).append("\n");
+                        if (!prod.getCategories().isEmpty()) {
+                            sb.append("Categoría: ").append(prod.getCategories().get(0).getNameCategory()).append("\n");
+                        }
+                        break;
+                    }
+                }
+            }
         }
+        
+        sb.append("Descripción: ").append(desc.getDescription()).append("\n");
+        
+        return sb.toString();
+    }
 
-        if (email == null || email.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El email es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (telefono == null || telefono.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El teléfono es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (dni == null || dni.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "El DNI es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (fecha == null || fecha.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "La fecha de nacimiento es obligatoria.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (password == null || password.isEmpty()) {
-            JOptionPane.showMessageDialog(panel, "La contraseña es obligatoria.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (!password.equals(confirmPassword)) {
-            JOptionPane.showMessageDialog(panel, "Las contraseñas no coinciden.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (salario <= 0) {
-            JOptionPane.showMessageDialog(panel, "El salario debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        // Verificar que el usuario no existe ya
-        ArrayList<RegisteredUser> usuarios = Application.getUsers();
-        for (RegisteredUser u : usuarios) {
-            if (u.getUsername().equals(usuario)) {
-                JOptionPane.showMessageDialog(panel, "El usuario '" + usuario + "' ya existe.", "Error", JOptionPane.ERROR_MESSAGE);
+    /**
+     * Crear descuento de rebaja porcentual
+     */
+    public boolean crearDescuentoRebaja(String nombreProducto, double porcentaje, String descripcion,
+                                       LocalDateTime desde, LocalDateTime hasta) {
+        try {
+            // Buscar el producto
+            NewProduct base = buscarProductoEnCatalogo(nombreProducto);
+            
+            if (!(base instanceof Product)) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ Producto no encontrado o es un Pack.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-        }
-        
-        try {
-            // Crear el nuevo empleado con salario
-            Employee nuevoEmpleado = new Employee(
-                usuario,
-                password,
-                nombre,
-                dni,
-                fecha,
-                email,
-                telefono,
-                salario,  // ← SALARIO PERSONALIZADO
-                true      // Activo por defecto
-            );
-
-            // Registrar en la aplicación
-            Application.registerEmployee(nuevoEmpleado);
-
-            // Mensaje de éxito
-            JOptionPane.showMessageDialog(
-                panel,
-                "✅ Empleado '" + usuario + "' creado exitosamente.\n" +
-                "Salario: €" + String.format("%.2f", salario),
-                "Éxito",
-                JOptionPane.INFORMATION_MESSAGE
-            );
-
-            return true;
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                panel,
-                "❌ Error al crear empleado: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
-            return false;
-        }
-    }
-
-    /**
-     * Obtener detalles de un empleado
-     */
-    public String obtenerDetallesEmpleado(Staff empleado) {
-        if (empleado == null) {
-            return "Empleado no encontrado";
-        }
-
-        String estado = empleado.isActive() ? "✅ Activo" : "❌ Inactivo";
-
-        return "📋 DETALLES DEL EMPLEADO\n\n" +
-               "Nombre Completo: " + empleado.getFullname() + "\n" +
-               "Usuario: " + empleado.getUsername() + "\n" +
-               "Email: " + empleado.getEmail() + "\n" +
-               "Teléfono: " + empleado.getPhoneNumber() + "\n" +
-               "DNI: " + empleado.getMaskedDni() + "\n" +
-               "Salario: €" + String.format("%.2f", empleado.getSalary()) + "\n" +
-               "Estado: " + estado;
-    }
-
-    /**
-     * Eliminar un empleado
-     */
-    public boolean eliminarEmpleado(Staff empleado) {
-        try {
-            // Aquí iría la lógica para eliminar
-            // Por ahora solo mostramos un placeholder
-            JOptionPane.showMessageDialog(
-                panel,
-                "❌ ELIMINAR EMPLEADO (PRÓXIMAMENTE)\n\n" +
-                "Se eliminaría a: " + empleado.getUsername(),
-                "Eliminar Empleado",
-                JOptionPane.INFORMATION_MESSAGE
-            );
-            return true;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(panel, "Error al eliminar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-    }
-
-    /**
-     * Editar un empleado
-     */
-    public boolean editarEmpleado(Staff empleado, String nombre, String email, String telefono) {
-        try {
-            // Validaciones
-            if (nombre == null || nombre.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(panel, "El nombre es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
+            
+            Product prod = (Product) base;
+            
+            if (porcentaje <= 0 || porcentaje >= 100) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ El porcentaje debe estar entre 0 y 100.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-
-            // Aquí iría la lógica para editar
-            JOptionPane.showMessageDialog(
-                panel,
-                "✏️ EDITAR EMPLEADO (PRÓXIMAMENTE)\n\n" +
-                "Se editaría a: " + empleado.getUsername(),
-                "Editar Empleado",
-                JOptionPane.INFORMATION_MESSAGE
-            );
+            
+            IRebaja rebaja = new PercentageDiscount(porcentaje, descripcion, desde, hasta);
+            prod.setDiscount(rebaja);
+            Application.addDiscount((Discount) rebaja);
+            
+            JOptionPane.showMessageDialog(panel, 
+                "✅ Rebaja del " + String.format("%.1f%%", porcentaje) + " aplicada a '" + nombreProducto + "'.", 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
             return true;
+            
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(panel, "Error al editar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, 
+                "❌ Error al crear rebaja: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-    }
-    
-    /**
-     * Cambiar el estado de un empleado (Activo/Inactivo)
-     */
-    public boolean cambiarEstadoEmpleado(Staff empleado, boolean activo) {
-        try {
-            if (empleado instanceof Employee) {
-                Employee emp = (Employee) empleado;
-                
-                if (activo) {
-                    emp.activateEmployee();
-                    JOptionPane.showMessageDialog(
-                        panel,
-                        "✅ Usuario " + emp.getUsername() + " activado correctamente.",
-                        "Éxito",
-                        JOptionPane.INFORMATION_MESSAGE
-                    );
-                } else {
-                    emp.desactivateEmployee();
-                    JOptionPane.showMessageDialog(
-                        panel,
-                        "❌ Usuario " + emp.getUsername() + " desactivado correctamente.",
-                        "Éxito",
-                        JOptionPane.INFORMATION_MESSAGE
-                    );
-                }
-                
-                // Guardar cambios
-                Application.guardarDatos("rongero_data.dat");
-                return true;
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                panel,
-                "❌ Error al cambiar estado: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
-            return false;
-        }
-        
-        return false;
     }
 
     /**
-     * Obtener el estado actual de un empleado
+     * Crear descuento por volumen
      */
-    public boolean obtenerEstadoEmpleado(Staff empleado) {
-        if (empleado instanceof Employee) {
-            return ((Employee) empleado).isEnabled();
-        }
-        return false;
-    }
-    
-    public boolean agregarPermisoEmpleado(Staff empleado, Permission permiso) {
+    public boolean crearDescuentoVolumen(double gastoMinimo, double descuentoEuro, String descripcion,
+                                        LocalDateTime desde, LocalDateTime hasta) {
         try {
-            if (empleado instanceof Employee) {
-                Employee emp = (Employee) empleado;
-                if (!emp.permissions.contains(permiso)) {
-                    emp.add_permisions(permiso);
-                    Application.guardarDatos("rongero_data.dat");
+            if (gastoMinimo <= 0) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ El gasto mínimo debe ser mayor a 0.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (descuentoEuro <= 0) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ El descuento en euros debe ser mayor a 0.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            IVolumen vol = new VolumeDiscount(descuentoEuro, gastoMinimo, descripcion, desde, hasta);
+            Application.addDiscount((Discount) vol);
+            
+            JOptionPane.showMessageDialog(panel, 
+                "✅ Descuento por volumen creado:\n" +
+                "Gasto mínimo: €" + String.format("%.2f", gastoMinimo) + "\n" +
+                "Descuento: €" + String.format("%.2f", descuentoEuro), 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            return true;
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(panel, 
+                "❌ Error al crear descuento por volumen: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    /**
+     * Crear descuento de regalo
+     */
+    public boolean crearDescuentoRegalo(double gastoMinimo, String nombreProductoRegalo, 
+                                       String descripcion, LocalDateTime desde, LocalDateTime hasta) {
+        try {
+            NewProduct pRegalo = buscarProductoEnCatalogo(nombreProductoRegalo);
+            
+            if (pRegalo == null) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ El producto para regalo no existe.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (gastoMinimo <= 0) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ El gasto mínimo debe ser mayor a 0.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            IRegalo gift = new GiftDiscount(gastoMinimo, pRegalo, descripcion, desde, hasta);
+            Application.addDiscount((Discount) gift);
+            
+            JOptionPane.showMessageDialog(panel, 
+                "✅ Promoción de regalo creada:\n" +
+                "Gasto mínimo: €" + String.format("%.2f", gastoMinimo) + "\n" +
+                "Regalo: " + pRegalo.getName(), 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            return true;
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(panel, 
+                "❌ Error al crear promoción de regalo: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    /**
+     * Crear descuento por cantidad
+     */
+    public boolean crearDescuentoCantidad(String nombreProducto, int lleva, int paga, 
+                                         String descripcion, LocalDateTime desde, LocalDateTime hasta) {
+        try {
+            NewProduct pCant = buscarProductoEnCatalogo(nombreProducto);
+            
+            if (!(pCant instanceof Product)) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ Producto no encontrado o es un Pack.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (lleva <= 0 || paga <= 0) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ Las cantidades deben ser mayores a 0.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (paga >= lleva) {
+                JOptionPane.showMessageDialog(panel, 
+                    "❌ La cantidad a pagar debe ser menor a la cantidad a llevar.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            ICantidad promo = new QuantityDiscount(lleva, paga, descripcion, desde, hasta);
+            ((Product) pCant).setDiscount(promo);
+            Application.addDiscount((Discount) promo);
+            
+            JOptionPane.showMessageDialog(panel, 
+                "✅ Promoción de cantidad creada:\n" +
+                "Lleva " + lleva + " paga " + paga, 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            return true;
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(panel, 
+                "❌ Error al crear promoción de cantidad: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    /**
+     * Eliminar un descuento
+     */
+    public boolean eliminarDescuento(IDiscount descuento) {
+        try {
+            // Eliminar de productos si aplica
+            if (descuento instanceof PercentageDiscount || descuento instanceof QuantityDiscount) {
+                for (NewProduct p : Application.getCatalog()) {
+                    if (p instanceof Product) {
+                        Product prod = (Product) p;
+                        if (prod.getDiscount() == descuento) {
+                            prod.setDiscount(null);
+                        }
+                    }
                 }
-                return true;
             }
+            
+            // Eliminar de la lista global
+            ArrayList<IDiscount> globales = Application.getGlobalDiscounts();
+            globales.remove(descuento);
+            
+            JOptionPane.showMessageDialog(panel, 
+                "✅ Descuento eliminado correctamente.", 
+                "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            
+            Application.guardarDatos("rongero_data.dat");
+            return true;
+            
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(panel, "Error al añadir permiso: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(panel, 
+                "❌ Error al eliminar descuento: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return false;
     }
-    
-    public boolean quitarPermisoEmpleado(Staff empleado, Permission permiso) {
-        try {
-            if (empleado instanceof Employee) {
-                Employee emp = (Employee) empleado;
-                if (emp.permissions.contains(permiso)) {
-                    emp.delete_permisions(permiso);
-                    Application.guardarDatos("rongero_data.dat");
-                }
-                return true;
+
+    /**
+     * Método auxiliar que busca un producto en el catálogo por su nombre
+     */
+    private NewProduct buscarProductoEnCatalogo(String nombre) {
+        for (NewProduct p : Application.getCatalog()) {
+            if (p.getName().equalsIgnoreCase(nombre)) {
+                return p;
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(panel, "Error al quitar permiso: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return false;
+        return null;
     }
-    
-    public boolean cambiarRolEmpleado(Staff empleado, EmployeeRoles rol) {
-        try {
-            if (empleado instanceof Employee) {
-                Employee emp = (Employee) empleado;
-                emp.Rol.clear();
-                emp.add_roles(rol);
-                Application.guardarDatos("rongero_data.dat");
-                return true;
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(panel, "Error al cambiar rol: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+    /**
+     * Obtener lista de nombres de productos para combobox
+     */
+    public ArrayList<String> obtenerNombresProductos() {
+        ArrayList<String> nombres = new ArrayList<>();
+        for (NewProduct p : Application.getCatalog()) {
+            nombres.add(p.getName());
         }
-        return false;
+        return nombres;
+    }
+
+    /**
+     * Obtener lista de nombres de productos individuales (no packs)
+     */
+    public ArrayList<String> obtenerNombresProductosIndividuales() {
+        ArrayList<String> nombres = new ArrayList<>();
+        for (NewProduct p : Application.getCatalog()) {
+            if (p instanceof Product) {
+                nombres.add(p.getName());
+            }
+        }
+        return nombres;
     }
 }

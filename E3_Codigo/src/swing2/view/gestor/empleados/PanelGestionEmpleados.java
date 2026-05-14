@@ -1,4 +1,4 @@
-package swing2.view.gestor;
+package swing2.view.gestor.empleados;
 
 import javax.swing.*;
 import java.awt.*;
