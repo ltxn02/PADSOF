@@ -84,20 +84,21 @@ public class VentanaPrincipa extends JFrame {
             // ========================================================
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
-                if (c instanceof PanelProductosEmpleado) {
+                if (c instanceof swing2.view.empleado.PanelProductosEmpleado ||
+                        c instanceof swing2.view.empleado.PanelIntercambiosEmpleado) {
                     contenedor.remove(c);
-                    break;
                 }
             }
 
-            // Creamos y añadimos el nuevo panel de administrador
-            PanelProductosEmpleado panelEmp = new PanelProductosEmpleado(this, (Employee) nuevoUsuario);
-            contenedor.add(panelEmp, "PRODUCTOS_EMPLEADO");
+            // Creamos y añadimos los paneles del empleado
+            Employee emp = (Employee) nuevoUsuario;
+            contenedor.add(new swing2.view.empleado.PanelProductosEmpleado(this, emp), "PRODUCTOS_EMPLEADO");
+            contenedor.add(new swing2.view.empleado.PanelIntercambiosEmpleado(this, emp), "INTERCAMBIOS_EMPLEADO");
 
             contenedor.revalidate();
             contenedor.repaint();
 
-            mostrarPantalla("PRODUCTOS_EMPLEADO");
+            mostrarPantalla("PRODUCTOS_EMPLEADO"); // Empezamos en productos
 
         } else if (nuevoUsuario instanceof Client) {
             // ===== ES CLIENTE =====

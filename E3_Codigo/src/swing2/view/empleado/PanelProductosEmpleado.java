@@ -1183,6 +1183,8 @@ public class PanelProductosEmpleado extends JPanel {
             cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
         });
 
+        btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS_EMPLEADO"));
+
         nav.add(crearPanelLogo());
         nav.add(btnProductos);
         nav.add(btnIntercambios);
