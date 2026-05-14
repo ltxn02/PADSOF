@@ -70,4 +70,8 @@ public class Comic extends Product implements java.io.Serializable {
         this.publicationYear = publicationYear;
         this.writtenBy = writtenBy;
     }
+    
+    public String getPublisher() {
+    	return this.publisher;
+    }
 }

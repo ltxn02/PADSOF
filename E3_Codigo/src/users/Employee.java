@@ -363,6 +363,15 @@ public class Employee extends Staff implements java.io.Serializable{
     }
     
     /**
+     * Establece el estado de activación del empleado.
+     * 
+     * @param enabled {@code true} para activar, {@code false} para desactivar
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
+    /**
      * Actualiza el estado de un pedido con validación de permisos.
      * 
      * Solo un empleado con el permiso {@link Permission#ORDER_STATUS_UPDATE}

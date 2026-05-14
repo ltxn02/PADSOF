@@ -66,4 +66,8 @@ public class Figurine extends Product implements java.io.Serializable {
         this.material = material;
         this.franchise = franchise;
     }
+    
+    public String getFranchise() {
+    	return this.franchise;
+    }
 }

@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
  * @version 3.0
  */
 public abstract class Discount implements IDiscount {
+	private static int lastDiscountId = 1;
+	private int discountId;
     protected double value;
     protected String description;
     protected LocalDateTime from;
@@ -31,6 +33,8 @@ public abstract class Discount implements IDiscount {
         this.description = desc;
         this.from = from;
         this.to = to;
+        this.discountId = Discount.lastDiscountId;
+        Discount.lastDiscountId++;
     }
 
     /**
@@ -42,5 +46,13 @@ public abstract class Discount implements IDiscount {
     public boolean isExpired() {
         LocalDateTime now = LocalDateTime.now();
         return now.isAfter(to) || now.isBefore(from);
+    }
+    
+    public int getDiscountId() {
+        return this.discountId;
+    }
+    
+    public double getValue() {
+    	return this.value;
     }
 }

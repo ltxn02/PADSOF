@@ -10,7 +10,6 @@ import swing2.view.gestor.productos.PanelGestionProductos;
 
 import java.awt.*;
 import users.Manager;
-import users.RegisteredUser;
 
 public class PanelDashboard extends JPanel {
 	private VentanaPrincipa ventanaPadre;

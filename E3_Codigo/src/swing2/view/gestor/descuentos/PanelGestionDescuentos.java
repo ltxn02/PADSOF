@@ -5,10 +5,10 @@ import javax.swing.*;
 import discounts.IDiscount;
 
 import java.awt.*;
+import java.util.HashMap;
 
 import swing2.controller.gestor.GestorDescuentoController;
 import swing2.view.VentanaPrincipa;
-import users.Staff;
 
 /**
  * Panel contenedor para gestión de descuentos.
@@ -28,12 +28,15 @@ public class PanelGestionDescuentos extends JPanel {
 	private PanelAnadirDescuento panelAnadirNuevo;
 	private PanelDetallesDescuento panelDetalles;
 	
+	// === MAPA DE PANELES DE AÑADIR (uno por cada tipo) ===
+	private HashMap<Integer, PanelAnadirDescuento> panelesPorTipo = new HashMap<>();
+	
 	// === COLORES ===
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	
 	public PanelGestionDescuentos(VentanaPrincipa ventanaPadre) {
 		this.ventanaPadre = ventanaPadre;
-		this.ctrl = new GestorDescuentoController(ventanaPadre, null);
+		this.ctrl = new GestorDescuentoController(ventanaPadre, this);
 		
 		// ============================================================
 		// USAR CardLayout INTERNO para cambiar entre paneles
@@ -50,7 +53,6 @@ public class PanelGestionDescuentos extends JPanel {
 		contenedorInterno.add(panelListado, "LISTADO");
 		contenedorInterno.add(panelSeleccionTipo, "SELECCION_TIPO");
 		contenedorInterno.add(panelDetalles, "DETALLES");
-		// El panel de añadir se agregará dinámicamente cuando se seleccione un tipo
 		
 		// El panel principal es el contenedor interno
 		this.setLayout(new BorderLayout());
@@ -65,7 +67,7 @@ public class PanelGestionDescuentos extends JPanel {
 	 */
 	public void mostrarListado() {
 		layoutInterno.show(contenedorInterno, "LISTADO");
-		panelListado.limpiarBusqueda();
+		panelListado.cargarDescuentos();
 	}
 	
 	/**
@@ -77,27 +79,30 @@ public class PanelGestionDescuentos extends JPanel {
 	
 	/**
 	 * Mostrar panel de añadir descuento con el tipo ya seleccionado
+	 * @param tipoDescuento 0=Rebaja%, 1=Volumen, 2=Regalo, 3=Cantidad
 	 */
-	public void mostrarAnadirDescuentoConTipo(int tipoDescuento) {
-		// Crear un nuevo panel con el tipo seleccionado
-		panelAnadirNuevo = new PanelAnadirDescuento(this, tipoDescuento);
-		
-		// Remover el anterior si existe
-		contenedorInterno.remove(panelListado);
-		
-		// Agregar el nuevo
-		contenedorInterno.add(panelAnadirNuevo, "ANADIR_NUEVO");
-		
-		// Mostrar
-		layoutInterno.show(contenedorInterno, "ANADIR_NUEVO");
+		public void mostrarAnadirDescuentoConTipo(int tipoDescuento) {
+	    // Verificar si ya existe un panel para este tipo
+	    if (!panelesPorTipo.containsKey(tipoDescuento)) {
+	        // Crear nuevo panel para este tipo
+	        panelAnadirNuevo = new PanelAnadirDescuento(this, ctrl, tipoDescuento);
+	        panelesPorTipo.put(tipoDescuento, panelAnadirNuevo);
+	        
+	        // Agregar al contenedor con una clave única
+	        String clave = "ANADIR_" + tipoDescuento;
+	        contenedorInterno.add(panelAnadirNuevo, clave);
+	    }
+	    
+	    // Mostrar el panel del tipo seleccionado
+	    String clave = "ANADIR_" + tipoDescuento;
+	    layoutInterno.show(contenedorInterno, clave);
 	}
 	
 	/**
 	 * Mostrar detalles de un descuento
 	 */
-	public void mostrarDetalles(Object descuento) {
-		IDiscount discount = (IDiscount)descuento;
-		panelDetalles.mostrarDetalles(discount);
+	public void mostrarDetalles(IDiscount descuento) {
+		panelDetalles.mostrarDetalles(descuento);
 		layoutInterno.show(contenedorInterno, "DETALLES");
 	}
 }

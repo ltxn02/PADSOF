@@ -87,5 +87,12 @@ public class GiftDiscount extends Discount implements IRegalo, IVolumen {
     public String getDescription() {
         return description + " (¡REGALO!: " + regalo.getName() + " por compras > " + minGasto + "€)";
     }
-
+    
+    public double getMinGasto() {
+    	return this.minGasto;
+    }
+    
+    public Item getRegalo() {
+    	return this.regalo;
+    }
 }

@@ -65,4 +65,8 @@ public class VolumeDiscount extends Discount implements IVolumen {
     public String getDescription() {
         return String.format("%s (-%.2f€ si gastas >%.2f€)", description, value, threshold);
     }
+    
+    public double getThreshold() {
+    	return this.threshold;
+    }
 }

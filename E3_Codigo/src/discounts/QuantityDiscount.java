@@ -79,4 +79,12 @@ public class QuantityDiscount extends Discount implements ICantidad {
     public String getDescription() {
         return String.format("%s (Oferta %d x %d)", description, buyX, payY);
     }
+    
+    public int getBuyX() {
+    	return this.buyX;
+    }
+    
+    public int getPayY() {
+    	return this.payY;
+    }
 }
