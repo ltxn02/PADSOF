@@ -34,10 +34,10 @@ public class PanelInicioo extends JPanel {
 
         cargarImagenFondo();
 
-        // 1. Barra superior
+        
         setupBarraSuperior();
 
-        // 2. Configurar el cuerpo principal
+        
         panelCuerpo = new JPanel(new GridBagLayout());
         panelCuerpo.setOpaque(false);
 
@@ -52,7 +52,7 @@ public class PanelInicioo extends JPanel {
         scrollProductos.setOpaque(false);
         scrollProductos.getViewport().setOpaque(false);
         scrollProductos.setBorder(null);
-        // Mejorar scroll
+        
         scrollProductos.getVerticalScrollBar().setUnitIncrement(16);
 
         gbcCuerpo.gridy = 0;
@@ -61,7 +61,7 @@ public class PanelInicioo extends JPanel {
 
         this.add(panelCuerpo, BorderLayout.CENTER);
 
-        // 3. Estado inicial
+        
         marcarActivo(btnInicio);
         cargarMasVendidos();
     }
@@ -69,14 +69,14 @@ public class PanelInicioo extends JPanel {
     private void cambiarLayoutCuerpo(boolean esInicio) {
         panelCuerpo.removeAll();
 
-        // IMPORTANTE: Aseguramos que panelCuerpo use GridBagLayout
-        // Si en algún momento cambió a BorderLayout, esto lo arregla.
+        
+        
         panelCuerpo.setLayout(new GridBagLayout());
 
         if (esInicio) {
             gbcCuerpo.gridx = 0;
             gbcCuerpo.weightx = 0.19;
-            gbcCuerpo.fill = GridBagConstraints.BOTH; // Para que ocupe el espacio
+            gbcCuerpo.fill = GridBagConstraints.BOTH; 
             panelCuerpo.add(panelVacioIzquierdo, gbcCuerpo);
             panelCuerpo.add(crearPanelPublicitario(), gbcCuerpo);
             gbcCuerpo.gridx = 1;
@@ -123,8 +123,8 @@ public class PanelInicioo extends JPanel {
     }
 
     private void abrirSelectorCantidad(NewProduct p) {
-        // 1. COMPROBACIÓN DE SESIÓN (Seguridad)
-        // Cambia 'usuarioActual' por tu variable de sesión o controlador
+        
+        
         if (usuarioActual == null) {
             JOptionPane.showMessageDialog(this,
                     "¡Atención! Debes iniciar sesión para poder comprar productos.",
@@ -133,15 +133,15 @@ public class PanelInicioo extends JPanel {
             return;
         }
 
-        // 2. CREACIÓN DEL DIÁLOGO PERSONALIZADO
+        
         JDialog dialog = new JDialog();
         dialog.setTitle("Seleccionar Cantidad");
         dialog.setModal(true);
         dialog.setResizable(false);
-        dialog.getContentPane().setBackground(new Color(15, 45, 105)); // Azul a juego con la tarjeta
+        dialog.getContentPane().setBackground(new Color(15, 45, 105)); 
         dialog.setLayout(new BorderLayout(10, 10));
 
-        // --- PANEL INFO (Nombre y Precio) ---
+        
         JPanel pInfo = new JPanel(new GridLayout(2, 1, 5, 5));
         pInfo.setOpaque(false);
         pInfo.setBorder(BorderFactory.createEmptyBorder(20, 25, 10, 25));
@@ -158,7 +158,7 @@ public class PanelInicioo extends JPanel {
         pInfo.add(lblNombre);
         pInfo.add(lblPrecio);
 
-        // --- PANEL CENTRAL (Selector de Cantidad) ---
+        
         JPanel pCant = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         pCant.setOpaque(false);
 
@@ -166,12 +166,12 @@ public class PanelInicioo extends JPanel {
         lblTxt.setForeground(Color.WHITE);
         lblTxt.setFont(new Font("Arial", Font.PLAIN, 14));
 
-        // Configuración del Spinner (Valor inicial 1, Min 1, Max 99, Salto 1)
+        
         SpinnerModel model = new SpinnerNumberModel(1, 1, 99, 1);
         JSpinner spinner = new JSpinner(model);
         spinner.setPreferredSize(new Dimension(60, 30));
 
-        // Estilizar el campo de texto del spinner
+        
         JComponent editor = spinner.getEditor();
         JFormattedTextField textField = ((JSpinner.DefaultEditor) editor).getTextField();
         textField.setColumns(3);
@@ -179,7 +179,7 @@ public class PanelInicioo extends JPanel {
         pCant.add(lblTxt);
         pCant.add(spinner);
 
-        // --- PANEL BOTÓN (Confirmación) ---
+        
         JPanel pBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pBoton.setOpaque(false);
         pBoton.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
@@ -192,14 +192,14 @@ public class PanelInicioo extends JPanel {
         btnConfirmar.setFocusPainted(false);
         btnConfirmar.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
 
-        // Lógica al pulsar Confirmar
+        
         btnConfirmar.addActionListener(e -> {
             int cantidad = (int) spinner.getValue();
 
-            // Verificamos que el usuario sea cliente para acceder a su carrito
+            
             if (usuarioActual instanceof Client) {
                 Client cliente = (Client) usuarioActual;
-                // LLAMADA REAL: Se añade al objeto persistente en el usuario
+                
                 cliente.getShoppingCart().addCartItem(p, cantidad);
 
                 dialog.dispose();
@@ -213,17 +213,19 @@ public class PanelInicioo extends JPanel {
 
         pBoton.add(btnConfirmar);
 
-        // Ensamblar todo en el diálogo
+        
         dialog.add(pInfo, BorderLayout.NORTH);
         dialog.add(pCant, BorderLayout.CENTER);
         dialog.add(pBoton, BorderLayout.SOUTH);
 
         dialog.pack();
-        dialog.setLocationRelativeTo(this); // Centrar respecto al panel principal
+        dialog.setLocationRelativeTo(this); 
         dialog.setVisible(true);
     }
+
+
     private JPanel crearTarjeta(NewProduct p) {
-        // 1. Configuración de la Tarjeta
+        
         JPanel card = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -242,11 +244,11 @@ public class PanelInicioo extends JPanel {
         int padding = 15;
         card.setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
 
-        // --- PANEL DE IMAGEN (Contenedor del Badge y la Foto) ---
+        
         JPanel pImg = new JPanel(null);
         pImg.setOpaque(false);
 
-        // --- BADGE ---
+        
         JLabel badge = new JLabel("", SwingConstants.CENTER);
         if (p instanceof Game) badge.setText("GAME");
         else if (p instanceof Comic) badge.setText("COMIC");
@@ -260,11 +262,11 @@ public class PanelInicioo extends JPanel {
         badge.setForeground(Color.BLACK);
         badge.setFont(new Font("Arial", Font.BOLD, 10));
 
-        // --- LABEL DE IMAGEN ---
+        
         JLabel imgLabel = new JLabel();
         imgLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // --- TU LÓGICA ORIGINAL DE FOTOS (RESTAURADA) ---
+        
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
             String nombreArchivo = new File(p.getFotos().get(0)).getName();
             String[] posiblesRutas = {
@@ -284,7 +286,7 @@ public class PanelInicioo extends JPanel {
 
             if (f != null && f.exists()) {
                 ImageIcon icon = new ImageIcon(f.getAbsolutePath());
-                // Escalamos la imagen (210x340 es un buen tamaño base)
+                
                 Image scaled = icon.getImage().getScaledInstance(210, 340, Image.SCALE_SMOOTH);
                 imgLabel.setIcon(new ImageIcon(scaled));
             } else {
@@ -293,21 +295,21 @@ public class PanelInicioo extends JPanel {
             }
         }
 
-        // --- EL LISTENER PARA EL MOVIMIENTO DINÁMICO ---
+        
         pImg.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent e) {
-                // El badge persigue el borde derecho
+                
                 badge.setLocation(pImg.getWidth() - bWidth, 0);
-                // La imagen ocupa todo el panel disponible
+                
                 imgLabel.setBounds(0, 0, pImg.getWidth(), pImg.getHeight());
             }
         });
 
-        pImg.add(badge, 0); // Badge arriba
-        pImg.add(imgLabel); // Foto detrás
+        pImg.add(badge, 0); 
+        pImg.add(imgLabel); 
 
-        // --- INFO INFERIOR ---
+        
         JPanel info = new JPanel(new GridLayout(2, 1, 0, 5));
         info.setOpaque(false);
 
@@ -328,7 +330,7 @@ public class PanelInicioo extends JPanel {
         btnAdd.setFocusPainted(false);
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnAdd.addActionListener(e -> {
-            abrirSelectorCantidad(p); // Abrimos el diálogo bonito
+            abrirSelectorCantidad(p); 
         });
 
         priceRow.add(price, BorderLayout.WEST);
@@ -340,7 +342,7 @@ public class PanelInicioo extends JPanel {
         card.add(pImg, BorderLayout.CENTER);
         card.add(info, BorderLayout.SOUTH);
 
-        // Eventos de clic
+        
         card.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -352,19 +354,19 @@ public class PanelInicioo extends JPanel {
     }
 
     private JPanel crearPanelPublicitario() {
-        // 1. Contenedor principal del lado izquierdo
+        
         JPanel panelPubli = new JPanel(new BorderLayout());
         panelPubli.setOpaque(false);
         panelPubli.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
 
-        // 2. Label con recorte redondeado para la imagen
+        
         JLabel labelFoto = new JLabel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Creamos un área de recorte con esquinas redondeadas (30px)
+                
                 Shape clip = new java.awt.geom.RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 30, 30);
                 g2.setClip(clip);
 
@@ -374,19 +376,19 @@ public class PanelInicioo extends JPanel {
         };
         labelFoto.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // 3. Cargar la imagen desde src/imgProductos/foto.jpg
+        
         String path = "src/foto/foto2.png";
         File f = new File(path);
 
-        // Si no la encuentra ahí, buscamos en la ruta alternativa por si acaso
+        
         if (!f.exists()) {
             f = new File("E3_Codigo/src/foto/foto2.png");
         }
 
         if (f.exists()) {
             ImageIcon icon = new ImageIcon(f.getAbsolutePath());
-            // Escalamos la imagen (350 de ancho es perfecto para el tercio izquierdo)
-            // El 800 de alto lo ajustará Java según el contenedor
+            
+            
             Image imgEscalada = icon.getImage().getScaledInstance(350, 800, Image.SCALE_SMOOTH);
             labelFoto.setIcon(new ImageIcon(imgEscalada));
         } else {
@@ -452,7 +454,7 @@ public class PanelInicioo extends JPanel {
     }
 
     private void cargarImagenFondo() {
-        // Ajuste de ruta común para evitar nulls
+        
         URL url = getClass().getResource("/foto/FondoCliente.png");
         if (url == null) url = getClass().getResource("../../foto/FondoCliente.png");
 
@@ -465,7 +467,7 @@ public class PanelInicioo extends JPanel {
         if (imagenFondo != null) g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
     }
 
-    // CAMBIADA VISIBILIDAD DEL MÉTODO DE private A public static
+    
     public static JPanel crearPanelLogo() {
         JPanel p = new JPanel() {
             @Override
@@ -485,7 +487,7 @@ public class PanelInicioo extends JPanel {
     }
 
     private JPanel crearPanelUsuario(RegisteredUser user) {
-        // Ajustamos un poco el margen vertical (de 22 a 15) para que los botones cuadren mejor
+        
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         p.setOpaque(false);
 
@@ -494,16 +496,16 @@ public class PanelInicioo extends JPanel {
             b.addActionListener(e -> ventana.mostrarPantalla("LOGIN"));
             p.add(b);
         } else {
-            // ==========================================
-            // Botón Mi Perfil
-            // ==========================================
+            
+            
+            
             JButton btnPerfil = new JButton();
             btnPerfil.setContentAreaFilled(false);
             btnPerfil.setBorderPainted(false);
             btnPerfil.setFocusPainted(false);
             btnPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            // Técnicas antibalas para la ruta (igual que en los productos)
+            
             String[] rutasPerfil = {
                     "E3_Codigo/src/foto/logoPerfil.png",
                     "src/foto/logoPerfil.png",
@@ -524,14 +526,14 @@ public class PanelInicioo extends JPanel {
                 Image imgPerfil = iconPerfil.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
                 btnPerfil.setIcon(new ImageIcon(imgPerfil));
             } else {
-                btnPerfil.setText("Perfil"); // Si falla, ponemos texto simple en vez de un emoji para evitar el "cuadrado"
+                btnPerfil.setText("Perfil"); 
                 btnPerfil.setFont(new Font("Arial", Font.BOLD, 14));
                 btnPerfil.setForeground(Color.WHITE);
             }
 
-            // ==========================================
-            // Botón Carrito
-            // ==========================================
+            
+            
+            
             JButton btnCarrito = new JButton();
             btnCarrito.setContentAreaFilled(false);
             btnCarrito.setBorderPainted(false);
@@ -558,27 +560,27 @@ public class PanelInicioo extends JPanel {
                 Image imgCarrito = iconCarrito.getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
                 btnCarrito.setIcon(new ImageIcon(imgCarrito));
             } else {
-                btnCarrito.setText("Carrito"); // Texto de seguridad
+                btnCarrito.setText("Carrito"); 
                 btnCarrito.setFont(new Font("Arial", Font.BOLD, 14));
                 btnCarrito.setForeground(Color.WHITE);
             }
 
-            // Eventos provisionales
+            
             btnPerfil.addActionListener(e -> ventana.mostrarPantalla("PERFIL"));
             btnCarrito.addActionListener(e -> ventana.mostrarPantalla("CARRITO"));
 
-            // Añadimos los botones al panel
+            
             p.add(btnPerfil);
             p.add(btnCarrito);
         }
         return p;
     }
     public void mostrarDetalleProducto(NewProduct p) {
-        // 1. Limpiamos el cuerpo principal
+        
         panelCuerpo.removeAll();
         panelCuerpo.setLayout(new BorderLayout());
 
-        // 2. Contenedor con fondo blanco redondeado
+        
         JPanel detalleContenedor = new JPanel(new GridLayout(1, 2, 40, 0)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -592,29 +594,29 @@ public class PanelInicioo extends JPanel {
         detalleContenedor.setOpaque(false);
         detalleContenedor.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60));
 
-        // --- COLUMNA IZQUIERDA: TEXTOS Y SCROLL ---
+        
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setOpaque(false);
 
-        // Botón Volver simple (por ahora solo recarga mas vendidos para que no de error)
-        // Botón volver
-        // --- DENTRO DE mostrarDetalleProducto(NewProduct p) ---
+        
+        
+        
 
         JButton btnVolver = new JButton("← Volver al Catálogo");
         btnVolver.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         btnVolver.addActionListener(e -> {
-            // 1. IMPORTANTE: Forzamos el layout de vuelta a GridBagLayout
-            // para que la función cambiarLayoutCuerpo no explote
+            
+            
             panelCuerpo.setLayout(new GridBagLayout());
 
-            // 2. Cargamos la vista que corresponda
-            // Si no tienes la variable vistaAnterior, usa una por defecto:
+            
+            
             cargarMasVendidos();
 
-            // Si quieres que sea más dinámico, puedes usar:
-            // if (esVistaCatalogo) cargarCatalogoORecomendados(); else cargarMasVendidos();
+            
+            
         });
 
         JLabel titulo = new JLabel(p.getName());
@@ -626,7 +628,7 @@ public class PanelInicioo extends JPanel {
         precio.setForeground(new Color(110, 30, 230));
         precio.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Texto de descripción
+        
         JTextArea desc = new JTextArea(p.getDescription());
         desc.setFont(new Font("Arial", Font.PLAIN, 16));
         desc.setLineWrap(true);
@@ -635,7 +637,7 @@ public class PanelInicioo extends JPanel {
         desc.setOpaque(false);
         desc.setForeground(new Color(50, 50, 50));
 
-        // ScrollPane para la descripción
+        
         JScrollPane scrollDesc = new JScrollPane(desc);
         scrollDesc.setBorder(null);
         scrollDesc.setOpaque(false);
@@ -652,9 +654,9 @@ public class PanelInicioo extends JPanel {
         btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnAdd.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnAdd.addActionListener(e -> {
-            abrirSelectorCantidad(p); // Reutilizamos la misma ventana bonita
+            abrirSelectorCantidad(p); 
         });
-        // Añadimos componentes al panel izquierdo
+        
         infoPanel.add(btnVolver);
         infoPanel.add(Box.createVerticalStrut(30));
         infoPanel.add(titulo);
@@ -663,11 +665,11 @@ public class PanelInicioo extends JPanel {
         infoPanel.add(Box.createVerticalStrut(20));
         infoPanel.add(new JLabel("Descripción:"));
         infoPanel.add(Box.createVerticalStrut(10));
-        infoPanel.add(scrollDesc); // El scroll ya contiene el texto
+        infoPanel.add(scrollDesc); 
         infoPanel.add(Box.createVerticalGlue());
         infoPanel.add(btnAdd);
 
-        // --- COLUMNA DERECHA: IMAGEN ---
+        
         JLabel lblFoto = new JLabel();
         lblFoto.setHorizontalAlignment(SwingConstants.CENTER);
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
@@ -687,11 +689,11 @@ public class PanelInicioo extends JPanel {
             }
         }
 
-        // --- ENSAMBLAJE ---
-        detalleContenedor.add(infoPanel); // Izquierda
-        detalleContenedor.add(lblFoto);   // Derecha
+        
+        detalleContenedor.add(infoPanel); 
+        detalleContenedor.add(lblFoto);   
 
-        // Margen exterior
+        
         JPanel margen = new JPanel(new BorderLayout());
         margen.setOpaque(false);
         margen.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));

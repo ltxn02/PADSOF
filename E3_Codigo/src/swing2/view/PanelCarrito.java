@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+
+import logic.Application;
 import transactions.*;
 import catalog.NewProduct;
 import users.Client;
@@ -22,17 +25,17 @@ public class PanelCarrito extends JPanel {
 
         cargarImagenFondo();
 
-        // Configuración básica del panel
+        
         setLayout(new BorderLayout(20, 20));
-        setOpaque(false); // Para que se vea la imagen de fondo
+        setOpaque(false); 
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // --- 1. ENCABEZADO (GIF Volver + Título + Logo) ---
+        
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
         header.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
-        // Lado Izquierdo: GIF de flecha
+        
         JLabel lblVolverGif = new JLabel();
         URL gifUrl = getClass().getResource("/foto/flecha.gif");
         if (gifUrl == null) gifUrl = getClass().getResource("../../foto/flecha.gif");
@@ -53,15 +56,15 @@ public class PanelCarrito extends JPanel {
 
         JPanel pIzquierdo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pIzquierdo.setOpaque(false);
-        pIzquierdo.setPreferredSize(new Dimension(220, 80)); // Balanceado con el logo
+        pIzquierdo.setPreferredSize(new Dimension(220, 80)); 
         pIzquierdo.add(lblVolverGif);
 
-        // Centro: Título
+        
         JLabel titulo = new JLabel("MI CARRITO", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 32));
         titulo.setForeground(Color.WHITE);
 
-        // Lado Derecho: Logo
+        
         JPanel panelLogo = PanelInicioo.crearPanelLogo();
         panelLogo.setPreferredSize(new Dimension(220, 80));
 
@@ -70,7 +73,7 @@ public class PanelCarrito extends JPanel {
         header.add(panelLogo, BorderLayout.EAST);
         add(header, BorderLayout.NORTH);
 
-        // --- 2. CUERPO (Lista de productos con Scroll) ---
+        
         contenedorProductos = new JPanel();
         contenedorProductos.setLayout(new BoxLayout(contenedorProductos, BoxLayout.Y_AXIS));
         contenedorProductos.setOpaque(false);
@@ -82,7 +85,7 @@ public class PanelCarrito extends JPanel {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         add(scroll, BorderLayout.CENTER);
 
-        // --- 3. LATERAL (Resumen de pago) ---
+        
         add(crearPanelResumen(), BorderLayout.EAST);
 
         actualizarVista();
@@ -108,7 +111,7 @@ public class PanelCarrito extends JPanel {
             contenedorProductos.add(crearFilaProducto(ci));
             contenedorProductos.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-        // getPrice() calcula totales y descuentos automáticamente
+        
         lblTotal.setText(String.format("%.2f€", carritoActual.getPrice()));
 
         contenedorProductos.revalidate();
@@ -118,23 +121,28 @@ public class PanelCarrito extends JPanel {
     private JPanel crearFilaProducto(CartItem ci) {
         NewProduct p = ci.getProduct();
         JPanel fila = new JPanel(new BorderLayout(15, 0));
-        fila.setBackground(new Color(15, 45, 105, 230)); // Azul translúcido
+        fila.setBackground(new Color(15, 45, 105, 230)); 
         fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         fila.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-        // Imagen del producto
+        
         JLabel lblFoto = new JLabel();
         lblFoto.setPreferredSize(new Dimension(80, 80));
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
-            String nombre = new File(p.getFotos().get(0)).getName();
-            String path = "src/imgProductos/" + nombre;
-            if (new File(path).exists()) {
-                ImageIcon icon = new ImageIcon(path);
-                lblFoto.setIcon(new ImageIcon(icon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH)));
-            }
-        }
-
-        // Info central
+            String nombreArchivo = new File(p.getFotos().get(0)).getName();
+            String[] rutas = {
+                    "E3_Codigo/src/imgProductos/" + nombreArchivo,
+                    "src/imgProductos/" + nombreArchivo,
+                    "../src/imgProductos/" + nombreArchivo
+            };
+            File f = null;
+            for (String r : rutas) { if (new File(r).exists()) { f = new File(r); break; } }
+        if (f != null) {
+            ImageIcon icon = new ImageIcon(f.getAbsolutePath());
+            Image scaled = icon.getImage().getScaledInstance(50, 76, Image.SCALE_SMOOTH);
+            lblFoto.setIcon(new ImageIcon(scaled));
+        }}
+        
         JPanel info = new JPanel(new GridLayout(2, 1));
         info.setOpaque(false);
         JLabel name = new JLabel(p.getName());
@@ -145,7 +153,7 @@ public class PanelCarrito extends JPanel {
         info.add(name);
         info.add(detalles);
 
-        // Botón eliminar
+        
         JButton btnEliminar = new JButton("Eliminar");
         btnEliminar.setBackground(new Color(180, 50, 50));
         btnEliminar.setForeground(Color.WHITE);
@@ -173,7 +181,7 @@ public class PanelCarrito extends JPanel {
 
         lblTotal = new JLabel("0.00€");
         lblTotal.setFont(new Font("Arial", Font.BOLD, 35));
-        lblTotal.setForeground(new Color(0, 178, 255)); // Azul neón
+        lblTotal.setForeground(new Color(0, 178, 255)); 
         lblTotal.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton btnPagar = new JButton("FINALIZAR COMPRA");
@@ -186,7 +194,7 @@ public class PanelCarrito extends JPanel {
             if(carritoActual.getCartItems().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "El carrito está vacío.");
             } else {
-                JOptionPane.showMessageDialog(this, "¡Gracias por tu compra en RONGERO!");
+                pagar();
                 carritoActual.clearCart();
                 actualizarVista();
             }
@@ -198,5 +206,117 @@ public class PanelCarrito extends JPanel {
         p.add(Box.createVerticalGlue());
         p.add(btnPagar);
         return p;
+    }
+    private void pagar() {
+        // 1. Comprobaciones previas
+        if (carritoActual.getCartItems().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El carrito está vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 2. CREACIÓN DEL DIÁLOGO DE PAGO
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Pasarela de Pago Seguro - RONGERO");
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        dialog.getContentPane().setBackground(new Color(15, 45, 105));
+        dialog.setLayout(new BorderLayout(10, 20));
+
+        // --- PANEL INFO (Resumen de compra) ---
+        JPanel pInfo = new JPanel(new GridLayout(2, 1, 5, 5));
+        pInfo.setOpaque(false);
+        pInfo.setBorder(BorderFactory.createEmptyBorder(20, 25, 10, 25));
+
+        JLabel lblTitulo = new JLabel("Resumen de Pedido");
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JLabel lblTotal = new JLabel(String.format("Total a cargar: %.2f€", carritoActual.getPrice()));
+        lblTotal.setForeground(new Color(180, 160, 255));
+        lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
+
+        pInfo.add(lblTitulo);
+        pInfo.add(lblTotal);
+
+        // --- PANEL CENTRAL (Introducción de Tarjeta) ---
+        JPanel pTarjeta = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        pTarjeta.setOpaque(false);
+
+        JLabel lblTxt = new JLabel("Nº Tarjeta (16 dígitos):");
+        lblTxt.setForeground(Color.WHITE);
+        lblTxt.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        JTextField txtTarjeta = new JTextField(16);
+        txtTarjeta.setFont(new Font("Monospaced", Font.BOLD, 16));
+        txtTarjeta.setHorizontalAlignment(JTextField.CENTER);
+
+        pTarjeta.add(lblTxt);
+        pTarjeta.add(txtTarjeta);
+
+        // --- PANEL BOTÓN (Confirmar Pago) ---
+        JPanel pBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pBoton.setOpaque(false);
+        pBoton.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+
+        JButton btnPagar = new JButton("Pagar Ahora");
+        btnPagar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnPagar.setBackground(new Color(0, 178, 255));
+        btnPagar.setForeground(Color.WHITE);
+        btnPagar.setFont(new Font("Arial", Font.BOLD, 14));
+
+        btnPagar.addActionListener(e -> {
+            String nTarjeta = txtTarjeta.getText().trim();
+
+            // Validar formato básico antes de intentar nada
+            if (!nTarjeta.matches("^[0-9]{16}$")) {
+                JOptionPane.showMessageDialog(dialog, "La tarjeta debe tener 16 números.", "Formato Incorrecto", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                // 1. Crear el objeto Order
+                // Pasamos el cliente actual, una copia de los items del carrito y el precio total
+                Client clienteActual = (Client) ventana.getUsuarioLogueado();
+                Order nuevoPedido = new Order(
+                        clienteActual,
+                        new ArrayList<>(carritoActual.getCartItems()),
+                        carritoActual.getPrice()
+                );
+
+                // 2. Procesar el pago con la pasarela de TeleChargeAndPaySystem (vía Order)
+                boolean exito = nuevoPedido.procesarPago(nTarjeta);
+
+                if (exito) {
+                    dialog.dispose(); // Cerrar ventana de pago
+
+                    // 3. Feedback y Limpieza
+                    JOptionPane.showMessageDialog(this,
+                            "¡Pago realizado con éxito!\nCódigo de recogida: " + nuevoPedido.getPickupCode(),
+                            "Pedido Confirmado", JOptionPane.INFORMATION_MESSAGE);
+
+                    // Vaciar el carrito y actualizar la vista
+                    carritoActual.clearCart();
+                    actualizarVista();
+
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "El pago ha sido rechazado por el banco.", "Error de Pago", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        pBoton.add(btnPagar);
+
+        dialog.add(pInfo, BorderLayout.NORTH);
+        dialog.add(pTarjeta, BorderLayout.CENTER);
+        dialog.add(pBoton, BorderLayout.SOUTH);
+
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 }

@@ -21,7 +21,7 @@ public class PanelLoginn extends JPanel {
         this.setLayout(new GridBagLayout());
         GridBagConstraints gbcMain = new GridBagConstraints();
 
-        // --- LOGO ---
+        
         URL imgUrl = getClass().getResource("../../foto/logoVertical.png");
         if (imgUrl != null) {
             ImageIcon iconoOriginal = new ImageIcon(imgUrl);
@@ -31,7 +31,7 @@ public class PanelLoginn extends JPanel {
             this.add(new JLabel(new ImageIcon(imgEscalada)), gbcMain);
         }
 
-        // --- CUADRO FORMULARIO ---
+        
         JPanel panelAzul = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -49,14 +49,14 @@ public class PanelLoginn extends JPanel {
         gbcForm.insets = new Insets(10, 10, 10, 10);
         gbcForm.fill = GridBagConstraints.HORIZONTAL;
 
-        // Título
+        
         JLabel titulo = new JLabel("ACCESO", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(Color.WHITE);
         gbcForm.gridx = 0; gbcForm.gridy = 0; gbcForm.gridwidth = 2;
         panelAzul.add(titulo, gbcForm);
 
-        // Campos (Usuario y Pass)
+        
         gbcForm.gridwidth = 1;
         gbcForm.gridy = 1; gbcForm.gridx = 0;
         panelAzul.add(crearLabel("Usuario:"), gbcForm);
@@ -70,7 +70,7 @@ public class PanelLoginn extends JPanel {
         gbcForm.gridx = 1;
         panelAzul.add(campoPassword, gbcForm);
 
-        // Botón Login
+        
         botonLogin = new JButton("ENTRAR");
         botonLogin.setBackground(new Color(0, 160, 210));
         botonLogin.setForeground(Color.WHITE);
@@ -78,7 +78,7 @@ public class PanelLoginn extends JPanel {
         gbcForm.insets = new Insets(20, 10, 5, 10);
         panelAzul.add(botonLogin, gbcForm);
 
-        // --- BOTÓN REGISTRO (Link funcional) ---
+        
         JButton btnRegistro = new JButton("¿No tienes cuenta? Regístrate aquí");
         btnRegistro.setForeground(new Color(200, 220, 255));
         btnRegistro.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -91,14 +91,14 @@ public class PanelLoginn extends JPanel {
         gbcForm.insets = new Insets(0, 10, 10, 10);
         panelAzul.add(btnRegistro, gbcForm);
 
-        // --- EVENTOS ---
+        
 
-        // Ejecutar login a través del controlador
+        
         botonLogin.addActionListener(e -> {
             controller.ejecutarLogin(campoUsuario.getText().trim(), new String(campoPassword.getPassword()));
         });
 
-        // Llevar a la pantalla de Registro
+        
         btnRegistro.addActionListener(e -> {
             ventanaPadre.mostrarPantalla("REGISTRO");
         });

@@ -28,16 +28,16 @@ public class PanelIntercambios extends JPanel {
         cargarImagenFondo();
         setupBarraSuperior();
 
-        // Configurar el cuerpo principal
+        
         JPanel panelCuerpo = new JPanel(new BorderLayout());
         panelCuerpo.setOpaque(false);
 
-        // Cuadrícula para las tarjetas
-        contenedorCentral = new JPanel(new GridLayout(0, 3, 25, 25)); // 3 columnas, 25px de espacio
+        
+        contenedorCentral = new JPanel(new GridLayout(0, 3, 25, 25)); 
         contenedorCentral.setOpaque(false);
         contenedorCentral.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
 
-        // SOLUCIÓN AL ESTIRAMIENTO (TRUCO DEL BORDERLAYOUT NORTH)
+        
         JPanel wrapperGrid = new JPanel(new BorderLayout());
         wrapperGrid.setOpaque(false);
         wrapperGrid.add(contenedorCentral, BorderLayout.NORTH);
@@ -51,7 +51,7 @@ public class PanelIntercambios extends JPanel {
         panelCuerpo.add(scrollProductos, BorderLayout.CENTER);
         this.add(panelCuerpo, BorderLayout.CENTER);
 
-        // Estado inicial
+        
         marcarActivo(btnIntercambios);
         cargarIntercambios();
     }
@@ -90,49 +90,49 @@ public class PanelIntercambios extends JPanel {
         };
         card.setLayout(new BorderLayout());
         card.setOpaque(false);
-        // Tarjeta vertical y más estrecha (estilo Productos)
+        
         card.setPreferredSize(new Dimension(280, 440));
         card.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        // --- ZONA SUPERIOR (Imagen y Etiquetas) ---
+        
         JPanel pTop = new JPanel(null);
         pTop.setOpaque(false);
         pTop.setPreferredSize(new Dimension(250, 310));
 
-        // Etiqueta Estado
+        
         String condicionTxt = (p.getCondition() != null) ? p.getCondition().toString().replace("_", " ") : "SIN TASAR";
         JLabel lblCondition = crearBadge(condicionTxt);
         lblCondition.setBounds(0, 0, 100, 25);
         pTop.add(lblCondition);
 
-        // Etiqueta Precio
+        
         JLabel lblPrice = crearBadge(String.format("%.0f€", p.getPrice()));
         lblPrice.setBounds(180, 0, 70, 25);
         pTop.add(lblPrice);
 
-        // Imagen del producto
+        
         JLabel imgLabel = new JLabel("", SwingConstants.CENTER);
-        // Ajustamos los márgenes para encajar la nueva imagen vertical
+        
         imgLabel.setBounds(10, 35, 230, 270);
         cargarImagenProducto(p, imgLabel);
         pTop.add(imgLabel);
 
-        // --- ZONA INFERIOR (Info, Usuario y Botón) ---
+        
         JPanel pBottom = new JPanel(new BorderLayout());
         pBottom.setOpaque(false);
 
-        // Título centrado
+        
         JLabel name = new JLabel(p.getName(), SwingConstants.CENTER);
         name.setForeground(Color.WHITE);
         name.setFont(new Font("Arial", Font.BOLD, 14));
         name.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
         pBottom.add(name, BorderLayout.NORTH);
 
-        // Footer
+        
         JPanel pFooter = new JPanel(new BorderLayout());
         pFooter.setOpaque(false);
 
-        // Usuario info
+        
         JPanel pUser = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         pUser.setOpaque(false);
 
@@ -146,7 +146,7 @@ public class PanelIntercambios extends JPanel {
         pUser.add(lblPic);
         pUser.add(lblOwner);
 
-        // Botón
+        
         JButton btnExchange = new JButton("Solicitar Intercambio");
         btnExchange.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExchange.setBackground(new Color(50, 130, 220));
@@ -166,7 +166,7 @@ public class PanelIntercambios extends JPanel {
         return card;
     }
 
-    // Crea la típica etiqueta amarilla de las esquinas
+    
     private JLabel crearBadge(String texto) {
         JLabel badge = new JLabel(texto, SwingConstants.CENTER);
         badge.setOpaque(true);
@@ -176,7 +176,7 @@ public class PanelIntercambios extends JPanel {
         return badge;
     }
 
-    // Único método de carga de imagen, escalado en vertical
+    
     private void cargarImagenProducto(SecondHandProduct p, JLabel imgLabel) {
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
             String nombreArchivo = new File(p.getFotos().get(0)).getName();
@@ -188,7 +188,7 @@ public class PanelIntercambios extends JPanel {
             File f = encontrarArchivo(rutas);
             if (f != null) {
                 ImageIcon icon = new ImageIcon(f.getAbsolutePath());
-                // Escalamos a dimensiones verticales (230x270)
+                
                 Image scaled = icon.getImage().getScaledInstance(230, 270, Image.SCALE_SMOOTH);
                 imgLabel.setIcon(new ImageIcon(scaled));
             } else {
@@ -198,7 +198,7 @@ public class PanelIntercambios extends JPanel {
         }
     }
 
-    // Carga la foto de perfil del usuario creador
+    
     private void cargarImagenPerfil(JLabel imgLabel) {
         String[] rutas = {
                 "E3_Codigo/src/foto/logoPerfil.png",
@@ -225,9 +225,9 @@ public class PanelIntercambios extends JPanel {
         return null;
     }
 
-    // ==========================================
-    // BARRA DE NAVEGACIÓN
-    // ==========================================
+    
+    
+    
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
@@ -240,7 +240,7 @@ public class PanelIntercambios extends JPanel {
         btnProductos = crearBotonNav("Productos");
         btnIntercambios = crearBotonNav("Intercambios");
 
-        // EVENTOS DE NAVEGACIÓN
+        
         btnInicio.addActionListener(e -> ventana.mostrarPantalla("INICIO"));
         btnProductos.addActionListener(e -> ventana.mostrarPantalla("INICIO"));
         btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS"));
