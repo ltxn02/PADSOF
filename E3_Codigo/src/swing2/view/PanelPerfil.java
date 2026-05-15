@@ -101,18 +101,38 @@ public class PanelPerfil extends JPanel {
         fotoPerfil.setText("FOTO");
         fotoPerfil.setForeground(Color.WHITE);
 
-        // Botones de acción
-        JPanel acciones = new JPanel(new GridLayout(2, 1, 10, 10));
+        // Botones de acción (ahora con 3 filas)
+        JPanel acciones = new JPanel(new GridLayout(3, 1, 10, 10));
         acciones.setOpaque(false);
 
         JButton btnPass = crearBoton("Cambiar Contraseña");
         JButton btnFoto = crearBoton("Subir Nueva Foto");
+        JButton btnCerrarSesion = crearBoton("Cerrar Sesión");
+
+        // Ponemos el botón de cerrar sesión en rojo para que destaque
+        btnCerrarSesion.setBackground(new Color(220, 50, 50));
 
         btnPass.addActionListener(e -> JOptionPane.showInputDialog("Introduce tu nueva contraseña:"));
         btnFoto.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abriendo selector de archivos..."));
 
+        // Lógica para cerrar sesión
+        btnCerrarSesion.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Estás seguro de que deseas cerrar sesión?",
+                    "Cerrar Sesión",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                ventana.cambiarSesion(null); // Esto redirige al LOGIN automáticamente
+            }
+        });
+
         acciones.add(btnPass);
         acciones.add(btnFoto);
+        acciones.add(btnCerrarSesion);
 
         p.add(fotoPerfil);
         p.add(acciones);
@@ -165,6 +185,7 @@ public class PanelPerfil extends JPanel {
         b.setBackground(new Color(110, 30, 230));
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return b;
     }
 

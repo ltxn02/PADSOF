@@ -489,25 +489,73 @@ public class PanelPedidosEmpleado extends JPanel {
         JButton btnPerfil = new JButton();
         btnPerfil.setContentAreaFilled(false);
         btnPerfil.setBorderPainted(false);
+        btnPerfil.setFocusPainted(false);
         btnPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // FORZAMOS un tamaño mínimo para que nunca se vuelva invisible
+        btnPerfil.setPreferredSize(new Dimension(50, 50));
 
-        String[] rutasPerfil = {
-                "E3_Codigo/src/foto/logoPerfilProvisional2.png",
-                "src/foto/logoPerfilProvisional2.png",
-                "../src/foto/logoPerfilProvisional2.png"
-        };
-        File fPerfil = encontrarArchivo(rutasPerfil);
-        if (fPerfil != null) {
-            Image img = new ImageIcon(fPerfil.getAbsolutePath()).getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-            btnPerfil.setIcon(new ImageIcon(img));
-        } else {
-            btnPerfil.setText("👤 " + (user != null ? user.getUsername() : ""));
-            btnPerfil.setForeground(Color.WHITE);
+        if (user != null) {
+            btnPerfil.setToolTipText("Perfil de " + user.getUsername());
         }
 
-        btnPerfil.addActionListener(e -> ventana.cambiarSesion(null));
-        p.add(btnPerfil);
+        String[] rutasPerfil = {
+                "src/foto/logoPerfilProvisional2.png",
+                "E3_Codigo/src/foto/logoPerfilProvisional2.png",
+                "foto/logoPerfilProvisional2.png" // Por si se ejecuta desde dentro de src
+        };
 
+        File fPerfil = encontrarArchivo(rutasPerfil);
+        boolean imagenCargada = false;
+
+        if (fPerfil != null) {
+            try {
+                // ImageIO es síncrono y mucho más seguro en Linux
+                java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(fPerfil);
+                if (img != null) {
+                    Image scaled = img.getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+                    btnPerfil.setIcon(new ImageIcon(scaled));
+                    imagenCargada = true;
+                }
+            } catch (Exception ex) {
+                System.err.println("Aviso: No se pudo cargar la imagen del botón: " + ex.getMessage());
+            }
+        }
+
+        // Fallback seguro: Si no hay imagen, ponemos texto estándar (sin emojis que den problemas)
+        if (!imagenCargada) {
+            btnPerfil.setText("Perfil ▼");
+            btnPerfil.setFont(new Font("Arial", Font.BOLD, 16));
+            btnPerfil.setForeground(Color.WHITE);
+            btnPerfil.setPreferredSize(new Dimension(100, 50)); // Lo hacemos más ancho para el texto
+        }
+
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar Sesión");
+        itemCerrarSesion.setFont(new Font("Arial", Font.BOLD, 14));
+        itemCerrarSesion.setForeground(new Color(220, 50, 50));
+        itemCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        itemCerrarSesion.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Estás seguro de que deseas cerrar sesión?",
+                    "Cerrar Sesión",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                ventana.cambiarSesion(null);
+            }
+        });
+
+        popupMenu.add(itemCerrarSesion);
+
+        btnPerfil.addActionListener(e -> {
+            popupMenu.show(btnPerfil, 0, btnPerfil.getHeight());
+        });
+
+        p.add(btnPerfil);
         return p;
     }
 
