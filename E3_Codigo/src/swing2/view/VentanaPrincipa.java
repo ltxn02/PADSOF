@@ -63,6 +63,7 @@ public class VentanaPrincipa extends JFrame {
         setVisible(true);
     }
 
+
     /**
      * Cambia el usuario actual y refresca el Panel de Inicio.
      * Esto permite que el sistema de recomendaciones actúe si el usuario es un Client.
