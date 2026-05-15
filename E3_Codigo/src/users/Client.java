@@ -159,6 +159,7 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		if(order.procesarPago(cardNumber)) {
 			this.shoppingCart.clearCart();
 			String code = order.generateCode();
+			addNotification(new Notification("Su pedido con codigo " + code + " se está preparando", this));
 			return code;
 		}
 		

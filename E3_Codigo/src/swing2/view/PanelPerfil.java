@@ -1,16 +1,27 @@
 package swing2.view;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import users.Client;
 import users.RegisteredUser;
+import transactions.Order;
+import utils.Notification;
 
 public class PanelPerfil extends JPanel {
     private RegisteredUser usuario;
     private VentanaPrincipa ventana;
     private Image imagenFondo;
+    private JLabel lblFotoPerfil;
+
+    // Formateador para las fechas de las tablas
+    private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")
+            .withZone(ZoneId.systemDefault());
 
     public PanelPerfil(RegisteredUser usuario, VentanaPrincipa ventana) {
         this.usuario = usuario;
@@ -21,27 +32,20 @@ public class PanelPerfil extends JPanel {
         setOpaque(false);
         setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        // --- ENCABEZADO ---
         setupHeader();
 
-        // --- CONTENIDO PRINCIPAL ---
-        JPanel contenedorCentral = new JPanel(new GridBagLayout());
+        JPanel contenedorCentral = new JPanel(new BorderLayout(0, 25));
         contenedorCentral.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.BOTH;
 
-        // 1. Datos del Usuario
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.4; gbc.weighty = 0.5;
-        contenedorCentral.add(crearPanelDatos(), gbc);
+        // Superior: Datos y Botones
+        JPanel filaSuperior = new JPanel(new GridLayout(1, 2, 25, 0));
+        filaSuperior.setOpaque(false);
+        filaSuperior.add(crearPanelDatos());
+        filaSuperior.add(crearPanelAcciones());
 
-        // 2. Foto y Opciones de Edición
-        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 0.6;
-        contenedorCentral.add(crearPanelEdicion(), gbc);
-
-        // 3. Historial de Pedidos (Abajo ocupando todo el ancho)
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2; gbc.weighty = 0.5;
-        contenedorCentral.add(crearPanelPedidos(), gbc);
+        // Inferior: Historial y Notificaciones
+        contenedorCentral.add(filaSuperior, BorderLayout.NORTH);
+        contenedorCentral.add(crearPanelTablas(), BorderLayout.CENTER);
 
         add(contenedorCentral, BorderLayout.CENTER);
     }
@@ -50,18 +54,17 @@ public class PanelPerfil extends JPanel {
         JPanel header = new JPanel(new BorderLayout());
         header.setOpaque(false);
 
-        // Reutilizamos el GIF de flecha que ya tienes
-        JLabel lblVolver = new JLabel(new ImageIcon(getClass().getResource("/foto/flecha.gif")));
+        URL gifUrl = getClass().getResource("/foto/flecha.gif");
+        JLabel lblVolver = new JLabel(gifUrl != null ? new ImageIcon(gifUrl) : null);
+        if (lblVolver.getIcon() == null) lblVolver.setText("← Volver");
+
         lblVolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblVolver.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                ventana.mostrarPantalla("INICIO");
-            }
+            public void mouseClicked(java.awt.event.MouseEvent e) { ventana.mostrarPantalla("INICIO"); }
         });
 
         JLabel titulo = new JLabel("MI PERFIL", SwingConstants.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 32));
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 35));
         titulo.setForeground(Color.WHITE);
 
         header.add(lblVolver, BorderLayout.WEST);
@@ -72,117 +75,182 @@ public class PanelPerfil extends JPanel {
 
     private JPanel crearPanelDatos() {
         JPanel p = crearPanelEstilizado();
-        p.setLayout(new GridLayout(4, 1, 10, 10));
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 
-        JLabel lblUser = new JLabel("Usuario: " + usuario.getUsername());
-        JLabel lblEmail = new JLabel("Email: " + (usuario instanceof Client ? ((Client)usuario).getEmail() : "N/A"));
-        JLabel lblTipo = new JLabel("Rango: " + usuario.getClass().getSimpleName());
+        JLabel t = new JLabel("INFORMACIÓN PERSONAL");
+        t.setForeground(new Color(0, 178, 255));
+        t.setFont(new Font("Arial", Font.BOLD, 20));
 
-        styleLabel(lblUser, 18);
-        styleLabel(lblEmail, 16);
-        styleLabel(lblTipo, 16);
+        p.add(t); p.add(Box.createVerticalStrut(15));
+        p.add(crearDatoLbl("Usuario: ", usuario.getUsername()));
+        p.add(crearDatoLbl("Email: ", (usuario instanceof Client ? ((Client)usuario).getEmail() : "N/A")));
+        p.add(crearDatoLbl("Nombre: ", usuario.getFullname()));
+        p.add(crearDatoLbl("DNI: ", usuario.MaskedDni()));
 
-        p.add(new JLabel("INFORMACIÓN PERSONAL")).setForeground(new Color(0, 178, 255));
-        p.add(lblUser);
-        p.add(lblEmail);
-        p.add(lblTipo);
         return p;
     }
 
-    private JPanel crearPanelEdicion() {
+    private JPanel crearPanelAcciones() {
         JPanel p = crearPanelEstilizado();
-        p.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 20));
+        p.setLayout(new BorderLayout(20, 0));
 
-        // Placeholder para la foto de perfil
-        JLabel fotoPerfil = new JLabel();
-        fotoPerfil.setPreferredSize(new Dimension(120, 120));
-        fotoPerfil.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        fotoPerfil.setHorizontalAlignment(SwingConstants.CENTER);
-        fotoPerfil.setText("FOTO");
-        fotoPerfil.setForeground(Color.WHITE);
+        lblFotoPerfil = new JLabel();
+        lblFotoPerfil.setPreferredSize(new Dimension(150, 150));
+        lblFotoPerfil.setBorder(BorderFactory.createLineBorder(new Color(0, 178, 255), 2));
+        actualizarFotoUI();
 
-        // Botones de acción (ahora con 3 filas)
-        JPanel acciones = new JPanel(new GridLayout(3, 1, 10, 10));
-        acciones.setOpaque(false);
+        JPanel botones = new JPanel(new GridLayout(3, 1, 0, 10));
+        botones.setOpaque(false);
 
-        JButton btnPass = crearBoton("Cambiar Contraseña");
-        JButton btnFoto = crearBoton("Subir Nueva Foto");
-        JButton btnCerrarSesion = crearBoton("Cerrar Sesión");
+        JButton btnPass = crearBoton("Cambiar contraseña");
+        JButton btnFoto = crearBoton("Actualizar foto");
+        JButton btnLogout = crearBoton("Cerrar Sesión");
+        btnLogout.setBackground(new Color(180, 40, 40));
 
-        // Ponemos el botón de cerrar sesión en rojo para que destaque
-        btnCerrarSesion.setBackground(new Color(220, 50, 50));
+        btnPass.addActionListener(e -> gestionarCambioPassword());
+        btnFoto.addActionListener(e -> gestionarCambioFoto());
+        btnLogout.addActionListener(e -> ventana.cambiarSesion(null));
 
-        btnPass.addActionListener(e -> JOptionPane.showInputDialog("Introduce tu nueva contraseña:"));
-        btnFoto.addActionListener(e -> JOptionPane.showMessageDialog(this, "Abriendo selector de archivos..."));
+        botones.add(btnPass); botones.add(btnFoto); botones.add(btnLogout);
+        p.add(lblFotoPerfil, BorderLayout.WEST);
+        p.add(botones, BorderLayout.CENTER);
+        return p;
+    }
 
-        // Lógica para cerrar sesión
-        btnCerrarSesion.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Estás seguro de que deseas cerrar sesión?",
-                    "Cerrar Sesión",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
+    private JPanel crearPanelTablas() {
+        JPanel p = new JPanel(new GridLayout(1, 2, 25, 0));
+        p.setOpaque(false);
 
-            if (confirm == JOptionPane.YES_OPTION) {
-                ventana.cambiarSesion(null); // Esto redirige al LOGIN automáticamente
+        // TABLA PEDIDOS (Izquierda)
+        p.add(crearTablaPersonalizada("MIS PEDIDOS", obtenerMatrizPedidos(),
+                new String[]{"ID", "Fecha", "Total", "Estado"}));
+
+        // TABLA NOTIFICACIONES (Derecha)
+        p.add(crearTablaPersonalizada("NOTIFICACIONES", obtenerMatrizNotificaciones(),
+                new String[]{"Fecha", "Mensaje"}));
+
+        return p;
+    }
+
+    // --- MÉTODOS DE EXTRACCIÓN DE DATOS (Arreglan el problema de impresión) ---
+
+    private Object[][] obtenerMatrizPedidos() {
+        if (!(usuario instanceof Client)) return new Object[0][0];
+        List<Order> pedidos = ((Client)usuario).getOrders();
+        if (pedidos == null || pedidos.isEmpty()) return new Object[0][0];
+
+        Object[][] data = new Object[pedidos.size()][4];
+        for (int i = 0; i < pedidos.size(); i++) {
+            Order o = pedidos.get(i);
+            data[i][0] = "#" + o.getOrderId();
+            data[i][1] = (o.getPaidAt() != null) ? fmt.format(o.getPaidAt()) : "---";
+            data[i][2] = String.format("%.2f€", o.getPrice());
+            data[i][3] = o.getOrderStatus();
+        }
+        return data;
+    }
+
+    private Object[][] obtenerMatrizNotificaciones() {
+        List<Notification> notis = usuario.getMyNotifications();
+        if (notis == null || notis.isEmpty()) return new Object[0][0];
+
+        Object[][] data = new Object[notis.size()][2];
+        for (int i = 0; i < notis.size(); i++) {
+            Notification n = notis.get(i);
+            // n.toString() o n.notificationPreview() según prefieras
+            data[i][0] = fmt.format(java.time.Instant.now()); // O n.receivedAt si tienes el getter
+            data[i][1] = n.toString().substring(n.toString().indexOf(":") + 1).trim();
+        }
+        return data;
+    }
+
+    // --- LÓGICA DE GESTIÓN ---
+
+    private void gestionarCambioPassword() {
+        JPasswordField pf = new JPasswordField();
+        int ok = JOptionPane.showConfirmDialog(this, pf, "Nueva contraseña (8+ carac. y 1 Mayus):", JOptionPane.OK_CANCEL_OPTION);
+        if (ok == JOptionPane.OK_OPTION) {
+            String pass = new String(pf.getPassword());
+            if (pass.length() >= 8 && pass.matches(".*[A-Z].*")) {
+                usuario.Password(pass);
+                JOptionPane.showMessageDialog(this, "Contraseña actualizada.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Debe tener 8 caracteres y una mayúscula.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        });
-
-        acciones.add(btnPass);
-        acciones.add(btnFoto);
-        acciones.add(btnCerrarSesion);
-
-        p.add(fotoPerfil);
-        p.add(acciones);
-        return p;
+        }
     }
 
-    private JPanel crearPanelPedidos() {
+    private void gestionarCambioFoto() {
+        JFileChooser jfc = new JFileChooser();
+        if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            usuario.Foto(jfc.getSelectedFile().getAbsolutePath());
+            actualizarFotoUI();
+        }
+    }
+
+    private void actualizarFotoUI() {
+        if (usuario.getFoto() != null && !usuario.getFoto().isEmpty()) {
+            ImageIcon icon = new ImageIcon(usuario.getFoto());
+            Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+            lblFotoPerfil.setIcon(new ImageIcon(img));
+            lblFotoPerfil.setText("");
+        } else {
+            lblFotoPerfil.setText("SIN FOTO");
+            lblFotoPerfil.setHorizontalAlignment(SwingConstants.CENTER);
+            lblFotoPerfil.setForeground(Color.GRAY);
+        }
+    }
+
+    // --- COMPONENTES ESTILIZADOS ---
+
+    private JPanel crearTablaPersonalizada(String titulo, Object[][] datos, String[] cabecera) {
         JPanel p = crearPanelEstilizado();
-        p.setLayout(new BorderLayout());
+        p.setLayout(new BorderLayout(0, 10));
 
-        JLabel titulo = new JLabel("MIS PEDIDOS RECIENTES");
-        styleLabel(titulo, 18);
-        titulo.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
+        JLabel lbl = new JLabel(titulo);
+        lbl.setForeground(new Color(0, 178, 255));
+        lbl.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // Lista de ejemplo (Aquí conectarías con tu lógica de facturas/pedidos)
-        String[] columnas = {"ID Pedido", "Fecha", "Total", "Estado"};
-        Object[][] datos = {
-                {"#001", "12/05/2026", "45.99€", "Entregado"},
-                {"#002", "13/05/2026", "120.00€", "En camino"}
+        DefaultTableModel model = new DefaultTableModel(datos, cabecera) {
+            @Override public boolean isCellEditable(int r, int c) { return false; }
         };
 
-        JTable tabla = new JTable(datos, columnas);
-        tabla.setBackground(new Color(30, 30, 60));
-        tabla.setForeground(Color.WHITE);
-        tabla.setFillsViewportHeight(true);
+        JTable t = new JTable(model);
+        t.setBackground(new Color(20, 20, 50));
+        t.setForeground(Color.WHITE);
+        t.setRowHeight(30);
+        t.getTableHeader().setBackground(new Color(40, 40, 80));
+        t.getTableHeader().setForeground(Color.WHITE);
 
-        JScrollPane scroll = new JScrollPane(tabla);
-        scroll.getViewport().setBackground(new Color(26, 26, 75));
+        JScrollPane sp = new JScrollPane(t);
+        sp.getViewport().setBackground(new Color(20, 20, 50));
+        sp.setBorder(null);
 
-        p.add(titulo, BorderLayout.NORTH);
-        p.add(scroll, BorderLayout.CENTER);
+        p.add(lbl, BorderLayout.NORTH);
+        p.add(sp, BorderLayout.CENTER);
         return p;
     }
 
-    // --- MÉTODOS AUXILIARES DE ESTILO ---
     private JPanel crearPanelEstilizado() {
         JPanel p = new JPanel();
-        p.setBackground(new Color(15, 45, 105, 200));
-        p.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        p.setBackground(new Color(10, 30, 80, 230));
+        p.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(50, 50, 150), 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
         return p;
     }
 
-    private void styleLabel(JLabel l, int size) {
-        l.setFont(new Font("Arial", Font.BOLD, size));
-        l.setForeground(Color.WHITE);
+    private JLabel crearDatoLbl(String t1, String t2) {
+        JLabel l = new JLabel("<html><font color='#00B2FF'><b>" + t1 + "</b></font> <font color='white'>" + (t2 != null ? t2 : "---") + "</font></html>");
+        l.setFont(new Font("Arial", Font.PLAIN, 16));
+        l.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        return l;
     }
 
     private JButton crearBoton(String t) {
         JButton b = new JButton(t);
-        b.setBackground(new Color(110, 30, 230));
+        b.setBackground(new Color(80, 40, 200));
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
         b.setCursor(new Cursor(Cursor.HAND_CURSOR));

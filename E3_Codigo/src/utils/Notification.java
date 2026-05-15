@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import transactions.*;
 import catalog.*;
+import users.Client;
 import users.RegisteredUser;
 
 /**
@@ -23,6 +24,7 @@ public class Notification extends BaseElement implements java.io.Serializable{
     private Instant receivedAt;
     private boolean read;
     private ArrayList<RegisteredUser> receivedUsers;
+    private Client client;
 
     /**
      * Constructor para crear una nueva notificación.
@@ -36,6 +38,16 @@ public class Notification extends BaseElement implements java.io.Serializable{
         this.receivedAt = Instant.now();
         this.read = false;
         this.receivedUsers = receivedUsers;
+
+        // Asignamos el ID actual y sumamos 1 para la siguiente notificación generada
+        this.notificationId = lastNotificationId++;
+    }
+    public Notification(String message, Client c) {
+        this.message = message;
+        this.receivedAt = Instant.now();
+        this.read = false;
+        this.receivedUsers = null;
+        this.client = c;
 
         // Asignamos el ID actual y sumamos 1 para la siguiente notificación generada
         this.notificationId = lastNotificationId++;

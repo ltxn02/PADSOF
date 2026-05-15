@@ -73,6 +73,9 @@ public class Order implements java.io.Serializable{
             // Si llega aquí, el pago ha funcionado
             this.orderStatus = OrderStatus.EN_PREPARACION;
             this.paidAt = Instant.now();
+            String msg = "¡Pago aceptado! Tu pedido #" + this.orderId + " está en preparación. Código: " + this.pickupCode;
+            Notification n = new Notification(msg, new java.util.ArrayList<>(java.util.List.of(this.client)));
+            this.client.getMyNotifications().add(n);
             System.out.println("¡Pago aceptado! El pedido pasa a estar en preparación.");
             return true;
 

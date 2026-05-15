@@ -3,9 +3,7 @@ package swing2.view;
 import java.awt.CardLayout;
 import java.awt.Component;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import logic.Application;
 import swing2.view.empleado.PanelProductosEmpleado;
@@ -18,41 +16,41 @@ public class VentanaPrincipa extends JFrame {
     private CardLayout cardLayout = new CardLayout();
     private JPanel contenedor = new JPanel(cardLayout);
 
-    // El "Estado" de la aplicación: quién está usando el programa
+
     private RegisteredUser usuarioLogueado = null;
 
-    // Referencias a paneles
+
     private PanelInicioo panelCliente = null;
     private PanelDashboard panelGestor = null;
     private PanelCarrito panelCarrito = null;
 
     public VentanaPrincipa() {
-        // Carga inicial de datos desde el archivo binario
+
         Application.cargarDatos("rongero_data.dat");
 
         setTitle("RONGERO - Tienda Frikis");
         setSize(1400, 750);
-        // Evitamos que se cierre de golpe
+
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        // Le añadimos un "escuchador" para detectar cuándo el usuario le da a la 'X'
+
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent e) {
                 System.out.println("[Sistema] Guardando todos los datos en rongero_data.dat antes de salir...");
                 Application.guardarDatos("rongero_data.dat");
                 System.out.println("[Sistema] ¡Datos guardados con éxito! Cerrando aplicación.");
-                System.exit(0); // Ahora sí, cerramos el programa
+                System.exit(0);
             }
         });
         setLocationRelativeTo(null);
 
-        // Paneles principales
+
         panelCliente = new PanelInicioo(this, usuarioLogueado);
         panelGestor = new PanelDashboard(this, null);
 
-        // Al inicio, cargamos las pantallas base.
-        // PanelInicioo recibe 'null' porque empezamos como Invitados (Guest).
+
+
         contenedor.add(panelCliente, "INICIO");
         contenedor.add(new PanelIntercambios(this, usuarioLogueado), "INTERCAMBIOS");
         contenedor.add(new PanelLoginn(this), "LOGIN");
@@ -62,7 +60,6 @@ public class VentanaPrincipa extends JFrame {
         add(contenedor);
         setVisible(true);
     }
-
 
     /**
      * Cambia el usuario actual y refresca el Panel de Inicio.
@@ -74,7 +71,7 @@ public class VentanaPrincipa extends JFrame {
         this.usuarioLogueado = nuevoUsuario;
 
         if (nuevoUsuario == null) {
-            mostrarPantalla("LOGIN");
+            mostrarPantalla("INICIO");
         } else if (nuevoUsuario instanceof Manager) {
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
@@ -84,7 +81,7 @@ public class VentanaPrincipa extends JFrame {
                 }
             }
 
-            // Crear nuevo panel con el manager
+
             panelGestor = new PanelDashboard(this, (Manager)nuevoUsuario);
             contenedor.add(panelGestor, "GESTOR");
 
@@ -94,12 +91,12 @@ public class VentanaPrincipa extends JFrame {
             mostrarPantalla("GESTOR");
 
         } else if (nuevoUsuario instanceof Employee) {
-            // ========================================================
-            // USUARIO ES EMPLEADO
-            // ========================================================
+
+
+
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
-                // AÑADIDO: También limpiamos el panel de pedidos anterior
+
                 if (c instanceof PanelProductosEmpleado ||
                         c instanceof PanelIntercambiosEmpleado ||
                         c instanceof PanelPedidosEmpleado) {
@@ -107,7 +104,7 @@ public class VentanaPrincipa extends JFrame {
                 }
             }
 
-            // Creamos y añadimos los TRES paneles del empleado
+
             Employee emp = (Employee) nuevoUsuario;
             contenedor.add(new PanelProductosEmpleado(this, emp), "PRODUCTOS_EMPLEADO");
             contenedor.add(new PanelIntercambiosEmpleado(this, emp), "INTERCAMBIOS_EMPLEADO");
@@ -116,11 +113,11 @@ public class VentanaPrincipa extends JFrame {
             contenedor.revalidate();
             contenedor.repaint();
 
-            mostrarPantalla("PRODUCTOS_EMPLEADO"); // Empezamos en productos
+            mostrarPantalla("PRODUCTOS_EMPLEADO");
 
         } else if (nuevoUsuario instanceof Client) {
-            // ===== ES CLIENTE =====
-            // Remover los paneles INICIOO e INTERCAMBIOS anteriores
+
+
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
                 if (c instanceof PanelInicioo || c instanceof PanelIntercambios) {
@@ -128,16 +125,16 @@ public class VentanaPrincipa extends JFrame {
                 }
             }
 
-            // Crear NUEVOS paneles con el cliente actualizado
+
             panelCliente = new PanelInicioo(this, nuevoUsuario);
             contenedor.add(panelCliente, "INICIO");
             contenedor.add(new PanelIntercambios(this, nuevoUsuario), "INTERCAMBIOS");
 
-            // Actualizar UI
+
             contenedor.revalidate();
             contenedor.repaint();
 
-            // Mostrar panel de cliente
+
             mostrarPantalla("INICIO");
         }
     }
@@ -147,7 +144,7 @@ public class VentanaPrincipa extends JFrame {
      */
     public void mostrarPantalla(String nombre) {
         if (nombre.equals("CARRITO")) {
-            // 1. Eliminar el panel de carrito anterior si existe
+
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
                 if (c instanceof PanelCarrito) {
@@ -156,19 +153,51 @@ public class VentanaPrincipa extends JFrame {
                 }
             }
 
-            // 2. Comprobar que el usuario sea Cliente y tenga carrito
+
             if (usuarioLogueado instanceof Client) {
                 Client cliente = (Client) usuarioLogueado;
-                // Creamos el panel pasando el ShoppingCart del objeto Client
+
                 panelCarrito = new PanelCarrito(cliente.getShoppingCart(), this);
                 contenedor.add(panelCarrito, "CARRITO");
             } else {
-                // Si por error alguien intenta entrar sin ser cliente
-                cardLayout.show(contenedor, "LOGIN");
+                JOptionPane.showMessageDialog(this,
+                        "¡Atención! Debes iniciar sesión para poder comprar productos.",
+                        "Sesión no iniciada",
+                        JOptionPane.WARNING_MESSAGE);
+
                 return;
             }
         } else if (nombre.equals("PERFIL")) {
-            // Limpiamos el anterior para que los datos se refresquen
+            if (usuarioLogueado == null) {
+
+                Object[] opciones = {"Iniciar Sesión", "Registrarse", "Cancelar"};
+
+
+                int seleccion = JOptionPane.showOptionDialog(
+                        this,
+                        "¡Te damos la bienvenida! \nPara continuar, necesitas una cuenta.",
+                        "Sesión no iniciada",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null,
+                        opciones,
+                        opciones[0]
+                );
+
+
+                switch (seleccion) {
+                    case 0:
+                        mostrarPantalla("LOGIN");
+                        break;
+                    case 1:
+                        mostrarPantalla("REGISTRO");
+                        break;
+                    default:
+
+                        break;
+                }
+            }
+
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
                 if (c instanceof PanelPerfil) {
@@ -176,12 +205,12 @@ public class VentanaPrincipa extends JFrame {
                     break;
                 }
             }
-            // Añadimos el nuevo panel de perfil
+
             PanelPerfil pPerfil = new PanelPerfil(usuarioLogueado, this);
             contenedor.add(pPerfil, "PERFIL");
         }
 
-        // Refrescar y mostrar
+
         contenedor.revalidate();
         contenedor.repaint();
         cardLayout.show(contenedor, nombre);
@@ -193,7 +222,7 @@ public class VentanaPrincipa extends JFrame {
 
     public static void main(String[] args) {
         System.setProperty("sun.java2d.uiScale", "1.0");
-        // Ejecución segura en el hilo de eventos de Swing
+
         SwingUtilities.invokeLater(() -> new VentanaPrincipa());
     }
 }

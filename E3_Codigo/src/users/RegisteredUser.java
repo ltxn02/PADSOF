@@ -203,7 +203,21 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 	public String getBirthdate() {
 		return this.birthdate;
 	}
-	
+
+	public void Password(String password) {
+		this.password = password;
+	}
+
+	public String MaskedDni() {
+		if (dni == null || dni.length() < 4) return "****";
+		String visible = dni.substring(dni.length() - 4);
+		return "****" + visible;
+	}
+
+	public void Foto(String foto) {
+		this.foto = foto;
+	}
+
 	public int getUserId() {
 		return this.userId;
 	}
@@ -224,6 +238,8 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 	 *           <li>Tabulación para mejor legibilidad</li>
 	 *         </ul>
 	 */
+
+
 	public String view_notifications() {
 		String res = "My inbox (" + countNewNotifications() + " new):\n";
 		for(Notification n: this.myNotifications) {

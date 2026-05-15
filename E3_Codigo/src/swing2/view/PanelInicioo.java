@@ -125,7 +125,7 @@ public class PanelInicioo extends JPanel {
     private void abrirSelectorCantidad(NewProduct p) {
         
         
-        if (usuarioActual == null) {
+        if (ventana.getUsuarioLogueado() == null) {
             JOptionPane.showMessageDialog(this,
                     "¡Atención! Debes iniciar sesión para poder comprar productos.",
                     "Sesión no iniciada",
@@ -491,11 +491,7 @@ public class PanelInicioo extends JPanel {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         p.setOpaque(false);
 
-        if (user == null) {
-            JButton b = new JButton("Iniciar Sesión");
-            b.addActionListener(e -> ventana.mostrarPantalla("LOGIN"));
-            p.add(b);
-        } else {
+
             
             
             
@@ -572,7 +568,7 @@ public class PanelInicioo extends JPanel {
             
             p.add(btnPerfil);
             p.add(btnCarrito);
-        }
+
         return p;
     }
     public void mostrarDetalleProducto(NewProduct p) {
