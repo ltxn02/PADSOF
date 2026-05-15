@@ -7,7 +7,7 @@ LIB = lib/*
 
 # Tus dos puntos de entrada (Consola y GUI)
 MAIN_CONSOLA = ui.main
-MAIN_GUI = gui.VentanaPrincipal
+MAIN_GUI = swing2.view.VentanaPrincipa
 
 # Esta línea mágica le dice a Make que estos nombres son COMANDOS, no carpetas
 .PHONY: compile run run-gui test doc clean

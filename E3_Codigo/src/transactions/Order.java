@@ -129,6 +129,14 @@ public class Order implements java.io.Serializable{
         return paidAt;
     }
 
+    public int getOrderId() {
+        return this.orderId;
+    }
+
+    public Client getClient() {
+        return this.client;
+    }
+
     public String orderPreview() {
         StringBuilder sb = new StringBuilder();
 

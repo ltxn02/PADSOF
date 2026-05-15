@@ -1000,6 +1000,8 @@ public class PanelIntercambiosEmpleado extends JPanel {
             ventana.mostrarPantalla("INTERCAMBIOS_EMPLEADO");
         });
 
+        btnPedidos.addActionListener(e -> ventana.mostrarPantalla("PEDIDOS_EMPLEADO"));
+
         nav.add(crearPanelLogo());
         nav.add(btnProductos);
         nav.add(btnIntercambios);

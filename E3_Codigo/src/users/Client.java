@@ -577,13 +577,17 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 		return this.myProducts;
 	}
 
-    
-    
-    
+	/**
+	 * Obtiene la lista de todos los pedidos realizados por el cliente.
+	 *
+	 * @return Lista de {@link Order} del cliente.
+	 */
+	public List<Order> getOrders() {
+		return this.ordersMade;
+	}
 	// ═══════════════════════════════════════════════════════════
     // HELPERS / MÉTODOS AUXILIARES PRIVADOS
     // ═══════════════════════════════════════════════════════════
-
 	
 	/**
 	 * Método auxiliar privado que genera una vista previa de una lista de elementos.

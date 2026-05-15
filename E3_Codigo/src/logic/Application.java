@@ -186,6 +186,40 @@ public class Application {
 
             System.out.println("[Sistema] Intercambios de prueba inicializados.");
 
+            // =========================================================
+            // 4. INICIALIZACIÓN DE PEDIDOS POR DEFECTO (PRUEBAS)
+            // =========================================================
+            try {
+                // Usamos a cliente1 (Gon67) que ya está creado arriba
+                // Metemos productos en su carrito
+                cliente1.addToCart(catalog.get(0), 1); // 1x One Piece Vol 1
+                cliente1.addToCart(catalog.get(10), 1); // 1x Figura Gon
+
+                // Creamos el pedido a mano copiando los items del carrito para no usar la pasarela del profesor
+                Order pedido1 = new Order(cliente1, new ArrayList<>(cliente1.getShoppingCart().getCartItems()), cliente1.getShoppingCart().getPrice());
+                pedido1.setOrderStatus(OrderStatus.EN_PREPARACION); // Le forzamos el estado
+
+                // Lo guardamos en el historial del cliente y vaciamos el carrito
+                cliente1.getOrders().add(pedido1);
+                cliente1.getOrderHistoric().addOrder(pedido1);
+                cliente1.getShoppingCart().clearCart();
+
+                // Usamos a cliente2 (asus09) para otro pedido
+                cliente2.addToCart(catalog.get(20), 1); // 1x Juego Catan
+
+                Order pedido2 = new Order(cliente2, new ArrayList<>(cliente2.getShoppingCart().getCartItems()), cliente2.getShoppingCart().getPrice());
+                pedido2.setOrderStatus(OrderStatus.SIN_PAGAR);
+
+                cliente2.getOrders().add(pedido2);
+                cliente2.getOrderHistoric().addOrder(pedido2);
+                cliente2.getShoppingCart().clearCart();
+
+                System.out.println("[Sistema] Pedidos de prueba inicializados.");
+
+            } catch (Exception e) {
+                System.err.println("Error al crear pedidos por defecto: " + e.getMessage());
+            }
+
         } catch (Exception e) {
             System.err.println("Error al crear intercambios por defecto: " + e.getMessage());
         }

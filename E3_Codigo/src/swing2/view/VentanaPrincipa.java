@@ -9,6 +9,8 @@ import javax.swing.SwingUtilities;
 
 import logic.Application;
 import swing2.view.empleado.PanelProductosEmpleado;
+import swing2.view.empleado.PanelIntercambiosEmpleado;
+import swing2.view.empleado.PanelPedidosEmpleado;
 import swing2.view.gestor.PanelDashboard;
 import users.*;
 
@@ -18,24 +20,37 @@ public class VentanaPrincipa extends JFrame {
 
     // El "Estado" de la aplicación: quién está usando el programa
     private RegisteredUser usuarioLogueado = null;
-    
+
     // Referencias a paneles
     private PanelInicioo panelCliente = null;
     private PanelDashboard panelGestor = null;
     private PanelCarrito panelCarrito = null;
+
     public VentanaPrincipa() {
         // Carga inicial de datos desde el archivo binario
         Application.cargarDatos("rongero_data.dat");
 
         setTitle("RONGERO - Tienda Frikis");
         setSize(1400, 750);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Evitamos que se cierre de golpe
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        // Le añadimos un "escuchador" para detectar cuándo el usuario le da a la 'X'
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.out.println("[Sistema] Guardando todos los datos en rongero_data.dat antes de salir...");
+                Application.guardarDatos("rongero_data.dat");
+                System.out.println("[Sistema] ¡Datos guardados con éxito! Cerrando aplicación.");
+                System.exit(0); // Ahora sí, cerramos el programa
+            }
+        });
         setLocationRelativeTo(null);
-        
+
         // Paneles principales
         panelCliente = new PanelInicioo(this, usuarioLogueado);
         panelGestor = new PanelDashboard(this, null);
-        
+
         // Al inicio, cargamos las pantallas base.
         // PanelInicioo recibe 'null' porque empezamos como Invitados (Guest).
         contenedor.add(panelCliente, "INICIO");
@@ -43,7 +58,7 @@ public class VentanaPrincipa extends JFrame {
         contenedor.add(new PanelLoginn(this), "LOGIN");
         contenedor.add(new PanelRegistro(this), "REGISTRO");
         contenedor.add(panelGestor, "GESTOR");
-        
+
         add(contenedor);
         setVisible(true);
     }
@@ -51,49 +66,51 @@ public class VentanaPrincipa extends JFrame {
     /**
      * Cambia el usuario actual y refresca el Panel de Inicio.
      * Esto permite que el sistema de recomendaciones actúe si el usuario es un Client.
-     * 
-     * 
-     * !!!! MODIFICADA PARA QUE RECONOZCA EL TIPO DE USUARIO CON EL QUE SE ACCEDE (Client, Employee, Manager)
+     * * * !!!! MODIFICADA PARA QUE RECONOZCA EL TIPO DE USUARIO CON EL QUE SE ACCEDE (Client, Employee, Manager)
      * ~ Lidia, 20:10, 05/05/2026
      */
     public void cambiarSesion(RegisteredUser nuevoUsuario) {
         this.usuarioLogueado = nuevoUsuario;
-        
+
         if (nuevoUsuario == null) {
-        	mostrarPantalla("LOGIN");
+            mostrarPantalla("LOGIN");
         } else if (nuevoUsuario instanceof Manager) {
-        	Component[] componentes = contenedor.getComponents();
-        	for (Component c : componentes) {
-        		if (c instanceof PanelDashboard) {
-        			contenedor.remove(c);
-        			break;
-        		}
-        	}
-        	
-        	// Crear nuevo panel con el manager
-        	panelGestor = new PanelDashboard(this, (Manager)nuevoUsuario);
-        	contenedor.add(panelGestor, "GESTOR");
-        	
-        	contenedor.revalidate();
-        	contenedor.repaint();
-        	
-        	mostrarPantalla("GESTOR");
+            Component[] componentes = contenedor.getComponents();
+            for (Component c : componentes) {
+                if (c instanceof PanelDashboard) {
+                    contenedor.remove(c);
+                    break;
+                }
+            }
+
+            // Crear nuevo panel con el manager
+            panelGestor = new PanelDashboard(this, (Manager)nuevoUsuario);
+            contenedor.add(panelGestor, "GESTOR");
+
+            contenedor.revalidate();
+            contenedor.repaint();
+
+            mostrarPantalla("GESTOR");
+
         } else if (nuevoUsuario instanceof Employee) {
             // ========================================================
             // USUARIO ES EMPLEADO
             // ========================================================
             Component[] componentes = contenedor.getComponents();
             for (Component c : componentes) {
-                if (c instanceof swing2.view.empleado.PanelProductosEmpleado ||
-                        c instanceof swing2.view.empleado.PanelIntercambiosEmpleado) {
+                // AÑADIDO: También limpiamos el panel de pedidos anterior
+                if (c instanceof PanelProductosEmpleado ||
+                        c instanceof PanelIntercambiosEmpleado ||
+                        c instanceof PanelPedidosEmpleado) {
                     contenedor.remove(c);
                 }
             }
 
-            // Creamos y añadimos los paneles del empleado
+            // Creamos y añadimos los TRES paneles del empleado
             Employee emp = (Employee) nuevoUsuario;
-            contenedor.add(new swing2.view.empleado.PanelProductosEmpleado(this, emp), "PRODUCTOS_EMPLEADO");
-            contenedor.add(new swing2.view.empleado.PanelIntercambiosEmpleado(this, emp), "INTERCAMBIOS_EMPLEADO");
+            contenedor.add(new PanelProductosEmpleado(this, emp), "PRODUCTOS_EMPLEADO");
+            contenedor.add(new PanelIntercambiosEmpleado(this, emp), "INTERCAMBIOS_EMPLEADO");
+            contenedor.add(new PanelPedidosEmpleado(this, emp), "PEDIDOS_EMPLEADO");
 
             contenedor.revalidate();
             contenedor.repaint();
@@ -122,7 +139,6 @@ public class VentanaPrincipa extends JFrame {
             // Mostrar panel de cliente
             mostrarPantalla("INICIO");
         }
-        
     }
 
     /**

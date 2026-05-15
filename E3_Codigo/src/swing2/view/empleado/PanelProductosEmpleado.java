@@ -1184,6 +1184,7 @@ public class PanelProductosEmpleado extends JPanel {
         });
 
         btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS_EMPLEADO"));
+        btnPedidos.addActionListener(e -> ventana.mostrarPantalla("PEDIDOS_EMPLEADO"));
 
         nav.add(crearPanelLogo());
         nav.add(btnProductos);
