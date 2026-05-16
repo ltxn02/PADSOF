@@ -599,7 +599,7 @@ public class PanelInicioo extends JPanel {
         
         
 
-        JButton btnVolver = new JButton("← Volver al Catálogo");
+        JButton btnVolver = new JButton("Volver al Catálogo");
         btnVolver.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         btnVolver.addActionListener(e -> {

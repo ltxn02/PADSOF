@@ -17,7 +17,7 @@ public class PanelRegistro extends JPanel {
         g.insets = new Insets(8, 8, 8, 8);
         g.fill = GridBagConstraints.HORIZONTAL;
 
-        // Título
+        
         JLabel titulo = new JLabel("CREAR NUEVA CUENTA", SwingConstants.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setForeground(Color.WHITE);
@@ -27,7 +27,7 @@ public class PanelRegistro extends JPanel {
         g.gridwidth = 1;
         int r = 1;
 
-        // Filas alineadas (DNI y Correo ahora estarán en línea perfecta)
+        
         agregarFilaFormulario("Nombre Completo:", txtNombre = new JTextField(15), null, g, r++);
         agregarFilaFormulario("F. Nacimiento (DD/MM/AAAA):", txtFecha = new JTextField(15), null, g, r++);
         agregarFilaFormulario("DNI (8 nms + letra):", txtDni = new JTextField(15), null, g, r++);
@@ -35,17 +35,17 @@ public class PanelRegistro extends JPanel {
         agregarFilaFormulario("Correo Electrónico:", txtEmail = new JTextField(15), null, g, r++);
         agregarFilaFormulario("Teléfono:", txtTlf = new JTextField(15), null, g, r++);
 
-        // Contraseña 1 con botón
+        
         txtPass = new JPasswordField(15);
         JToggleButton btnVer1 = crearBotonOjo(txtPass);
         agregarFilaFormulario("Contraseña:", txtPass, btnVer1, g, r++);
 
-        // Contraseña 2 con botón
+        
         txtConfirm = new JPasswordField(15);
         JToggleButton btnVer2 = crearBotonOjo(txtConfirm);
         agregarFilaFormulario("Confirmar Pass:", txtConfirm, btnVer2, g, r++);
 
-        // Botón Registrar
+        
         JButton btnFinalizar = new JButton("FINALIZAR REGISTRO");
         btnFinalizar.setBackground(new Color(46, 204, 113));
         btnFinalizar.setForeground(Color.WHITE);
@@ -64,24 +64,24 @@ public class PanelRegistro extends JPanel {
     private void agregarFilaFormulario(String etiqueta, JTextField campo, JToggleButton boton, GridBagConstraints g, int fila) {
         g.gridy = fila;
 
-        // Columna 0: Etiqueta alineada a la derecha
+        
         g.gridx = 0;
         g.anchor = GridBagConstraints.EAST;
         JLabel lbl = new JLabel(etiqueta);
         lbl.setForeground(Color.WHITE);
         this.add(lbl, g);
 
-        // Columna 1: Campo de texto
+        
         g.gridx = 1;
         g.anchor = GridBagConstraints.CENTER;
         this.add(campo, g);
 
-        // Columna 2: Botón de ojo o espacio vacío para mantener alineación
+        
         g.gridx = 2;
         if (boton != null) {
             this.add(boton, g);
         } else {
-            // Añadimos un espacio invisible del mismo tamaño que el botón
+            
             this.add(Box.createHorizontalStrut(45), g);
         }
     }

@@ -62,6 +62,14 @@ public class Notification extends BaseElement implements java.io.Serializable{
         return this.read;
     }
 
+    public Instant getReceivedAt() {
+        return receivedAt;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     /**
      * Cambia el estado de lectura de la notificación.
      *

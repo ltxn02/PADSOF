@@ -41,6 +41,7 @@ public class Order implements java.io.Serializable{
         Order.lastOrderId++;
     }
 
+
     public String generateCode() {
         Random rand = new Random();
         // Genera un número del 0 al 99999
@@ -75,6 +76,8 @@ public class Order implements java.io.Serializable{
             String msg = "¡Pago aceptado! Tu pedido #" + this.orderId + " está en preparación. Código: " + this.pickupCode;
             Notification n = new Notification(msg, new java.util.ArrayList<>(java.util.List.of(this.client)));
             this.client.getMyNotifications().add(n);
+            this.client.getOrders().add(this);
+            this.orderedAt = Instant.now();
             System.out.println("¡Pago aceptado! El pedido pasa a estar en preparación.");
             return true;
 

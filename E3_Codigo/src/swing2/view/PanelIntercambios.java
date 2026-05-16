@@ -35,9 +35,9 @@ public class PanelIntercambios extends JPanel {
     private final Color COLOR_FONDO_NAV = new Color(26, 26, 75, 200);
     private final Color COLOR_ACTIVO = new Color(0, 178, 255);
 
-    // =========================================================================
-    // CONSTRUCTOR
-    // =========================================================================
+    
+    
+    
     public PanelIntercambios(VentanaPrincipa ventana, RegisteredUser usuarioActual) {
         this.ventana = ventana;
         this.usuarioActual = usuarioActual;
@@ -67,9 +67,9 @@ public class PanelIntercambios extends JPanel {
         cargarIntercambios();
     }
 
-    // =========================================================================
-    // RESOLUCIÓN DE ARCHIVOS
-    // =========================================================================
+    
+    
+    
     private File encontrarArchivo(String nombre, String subcarpeta) {
         String[] rutas = {
                 "E3_Codigo/src/" + subcarpeta + "/" + nombre,
@@ -84,9 +84,9 @@ public class PanelIntercambios extends JPanel {
         return null;
     }
 
-    // =========================================================================
-    // NAVEGACIÓN - CARGAR VISTAS
-    // =========================================================================
+    
+    
+    
     public void cargarIntercambios() {
         actualizarVistaPrincipal("EXPLORAR");
         contenedorCentral.removeAll();
@@ -180,9 +180,9 @@ public class PanelIntercambios extends JPanel {
         finalizarCarga();
     }
 
-    // =========================================================================
-    // ACTUALIZAR INTERFAZ
-    // =========================================================================
+    
+    
+    
     private void actualizarVistaPrincipal(String titulo) {
         panelCuerpo.removeAll();
         panelCuerpo.add(buildSubMenu(titulo), BorderLayout.NORTH);
@@ -203,9 +203,9 @@ public class PanelIntercambios extends JPanel {
         panelCuerpo.repaint();
     }
 
-    // =========================================================================
-    // SUBMENÚ
-    // =========================================================================
+    
+    
+    
     private JPanel buildSubMenu(String activo) {
         JPanel menu = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         menu.setOpaque(false);
@@ -229,9 +229,9 @@ public class PanelIntercambios extends JPanel {
         return menu;
     }
 
-    // =========================================================================
-    // TARJETAS
-    // =========================================================================
+    
+    
+    
     private JPanel crearTarjeta(SecondHandProduct p, boolean clicable) {
         JPanel card = new JPanel(new BorderLayout()) {
             @Override protected void paintComponent(Graphics g) {
@@ -255,7 +255,7 @@ public class PanelIntercambios extends JPanel {
             });
         }
 
-        // Imagen
+        
         JLabel imgLabel = new JLabel("", SwingConstants.CENTER);
         imgLabel.setPreferredSize(new Dimension(230, 250));
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
@@ -267,7 +267,7 @@ public class PanelIntercambios extends JPanel {
             }
         }
 
-        // Info
+        
         JPanel footer = new JPanel(new GridLayout(2, 1));
         footer.setOpaque(false);
         JLabel name = new JLabel(p.getName());
@@ -393,9 +393,9 @@ public class PanelIntercambios extends JPanel {
         return card;
     }
 
-    // =========================================================================
-    // VISTAS DETALLADAS
-    // =========================================================================
+    
+    
+    
     public void mostrarDetalleIntercambio(SecondHandProduct p) {
         panelCuerpo.removeAll();
 
@@ -417,7 +417,7 @@ public class PanelIntercambios extends JPanel {
         detailCard.setOpaque(false);
         detailCard.setBorder(new EmptyBorder(40, 50, 40, 50));
 
-        // Panel info (izquierda)
+        
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setOpaque(false);
@@ -478,7 +478,7 @@ public class PanelIntercambios extends JPanel {
         infoPanel.add(Box.createVerticalGlue());
         infoPanel.add(btnAccion);
 
-        // Panel imagen (derecha)
+        
         JLabel lblFoto = new JLabel("", SwingConstants.CENTER);
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
             File f = encontrarArchivo(new File(p.getFotos().get(0)).getName(), "imgProductos");
@@ -518,7 +518,7 @@ public class PanelIntercambios extends JPanel {
         detailCard.setOpaque(false);
         detailCard.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        // Cabecera
+        
         JPanel header = new JPanel(new GridLayout(2, 1));
         header.setOpaque(false);
 
@@ -526,16 +526,16 @@ public class PanelIntercambios extends JPanel {
         lblTitulo.setFont(new Font("Georgia", Font.BOLD, 26));
         lblTitulo.setForeground(ACCENT_CYAN);
 
-        JLabel lblUsuarios = new JLabel("<html>Solicitante: <b style='color:white'>"
-                + offer.getOfferor().getUsername() + "</b> | Receptor: <b style='color:white'>"
-                + offer.getReceptor().getUsername() + "</b></html>");
+        JLabel lblUsuarios = new JLabel("Solicitante:"
+                + offer.getOfferor().getUsername() + "| Receptor: "
+                + offer.getReceptor().getUsername() + " ");
         lblUsuarios.setForeground(TEXT_DIM);
 
         header.add(lblTitulo);
         header.add(lblUsuarios);
         detailCard.add(header, BorderLayout.NORTH);
 
-        // Cuerpo: Comparativa
+        
         JPanel body = new JPanel(new GridLayout(1, 2, 40, 0));
         body.setOpaque(false);
 
@@ -560,8 +560,8 @@ public class PanelIntercambios extends JPanel {
         body.add(pnlPedido);
         detailCard.add(body, BorderLayout.CENTER);
 
-        // Pie: Botón volver
-        JButton btnVolver = new JButton("← Volver a la lista");
+        
+        JButton btnVolver = new JButton(" Volver a la lista");
         btnVolver.setForeground(Color.WHITE);
         btnVolver.setContentAreaFilled(false);
         btnVolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -599,9 +599,9 @@ public class PanelIntercambios extends JPanel {
         return mini;
     }
 
-    // =========================================================================
-    // FORMULARIO DE SUBIDA
-    // =========================================================================
+    
+    
+    
     public void mostrarFormularioSubirProducto() {
         panelCuerpo.removeAll();
         panelCuerpo.add(buildSubMenu("MIS PRODUCTOS"), BorderLayout.NORTH);
@@ -701,9 +701,9 @@ public class PanelIntercambios extends JPanel {
         finalizarCarga();
     }
 
-    // =========================================================================
-    // GESTIÓN DE INTERCAMBIO
-    // =========================================================================
+    
+    
+    
     private void gestionarSolicitudIntercambio(SecondHandProduct deseado) {
         if (usuarioActual == null) {
             JOptionPane.showMessageDialog(this,
@@ -778,9 +778,9 @@ public class PanelIntercambios extends JPanel {
         }
     }
 
-    // =========================================================================
-    // BARRA SUPERIOR
-    // =========================================================================
+    
+    
+    
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
@@ -794,7 +794,7 @@ public class PanelIntercambios extends JPanel {
         btnIntercambios = crearBotonNav("Intercambios");
 
         btnInicio.addActionListener(e -> ventana.mostrarPantalla("INICIO"));
-        btnProductos.addActionListener(e -> ventana.mostrarPantalla("PRODUCTOS"));
+        btnProductos.addActionListener(e -> ventana.mostrarPantalla("CATALOGO"));
         btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS"));
 
         nav.add(crearPanelLogo());

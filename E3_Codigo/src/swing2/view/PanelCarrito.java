@@ -43,7 +43,7 @@ public class PanelCarrito extends JPanel {
         if (gifUrl != null) {
             lblVolverGif.setIcon(new ImageIcon(gifUrl));
         } else {
-            lblVolverGif.setText("← VOLVER");
+            lblVolverGif.setText("VOLVER");
             lblVolverGif.setForeground(Color.WHITE);
         }
         lblVolverGif.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -208,13 +208,13 @@ public class PanelCarrito extends JPanel {
         return p;
     }
     private void pagar() {
-        // 1. Comprobaciones previas
+        
         if (carritoActual.getCartItems().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El carrito está vacío.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // 2. CREACIÓN DEL DIÁLOGO DE PAGO
+        
         JDialog dialog = new JDialog();
         dialog.setTitle("Pasarela de Pago Seguro - RONGERO");
         dialog.setModal(true);
@@ -222,7 +222,7 @@ public class PanelCarrito extends JPanel {
         dialog.getContentPane().setBackground(new Color(15, 45, 105));
         dialog.setLayout(new BorderLayout(10, 20));
 
-        // --- PANEL INFO (Resumen de compra) ---
+        
         JPanel pInfo = new JPanel(new GridLayout(2, 1, 5, 5));
         pInfo.setOpaque(false);
         pInfo.setBorder(BorderFactory.createEmptyBorder(20, 25, 10, 25));
@@ -240,7 +240,7 @@ public class PanelCarrito extends JPanel {
         pInfo.add(lblTitulo);
         pInfo.add(lblTotal);
 
-        // --- PANEL CENTRAL (Introducción de Tarjeta) ---
+        
         JPanel pTarjeta = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         pTarjeta.setOpaque(false);
 
@@ -255,7 +255,7 @@ public class PanelCarrito extends JPanel {
         pTarjeta.add(lblTxt);
         pTarjeta.add(txtTarjeta);
 
-        // --- PANEL BOTÓN (Confirmar Pago) ---
+        
         JPanel pBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pBoton.setOpaque(false);
         pBoton.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
@@ -269,15 +269,15 @@ public class PanelCarrito extends JPanel {
         btnPagar.addActionListener(e -> {
             String nTarjeta = txtTarjeta.getText().trim();
 
-            // Validar formato básico antes de intentar nada
+            
             if (!nTarjeta.matches("^[0-9]{16}$")) {
                 JOptionPane.showMessageDialog(dialog, "La tarjeta debe tener 16 números.", "Formato Incorrecto", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
-                // 1. Crear el objeto Order
-                // Pasamos el cliente actual, una copia de los items del carrito y el precio total
+                
+                
                 Client clienteActual = (Client) ventana.getUsuarioLogueado();
                 Order nuevoPedido = new Order(
                         clienteActual,
@@ -285,18 +285,18 @@ public class PanelCarrito extends JPanel {
                         carritoActual.getPrice()
                 );
 
-                // 2. Procesar el pago con la pasarela de TeleChargeAndPaySystem (vía Order)
+                
                 boolean exito = nuevoPedido.procesarPago(nTarjeta);
 
                 if (exito) {
-                    dialog.dispose(); // Cerrar ventana de pago
+                    dialog.dispose(); 
 
-                    // 3. Feedback y Limpieza
+                    
                     JOptionPane.showMessageDialog(this,
                             "¡Pago realizado con éxito!\nCódigo de recogida: " + nuevoPedido.getPickupCode(),
                             "Pedido Confirmado", JOptionPane.INFORMATION_MESSAGE);
 
-                    // Vaciar el carrito y actualizar la vista
+                    
                     carritoActual.clearCart();
                     actualizarVista();
 

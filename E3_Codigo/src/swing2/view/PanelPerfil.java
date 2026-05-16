@@ -19,7 +19,7 @@ public class PanelPerfil extends JPanel {
     private Image imagenFondo;
     private JLabel lblFotoPerfil;
 
-    // Formateador para las fechas de las tablas
+    
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")
             .withZone(ZoneId.systemDefault());
 
@@ -37,13 +37,13 @@ public class PanelPerfil extends JPanel {
         JPanel contenedorCentral = new JPanel(new BorderLayout(0, 25));
         contenedorCentral.setOpaque(false);
 
-        // Superior: Datos y Botones
+        
         JPanel filaSuperior = new JPanel(new GridLayout(1, 2, 25, 0));
         filaSuperior.setOpaque(false);
         filaSuperior.add(crearPanelDatos());
         filaSuperior.add(crearPanelAcciones());
 
-        // Inferior: Historial y Notificaciones
+        
         contenedorCentral.add(filaSuperior, BorderLayout.NORTH);
         contenedorCentral.add(crearPanelTablas(), BorderLayout.CENTER);
 
@@ -121,11 +121,11 @@ public class PanelPerfil extends JPanel {
         JPanel p = new JPanel(new GridLayout(1, 2, 25, 0));
         p.setOpaque(false);
 
-        // TABLA PEDIDOS (Izquierda)
+        
         p.add(crearTablaPersonalizada("MIS PEDIDOS", obtenerMatrizPedidos(),
-                new String[]{"ID", "Fecha", "Total", "Estado"}));
+                new String[]{"Codigo", "Fecha", "Total", "Estado"}));
 
-        // TABLA NOTIFICACIONES (Derecha)
+        
         p.add(crearTablaPersonalizada("NOTIFICACIONES", obtenerMatrizNotificaciones(),
                 new String[]{"Fecha", "Mensaje"}));
 
@@ -134,7 +134,7 @@ public class PanelPerfil extends JPanel {
         return p;
     }
 
-    // --- MÉTODOS DE EXTRACCIÓN DE DATOS (Arreglan el problema de impresión) ---
+    
 
     private Object[][] obtenerMatrizPedidos() {
         if (!(usuario instanceof Client)) return new Object[0][0];
@@ -144,7 +144,7 @@ public class PanelPerfil extends JPanel {
         Object[][] data = new Object[pedidos.size()][4];
         for (int i = 0; i < pedidos.size(); i++) {
             Order o = pedidos.get(i);
-            data[i][0] = "#" + o.getOrderId();
+            data[i][0] = "#" + o.getPickupCode();
             data[i][1] = (o.getPaidAt() != null) ? fmt.format(o.getPaidAt()) : "---";
             data[i][2] = String.format("%.2f€", o.getPrice());
             data[i][3] = o.getOrderStatus();
@@ -156,7 +156,7 @@ public class PanelPerfil extends JPanel {
         List<Notification> todas = usuario.getMyNotifications();
         if (todas == null) return new Object[0][0];
 
-        // FILTRO: Solo las que NO han sido leídas
+        
         List<Notification> noLeidas = todas.stream()
                 .filter(n -> !n.isRead())
                 .toList();
@@ -166,8 +166,8 @@ public class PanelPerfil extends JPanel {
         Object[][] data = new Object[noLeidas.size()][2];
         for (int i = 0; i < noLeidas.size(); i++) {
             Notification n = noLeidas.get(i);
-            data[i][0] = fmt.format(java.time.Instant.now()); // O n.receivedAt si tienes el getter
-            // Limpiamos el texto para que solo salga el mensaje en la tabla
+            data[i][0] =  n.getReceivedAt();
+            
             String texto = n.toString();
             data[i][1] = texto.contains(":") ? texto.substring(texto.indexOf(":") + 1).trim() : texto;
         }
@@ -175,15 +175,15 @@ public class PanelPerfil extends JPanel {
     }
 
     private void actualizarTablasUI() {
-        // Eliminamos el panel inferior actual y lo volvemos a crear
-        // Nota: Para que esto funcione de forma sencilla, puedes hacer que crearPanelTablas
-        // se guarde en una variable de clase o simplemente refrescar la pantalla entera:
+        
+        
+        
         ventana.mostrarPantalla("PERFIL");
     }
 
-    // --- LÓGICA DE GESTIÓN ---
+    
     private void gestionarLecturaNotificacion(int index) {
-        // 1. Obtener las notificaciones NO LEÍDAS (ya que la tabla filtra por ellas)
+        
         List<Notification> todas = usuario.getMyNotifications();
         List<Notification> pendientes = todas.stream()
                 .filter(n -> !n.isRead())
@@ -192,19 +192,19 @@ public class PanelPerfil extends JPanel {
         if (index >= 0 && index < pendientes.size()) {
             Notification n = pendientes.get(index);
 
-            // 2. Mostrar el mensaje
-            String mensajeCompleto = n.toString(); // Tu toString ya formatea bonito
+            
+            String mensajeCompleto = n.toString(); 
             int opcion = JOptionPane.showConfirmDialog(this,
                     mensajeCompleto,
                     "Detalle de Notificación",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE);
 
-            // 3. Al darle a Aceptar (u OK), marcar como leída y refrescar
+            
             if (opcion == JOptionPane.OK_OPTION || opcion == JOptionPane.CLOSED_OPTION) {
                 n.markAsRead(true);
 
-                // 4. Refrescar la interfaz para que desaparezca de la lista
+                
                 actualizarTablasUI();
             }
         }
@@ -245,7 +245,7 @@ public class PanelPerfil extends JPanel {
         }
     }
 
-    // --- COMPONENTES ESTILIZADOS ---
+    
 
     private JPanel crearTablaPersonalizada(String titulo, Object[][] datos, String[] cabecera) {
         JPanel p = crearPanelEstilizado();
