@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import swing2.view.PanelInicioo;
 import swing2.view.VentanaPrincipa;
+import swing2.view.gestor.clientes.PanelGestionClientes;
 import swing2.view.gestor.descuentos.PanelGestionDescuentos;
 import swing2.view.gestor.empleados.PanelGestionEmpleados;
 import swing2.view.gestor.productos.PanelGestionProductos;
@@ -18,7 +19,7 @@ public class PanelDashboard extends JPanel {
 	private JPanel menuNavegacion;
 	private Manager usuarioActual;
 	
-	private JButton btnEstadisticas, btnDescuentos, btnProductos, btnEmpleados, btnPedidos, btnLogout;
+	private JButton btnEstadisticas, btnDescuentos, btnProductos, btnEmpleados, btnClientes, btnLogout;
 	private JButton btnActivo = null;
 	
 	private static final Font FUENTE_TITULOS = new Font("Arial", Font.BOLD, 14);
@@ -49,7 +50,7 @@ public class PanelDashboard extends JPanel {
 		panelContenido.add(new PanelGestionDescuentos(ventanaPadre), "DESCUENTOS");
 		panelContenido.add(new PanelGestionProductos(ventanaPadre), "PRODUCTOS");
 		panelContenido.add(new PanelGestionEmpleados(ventanaPadre), "EMPLEADOS");
-		panelContenido.add(crearPanelPrueba("PEDIDOS"), "PEDIDOS");
+		panelContenido.add(new PanelGestionClientes(ventanaPadre), "CLIENTES");
 		
 		this.add(panelContenido, BorderLayout.CENTER);
 		
@@ -72,14 +73,14 @@ public class PanelDashboard extends JPanel {
 		btnDescuentos = crearBotonMenu("DESCUENTOS");
 		btnProductos = crearBotonMenu("PRODUCTOS");
 		btnEmpleados = crearBotonMenu("EMPLEADOS");
-		btnPedidos = crearBotonMenu("PEDIDOS");
+		btnClientes = crearBotonMenu("CLIENTES");
 		
 		// Agregar listeners a los botones
 		btnEstadisticas.addActionListener(e -> { marcarActivo(btnEstadisticas); mostrarSeccion("ESTADISTICAS"); });
 		btnDescuentos.addActionListener(e -> { marcarActivo(btnDescuentos); mostrarSeccion("DESCUENTOS"); });
 		btnProductos.addActionListener(e -> { marcarActivo(btnProductos); mostrarSeccion("PRODUCTOS"); });
 		btnEmpleados.addActionListener(e -> { marcarActivo(btnEmpleados); mostrarSeccion("EMPLEADOS"); });
-		btnPedidos.addActionListener(e -> { marcarActivo(btnPedidos); mostrarSeccion("PEDIDOS"); });
+		btnClientes.addActionListener(e -> { marcarActivo(btnClientes); mostrarSeccion("CLIENTES"); });
 		
 		// Agregar componentes a la parte izquierda
 		nav.add(PanelInicioo.crearPanelLogo());
@@ -87,7 +88,7 @@ public class PanelDashboard extends JPanel {
 		nav.add(btnDescuentos);
 		nav.add(btnProductos);
 		nav.add(btnEmpleados);
-		nav.add(btnPedidos);
+		nav.add(btnClientes);
 		
 		// --- PARTE DERECHA: Usuario + Logout ---
 		JPanel navDcha = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
@@ -141,7 +142,7 @@ public class PanelDashboard extends JPanel {
 	}
 	
     private void marcarActivo(JButton b) {
-    	marcarInactivo(btnEstadisticas, btnDescuentos, btnProductos, btnEmpleados, btnPedidos);
+    	marcarInactivo(btnEstadisticas, btnDescuentos, btnProductos, btnEmpleados, btnClientes);
         b.setForeground(COLOR_TEXTO_ACTIVO);
         b.setBackground(COLOR_MENU_ACTIVO);
     }

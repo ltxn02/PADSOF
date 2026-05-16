@@ -586,6 +586,13 @@ public class Client extends RegisteredUser implements java.io.Serializable{
 	public List<Order> getOrders() {
 		return this.ordersMade;
 	}
+	
+	
+	public LocalDateTime getJoiningDate() {
+		return this.joiningDate;
+	}
+	
+	
 	// ═══════════════════════════════════════════════════════════
     // HELPERS / MÉTODOS AUXILIARES PRIVADOS
     // ═══════════════════════════════════════════════════════════

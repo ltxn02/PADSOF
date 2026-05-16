@@ -416,14 +416,4 @@ public class PanelDetallesEmpleado extends JPanel {
 
 	    return fila;
 	}
-
-	// Formatear lista de permisos
-	private String formatearPermisos(Employee emp) {
-	    if (emp.permissions.isEmpty()) return "Sin permisos";
-	    StringBuilder sb = new StringBuilder();
-	    for (Permission p : emp.permissions) {
-	        sb.append(p.name()).append(" ");
-	    }
-	    return sb.toString().trim();
-	}
 }
