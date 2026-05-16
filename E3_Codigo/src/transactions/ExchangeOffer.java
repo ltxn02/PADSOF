@@ -29,6 +29,7 @@ public class ExchangeOffer implements java.io.Serializable {
     private Client receptor;
     private ExchangeOfferStatus status;
 
+
     /**
      * Constructor para inicializar una nueva oferta de intercambio.
      * Al crearse, la oferta bloquea automáticamente los productos ofrecidos para
@@ -44,6 +45,8 @@ public class ExchangeOffer implements java.io.Serializable {
         this.offeror = offeror;
         this.receptor = requestedProduct.getOwner();
         this.createDate = LocalDateTime.now();
+        offeror.getOffersMade().add(this);
+        ((Client)requestedProduct.getOwner()).obtenerMisOfertasRecibidos().add(this);
 
         for (SecondHandProduct p : this.offeredProducts){
             p.change_offered_status(true);
@@ -61,12 +64,12 @@ public class ExchangeOffer implements java.io.Serializable {
     public boolean is_Expired(){
         Duration tiempoTranscurrido = Duration.between(createDate, LocalDateTime.now());
         return tiempoTranscurrido.compareTo(ExchangeOffer.timeonHold) > 0;
+
     }
+
 
     /**
      * Cancela la oferta por iniciativa del ofertante.
-     * Solo es posible si la oferta se encuentra en estado PENDIENTE.
-     * @throws IllegalStateException Si la oferta ya ha sido procesada o cancelada.
      */
     public void cancelOffer() throws IllegalStateException {
         if(this.status != ExchangeOfferStatus.PENDIENTE) {
@@ -74,15 +77,61 @@ public class ExchangeOffer implements java.io.Serializable {
         }
         this.status = ExchangeOfferStatus.CANCELADA;
         this.liberarProductosofertados();
+
+        
+        String msg = "Oferta #" + this.offerId + " cancelada.";
+        this.offeror.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.offeror))));
+        this.receptor.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.receptor))));
+
+        
+        this.offeror.getOffersMade().remove(this);
+        this.receptor.obtenerMisOfertasRecibidos().remove(this);
     }
 
     /**
      * Rechaza la oferta por parte del receptor.
-     * Cambia el estado y libera los productos del ofertante para su uso en el catálogo.
      */
     public void reject_offer(){
         this.status = ExchangeOfferStatus.RECHAZADA;
         this.liberarProductosofertados();
+
+        
+        String msgEmisor = "Tu oferta por " + requestedProduct.getName() + " ha sido rechazada.";
+        this.offeror.getMyNotifications().add(new Notification(msgEmisor, new ArrayList<>(List.of(this.offeror))));
+
+        String msgReceptor = "Has rechazado la oferta de " + offeror.getUsername();
+        this.receptor.getMyNotifications().add(new Notification(msgReceptor, new ArrayList<>(List.of(this.receptor))));
+
+        
+        this.offeror.getOffersMade().remove(this);
+        this.receptor.obtenerMisOfertasRecibidos().remove(this);
+    }
+
+    /**
+     * Acepta formalmente la oferta.
+     */
+    public void aceptaroferta(){
+        this.status = ExchangeOfferStatus.ACEPTADA;
+        try {
+            
+            intercambiar_propietarios();
+
+            Exchange exchange = new Exchange(this);
+            this.offeror.addExchange(exchange);
+            this.receptor.addExchange(exchange);
+
+            
+            String msg = "¡Intercambio #" + this.offerId + " realizado con éxito!";
+            this.offeror.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.offeror))));
+            this.receptor.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.receptor))));
+
+            
+            this.offeror.getOffersMade().remove(this);
+            this.receptor.obtenerMisOfertasRecibidos().remove(this);
+
+        } catch (Exception e) {
+            System.err.println("Error al generar el intercambio técnico: " + e.getMessage());
+        }
     }
 
     /**
@@ -92,6 +141,11 @@ public class ExchangeOffer implements java.io.Serializable {
         if(is_Expired()){
             this.status = ExchangeOfferStatus.EXPIRADA;
             this.liberarProductosofertados();
+            String msg = "Tu oferta ha caducado ";
+            Notification n = new Notification(msg, new java.util.ArrayList<>(java.util.List.of(this.offeror)));
+            this.offeror.getMyNotifications().add(n);
+            Notification m = new Notification(msg, new java.util.ArrayList<>(java.util.List.of(this.receptor)));
+            this.offeror.getMyNotifications().add(m);
         }
     }
 
@@ -103,21 +157,7 @@ public class ExchangeOffer implements java.io.Serializable {
         return this.status == ExchangeOfferStatus.ACEPTADA;
     }
 
-    /**
-     * Acepta formalmente la oferta e inicia la creación de un objeto {@link Exchange}.
-     * Vincula el nuevo intercambio a los historiales de ambos clientes.
-     */
-    public void aceptaroferta(){
-        this.status = ExchangeOfferStatus.ACEPTADA;
-        try {
-            Exchange exchange = new Exchange(this);
-            this.offeror.addExchange(exchange);
-            this.receptor.addExchange(exchange);
-        } catch (Exception e) {
-            System.err.println("Error al generar el intercambio técnico: " + e.getMessage());
-        }
-    }
-
+ 
     /**
      * Realiza el traspaso efectivo de la propiedad de todos los productos involucrados.
      * El producto solicitado pasa al ofertante y los ofrecidos al receptor.
@@ -149,6 +189,10 @@ public class ExchangeOffer implements java.io.Serializable {
     public boolean liberarProductosofertados() {
         for (SecondHandProduct p: offeredProducts){
             p.change_offered_status(false);
+            String msg = "Tu producto " + p.getName() + " está disponible nuevamente para realizar nuevas ofertas";
+            Notification n = new Notification(msg, new java.util.ArrayList<>(java.util.List.of(this.offeror)));
+            this.offeror.getMyNotifications().add(n);
+
         }
         return true;
     }
@@ -204,6 +248,11 @@ public class ExchangeOffer implements java.io.Serializable {
         }
         System.out.printf("\n  VALOR TOTAL OFRECIDO: %.2f€\n", suma);
         System.out.println(linea + "\n");
+    }
+
+
+    public List<SecondHandProduct> getOfferedProducts() {
+        return offeredProducts;
     }
 
     /**

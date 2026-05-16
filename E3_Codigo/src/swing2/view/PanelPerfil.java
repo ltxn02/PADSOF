@@ -129,6 +129,8 @@ public class PanelPerfil extends JPanel {
         p.add(crearTablaPersonalizada("NOTIFICACIONES", obtenerMatrizNotificaciones(),
                 new String[]{"Fecha", "Mensaje"}));
 
+
+
         return p;
     }
 
@@ -151,20 +153,62 @@ public class PanelPerfil extends JPanel {
     }
 
     private Object[][] obtenerMatrizNotificaciones() {
-        List<Notification> notis = usuario.getMyNotifications();
-        if (notis == null || notis.isEmpty()) return new Object[0][0];
+        List<Notification> todas = usuario.getMyNotifications();
+        if (todas == null) return new Object[0][0];
 
-        Object[][] data = new Object[notis.size()][2];
-        for (int i = 0; i < notis.size(); i++) {
-            Notification n = notis.get(i);
-            // n.toString() o n.notificationPreview() según prefieras
+        // FILTRO: Solo las que NO han sido leídas
+        List<Notification> noLeidas = todas.stream()
+                .filter(n -> !n.isRead())
+                .toList();
+
+        if (noLeidas.isEmpty()) return new Object[0][0];
+
+        Object[][] data = new Object[noLeidas.size()][2];
+        for (int i = 0; i < noLeidas.size(); i++) {
+            Notification n = noLeidas.get(i);
             data[i][0] = fmt.format(java.time.Instant.now()); // O n.receivedAt si tienes el getter
-            data[i][1] = n.toString().substring(n.toString().indexOf(":") + 1).trim();
+            // Limpiamos el texto para que solo salga el mensaje en la tabla
+            String texto = n.toString();
+            data[i][1] = texto.contains(":") ? texto.substring(texto.indexOf(":") + 1).trim() : texto;
         }
         return data;
     }
 
+    private void actualizarTablasUI() {
+        // Eliminamos el panel inferior actual y lo volvemos a crear
+        // Nota: Para que esto funcione de forma sencilla, puedes hacer que crearPanelTablas
+        // se guarde en una variable de clase o simplemente refrescar la pantalla entera:
+        ventana.mostrarPantalla("PERFIL");
+    }
+
     // --- LÓGICA DE GESTIÓN ---
+    private void gestionarLecturaNotificacion(int index) {
+        // 1. Obtener las notificaciones NO LEÍDAS (ya que la tabla filtra por ellas)
+        List<Notification> todas = usuario.getMyNotifications();
+        List<Notification> pendientes = todas.stream()
+                .filter(n -> !n.isRead())
+                .toList();
+
+        if (index >= 0 && index < pendientes.size()) {
+            Notification n = pendientes.get(index);
+
+            // 2. Mostrar el mensaje
+            String mensajeCompleto = n.toString(); // Tu toString ya formatea bonito
+            int opcion = JOptionPane.showConfirmDialog(this,
+                    mensajeCompleto,
+                    "Detalle de Notificación",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            // 3. Al darle a Aceptar (u OK), marcar como leída y refrescar
+            if (opcion == JOptionPane.OK_OPTION || opcion == JOptionPane.CLOSED_OPTION) {
+                n.markAsRead(true);
+
+                // 4. Refrescar la interfaz para que desaparezca de la lista
+                actualizarTablasUI();
+            }
+        }
+    }
 
     private void gestionarCambioPassword() {
         JPasswordField pf = new JPasswordField();
@@ -221,6 +265,18 @@ public class PanelPerfil extends JPanel {
         t.setRowHeight(30);
         t.getTableHeader().setBackground(new Color(40, 40, 80));
         t.getTableHeader().setForeground(Color.WHITE);
+
+        if (titulo.equals("NOTIFICACIONES")) {
+            t.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent e) {
+                    int fila = t.getSelectedRow();
+                    if (fila != -1) {
+                        gestionarLecturaNotificacion(fila);
+                    }
+                }
+            });
+        }
 
         JScrollPane sp = new JScrollPane(t);
         sp.getViewport().setBackground(new Color(20, 20, 50));

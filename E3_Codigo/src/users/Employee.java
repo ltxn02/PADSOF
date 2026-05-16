@@ -236,6 +236,9 @@ public class Employee extends Staff implements java.io.Serializable{
     	}
     	
     	product.appraiseSecondHand(this, c, valuedOn);
+        String a= "Su producto " + product.getName() + " Ha sido valorado";
+        Notification m = new Notification(a, client);
+        client.getMyNotifications().add(m);
     }
     
     /**
@@ -257,6 +260,13 @@ public class Employee extends Staff implements java.io.Serializable{
     	
     	try {
     		exchange.validateExchange(this);
+            String a= "Su intercambio ha sido aceptado por la tienda. Pueden pasarse a la tienda para recoger sus productos";
+            Client a1= exchange.getAssociatedOffer().getOfferor();
+            Client a2= exchange.getAssociatedOffer().getReceptor();
+            Notification m = new Notification(a, a1);
+            a1.getMyNotifications().add(m);
+            Notification d = new Notification(a, a2);
+            a2.getMyNotifications().add(d);
     	} catch (Exception e) {
     		System.err.println("Error validating exchange: " + e.getMessage());
     	}
@@ -280,6 +290,14 @@ public class Employee extends Staff implements java.io.Serializable{
     	
     	try {
     		exchange.cancelExchange(this);
+            String a= "Su intercambio ha sido cancelado por la tienda.";
+            Client a1= exchange.getAssociatedOffer().getOfferor();
+            Client a2= exchange.getAssociatedOffer().getReceptor();
+            Notification m = new Notification(a, a1);
+            a1.getMyNotifications().add(m);
+            Notification d = new Notification(a, a2);
+            a2.getMyNotifications().add(d);
+
     	} catch (Exception e) {
     		System.err.println("Error cancelling exchange: " + e.getMessage());
     	}
@@ -393,6 +411,10 @@ public class Employee extends Staff implements java.io.Serializable{
 
         // 2. Si lo tiene, actualizamos el estado del pedido
         order.setOrderStatus(newStatus);
+        String a= "Se ha actualizado el estado de su pedido con identificador " + order.getOrderId() + " \n Actualmente su producto está: "+ newStatus;
+        Client a1= order.getClient();
+        Notification m = new Notification(a, a1);
+        a1.getMyNotifications().add(m);
     }
 
     

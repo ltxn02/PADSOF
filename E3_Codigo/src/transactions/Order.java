@@ -70,7 +70,6 @@ public class Order implements java.io.Serializable{
         try {
             TeleChargeAndPaySystem.charge(numeroTarjeta, "\nPedido Rongero #" + this.orderId, this.price, true);
 
-            // Si llega aquí, el pago ha funcionado
             this.orderStatus = OrderStatus.EN_PREPARACION;
             this.paidAt = Instant.now();
             String msg = "¡Pago aceptado! Tu pedido #" + this.orderId + " está en preparación. Código: " + this.pickupCode;

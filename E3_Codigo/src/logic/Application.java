@@ -51,6 +51,8 @@ public class Application {
             Employee emp10 = new Employee("pvazquez", "12345", "Pedro Vázquez López", "67890123J", "03/10/1986", "pedro.vazquez@rongero.es", "691234567", 1550.00, true);
             Employee emp11 = new Employee("snunez", "12345", "Sofía Núñez Gómez", "89012345K", "25/02/1996", "sofia.nunez@rongero.es", "692345678", 1300.00, true);
 
+            emp1.permissions.add(Permission.EXCH_VALIDATE);
+
             users.put(emp1.getUsername(), emp1);
             users.put(emp2.getUsername(), emp2);
             users.put(emp3.getUsername(), emp3);

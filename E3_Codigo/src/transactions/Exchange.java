@@ -47,7 +47,7 @@ public class Exchange implements java.io.Serializable {
         }
         this.processedBy = e;
         this.status = ExchangeStatus.COMPLETADO;
-        this.associatedOffer.intercambiar_propietarios();
+        associatedOffer.aceptaroferta();
     }
 
     /**
