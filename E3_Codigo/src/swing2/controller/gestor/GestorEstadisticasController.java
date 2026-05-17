@@ -10,18 +10,29 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Controlador para estadísticas del gestor
- * Datos 100% reales del sistema
+ * Controlador para estadísticas del gestor.
+ * Proporciona datos estadísticos reales recopilados a partir del estado de la aplicación.
+ * 
+ * @author Lidia Martín
  */
 public class GestorEstadisticasController {
     private PanelGestionEstadisticas vista;
     
+    /**
+     * Constructor del controlador de estadísticas.
+     * Asocia el controlador con su vista correspondiente para gestionar la actualización de datos.
+     * 
+     * @param vista El panel de interfaz gráfica encargado de mostrar las estadísticas.
+     */
     public GestorEstadisticasController(PanelGestionEstadisticas vista) {
         this.vista = vista;
     }
     
     /**
-     * Calcula ingresos totales de pedidos pagos (EN_PREPARACION, ENTREGADO)
+     * Calcula los ingresos totales de la aplicación basándose en los pedidos cuyo 
+     * estado sea de pago procesado (EN_PREPARACION o ENTREGADO).
+     * 
+     * @return El importe total acumulado en euros de todas las ventas válidas.
      */
     public double calcularIngresosTotales() {
         return Application.getUsers().stream()
@@ -38,7 +49,10 @@ public class GestorEstadisticasController {
     }
     
     /**
-     * Calcula valor estimado de productos por tasación
+     * Calcula la valoración económica estimada de la totalidad de los productos 
+     * de segunda mano introducidos mediante el sistema de tasación.
+     * 
+     * @return El valor total estimado en euros de los productos de segunda mano.
      */
     public double calcularValoracionEstimado() {
         return Application.getSecondHandProducts().stream()
@@ -47,7 +61,10 @@ public class GestorEstadisticasController {
     }
     
     /**
-     * Obtiene top 3 productos más vendidos
+     * Obtiene un ranking (Top 3) con los productos más vendidos de la plataforma, 
+     * contabilizando las cantidades agregadas en cada ítem de los pedidos de los clientes.
+     * 
+     * @return Una lista de cadenas con el formato "Nombre (X ventas)" ordenada descendentemente.
      */
     public List<String> obtenerProductosMasVendidos() {
         Map<String, Integer> ventasPorProducto = new HashMap<>();
@@ -72,7 +89,10 @@ public class GestorEstadisticasController {
     }
     
     /**
-     * Obtiene top 3 clientes más activos (por número de pedidos)
+     * Obtiene un ranking (Top 3) con los usuarios más activos de la aplicación, 
+     * clasificados según el volumen bruto de pedidos que han realizado de forma histórica.
+     * 
+     * @return Una lista de cadenas con el formato "Username (X pedidos)" ordenada de mayor a menor.
      */
     public List<String> obtenerClientesMasActivos() {
         return Application.getUsers().stream()
@@ -84,6 +104,9 @@ public class GestorEstadisticasController {
             .collect(Collectors.toList());
     }
     
+    /**
+     * Solicita la actualización y el redibujado de los componentes de la interfaz visual asociada.
+     */
     public void refrescarDatos() {
         vista.refrescar();
     }
