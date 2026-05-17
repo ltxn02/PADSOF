@@ -167,7 +167,7 @@ public class PanelListaEmpleados extends JPanel {
 	 * 2.- CREAR LA TABLA
 	 */
 	private void crearTabla() {
-		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Estado", "Detalles"};
+		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Rol", "Estado", "Detalles"};
 		
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
@@ -183,7 +183,7 @@ public class PanelListaEmpleados extends JPanel {
 		tabla.setFont(new Font("Arial", Font.PLAIN, 12));
 		tabla.setSelectionBackground(new Color(100, 150, 255));
 		
-		tabla.setRowHeight(37);  // Aumentar altura
+		tabla.setRowHeight(37);	 // Altura
 		tabla.setIntercellSpacing(new Dimension(0, 1));  // Espaciado
 		tabla.setShowGrid(false);
 		tabla.setBorder(null);
@@ -235,11 +235,12 @@ public class PanelListaEmpleados extends JPanel {
 		
 		// Ajustar ancho de columnas
 		tabla.getColumnModel().getColumn(0).setPreferredWidth(200);	// Nombre
-		tabla.getColumnModel().getColumn(1).setPreferredWidth(150);	// Usuario
-		tabla.getColumnModel().getColumn(2).setPreferredWidth(200);	// Correo
+		tabla.getColumnModel().getColumn(1).setPreferredWidth(100);	// Usuario
+		tabla.getColumnModel().getColumn(2).setPreferredWidth(150);	// Correo
 		tabla.getColumnModel().getColumn(3).setPreferredWidth(100);	// Teléfono
-		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);	// Estado
-		tabla.getColumnModel().getColumn(5).setPreferredWidth(100); // Más
+		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);	// Rol
+		tabla.getColumnModel().getColumn(5).setPreferredWidth(100);	// Estado
+		tabla.getColumnModel().getColumn(6).setPreferredWidth(100); // Detalles
 		
 		// EVENTO: Click en una fila para ver detalles
 		tabla.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -247,7 +248,7 @@ public class PanelListaEmpleados extends JPanel {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int fila = tabla.rowAtPoint(evt.getPoint());
 				int columna = tabla.columnAtPoint(evt.getPoint());
-				if (fila >= 0 && columna == 5) {	// Columna "Usuario"
+				if (fila >= 0 && columna == 6) {	// Columna "Detalles"
 					verDetallesEmpleado(fila);
 				}
 			}
@@ -258,9 +259,13 @@ public class PanelListaEmpleados extends JPanel {
 	 * 3.- CREAR BARRA DE PAGINACIÓN
 	 */
 	private JPanel crearBarraPaginacion() {
-		JPanel barra = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		JPanel barra = new JPanel(new BorderLayout());
 		barra.setBackground(COLOR_FONDO);
 		barra.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+		
+		// Panel paginación
+		JPanel panelPaginacion = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		panelPaginacion.setOpaque(false);
 		
 		// Botón anterior
 		btnAnterior = new JButton("< Anterior");
@@ -287,11 +292,51 @@ public class PanelListaEmpleados extends JPanel {
 		btnSiguiente.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnSiguiente.addActionListener(e -> irPaginaSiguiente());
 		
-		barra.add(btnAnterior);
-		barra.add(labelPaginacion);
-		barra.add(btnSiguiente);
+		panelPaginacion.add(btnAnterior);
+		panelPaginacion.add(labelPaginacion);
+		panelPaginacion.add(btnSiguiente);
+		
+		// Panel leyenda
+		JPanel leyendaRoles = crearLeyendaRoles();
+		
+		barra.add(panelPaginacion, BorderLayout.NORTH);
+		barra.add(leyendaRoles, BorderLayout.SOUTH);
 		
 		return barra;
+	}
+	
+	/*
+	 * ========================================================
+	 * LEYENDA DE ROLES
+	 * ========================================================
+	 */
+	private JPanel crearLeyendaRoles() {
+		JPanel leyenda = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 5));
+		leyenda.setOpaque(false);
+		leyenda.setPreferredSize(new Dimension(900, 25));
+		leyenda.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
+		
+		JLabel lblTitulo = new JLabel("Roles: ");
+		lblTitulo.setForeground(Color.WHITE);
+		lblTitulo.setFont(new Font("Arial", Font.BOLD, 11));
+		leyenda.add(lblTitulo);
+		
+		JLabel lblOE = new JLabel("OE = Operario de pedidos");
+		lblOE.setForeground(new Color(173, 216, 230));
+		lblOE.setFont(new Font("Arial", Font.PLAIN, 10));
+		leyenda.add(lblOE);
+		
+		JLabel lblEI = new JLabel("EI = Empleado de intercambios");
+		lblEI.setForeground(new Color(144, 238, 144));
+		lblEI.setFont(new Font("Arial", Font.PLAIN, 10));
+		leyenda.add(lblEI);
+		
+		JLabel lblEP = new JLabel("EP = Empleado de productos");
+		lblEP.setForeground(new Color(255, 218, 185));
+		lblEP.setFont(new Font("Arial", Font.PLAIN, 10));
+		leyenda.add(lblEP);
+		
+		return leyenda;
 	}
 	
 	/**
@@ -320,10 +365,15 @@ public class PanelListaEmpleados extends JPanel {
 		for (int i = inicio; i < fin; i++) {
 			Staff empleado = empleadosActuales.get(i);
 			String estado = null;
+			String rolesAbreviados = "";
+			
 			if (empleado instanceof Employee) {
-				estado = ((Employee)empleado).isEnabled() ? "Activo" : "Inactivo";
+				Employee emp = (Employee) empleado;
+				estado = emp.isEnabled() ? "Activo" : "Inactivo";
+				rolesAbreviados = obtenerRolesAbreviados(emp);
 			} else {
 				estado = "Activo";
+				rolesAbreviados = "N/A";
 			}
 			
 			Object[] fila = {
@@ -331,12 +381,46 @@ public class PanelListaEmpleados extends JPanel {
 					empleado.getUsername(),
 					empleado.getEmail(),
 					empleado.getPhoneNumber(),
+					rolesAbreviados,
 					estado,
 					"Ver más"
 			};
 			
 			modeloTabla.addRow(fila);
 		}
+	}
+	
+	/**
+	 * Convierte los roles del empleado a abreviaturas
+	 * OE = ORDERS_EMPLOYEE
+	 * EI = EXCHANGES_EMPLOYEE
+	 * EP = PRODUCTS_EMPLOYEE
+	 */
+	private String obtenerRolesAbreviados(Employee emp) {
+		StringBuilder roles = new StringBuilder();
+		
+		if (emp.Rol != null && !emp.Rol.isEmpty()) {
+			for (int i = 0; i < emp.Rol.size(); i++) {
+				switch (emp.Rol.get(i).toString()) {
+					case "ORDERS_EMPLOYEE":
+						roles.append("OE");
+						break;
+					case "EXCHANGES_EMPLOYEE":
+						roles.append("EI");
+						break;
+					case "PRODUCTS_EMPLOYEE":
+						roles.append("EP");
+						break;
+				}
+				
+				// Añadir coma si no es el último
+				if (i < emp.Rol.size() - 1) {
+					roles.append(", ");
+				}
+			}
+		}
+		
+		return roles.toString().isEmpty() ? "N/A" : roles.toString();
 	}
 	
 	/**

@@ -389,6 +389,10 @@ public class Employee extends Staff implements java.io.Serializable{
         this.enabled = enabled;
     }
     
+    public List<EmployeeRoles> getRole() {
+    	return this.Rol;
+    }
+    
     /**
      * Actualiza el estado de un pedido con validación de permisos.
      * 

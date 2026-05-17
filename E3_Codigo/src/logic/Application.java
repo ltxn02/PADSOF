@@ -51,7 +51,61 @@ public class Application {
             Employee emp10 = new Employee("pvazquez", "12345", "Pedro Vázquez López", "67890123J", "03/10/1986", "pedro.vazquez@rongero.es", "691234567", 1550.00, true);
             Employee emp11 = new Employee("snunez", "12345", "Sofía Núñez Gómez", "89012345K", "25/02/1996", "sofia.nunez@rongero.es", "692345678", 1300.00, true);
 
-            emp1.permissions.add(Permission.EXCH_VALIDATE);
+            // ========== ASIGNACIÓN DE ROLES Y PERMISOS ==========
+            
+            // emp1 - María García: ESPECIALISTA EN PRODUCTOS
+            emp1.Rol.add(EmployeeRoles.PRODUCTS_EMPLOYEE);
+            emp1.permissions.add(Permission.PRODUCT_LOAD);
+            emp1.permissions.add(Permission.PRODUCT_EDIT);
+            
+            // emp2 - Carlos Martínez: GESTOR DE PRODUCTOS
+            emp2.Rol.add(EmployeeRoles.PRODUCTS_EMPLOYEE);
+            emp2.permissions.add(Permission.PRODUCT_LOAD);
+            emp2.permissions.add(Permission.PRODUCT_EDIT);
+            emp2.permissions.add(Permission.PRODUCT_SOFT_DELETE);
+            
+            // emp3 - Elena Fernández: VALIDADOR DE INTERCAMBIOS
+            emp3.Rol.add(EmployeeRoles.EXCHANGES_EMPLOYEE);
+            emp3.permissions.add(Permission.EXCH_VALIDATE);
+            emp3.permissions.add(Permission.EXCH_PRODUCT_APPRAISE);
+            
+            // emp4 - Juan López: GESTOR DE PEDIDOS
+            emp4.Rol.add(EmployeeRoles.ORDERS_EMPLOYEE);
+            emp4.permissions.add(Permission.ORDER_STATUS_UPDATE);
+            
+            // emp5 - Rosa Jiménez: OPERARIA DE PRODUCTOS
+            emp5.Rol.add(EmployeeRoles.PRODUCTS_EMPLOYEE);
+            emp5.permissions.add(Permission.PRODUCT_SOFT_DELETE);
+            
+            // emp6 - Antonio Rodríguez: GESTOR COMPLETO (Pedidos + Productos)
+            emp6.Rol.add(EmployeeRoles.ORDERS_EMPLOYEE);
+            emp6.Rol.add(EmployeeRoles.PRODUCTS_EMPLOYEE);
+            emp6.permissions.add(Permission.PRODUCT_LOAD);
+            emp6.permissions.add(Permission.PRODUCT_EDIT);
+            emp6.permissions.add(Permission.PRODUCT_SOFT_DELETE);
+            emp6.permissions.add(Permission.ORDER_STATUS_UPDATE);
+            
+            // emp7 - Laura Sánchez: TASADORA DE INTERCAMBIOS
+            emp7.Rol.add(EmployeeRoles.EXCHANGES_EMPLOYEE);
+            emp7.permissions.add(Permission.EXCH_PRODUCT_APPRAISE);
+            
+            // emp8 - Francisco González: ESPECIALISTA EN LOGÍSTICA
+            emp8.Rol.add(EmployeeRoles.ORDERS_EMPLOYEE);
+            emp8.permissions.add(Permission.ORDER_STATUS_UPDATE);
+            
+            // emp9 - Isabel Ramírez: VALIDADORA DE INTERCAMBIOS
+            emp9.Rol.add(EmployeeRoles.EXCHANGES_EMPLOYEE);
+            emp9.permissions.add(Permission.EXCH_VALIDATE);
+            
+            // emp10 - Pedro Vázquez: GESTOR DE CATÁLOGO SENIOR
+            emp10.Rol.add(EmployeeRoles.PRODUCTS_EMPLOYEE);
+            emp10.permissions.add(Permission.PRODUCT_LOAD);
+            emp10.permissions.add(Permission.PRODUCT_EDIT);
+            emp10.permissions.add(Permission.PRODUCT_SOFT_DELETE);
+            
+            // emp11 - Sofía Núñez: OPERARIA DE PEDIDOS
+            emp11.Rol.add(EmployeeRoles.ORDERS_EMPLOYEE);
+            emp11.permissions.add(Permission.ORDER_STATUS_UPDATE);
 
             users.put(emp1.getUsername(), emp1);
             users.put(emp2.getUsername(), emp2);
@@ -66,7 +120,6 @@ public class Application {
             users.put(emp11.getUsername(), emp11);
 
             System.out.println("[Sistema] 11 empleados adicionales creados para pruebas.");
-
             
         } catch (Exception e) {
             System.err.println("Error al crear usuarios por defecto: " + e.getMessage());

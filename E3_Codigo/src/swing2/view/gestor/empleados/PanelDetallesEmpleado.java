@@ -38,7 +38,7 @@ public class PanelDetallesEmpleado extends JPanel {
 		
 		// BARRA SUPERIOR: Título + botón volver
 		JPanel barraSuperior = crearBarraSuperior();
-		this.add(barraSuperior);
+		this.add(barraSuperior, BorderLayout.NORTH);
 		
 		// CONTENIDO CENTRAL: Información del empleado
 		JPanel contenidoPrincipal = crearContenidoPrincipal();
@@ -119,7 +119,10 @@ public class PanelDetallesEmpleado extends JPanel {
 	        seccion3.add(crearFilaEstado("Estado:", emp.isEnabled()));
 	    }
 	    
-	    // 3.1 - PERMISOS (desplegable)
+	    panel.add(seccion3);
+	    panel.add(Box.createVerticalStrut(20));
+	    
+	    // 3.1 - PERMISOS (checkboxes)
 	    if (empleado instanceof Employee) {
 	        Employee emp = (Employee) empleado;
 	        JPanel seccionPermisos = crearSeccion("PERMISOS");
@@ -128,7 +131,7 @@ public class PanelDetallesEmpleado extends JPanel {
 	        panel.add(Box.createVerticalStrut(20));
 	    }
 
-	    // 3.2 - ROL (radio buttons)
+	    // 3.2 - ROL (checkboxes)
 	    if (empleado instanceof Employee) {
 	        Employee emp = (Employee) empleado;
 	        JPanel seccionRol = crearSeccion("ROL");
@@ -136,9 +139,6 @@ public class PanelDetallesEmpleado extends JPanel {
 	        panel.add(seccionRol);
 	        panel.add(Box.createVerticalStrut(20));
 	    }
-	    
-	    panel.add(seccion3);
-	    panel.add(Box.createVerticalStrut(20));
 		
 		// 4.- DETALLES ADICIONALES
 		JPanel seccion4 = crearSeccion("DETALLES ADICIONALES");
@@ -193,30 +193,11 @@ public class PanelDetallesEmpleado extends JPanel {
 		return fila;
 	}
 	
-	// BARRA INFERIOR: Botones de acción
+	// BARRA INFERIOR: Solo botón volver
 	private JPanel crearBarraInferior() {
 		JPanel barra = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		barra.setBackground(COLOR_FONDO);
 		barra.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-		
-		// Botón editar
-		JButton btnEditar = new JButton("EDITAR");
-		btnEditar.setPreferredSize(new Dimension(150, 40));
-		btnEditar.setBackground(new Color(52, 152, 219));
-		btnEditar.setForeground(Color.WHITE);
-		btnEditar.setFont(new Font("Arial", Font.BOLD, 12));
-		btnEditar.setBorder(null);
-		btnEditar.setFocusPainted(false);
-		btnEditar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btnEditar.addActionListener(e -> {
-			JOptionPane.showMessageDialog(
-					this,
-					"EDITAR EMPLEADO (PRÓXIMAMENTE)" +
-					"Se podrá editar los datos de: " + empleado.getUsername(),
-					"Editar empleado",
-					JOptionPane.INFORMATION_MESSAGE
-			);
-		});
 		
 		// Botón volver
 		JButton btnVolver = new JButton("< Volver");
@@ -229,7 +210,6 @@ public class PanelDetallesEmpleado extends JPanel {
 		btnVolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnVolver.addActionListener(e -> panelPadre.mostrarListado());
 		
-		barra.add(btnEditar);
 		barra.add(btnVolver);
 		
 		return barra;
@@ -378,42 +358,60 @@ public class PanelDetallesEmpleado extends JPanel {
 	    return contenedor;
 	}
 
-	// FILA DE ROL (RADIO BUTTONS)
+	// FILA DE ROL (CHECKBOXES - IGUAL QUE PERMISOS)
 	private JPanel crearFilaRol(Employee emp) {
-	    JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 5));
-	    fila.setOpaque(false);
-	    fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-	    fila.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    JPanel contenedor = new JPanel();
+	    contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
+	    contenedor.setOpaque(false);
+	    contenedor.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 	    JLabel lbl = new JLabel("Rol:");
 	    lbl.setForeground(COLOR_LABEL);
 	    lbl.setFont(new Font("Arial", Font.BOLD, 11));
-	    lbl.setPreferredSize(new Dimension(180, 25));
+	    lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-	    JRadioButton r1 = new JRadioButton("ORDERS");
-	    JRadioButton r2 = new JRadioButton("EXCHANGES");
-	    JRadioButton r3 = new JRadioButton("PRODUCTS");
+	    contenedor.add(lbl);
+	    contenedor.add(Box.createVerticalStrut(5));
 
-	    r1.setOpaque(false); r2.setOpaque(false); r3.setOpaque(false);
-	    r1.setForeground(Color.WHITE); r2.setForeground(Color.WHITE); r3.setForeground(Color.WHITE);
+	    // Panel con checkboxes
+	    JPanel rolesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+	    rolesPanel.setOpaque(false);
+	    rolesPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-	    ButtonGroup grupo = new ButtonGroup();
-	    grupo.add(r1); grupo.add(r2); grupo.add(r3);
+	    JCheckBox[] checks = new JCheckBox[EmployeeRoles.values().length];
 
-	    // Seleccionar según rol actual
-	    if (emp.Rol.contains(EmployeeRoles.ORDERS_EMPLOYEE)) r1.setSelected(true);
-	    else if (emp.Rol.contains(EmployeeRoles.EXCHANGES_EMPLOYEE)) r2.setSelected(true);
-	    else if (emp.Rol.contains(EmployeeRoles.PRODUCTS_EMPLOYEE)) r3.setSelected(true);
+	    for (int i = 0; i < EmployeeRoles.values().length; i++) {
+	        EmployeeRoles r = EmployeeRoles.values()[i];
+	        JCheckBox cb = new JCheckBox(r.name());
+	        cb.setOpaque(false);
+	        cb.setForeground(Color.WHITE);
+	        cb.setFont(new Font("Arial", Font.PLAIN, 12));
+	        cb.setSelected(emp.Rol.contains(r));
+	        checks[i] = cb;
+	        rolesPanel.add(cb);
+	    }
 
-	    r1.addActionListener(e -> ctrl.cambiarRolEmpleado(emp, EmployeeRoles.ORDERS_EMPLOYEE));
-	    r2.addActionListener(e -> ctrl.cambiarRolEmpleado(emp, EmployeeRoles.EXCHANGES_EMPLOYEE));
-	    r3.addActionListener(e -> ctrl.cambiarRolEmpleado(emp, EmployeeRoles.PRODUCTS_EMPLOYEE));
+	    JButton btnGuardar = new JButton("Guardar rol");
+	    btnGuardar.addActionListener(e -> {
+	        emp.Rol.clear();
+	        for (int i = 0; i < checks.length; i++) {
+	            if (checks[i].isSelected()) {
+	                emp.Rol.add(EmployeeRoles.values()[i]);
+	            }
+	        }
+	        mostrarDetalles(emp);
+	    });
+	    btnGuardar.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    
+	    JPanel panelBtn = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+	    panelBtn.setOpaque(false);
+	    panelBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+	    panelBtn.add(btnGuardar);
+	    
+	    contenedor.add(rolesPanel);
+	    contenedor.add(Box.createVerticalStrut(5));
+	    contenedor.add(panelBtn);
 
-	    fila.add(lbl);
-	    fila.add(r1);
-	    fila.add(r2);
-	    fila.add(r3);
-
-	    return fila;
+	    return contenedor;
 	}
 }
