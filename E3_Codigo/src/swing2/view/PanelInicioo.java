@@ -746,7 +746,7 @@ public class PanelInicioo extends JPanel {
         double promedio = p.calculateRating();
         JLabel lblValoracionMedia = new JLabel();
         if (promedio > 0) {
-            lblValoracionMedia.setText(String.format("%.1f ⭐ (%d valoraciones)", promedio, p.getReviews().size()));
+            lblValoracionMedia.setText(String.format("%.1f (%d valoraciones)", promedio, p.getReviews().size()));
             lblValoracionMedia.setForeground(new Color(200, 140, 0)); 
             lblValoracionMedia.setFont(new Font("Arial", Font.BOLD, 16));
         } else {
