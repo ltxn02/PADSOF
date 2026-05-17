@@ -196,6 +196,8 @@ public class VentanaPrincipa extends JFrame {
 
                         break;
                 }
+                
+                return;
             }
 
             Component[] componentes = contenedor.getComponents();

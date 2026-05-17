@@ -148,7 +148,7 @@ public class PanelListaClientes extends JPanel {
 	 * ========================================================
 	 */
 	private void crearTabla() {
-		String[] columnas = {"ID", "Usuario", "Nombre Completo", "Email", "Teléfono"};
+		String[] columnas = {"ID", "Usuario", "Nombre Completo", "Email", "Teléfono", "Detalles"};
 		
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
@@ -216,17 +216,19 @@ public class PanelListaClientes extends JPanel {
 		
 		// Ajustar ancho de columnas
 		tabla.getColumnModel().getColumn(0).setPreferredWidth(80);	// ID Usuario
-		tabla.getColumnModel().getColumn(1).setPreferredWidth(150);	// Usuario
-		tabla.getColumnModel().getColumn(2).setPreferredWidth(250);	// Nombre Completo
-		tabla.getColumnModel().getColumn(3).setPreferredWidth(200);	// Email
-		tabla.getColumnModel().getColumn(4).setPreferredWidth(120);	// Teléfono
+		tabla.getColumnModel().getColumn(1).setPreferredWidth(130);	// Usuario
+		tabla.getColumnModel().getColumn(2).setPreferredWidth(225);	// Nombre Completo
+		tabla.getColumnModel().getColumn(3).setPreferredWidth(175);	// Email
+		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);	// Teléfono
+		tabla.getColumnModel().getColumn(5).setPreferredWidth(100); // Ver más
 		
 		// EVENTO: Click en una fila para ver detalles
 		tabla.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int fila = tabla.rowAtPoint(evt.getPoint());
-				if (fila >= 0) {
+				int columna = tabla.columnAtPoint(evt.getPoint());
+				if (fila >= 0 && columna == 5) {
 					verDetallesCliente(fila);
 				}
 			}
@@ -308,7 +310,8 @@ public class PanelListaClientes extends JPanel {
 					cliente.getUsername(),
 					cliente.getFullname(),
 					cliente.getEmail(),
-					cliente.getPhoneNumber()
+					cliente.getPhoneNumber(),
+					"Ver más"
 			};
 			
 			modeloTabla.addRow(fila);

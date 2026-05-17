@@ -8,6 +8,7 @@ import java.net.URL;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 import users.Client;
 import users.RegisteredUser;
 import transactions.Order;
@@ -159,7 +160,7 @@ public class PanelPerfil extends JPanel {
         
         List<Notification> noLeidas = todas.stream()
                 .filter(n -> !n.isRead())
-                .toList();
+                .collect(Collectors.toList());
 
         if (noLeidas.isEmpty()) return new Object[0][0];
 
@@ -187,7 +188,7 @@ public class PanelPerfil extends JPanel {
         List<Notification> todas = usuario.getMyNotifications();
         List<Notification> pendientes = todas.stream()
                 .filter(n -> !n.isRead())
-                .toList();
+                .collect(Collectors.toList());
 
         if (index >= 0 && index < pendientes.size()) {
             Notification n = pendientes.get(index);

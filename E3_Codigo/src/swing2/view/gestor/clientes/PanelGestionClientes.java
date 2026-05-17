@@ -4,11 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import swing2.controller.gestor.GestorClienteController;
 import swing2.view.VentanaPrincipa;
-import swing2.view.gestor.descuentos.PanelDetallesDescuento;
-import swing2.view.gestor.descuentos.PanelGestorSeleccionTipoDescuento;
-import swing2.view.gestor.descuentos.PanelListDescuentos;
 import users.Client;
-import users.Staff;
 
 public class PanelGestionClientes extends JPanel {
 	private VentanaPrincipa ventanaPadre;

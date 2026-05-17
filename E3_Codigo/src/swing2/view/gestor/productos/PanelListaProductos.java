@@ -16,12 +16,16 @@ import swing2.controller.gestor.GestorProductoController;
 
 /**
  * Panel de listado de productos.
- * Muestra tabla con todos los productos del catálogo.
+ * Muestra tabla con todos los productos del catálogo con soporte de búsqueda en tiempo real.
  */
 public class PanelListaProductos extends JPanel {
 	private PanelGestionProductos panelPadre;
 	private GestorProductoController ctrl;
-
+	
+	// === COMPONENTES DE BÚSQUEDA Y MIGRACIÓN ===
+	private JTextField campoBusqueda;
+	private JPanel pnlFilas; // Convertido en atributo de clase para poder actualizarlo
+	
 	// Colores
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	private static final Color COLOR_CABECERA = new Color(30, 45, 80);
@@ -43,21 +47,55 @@ public class PanelListaProductos extends JPanel {
 		JPanel pnlAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		pnlAcciones.setOpaque(false);
 		pnlAcciones.setBorder(new EmptyBorder(20, 40, 10, 40));
+		
+		// --- Inicialización de la Barra de Búsqueda ---
+		campoBusqueda = new JTextField();
+		aplicarPlaceholder();
+		campoBusqueda.setPreferredSize(new Dimension(500, 35));
+		campoBusqueda.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-		JButton btnAnadir = crearBotonAccion("➕ Añadir Producto");
-		JButton btnRefrescar = crearBotonAccion("🔄 Refrescar");
+		campoBusqueda.addFocusListener(new java.awt.event.FocusAdapter() {
+			@Override
+			public void focusGained(java.awt.event.FocusEvent e) {
+				if (campoBusqueda.getText().equals("Buscar productos")) {
+					campoBusqueda.setText("");
+					campoBusqueda.setForeground(Color.BLACK);
+					campoBusqueda.setFont(new Font("Arial", Font.PLAIN, 12));
+				}
+			}
 
-		btnAnadir.addActionListener(e -> panelPadre.mostrarAnadirProducto());
-		btnRefrescar.addActionListener(e -> refrescar());
+			@Override
+			public void focusLost(java.awt.event.FocusEvent e) {
+				if (campoBusqueda.getText().trim().isEmpty()) {
+					aplicarPlaceholder();
+				}
+			}
+		});
 
-		pnlAcciones.add(btnAnadir);
-		pnlAcciones.add(btnRefrescar);
+		campoBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
+			public void keyReleased(java.awt.event.KeyEvent evt) {
+				String texto = campoBusqueda.getText();
+				if (texto.equals("Buscar productos")) return;
+				actualizarTabla(texto); // Filtra los productos en tiempo real
+			}
+		});
 
+		pnlAcciones.add(campoBusqueda);
 		this.add(pnlAcciones, BorderLayout.NORTH);
 
-		// Panel de tabla
+		// Panel de tabla (inicializa la estructura visual)
 		JPanel pnlTabla = crearTablaProductos();
 		this.add(pnlTabla, BorderLayout.CENTER);
+		
+		// Cargar todos los productos inicialmente (filtro vacío)
+		actualizarTabla("");
+	}
+	
+	private void aplicarPlaceholder() {
+		campoBusqueda.setText("Buscar productos");
+		campoBusqueda.setForeground(Color.GRAY);
+		campoBusqueda.setFont(new Font("Arial", Font.ITALIC, 12));
 	}
 
 	private JPanel crearTablaProductos() {
@@ -90,31 +128,11 @@ public class PanelListaProductos extends JPanel {
 		}
 		panel.add(pnlCabecera, BorderLayout.NORTH);
 
-		// === FILAS DE PRODUCTOS ===
-		JPanel pnlFilas = new JPanel();
+		// === FILAS DE PRODUCTOS (Estructura base del contenedor) ===
+		pnlFilas = new JPanel();
 		pnlFilas.setLayout(new BoxLayout(pnlFilas, BoxLayout.Y_AXIS));
 		pnlFilas.setOpaque(false);
 		pnlFilas.setBackground(COLOR_FONDO);
-
-		ArrayList<NewProduct> catalogo = Application.getCatalog();
-		if (catalogo != null && !catalogo.isEmpty()) {
-			for (NewProduct p : catalogo) {
-				pnlFilas.add(Box.createRigidArea(new Dimension(0, 10)));
-				int idReal = 0;
-				if (p instanceof catalog.Product) {
-					idReal = ((catalog.Product) p).getProductId();
-				}
-				pnlFilas.add(crearFilaProducto(p, idReal));
-			}
-		} else {
-			JLabel lblVacio = new JLabel("No hay productos en el catálogo");
-			lblVacio.setFont(new Font("Arial", Font.BOLD, 18));
-			lblVacio.setForeground(new Color(150, 150, 150));
-			lblVacio.setHorizontalAlignment(SwingConstants.CENTER);
-			pnlFilas.add(Box.createVerticalGlue());
-			pnlFilas.add(lblVacio);
-			pnlFilas.add(Box.createVerticalGlue());
-		}
 
 		JScrollPane scroll = new JScrollPane(pnlFilas);
 		scroll.setOpaque(false);
@@ -125,6 +143,71 @@ public class PanelListaProductos extends JPanel {
 
 		panel.add(scroll, BorderLayout.CENTER);
 		return panel;
+	}
+
+	/**
+	 * Lógica encargada de vaciar el contenedor e insertar únicamente 
+	 * aquellos productos que coincidan con la búsqueda.
+	 */
+	private void actualizarTabla(String filtro) {
+		pnlFilas.removeAll(); // Borramos lo que haya actualmente en pantalla
+
+		ArrayList<NewProduct> catalogo = Application.getCatalog();
+		boolean hayResultados = false;
+
+		if (catalogo != null && !catalogo.isEmpty()) {
+			for (NewProduct p : catalogo) {
+				int idReal = 0;
+				if (p instanceof catalog.Product) {
+					idReal = ((catalog.Product) p).getProductId();
+				}
+
+				// Obtener Tipo y Marca para poder buscar también por estos criterios
+				String tipo = "Desconocido", marca = "-";
+				if (p instanceof Comic) {
+					tipo = "Cómic";
+					marca = ((Comic) p).getPublisher();
+				} else if (p instanceof Figurine) {
+					tipo = "Figura";
+					marca = ((Figurine) p).getFranchise();
+				} else if (p instanceof Game) {
+					tipo = "Juego";
+					marca = "Mecánica";
+				}
+
+				// Comprobamos si coincide con el filtro (por Nombre, Tipo, Marca o ID)
+				boolean coincide = filtro.isEmpty() || filtro.equals("Buscar productos") ||
+						p.getName().toLowerCase().contains(filtro.toLowerCase()) ||
+						tipo.toLowerCase().contains(filtro.toLowerCase()) ||
+						marca.toLowerCase().contains(filtro.toLowerCase()) ||
+						String.valueOf(idReal).contains(filtro);
+
+				if (coincide) {
+					pnlFilas.add(Box.createRigidArea(new Dimension(0, 10)));
+					pnlFilas.add(crearFilaProducto(p, idReal));
+					hayResultados = true;
+				}
+			}
+		}
+
+		// Mensaje en caso de que no haya coincidencias o el catálogo esté vacío
+		if (!hayResultados) {
+			String mensaje = (filtro.isEmpty() || filtro.equals("Buscar productos")) ? 
+					"No hay productos en el catálogo" : "No se encontraron productos coincidentes";
+			
+			JLabel lblVacio = new JLabel(mensaje);
+			lblVacio.setFont(new Font("Arial", Font.BOLD, 18));
+			lblVacio.setForeground(new Color(150, 150, 150));
+			lblVacio.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			pnlFilas.add(Box.createVerticalGlue());
+			pnlFilas.add(lblVacio);
+			pnlFilas.add(Box.createVerticalGlue());
+		}
+
+		// Forzamos a la interfaz a redibujarse inmediatamente
+		pnlFilas.revalidate();
+		pnlFilas.repaint();
 	}
 
 	private JPanel crearFilaProducto(NewProduct p, int id) {
@@ -148,7 +231,7 @@ public class PanelListaProductos extends JPanel {
 		// ID
 		fila.add(crearLabelFila(String.valueOf(id)));
 
-		// Nombre (truncar si es muy largo)
+		// Nombre
 		String nombre = p.getName().length() > 20 ? p.getName().substring(0, 17) + "..." : p.getName();
 		fila.add(crearLabelFila(nombre));
 
@@ -190,28 +273,6 @@ public class PanelListaProductos extends JPanel {
 		return lbl;
 	}
 
-	private JButton crearBotonAccion(String texto) {
-		JButton btn = new JButton(texto) {
-			@Override
-			protected void paintComponent(Graphics g) {
-				Graphics2D g2 = (Graphics2D) g.create();
-				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-				g2.setColor(COLOR_BOTON);
-				g2.fillRoundRect(0, 0, getWidth(), getHeight(), 25, 25);
-				g2.dispose();
-				super.paintComponent(g);
-			}
-		};
-		btn.setContentAreaFilled(false);
-		btn.setBorderPainted(false);
-		btn.setFocusPainted(false);
-		btn.setFont(new Font("Arial", Font.BOLD, 14));
-		btn.setForeground(Color.WHITE);
-		btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btn.setBorder(new EmptyBorder(10, 20, 10, 20));
-		return btn;
-	}
-
 	private void cargarImagenPequena(NewProduct p, JLabel imgLabel) {
 		if (p.getFotos() != null && !p.getFotos().isEmpty()) {
 			String nombreArchivo = new File(p.getFotos().get(0)).getName();
@@ -240,11 +301,11 @@ public class PanelListaProductos extends JPanel {
 		}
 		return null;
 	}
-
+	
 	public void refrescar() {
-		this.removeAll();
-		crearInterfaz();
-		this.revalidate();
-		this.repaint();
+	    if (campoBusqueda != null) {
+	        aplicarPlaceholder();
+	    }
+	    actualizarTabla("");
 	}
 }

@@ -3,48 +3,55 @@ package swing2.view.gestor.estadisticas;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import logic.Application;
 import swing2.controller.gestor.GestorEstadisticasController;
 import swing2.view.VentanaPrincipa;
-import users.*;
+import java.util.List;
 
 /**
- * Panel de Estadísticas del Gestor - SIMPLIFICADO
+ * Panel de Estadísticas del Gestor - RF-1.6
+ * Colores lisos, paneles redondeados, datos 100% reales
  */
 public class PanelGestionEstadisticas extends JPanel {
     private VentanaPrincipa ventanaPadre;
     private GestorEstadisticasController ctrl;
     
-    // === COLORES ===
+    // === COLORES LISOS ===
     private static final Color COLOR_FONDO = new Color(23, 48, 79);
-    private static final Color COLOR_CARD_1 = new Color(30, 70, 120);
-    private static final Color COLOR_CARD_2 = new Color(50, 100, 150);
-    private static final Color COLOR_ACCENT_BLUE = new Color(0, 180, 255);
-    private static final Color COLOR_ACCENT_GREEN = new Color(100, 220, 100);
-    private static final Color COLOR_ACCENT_ORANGE = new Color(255, 150, 50);
-    private static final Color COLOR_TEXT_DIM = new Color(140, 150, 190);
+    private static final Color COLOR_PANEL_1 = new Color(41, 128, 185);      // Azul
+    private static final Color COLOR_PANEL_2 = new Color(39, 174, 96);       // Verde
+    private static final Color COLOR_PANEL_3 = new Color(230, 126, 34);      // Naranja
+    private static final Color COLOR_TEXT = Color.WHITE;
+    private static final Color COLOR_TEXT_DIM = new Color(189, 195, 199);
     
     // === FUENTES ===
-    private static final Font FUENTE_TITULO = new Font("Arial", Font.BOLD, 20);
-    private static final Font FUENTE_SUBTITULO = new Font("Arial", Font.BOLD, 14);
-    private static final Font FUENTE_NUMERO = new Font("Arial", Font.BOLD, 28);
-    private static final Font FUENTE_ETIQUETA = new Font("Arial", Font.PLAIN, 12);
+    private static final Font FUENTE_TITULO = new Font("Arial", Font.BOLD, 24);
+    private static final Font FUENTE_SUBTITULO = new Font("Arial", Font.BOLD, 16);
+    private static final Font FUENTE_NUMERO = new Font("Arial", Font.BOLD, 42);
+    private static final Font FUENTE_TEXTO = new Font("Arial", Font.PLAIN, 14);
     
     public PanelGestionEstadisticas(VentanaPrincipa ventanaPadre) {
         this.ventanaPadre = ventanaPadre;
         this.ctrl = new GestorEstadisticasController(this);
         
-        this.setLayout(new BorderLayout(0, 0));
+        this.setLayout(new BorderLayout());
         this.setBackground(COLOR_FONDO);
-        this.setBorder(new EmptyBorder(20, 20, 20, 20));
+        this.setBorder(new EmptyBorder(30, 30, 30, 30));
         
         // Encabezado
-        JPanel panelHeader = crearPanelEncabezado();
-        this.add(panelHeader, BorderLayout.NORTH);
+        JLabel titulo = new JLabel("ESTADÍSTICAS");
+        titulo.setFont(FUENTE_TITULO);
+        titulo.setForeground(COLOR_TEXT);
+        JPanel header = new JPanel();
+        header.setOpaque(false);
+        header.setLayout(new FlowLayout(FlowLayout.LEFT));
+        header.add(titulo);
+        header.setBorder(new EmptyBorder(0, 0, 30, 0));
         
-        // Contenido scrolleable
-        JPanel panelPrincipal = crearPanelPrincipal();
-        JScrollPane scroll = new JScrollPane(panelPrincipal);
+        this.add(header, BorderLayout.NORTH);
+        
+        // Contenido principal
+        JPanel contenido = crearContenidoPrincipal();
+        JScrollPane scroll = new JScrollPane(contenido);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
         scroll.setBorder(null);
@@ -53,204 +60,228 @@ public class PanelGestionEstadisticas extends JPanel {
         this.add(scroll, BorderLayout.CENTER);
     }
     
-    private JPanel crearPanelEncabezado() {
-        JPanel panel = new JPanel(new BorderLayout(0, 10));
-        panel.setOpaque(false);
-        panel.setBorder(new EmptyBorder(0, 0, 20, 0));
-        
-        JLabel titulo = new JLabel("PANEL DE ESTADÍSTICAS");
-        titulo.setFont(FUENTE_TITULO);
-        titulo.setForeground(COLOR_ACCENT_BLUE);
-        
-        JLabel subtitulo = new JLabel("Resumen del negocio");
-        subtitulo.setFont(new Font("Arial", Font.PLAIN, 12));
-        subtitulo.setForeground(COLOR_TEXT_DIM);
-        
-        JPanel textos = new JPanel();
-        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
-        textos.setOpaque(false);
-        textos.add(titulo);
-        textos.add(subtitulo);
-        
-        panel.add(textos, BorderLayout.WEST);
-        return panel;
-    }
-    
-    private JPanel crearPanelPrincipal() {
+    private JPanel crearContenidoPrincipal() {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        panel.setBorder(new EmptyBorder(0, 0, 20, 0));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(0, 0, 30, 0));
         
-        // KPIs principales
-        panel.add(crearFilaKPIs());
-        panel.add(Box.createVerticalStrut(40));
+        // ===== SECCIÓN 1: Recaudación (Ventas vs Valoración) =====
+        panel.add(crearSeccion(
+            "RECAUDACIÓN",
+            crearPanelRecaudacion()
+        ));
+        panel.add(Box.createVerticalStrut(30));
         
-        // Usuarios
-        panel.add(crearTituloBloqueSeccion("👥 USUARIOS"));
-        panel.add(Box.createVerticalStrut(15));
-        panel.add(crearFilaUsuarios());
-        panel.add(Box.createVerticalStrut(40));
+        // ===== SECCIÓN 2: Productos Más Vendidos =====
+        panel.add(crearSeccion(
+            "PRODUCTOS MÁS VENDIDOS",
+            crearPanelProductosMasVendidos()
+        ));
+        panel.add(Box.createVerticalStrut(30));
         
-        // Productos
-        panel.add(crearTituloBloqueSeccion("📦 PRODUCTOS"));
-        panel.add(Box.createVerticalStrut(15));
-        panel.add(crearFilaProductos());
+        // ===== SECCIÓN 3: Usuarios Más Activos =====
+        panel.add(crearSeccion(
+            "USUARIOS MÁS ACTIVOS",
+            crearPanelUsuariosMasActivos()
+        ));
         
         return panel;
     }
     
-    private JLabel crearTituloBloqueSeccion(String texto) {
-        JLabel lbl = new JLabel(texto);
-        lbl.setFont(FUENTE_SUBTITULO);
-        lbl.setForeground(COLOR_ACCENT_BLUE);
-        lbl.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return lbl;
+    private JPanel crearSeccion(String titulo, JPanel contenido) {
+        JPanel seccion = new JPanel();
+        seccion.setOpaque(false);
+        seccion.setLayout(new BoxLayout(seccion, BoxLayout.Y_AXIS));
+        seccion.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        seccion.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(FUENTE_SUBTITULO);
+        lblTitulo.setForeground(COLOR_TEXT);
+        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        contenido.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        seccion.add(lblTitulo);
+        seccion.add(Box.createVerticalStrut(15));
+        seccion.add(contenido);
+        
+        return seccion;
     }
     
-    // ========== KPIs PRINCIPALES ==========
-    private JPanel crearFilaKPIs() {
-        JPanel fila = new JPanel(new GridLayout(1, 4, 20, 0));
-        fila.setOpaque(false);
-        fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+ // ========== PANEL 1: RECAUDACIÓN ==========
+    private JPanel crearPanelRecaudacion() {
+        // Mantenemos las columnas y el espacio de 25 entre ellas
+        JPanel panel = new JPanel(new GridLayout(1, 2, 25, 0));
+        panel.setOpaque(false);
         
-        int totalUsuarios = Application.getUsers().size();
-        int totalClientes = (int) Application.getUsers().stream()
-            .filter(u -> u instanceof Client).count();
-        int totalEmpleados = (int) Application.getUsers().stream()
-            .filter(u -> u instanceof Employee).count();
-        int totalGestores = (int) Application.getUsers().stream()
-            .filter(u -> u instanceof Manager).count();
+        // CAMBIO: Usamos PreferredSize con una altura un poco más holgada (130) 
+        // para que el radio redondeado y el texto respiren bien.
+        panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 130));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
         
-        fila.add(crearTarjetaKPI("USUARIOS", String.valueOf(totalUsuarios), COLOR_ACCENT_BLUE));
-        fila.add(crearTarjetaKPI("CLIENTES", String.valueOf(totalClientes), COLOR_ACCENT_GREEN));
-        fila.add(crearTarjetaKPI("EMPLEADOS", String.valueOf(totalEmpleados), COLOR_ACCENT_ORANGE));
-        fila.add(crearTarjetaKPI("GESTORES", String.valueOf(totalGestores), new Color(200, 100, 255)));
+        // Ingresos totales
+        double ingresos = ctrl.calcularIngresosTotales();
+        panel.add(crearTarjetaMetrica(
+            "INGRESOS (Ventas)",
+            String.format("€%.2f", ingresos),
+            "De pedidos completados",
+            COLOR_PANEL_1
+        ));
         
-        return fila;
+        // Valor estimado de tasaciones
+        double valoracion = ctrl.calcularValoracionEstimado();
+        panel.add(crearTarjetaMetrica(
+            "VALORACIÓN (Segunda Mano)",
+            String.format("€%.2f", valoracion),
+            "Valor estimado de productos",
+            COLOR_PANEL_2
+        ));
+        
+        return panel;
     }
     
-    private JPanel crearTarjetaKPI(String titulo, String valor, Color accentColor) {
+ // ========== PANEL 2: PRODUCTOS MÁS VENDIDOS ==========
+    private JPanel crearPanelProductosMasVendidos() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        List<String> productos = ctrl.obtenerProductosMasVendidos();
+        
+        if (productos.isEmpty()) {
+            JLabel lblVacio = new JLabel("Sin datos de ventas aún");
+            lblVacio.setFont(FUENTE_TEXTO);
+            lblVacio.setForeground(COLOR_TEXT_DIM);
+            panel.add(lblVacio);
+        } else {
+            for (int i = 0; i < productos.size(); i++) {
+                panel.add(crearFilaRanking(i + 1, productos.get(i)));
+                if (i < productos.size() - 1) {
+                    panel.add(Box.createVerticalStrut(12));
+                }
+            }
+            // AJUSTE DE TAMAÑO: Calculamos la altura justa según las filas (50px cada una + 12px de separación)
+            int alturaTotal = (productos.size() * 50) + ((productos.size() - 1) * 12);
+            panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, alturaTotal));
+            panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, alturaTotal));
+        }
+        
+        return panel;
+    }
+    
+ // ========== PANEL 3: USUARIOS MÁS ACTIVOS ==========
+    private JPanel crearPanelUsuariosMasActivos() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        List<String> usuarios = ctrl.obtenerClientesMasActivos();
+        
+        if (usuarios.isEmpty()) {
+            JLabel lblVacio = new JLabel("Sin datos de usuarios aún");
+            lblVacio.setFont(FUENTE_TEXTO);
+            lblVacio.setForeground(COLOR_TEXT_DIM);
+            panel.add(lblVacio);
+        } else {
+            for (int i = 0; i < usuarios.size(); i++) {
+                panel.add(crearFilaRanking(i + 1, usuarios.get(i)));
+                if (i < usuarios.size() - 1) {
+                    panel.add(Box.createVerticalStrut(12));
+                }
+            }
+            // AJUSTE DE TAMAÑO: Calculamos la altura justa según las filas (50px cada una + 12px de separación)
+            int alturaTotal = (usuarios.size() * 50) + ((usuarios.size() - 1) * 12);
+            panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, alturaTotal));
+            panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, alturaTotal));
+        }
+        
+        return panel;
+    }
+    
+// ========== COMPONENTES AUXILIARES ==========
+    
+    private JPanel crearTarjetaMetrica(String titulo, String valor, String descripcion, Color color) {
         JPanel card = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
+                // Antialiasing para suavizar los bordes redondeados
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
-                GradientPaint gp = new GradientPaint(0, 0, COLOR_CARD_1, getWidth(), getHeight(), COLOR_CARD_2);
-                g2.setPaint(gp);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-                
-                g2.setColor(accentColor);
-                g2.setStroke(new BasicStroke(4));
-                g2.drawRoundRect(2, 2, getWidth() - 4, getHeight() - 4, 15, 15);
-                
+                g2.setColor(color);
+                // fillRoundRect recibe: x, y, width, height, arcWidth, arcHeight
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20); 
                 g2.dispose();
             }
         };
         card.setOpaque(false);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(new EmptyBorder(20, 15, 20, 15));
+        card.setBorder(new EmptyBorder(20, 20, 20, 20));
+        
+        // AJUSTE DE TAMAÑO: Forzamos la altura a 130 para que coincida con el contenedor de Recaudación
+        card.setPreferredSize(new Dimension(card.getPreferredSize().width, 130));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
         
         JLabel lblTitulo = new JLabel(titulo);
-        lblTitulo.setFont(FUENTE_ETIQUETA);
+        lblTitulo.setFont(FUENTE_TEXTO);
         lblTitulo.setForeground(COLOR_TEXT_DIM);
-        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblTitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JLabel lblValor = new JLabel(valor);
         lblValor.setFont(FUENTE_NUMERO);
-        lblValor.setForeground(accentColor);
-        lblValor.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblValor.setForeground(COLOR_TEXT);
+        lblValor.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JLabel lblDesc = new JLabel(descripcion);
+        lblDesc.setFont(FUENTE_TEXTO);
+        lblDesc.setForeground(COLOR_TEXT_DIM);
+        lblDesc.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         card.add(lblTitulo);
-        card.add(Box.createVerticalStrut(10));
+        card.add(Box.createVerticalStrut(8));
         card.add(lblValor);
+        card.add(Box.createVerticalStrut(5));
+        card.add(lblDesc);
         
         return card;
     }
     
-    // ========== SECCIÓN USUARIOS ==========
-    private JPanel crearFilaUsuarios() {
-        JPanel fila = new JPanel(new GridLayout(1, 2, 20, 0));
-        fila.setOpaque(false);
-        fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
-        
-        // Clientes con pedidos
-        int clientesConPedidos = (int) Application.getUsers().stream()
-            .filter(u -> u instanceof Client)
-            .filter(u -> !((Client) u).getOrders().isEmpty())
-            .count();
-        
-        fila.add(crearTarjetaInfo("Clientes Activos", String.valueOf(clientesConPedidos), COLOR_ACCENT_GREEN));
-        
-        // Total de pedidos
-        int totalPedidos = (int) Application.getUsers().stream()
-            .filter(u -> u instanceof Client)
-            .mapToInt(u -> ((Client) u).getOrders().size())
-            .sum();
-        
-        fila.add(crearTarjetaInfo("Pedidos Totales", String.valueOf(totalPedidos), COLOR_ACCENT_BLUE));
-        
-        return fila;
-    }
-    
-    // ========== SECCIÓN PRODUCTOS ==========
-    private JPanel crearFilaProductos() {
-        JPanel fila = new JPanel(new GridLayout(1, 3, 20, 0));
-        fila.setOpaque(false);
-        fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
-        
-        int productosNuevos = Application.getCatalog().size();
-        fila.add(crearTarjetaInfo("Productos", String.valueOf(productosNuevos), COLOR_ACCENT_BLUE));
-        
-        int productosSegundaMano = Application.getSecondHandProducts().size();
-        fila.add(crearTarjetaInfo("Segunda Mano", String.valueOf(productosSegundaMano), COLOR_ACCENT_ORANGE));
-        
-        int categorias = Application.getGlobalCategories().size();
-        fila.add(crearTarjetaInfo("Categorías", String.valueOf(categorias), COLOR_ACCENT_GREEN));
-        
-        return fila;
-    }
-    
-    private JPanel crearTarjetaInfo(String titulo, String valor, Color color) {
-        JPanel card = new JPanel() {
+    private JPanel crearFilaRanking(int posicion, String contenido) {
+        JPanel fila = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
+                // Antialiasing para suavizar los bordes redondeados
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
-                g2.setColor(COLOR_CARD_1);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-                
-                g2.setColor(color);
-                g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(1, 1, getWidth() - 2, getHeight() - 2, 10, 10);
-                
-                g2.setColor(color);
-                g2.fillRect(0, 0, getWidth(), 3);
-                
+                g2.setColor(COLOR_PANEL_3);
+                // Un radio un poco menor (15) para las filas más pequeñas
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
                 g2.dispose();
             }
         };
-        card.setOpaque(false);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(new EmptyBorder(20, 15, 20, 15));
+        fila.setOpaque(false);
+        fila.setLayout(new BorderLayout());
+        fila.setBorder(new EmptyBorder(12, 15, 12, 15));
+        fila.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         
-        JLabel lblTitulo = new JLabel(titulo);
-        lblTitulo.setFont(FUENTE_ETIQUETA);
-        lblTitulo.setForeground(COLOR_TEXT_DIM);
-        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Posición
+        JLabel lblPos = new JLabel(String.valueOf(posicion));
+        lblPos.setFont(new Font("Arial", Font.BOLD, 18));
+        lblPos.setForeground(COLOR_TEXT);
+        lblPos.setPreferredSize(new Dimension(40, 40));
+        lblPos.setHorizontalAlignment(SwingConstants.CENTER);
         
-        JLabel lblValor = new JLabel(valor);
-        lblValor.setFont(new Font("Arial", Font.BOLD, 26));
-        lblValor.setForeground(color);
-        lblValor.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Contenido
+        JLabel lblContenido = new JLabel(contenido);
+        lblContenido.setFont(FUENTE_TEXTO);
+        lblContenido.setForeground(COLOR_TEXT);
+        lblContenido.setBorder(new EmptyBorder(0, 15, 0, 0));
         
-        card.add(lblTitulo);
-        card.add(Box.createVerticalStrut(10));
-        card.add(lblValor);
+        fila.add(lblPos, BorderLayout.WEST);
+        fila.add(lblContenido, BorderLayout.CENTER);
         
-        return card;
+        return fila;
     }
     
     public void refrescar() {
