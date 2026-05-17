@@ -12,52 +12,63 @@ import java.util.ArrayList;
 import users.Client;
 
 /**
- * Panel que muestra el listado de clientes con tabla, búsqueda y paginación.
+ * Panel de la interfaz gráfica que muestra el listado general de clientes registrados
+ * en el sistema. Incorpora una tabla interactiva, una barra de búsqueda en tiempo real
+ * y un sistema de paginación para manejar grandes volúmenes de datos.
+ * * @author Lidia Martin
  */
 public class PanelListaClientes extends JPanel {
 	private PanelGestionClientes panelPadre;  // Para volver atrás
 	private GestorClienteController ctrl;
-	
+
 	// TABLA
 	private JTable tabla;
 	private DefaultTableModel modeloTabla;
 	private JScrollPane scrollPane;
-	
+
 	// BÚSQUEDA Y FILTRADO
 	private JTextField campoBusqueda;
 	private ArrayList<Client> clientesFiltrados;
 	private ArrayList<Client> clientesActuales;
-	
+
 	// PAGINACIÓN
 	private int paginaActual = 0;
 	private int clientesPorPagina = 10;
 	private int totalPaginas = 1;
 	private JLabel labelPaginacion;
 	private JButton btnAnterior, btnSiguiente;
-	
+
 	// COLORES
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	private static final Color COLOR_TABLE = new Color(40, 80, 140);
 	private static final Color COLOR_HEADER = new Color(20, 50, 100);
-	
+
+	/**
+	 * Constructor del panel de listado de clientes.
+	 * Inicializa los componentes visuales principales: la barra de búsqueda,
+	 * la tabla central con su respectivo modelo y la barra inferior de paginación.
+	 *
+	 * @param panelPadre Panel contenedor que gestiona la navegación entre las vistas de clientes.
+	 * @param ctrl       Controlador principal para acceder a la lógica de negocio de clientes.
+	 */
 	public PanelListaClientes(PanelGestionClientes panelPadre, GestorClienteController ctrl) {
 		this.panelPadre = panelPadre;
 		this.ctrl = ctrl;
-		
+
 		this.setLayout(new BorderLayout(10, 10));
 		this.setBackground(COLOR_FONDO);
 		this.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-		
+
 		// 1.- Barra superior (SOLO búsqueda)
 		JPanel barraSuperior = crearBarraSuperior();
 		this.add(barraSuperior, BorderLayout.NORTH);
-		
+
 		// 2.- Tabla con scroll (más pequeña y centrada)
 		crearTabla();
 		scrollPane = new JScrollPane(tabla);
 		scrollPane.setBackground(COLOR_FONDO);
 		scrollPane.getViewport().setBackground(COLOR_FONDO);
-		
+
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
 
@@ -68,123 +79,138 @@ public class PanelListaClientes extends JPanel {
 		panelTablaCentrada.add(scrollPane);
 
 		this.add(panelTablaCentrada, BorderLayout.CENTER);
-		
+
 		// 3.- Barra de paginación (abajo)
 		JPanel barraPaginacion = crearBarraPaginacion();
 		this.add(barraPaginacion, BorderLayout.SOUTH);
-		
+
 		// 4.- Cargar datos iniciales
 		cargarClientes();
 	}
-	
+
+	/**
+	 * Construye la barra superior de la interfaz, que contiene exclusivamente
+	 * el campo de texto para la búsqueda dinámica de clientes, ajustado al ancho de la tabla.
+	 *
+	 * @return Un {@link JPanel} estructurado con la barra de búsqueda.
+	 */
 	/**
 	 * 1.- BARRA SUPERIOR (SOLO búsqueda, ancho completo)
 	 */
 	private JPanel crearBarraSuperior() {
-	    // Contenedor invisible para centrar
-	    JPanel contenedor = new JPanel(new GridBagLayout());
-	    contenedor.setOpaque(false);
+		// Contenedor invisible para centrar
+		JPanel contenedor = new JPanel(new GridBagLayout());
+		contenedor.setOpaque(false);
 
-	    // Barra real con mismo ancho que la tabla
-	    JPanel barra = new JPanel(new BorderLayout(10, 0));
-	    barra.setBackground(COLOR_FONDO);
-	    barra.setPreferredSize(new Dimension(900, 40)); // MISMO ANCHO QUE LA TABLA
+		// Barra real con mismo ancho que la tabla
+		JPanel barra = new JPanel(new BorderLayout(10, 0));
+		barra.setBackground(COLOR_FONDO);
+		barra.setPreferredSize(new Dimension(900, 40)); // MISMO ANCHO QUE LA TABLA
 
-	    // Búsqueda (ANCHO COMPLETO)
-	    campoBusqueda = new JTextField();
-	    aplicarPlaceholder();
-	    campoBusqueda.setPreferredSize(new Dimension(900, 35));
-	    campoBusqueda.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		// Búsqueda (ANCHO COMPLETO)
+		campoBusqueda = new JTextField();
+		aplicarPlaceholder();
+		campoBusqueda.setPreferredSize(new Dimension(900, 35));
+		campoBusqueda.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-	    campoBusqueda.addFocusListener(new java.awt.event.FocusAdapter() {
-	        @Override
-	        public void focusGained(java.awt.event.FocusEvent e) {
-	            if (campoBusqueda.getText().equals("Buscar clientes")) {
-	                campoBusqueda.setText("");
-	                campoBusqueda.setForeground(Color.BLACK);
-	                campoBusqueda.setFont(new Font("Arial", Font.PLAIN, 12));
-	            }
-	        }
+		campoBusqueda.addFocusListener(new java.awt.event.FocusAdapter() {
+			@Override
+			public void focusGained(java.awt.event.FocusEvent e) {
+				if (campoBusqueda.getText().equals("Buscar clientes")) {
+					campoBusqueda.setText("");
+					campoBusqueda.setForeground(Color.BLACK);
+					campoBusqueda.setFont(new Font("Arial", Font.PLAIN, 12));
+				}
+			}
 
-	        @Override
-	        public void focusLost(java.awt.event.FocusEvent e) {
-	            if (campoBusqueda.getText().trim().isEmpty()) {
-	                campoBusqueda.setText("Buscar clientes");
-	                campoBusqueda.setForeground(Color.GRAY);
-	                campoBusqueda.setFont(new Font("Arial", Font.ITALIC, 12));
-	            }
-	        }
-	    });
+			@Override
+			public void focusLost(java.awt.event.FocusEvent e) {
+				if (campoBusqueda.getText().trim().isEmpty()) {
+					campoBusqueda.setText("Buscar clientes");
+					campoBusqueda.setForeground(Color.GRAY);
+					campoBusqueda.setFont(new Font("Arial", Font.ITALIC, 12));
+				}
+			}
+		});
 
-	    campoBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
-	        @Override
-	        public void keyReleased(java.awt.event.KeyEvent evt) {
-	            String texto = campoBusqueda.getText();
-	            if (texto.equals("Buscar clientes")) return;
-	            buscarClientes(texto);
-	            paginaActual = 0;
-	            actualizarTabla();
-	            actualizarPaginacion();
-	        }
-	    });
+		campoBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
+			public void keyReleased(java.awt.event.KeyEvent evt) {
+				String texto = campoBusqueda.getText();
+				if (texto.equals("Buscar clientes")) return;
+				buscarClientes(texto);
+				paginaActual = 0;
+				actualizarTabla();
+				actualizarPaginacion();
+			}
+		});
 
-	    barra.add(campoBusqueda, BorderLayout.CENTER);
+		barra.add(campoBusqueda, BorderLayout.CENTER);
 
-	    contenedor.add(barra);
-	    return contenedor;
+		contenedor.add(barra);
+		return contenedor;
 	}
-	
+
+	/**
+	 * Aplica el estilo visual de "placeholder" (texto gris de indicación)
+	 * en el campo de búsqueda cuando este se encuentra vacío.
+	 */
 	private void aplicarPlaceholder() {
-	    campoBusqueda.setText("Buscar clientes");
-	    campoBusqueda.setForeground(Color.GRAY);
-	    campoBusqueda.setFont(new Font("Arial", Font.BOLD, 14));
+		campoBusqueda.setText("Buscar clientes");
+		campoBusqueda.setForeground(Color.GRAY);
+		campoBusqueda.setFont(new Font("Arial", Font.BOLD, 14));
 	}
-	
+
+	/**
+	 * Inicializa y configura la tabla (JTable), estableciendo el modelo de datos,
+	 * el renderizado visual de celdas y cabeceras, el tamaño de las columnas,
+	 * y los listeners para interactuar con las filas (Ver detalles).
+	 */
 	/**
 	 * 2.- CREAR LA TABLA
 	 */
 	private void crearTabla() {
 		String[] columnas = {"ID", "Usuario", "Nombre completo", "Email", "Teléfono", "Detalles"};
-		
+
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-		
+
 		tabla = new JTable(modeloTabla);
-		
+
 		tabla.setBackground(Color.WHITE);
 		tabla.setForeground(Color.BLACK);
 		tabla.setFont(new Font("Arial", Font.PLAIN, 12));
 		tabla.setSelectionBackground(new Color(100, 150, 255));
-		
+
 		tabla.setRowHeight(37);
 		tabla.setIntercellSpacing(new Dimension(0, 1));
 		tabla.setShowGrid(false);
 		tabla.setBorder(null);
 
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
-		    @Override
-		    public Component getTableCellRendererComponent(JTable table, Object value,
-		                                                   boolean isSelected, boolean hasFocus,
-		                                                   int row, int column) {
-		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value,
+														   boolean isSelected, boolean hasFocus,
+														   int row, int column) {
+				super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		        if (!isSelected) {
-		            setBackground(row % 2 == 0 ? new Color(219, 219, 219) : Color.WHITE);
-		        }
-		        setForeground(Color.BLACK);
-		        setHorizontalAlignment(SwingConstants.CENTER);
-		        return this;
-		    }
+				if (!isSelected) {
+					setBackground(row % 2 == 0 ? new Color(219, 219, 219) : Color.WHITE);
+				}
+				setForeground(Color.BLACK);
+				setHorizontalAlignment(SwingConstants.CENTER);
+				return this;
+			}
 		};
 
 		for (int i = 0; i < tabla.getColumnCount(); i++) {
-		    tabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
+			tabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
 		}
-		
+
 		// Personalizar header
 		JTableHeader header = tabla.getTableHeader();
 		header.setPreferredSize(new Dimension(header.getWidth(), 40));
@@ -194,30 +220,30 @@ public class PanelListaClientes extends JPanel {
 		header.setReorderingAllowed(false);
 
 		header.setDefaultRenderer(new DefaultTableCellRenderer() {
-		    @Override
-		    public Component getTableCellRendererComponent(JTable table, Object value,
-		                                                   boolean isSelected, boolean hasFocus,
-		                                                   int row, int column) {
-		        JLabel lbl = (JLabel) super.getTableCellRendererComponent(
-		                table, value, isSelected, hasFocus, row, column);
-		        lbl.setHorizontalAlignment(SwingConstants.CENTER);
-		        lbl.setOpaque(true);
-		        lbl.setBackground(Color.WHITE);
-		        lbl.setForeground(new Color(105, 103, 99));
-		        lbl.setFont(new Font("Arial", Font.BOLD, 16));
-		        lbl.setBorder(null);
-		        return lbl;
-		    }
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value,
+														   boolean isSelected, boolean hasFocus,
+														   int row, int column) {
+				JLabel lbl = (JLabel) super.getTableCellRendererComponent(
+						table, value, isSelected, hasFocus, row, column);
+				lbl.setHorizontalAlignment(SwingConstants.CENTER);
+				lbl.setOpaque(true);
+				lbl.setBackground(Color.WHITE);
+				lbl.setForeground(new Color(105, 103, 99));
+				lbl.setFont(new Font("Arial", Font.BOLD, 16));
+				lbl.setBorder(null);
+				return lbl;
+			}
 		});
-		
+
 		// Ajustar ancho de columnas
-		tabla.getColumnModel().getColumn(0).setPreferredWidth(80);	// ID Usuario
-		tabla.getColumnModel().getColumn(1).setPreferredWidth(130);	// Usuario
-		tabla.getColumnModel().getColumn(2).setPreferredWidth(225);	// Nombre completo
-		tabla.getColumnModel().getColumn(3).setPreferredWidth(175);	// Email
-		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);	// Teléfono
+		tabla.getColumnModel().getColumn(0).setPreferredWidth(80); // ID Usuario
+		tabla.getColumnModel().getColumn(1).setPreferredWidth(130);    // Usuario
+		tabla.getColumnModel().getColumn(2).setPreferredWidth(225);    // Nombre completo
+		tabla.getColumnModel().getColumn(3).setPreferredWidth(175);    // Email
+		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);    // Teléfono
 		tabla.getColumnModel().getColumn(5).setPreferredWidth(100); // Ver más
-		
+
 		// EVENTO: Click en una fila para ver detalles
 		tabla.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
@@ -230,7 +256,14 @@ public class PanelListaClientes extends JPanel {
 			}
 		});
 	}
-	
+
+	/**
+	 * Crea la barra de controles inferior, gestionando la navegación
+	 * entre las páginas de resultados (botones "Anterior" y "Siguiente")
+	 * e indicando la página en curso.
+	 *
+	 * @return Un {@link JPanel} configurado con la paginación.
+	 */
 	/**
 	 * 3.- CREAR BARRA DE PAGINACIÓN
 	 */
@@ -238,7 +271,7 @@ public class PanelListaClientes extends JPanel {
 		JPanel barra = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		barra.setBackground(COLOR_FONDO);
 		barra.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-		
+
 		// Botón anterior
 		btnAnterior = new JButton("< Anterior");
 		btnAnterior.setPreferredSize(new Dimension(120, 30));
@@ -248,12 +281,12 @@ public class PanelListaClientes extends JPanel {
 		btnAnterior.setFocusPainted(false);
 		btnAnterior.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnAnterior.addActionListener(e -> irPaginaAnterior());
-		
+
 		// Etiqueta de paginación
 		labelPaginacion = new JLabel("Página 1 de 1");
 		labelPaginacion.setForeground(Color.WHITE);
 		labelPaginacion.setFont(new Font("Arial", Font.BOLD, 12));
-		
+
 		// Botón siguiente
 		btnSiguiente = new JButton("Siguiente >");
 		btnSiguiente.setPreferredSize(new Dimension(120, 30));
@@ -263,18 +296,22 @@ public class PanelListaClientes extends JPanel {
 		btnSiguiente.setFocusPainted(false);
 		btnSiguiente.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnSiguiente.addActionListener(e -> irPaginaSiguiente());
-		
+
 		barra.add(btnAnterior);
 		barra.add(labelPaginacion);
 		barra.add(btnSiguiente);
-		
+
 		return barra;
 	}
-	
+
 	/**
 	 * LÓGICA: CARGAR, BUSCAR, ACTUALIZAR
 	 */
-	
+
+	/**
+	 * Carga todos los clientes desde el controlador, resetea los
+	 * filtros de búsqueda y actualiza los componentes visuales de tabla y paginación.
+	 */
 	public void cargarClientes() {
 		clientesFiltrados = ctrl.obtenerClientes();
 		clientesActuales = new ArrayList<>(clientesFiltrados);
@@ -282,21 +319,32 @@ public class PanelListaClientes extends JPanel {
 		actualizarTabla();
 		actualizarPaginacion();
 	}
-	
+
+	/**
+	 * Filtra la lista base de clientes según un término de búsqueda,
+	 * actualizando la lista de clientes actuales a visualizar.
+	 *
+	 * @param termino El texto introducido por el gestor para filtrar los resultados.
+	 */
 	private void buscarClientes(String termino) {
 		clientesActuales = ctrl.buscarClientes(clientesFiltrados, termino);
 		calcularPaginas();
 	}
-	
+
+	/**
+	 * Vuelca la información de la lista de `clientesActuales` en el modelo
+	 * de la tabla (JTable). Solo inserta los elementos correspondientes a la
+	 * página activa en ese momento.
+	 */
 	private void actualizarTabla() {
 		modeloTabla.setRowCount(0);
-		
+
 		int inicio = paginaActual * clientesPorPagina;
 		int fin = Math.min(inicio + clientesPorPagina, clientesActuales.size());
-		
+
 		for (int i = inicio; i < fin; i++) {
 			Client cliente = clientesActuales.get(i);
-			
+
 			Object[] fila = {
 					cliente.getUserId(),
 					cliente.getUsername(),
@@ -305,20 +353,28 @@ public class PanelListaClientes extends JPanel {
 					cliente.getPhoneNumber(),
 					"Ver más"
 			};
-			
+
 			modeloTabla.addRow(fila);
 		}
 	}
-	
+
 	/**
 	 * PAGINACIÓN
 	 */
-	
+
+	/**
+	 * Calcula dinámicamente el número total de páginas requeridas para
+	 * mostrar la lista de clientes actuales, en función del tamaño de página fijado.
+	 */
 	private void calcularPaginas() {
 		totalPaginas = (int) Math.ceil((double) clientesActuales.size() / clientesPorPagina);
 		if (totalPaginas == 0) totalPaginas = 1;
 	}
-	
+
+	/**
+	 * Refresca la información visual del módulo de paginación, habilitando o
+	 * deshabilitando los botones de "Anterior" y "Siguiente" según la página en curso.
+	 */
 	private void actualizarPaginacion() {
 		labelPaginacion.setText(String.format("Página %d de %d", paginaActual + 1, totalPaginas));
 		btnAnterior.setEnabled(paginaActual > 0);
@@ -326,7 +382,11 @@ public class PanelListaClientes extends JPanel {
 		btnAnterior.setText(paginaActual == 0 ? "" : "< Anterior");
 		btnSiguiente.setText(paginaActual == totalPaginas - 1 ? "" : "Siguiente >");
 	}
-	
+
+	/**
+	 * Retrocede a la página previa de resultados si no se encuentra en la primera página,
+	 * repintando la tabla con el tramo de datos correspondiente.
+	 */
 	private void irPaginaAnterior() {
 		if (paginaActual > 0) {
 			paginaActual--;
@@ -334,7 +394,11 @@ public class PanelListaClientes extends JPanel {
 			actualizarPaginacion();
 		}
 	}
-	
+
+	/**
+	 * Avanza a la siguiente página de resultados si no se encuentra en la última página,
+	 * repintando la tabla con el tramo de datos correspondiente.
+	 */
 	private void irPaginaSiguiente() {
 		if (paginaActual < totalPaginas - 1) {
 			paginaActual++;
@@ -342,23 +406,33 @@ public class PanelListaClientes extends JPanel {
 			actualizarPaginacion();
 		}
 	}
-	
+
 	/**
 	 * VER DETALLES DEL CLIENTE
 	 */
-	
+
+	/**
+	 * Identifica el cliente seleccionado en la tabla y solicita al panel padre
+	 * que alterne la vista al panel de detalles, suministrándole la instancia.
+	 *
+	 * @param fila Índice visual de la fila seleccionada dentro de la página actual.
+	 */
 	private void verDetallesCliente(int fila) {
 		int inicio = paginaActual * clientesPorPagina;
 		Client cliente = clientesActuales.get(inicio + fila);
-		
+
 		// Mostrar el panel de detalles
 		panelPadre.mostrarDetalles(cliente);
 	}
-	
+
 	/**
 	 * LIMPIAR Y REFRESCAR
 	 */
-	
+
+	/**
+	 * Restablece el buscador al estado por defecto ("Buscar clientes"),
+	 * vuelve a la página 1 de resultados y recarga todos los clientes del sistema.
+	 */
 	public void limpiarBusqueda() {
 		aplicarPlaceholder();
 		paginaActual = 0;
