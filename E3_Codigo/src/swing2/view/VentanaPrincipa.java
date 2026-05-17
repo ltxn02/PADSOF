@@ -2,6 +2,7 @@ package swing2.view;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.net.URL;
 
 import javax.swing.*;
 
@@ -44,6 +45,20 @@ public class VentanaPrincipa extends JFrame {
             }
         });
         setLocationRelativeTo(null);
+
+        try {
+            URL iconURL = getClass().getResource("/foto/logoi.png"); 
+            if (iconURL == null) {
+                iconURL = getClass().getResource("../../foto/logoi.png");
+            }
+
+            if (iconURL != null) {
+                ImageIcon icon = new ImageIcon(iconURL);
+                this.setIconImage(icon.getImage());
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el icono de la aplicación");
+        }
 
         ReproductorMusica musica = new ReproductorMusica();
         musica.reproducirMusica("/foto/musica_fondo.wav");
