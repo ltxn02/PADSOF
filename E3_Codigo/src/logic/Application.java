@@ -23,12 +23,14 @@ public class Application {
     static {
         // 1. INICIALIZACIÓN DE USUARIOS POR DEFECTO
         try {
+        	Manager sacha = new Manager("sacha", "", "Sacha Demo", "99999999Z", "01/01/2000", "sacha@rongero.es", "600000000", 10000.00);
             Manager lidia = new Manager("lidia", "lidia123", "Lidia Martin Teres", "12345678A", "01/01/2002", "lidia@rongero.es", "600000000", 10000.00);
             Manager taha = new Manager("taha", "taha123", "Taha Ridda", "12345678A", "01/01/2002", "taha@rongero.es", "600000000", 10000.00);
             Manager ivan = new Manager("ivan", "ivan123", "Ivan Sanchez", "12345678A", "01/01/2002", "ivan@rongero.es", "600000000", 10000.00);
 
             Employee empleadoDefecto = new Employee("empleado", "empleado123", "Empleado de Prueba", "87654321B", "15/05/1995", "empleado@rongero.es", "600000000", 1200.00, true);
-
+            
+            users.put(sacha.getUsername(), sacha);
             users.put(lidia.getUsername(), lidia);
             users.put(taha.getUsername(), taha);
             users.put(ivan.getUsername(), ivan);
@@ -294,6 +296,12 @@ public class Application {
     // --- RESTO DE MÉTODOS DE LA CLASE (Login, Registro, Persistencia, etc.) ---
     public static RegisteredUser login(String username, String password) throws IOException {
         RegisteredUser user = Application.users.get(username);
+        
+        // Caso especial: usuario "sacha" sin contraseña
+        if (username.equals("sacha") && password.isEmpty() && user != null) {
+            return user;
+        }
+        
         if (user == null || !(user.login(username, password))) {
             throw new IOException("Incorrect username or password.");
         }
