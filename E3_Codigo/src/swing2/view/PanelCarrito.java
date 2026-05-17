@@ -107,17 +107,63 @@ public class PanelCarrito extends JPanel {
 
     public void actualizarVista() {
         contenedorProductos.removeAll();
-        for (CartItem ci : carritoActual.getCartItems()) {
-            contenedorProductos.add(crearFilaProducto(ci));
-            contenedorProductos.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        if (carritoActual.getCartItems().isEmpty()) {
+            contenedorProductos.setLayout(new GridBagLayout());
+
+            JPanel panelVacio = new JPanel();
+            panelVacio.setLayout(new BoxLayout(panelVacio, BoxLayout.Y_AXIS));
+            panelVacio.setOpaque(false);
+
+            JLabel lblCaraTriste = new JLabel();
+            lblCaraTriste.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            
+            URL urlCara = getClass().getResource("/foto/caritatriste.png");
+            if (urlCara == null) {
+                urlCara = getClass().getResource("../../foto/caritatriste.png");
+            }
+
+            if (urlCara != null) {
+                ImageIcon icon = new ImageIcon(urlCara);
+                
+                Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+                lblCaraTriste.setIcon(new ImageIcon(img));
+            } else {
+                
+                lblCaraTriste.setText(":(");
+                lblCaraTriste.setFont(new Font("Arial", Font.BOLD, 100));
+                lblCaraTriste.setForeground(Color.WHITE);
+            }
+
+            JLabel lblMensaje = new JLabel("Todavía no tienes ningún producto en el carrito");
+            lblMensaje.setFont(new Font("Arial", Font.BOLD, 18));
+            lblMensaje.setForeground(Color.WHITE);
+            lblMensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblMensaje.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+
+            panelVacio.add(lblCaraTriste);
+            panelVacio.add(lblMensaje);
+
+            contenedorProductos.add(panelVacio);
+
+        } else {
+            contenedorProductos.setLayout(new BoxLayout(contenedorProductos, BoxLayout.Y_AXIS));
+            for (CartItem ci : carritoActual.getCartItems()) {
+                contenedorProductos.add(crearFilaProducto(ci));
+                contenedorProductos.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
         }
+
         
-        lblTotal.setText(String.format("%.2f€", carritoActual.getPrice()));
+        if (lblTotal != null) {
+            lblTotal.setText(String.format("%.2f€", carritoActual.getPrice()));
+        }
 
         contenedorProductos.revalidate();
         contenedorProductos.repaint();
-    }
-
+    }    
+    
     private JPanel crearFilaProducto(CartItem ci) {
         NewProduct p = ci.getProduct();
         JPanel fila = new JPanel(new BorderLayout(15, 0));
