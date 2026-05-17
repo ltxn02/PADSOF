@@ -778,16 +778,17 @@ public class PanelIntercambios extends JPanel {
         }
     }
 
-    
-    
-    
+
+
+
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
         barra.setPreferredSize(new Dimension(1000, 80));
 
-        JPanel nav = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        nav.setOpaque(false);
+        
+        JPanel navIzquierda = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        navIzquierda.setOpaque(false);
 
         btnInicio = crearBotonNav("Inicio");
         btnProductos = crearBotonNav("Productos");
@@ -797,14 +798,83 @@ public class PanelIntercambios extends JPanel {
         btnProductos.addActionListener(e -> ventana.mostrarPantalla("CATALOGO"));
         btnIntercambios.addActionListener(e -> ventana.mostrarPantalla("INTERCAMBIOS"));
 
-        nav.add(crearPanelLogo());
-        nav.add(btnInicio);
-        nav.add(btnProductos);
-        nav.add(btnIntercambios);
-        barra.add(nav, BorderLayout.WEST);
+        navIzquierda.add(crearPanelLogo());
+        navIzquierda.add(btnInicio);
+        navIzquierda.add(btnProductos);
+        navIzquierda.add(btnIntercambios);
+
+        
+        barra.add(navIzquierda, BorderLayout.WEST);
+        barra.add(crearPanelUsuarioIconos(), BorderLayout.EAST); 
+
         add(barra, BorderLayout.NORTH);
     }
+    private JPanel crearPanelUsuarioIconos() {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
+        p.setOpaque(false);
 
+        
+        JButton btnPerfil = new JButton();
+        estilizarBotonTransparente(btnPerfil);
+
+        String[] rutasPerfil = {
+                "E3_Codigo/src/foto/logoPerfil.png",
+                "src/foto/logoPerfil.png",
+                "../src/foto/logoPerfil.png"
+        };
+
+        File fPerfil = buscarImagen(rutasPerfil);
+        if (fPerfil != null) {
+            Image img = new ImageIcon(fPerfil.getAbsolutePath()).getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            btnPerfil.setIcon(new ImageIcon(img));
+        } else {
+            btnPerfil.setText("Perfil");
+            btnPerfil.setForeground(Color.WHITE);
+        }
+
+        
+        JButton btnCarrito = new JButton();
+        estilizarBotonTransparente(btnCarrito);
+
+        String[] rutasCarrito = {
+                "E3_Codigo/src/foto/logoCarritoProvisional.png",
+                "src/foto/logoCarritoProvisional.png",
+                "../src/foto/logoCarritoProvisional.png"
+        };
+
+        File fCarrito = buscarImagen(rutasCarrito);
+        if (fCarrito != null) {
+            Image img = new ImageIcon(fCarrito.getAbsolutePath()).getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+            btnCarrito.setIcon(new ImageIcon(img));
+        } else {
+            btnCarrito.setText("Carrito");
+            btnCarrito.setForeground(Color.WHITE);
+        }
+
+        
+        btnPerfil.addActionListener(e -> ventana.mostrarPantalla("PERFIL"));
+        btnCarrito.addActionListener(e -> ventana.mostrarPantalla("CARRITO"));
+
+        p.add(btnPerfil);
+        p.add(btnCarrito);
+        return p;
+    }
+
+    
+    private void estilizarBotonTransparente(JButton b) {
+        b.setContentAreaFilled(false);
+        b.setBorderPainted(false);
+        b.setFocusPainted(false);
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    private File buscarImagen(String[] rutas) {
+        for (String ruta : rutas) {
+            File f = new File(ruta);
+            if (f.exists()) return f;
+        }
+        return null;
+    }
     private JButton crearBotonNav(String t) {
         JButton b = new JButton(t);
         b.setPreferredSize(new Dimension(140, 80));

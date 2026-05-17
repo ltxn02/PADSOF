@@ -266,18 +266,19 @@ public class PanelPerfil extends JPanel {
         t.setRowHeight(30);
         t.getTableHeader().setBackground(new Color(40, 40, 80));
         t.getTableHeader().setForeground(Color.WHITE);
-
-        if (titulo.equals("NOTIFICACIONES")) {
-            t.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent e) {
-                    int fila = t.getSelectedRow();
-                    if (fila != -1) {
-                        gestionarLecturaNotificacion(fila);
-                    }
+        t.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseClicked(java.awt.event.MouseEvent e) {
+            int fila = t.getSelectedRow();
+            if (fila != -1) {
+                if (titulo.equals("NOTIFICACIONES")) {
+                    gestionarLecturaNotificacion(fila);
+                } else if (titulo.equals("MIS PEDIDOS")) {
+                    gestionarDetallePedido(fila); 
                 }
-            });
+            }
         }
+    });        
 
         JScrollPane sp = new JScrollPane(t);
         sp.getViewport().setBackground(new Color(20, 20, 50));
@@ -323,5 +324,30 @@ public class PanelPerfil extends JPanel {
     protected void paintComponent(Graphics g) {
         if (imagenFondo != null) g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
         super.paintComponent(g);
+    }
+    private void gestionarDetallePedido(int index) {
+        if (!(usuario instanceof Client)) return;
+        List<Order> pedidos = ((Client)usuario).getOrders();
+
+        if (index >= 0 && index < pedidos.size()) {
+            Order o = pedidos.get(index);
+
+            
+            StringBuilder detalleProds = new StringBuilder();
+            
+            
+            detalleProds.append("Código de Recogida: ").append(o.getPickupCode()).append("\n");
+            detalleProds.append("Fecha: ").append(o.getPaidAt() != null ? fmt.format(o.getPaidAt()) : "Pendiente").append("\n");
+            detalleProds.append("Estado: ").append(o.getOrderStatus()).append("\n");
+            detalleProds.append("------------------------------------------\n");
+            detalleProds.append("Precio Total: ").append(String.format("%.2f€", o.getPrice())).append("\n");
+
+            JOptionPane.showMessageDialog(this,
+                    detalleProds.toString(),
+                    "Detalle del Pedido #" + o.getPickupCode(),
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            
+        }
     }
 }

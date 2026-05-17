@@ -59,6 +59,28 @@ public class PanelRegistro extends JPanel {
         g.gridy = r; g.gridx = 0; g.gridwidth = 3;
         g.insets = new Insets(20, 8, 8, 8);
         this.add(btnFinalizar, g);
+        // --- BOTÓN VOLVER AL INICIO ---
+        JButton btnVolver = new JButton("¿Ya tienes cuenta? Inicia sesión o vuelve atrás");
+        btnVolver.setForeground(new Color(200, 220, 255));
+        btnVolver.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnVolver.setContentAreaFilled(false);
+        btnVolver.setBorderPainted(false);
+        btnVolver.setFocusPainted(false);
+        btnVolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Lo añadimos debajo del botón finalizar
+        g.gridy = r + 1;
+        g.gridx = 0;
+        g.gridwidth = 3;
+        g.insets = new Insets(0, 8, 8, 8);
+        this.add(btnVolver, g);
+
+        // Acción para volver
+        btnVolver.addActionListener(e -> {
+            limpiarCampos();
+            ventana.mostrarPantalla("INICIO");
+        });
+
     }
 
     private void agregarFilaFormulario(String etiqueta, JTextField campo, JToggleButton boton, GridBagConstraints g, int fila) {

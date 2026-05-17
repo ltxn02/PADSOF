@@ -571,6 +571,8 @@ public class PanelInicioo extends JPanel {
 
         return p;
     }
+
+
     public void mostrarDetalleProducto(NewProduct p) {
         
         panelCuerpo.removeAll();

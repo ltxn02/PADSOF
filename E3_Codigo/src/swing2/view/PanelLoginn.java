@@ -105,6 +105,25 @@ public class PanelLoginn extends JPanel {
 
         gbcMain.gridy = 1;
         this.add(panelAzul, gbcMain);
+        
+        JButton btnVolver = new JButton("Volver al inicio");
+        btnVolver.setForeground(new Color(200, 220, 255));
+        btnVolver.setFont(new Font("Arial", Font.PLAIN, 12));
+        btnVolver.setContentAreaFilled(false);
+        btnVolver.setBorderPainted(false);
+        btnVolver.setFocusPainted(false);
+        btnVolver.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+
+        gbcForm.gridy = 5; 
+        gbcForm.insets = new Insets(0, 10, 10, 10);
+        panelAzul.add(btnVolver, gbcForm);
+
+
+        btnVolver.addActionListener(e -> {
+            limpiarCampos(); 
+            ventanaPadre.mostrarPantalla("INICIO");
+        });
     }
 
     private JLabel crearLabel(String texto) {
