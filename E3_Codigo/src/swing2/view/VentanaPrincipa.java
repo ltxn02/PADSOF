@@ -60,6 +60,8 @@ public class VentanaPrincipa extends JFrame {
             System.err.println("No se pudo cargar el icono de la aplicación");
         }
 
+        ReproductorMusica musica = new ReproductorMusica();
+        musica.reproducirMusica("/foto/musica_fondo.wav");
         panelCliente = new PanelInicioo(this, usuarioLogueado);
         panelGestor = new PanelDashboard(this, null);
 
