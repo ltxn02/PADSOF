@@ -7,6 +7,7 @@ import swing2.view.VentanaPrincipa;
 import swing2.view.gestor.clientes.PanelGestionClientes;
 import swing2.view.gestor.descuentos.PanelGestionDescuentos;
 import swing2.view.gestor.empleados.PanelGestionEmpleados;
+import swing2.view.gestor.estadisticas.PanelGestionEstadisticas;
 import swing2.view.gestor.productos.PanelGestionProductos;
 
 import java.awt.*;
@@ -46,7 +47,7 @@ public class PanelDashboard extends JPanel {
 		this.add(panelContenido, BorderLayout.CENTER);
 		
 		// Agregar los paneles de contenido
-		panelContenido.add(crearPanelPrueba("ESTADÍSTICAS"), "ESTADISTICAS");
+		panelContenido.add(new PanelGestionEstadisticas(ventanaPadre), "ESTADISTICAS");
 		panelContenido.add(new PanelGestionDescuentos(ventanaPadre), "DESCUENTOS");
 		panelContenido.add(new PanelGestionProductos(ventanaPadre), "PRODUCTOS");
 		panelContenido.add(new PanelGestionEmpleados(ventanaPadre), "EMPLEADOS");
