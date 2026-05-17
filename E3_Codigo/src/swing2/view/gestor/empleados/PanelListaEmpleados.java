@@ -14,6 +14,8 @@ import users.Employee;
 
 /**
  * Panel que muestra el listado de empleados con tabla, búsqueda y paginación.
+ * 
+ * @author Lidia Martín
  */
 public class PanelListaEmpleados extends JPanel {
 	private PanelGestionEmpleados panelPadre;  // Para volver atrás
@@ -41,6 +43,14 @@ public class PanelListaEmpleados extends JPanel {
 	private static final Color COLOR_TABLE = new Color(40, 80, 140);
 	private static final Color COLOR_HEADER = new Color(20, 50, 100);
 	
+	/**
+	 * Constructor de la clase PanelListaEmpleados.
+	 * Configura el layout, inicializa los componentes de la interfaz (barra superior,
+	 * tabla con scroll, barra de paginación) y carga los datos iniciales de los empleados.
+	 * 
+	 * @param panelPadre Panel de gestión de empleados que actúa como contenedor de navegación.
+	 * @param ctrl       Controlador encargado de la lógica de negocio de los empleados.
+	 */
 	public PanelListaEmpleados(PanelGestionEmpleados panelPadre, GestorEmpleadoController ctrl) {
 		this.panelPadre = panelPadre;
 		this.ctrl = ctrl;
@@ -79,7 +89,10 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * 1.- BARRA SUPERIOR (búsqueda + botón "Añadir empleado")
+	 * Construye la barra superior que contiene el campo de texto para la búsqueda
+	 * en tiempo real y el botón destinado a añadir un nuevo empleado.
+	 * 
+	 * @return Un JPanel alineado y configurado para la zona norte de la interfaz.
 	 */
 	private JPanel crearBarraSuperior() {
 	    // Contenedor invisible para centrar
@@ -157,6 +170,10 @@ public class PanelListaEmpleados extends JPanel {
 	    return contenedor;
 	}
 	
+	/**
+	 * Aplica el texto por defecto y la tipografía en cursiva como marcador de posición 
+	 * (placeholder) en el cuadro de búsqueda de empleados.
+	 */
 	private void aplicarPlaceholder() {
 	    campoBusqueda.setText("Buscar empleados");
 	    campoBusqueda.setForeground(Color.GRAY);
@@ -164,7 +181,9 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * 2.- CREAR LA TABLA
+	 * Inicializa y define el JTable, configurando las columnas, deshabilitando la edición 
+	 * directa de celdas, personalizando renderizadores (filas alternas y texto centrado), 
+	 * estilizando la cabecera y enlazando el evento de selección para detalles.
 	 */
 	private void crearTabla() {
 		String[] columnas = {"Nombre", "Usuario", "Correo", "Teléfono", "Rol", "Estado", "Detalles"};
@@ -256,7 +275,10 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * 3.- CREAR BARRA DE PAGINACIÓN
+	 * Configura la barra inferior de paginación que agrupa los botones de navegación 
+	 * interactivos (Anterior/Siguiente) junto con la leyenda explicativa de roles.
+	 * 
+	 * @return Un JPanel listo para posicionarse en la zona sur de la interfaz.
 	 */
 	private JPanel crearBarraPaginacion() {
 		JPanel barra = new JPanel(new BorderLayout());
@@ -305,10 +327,11 @@ public class PanelListaEmpleados extends JPanel {
 		return barra;
 	}
 	
-	/*
-	 * ========================================================
-	 * LEYENDA DE ROLES
-	 * ========================================================
+	/**
+	 * Crea un subpanel de texto informativo para indicar el significado 
+	 * de las siglas de los roles asignados a los empleados en la tabla.
+	 * 
+	 * @return Un JPanel con la leyenda alineada.
 	 */
 	private JPanel crearLeyendaRoles() {
 		JPanel leyenda = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 5));
@@ -340,9 +363,9 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * LÓGICA: CARGAR, BUSCAR, ACTUALIZAR
+	 * Consulta los empleados disponibles mediante el controlador, inicializa las estructuras
+	 * de filtrado, calcula el rango de páginas y repinta la información.
 	 */
-	
 	public void cargarEmpleados() {
 		empleadosFiltrados = ctrl.obtenerEmpleados();
 		empleadosActuales = new ArrayList<>(empleadosFiltrados);
@@ -351,11 +374,21 @@ public class PanelListaEmpleados extends JPanel {
 		actualizarPaginacion();
 	}
 	
+	/**
+	 * Filtra la colección de empleados actual apoyándose en el controlador utilizando
+	 * un criterio de búsqueda textual y recalcula las páginas resultantes.
+	 * 
+	 * @param termino Cadena de texto que representa el filtro introducido.
+	 */
 	private void buscarEmpleados(String termino) {
 		empleadosActuales = ctrl.buscarEmpleados(empleadosFiltrados, termino);
 		calcularPaginas();
 	}
 	
+	/**
+	 * Limpia las filas actuales de la tabla y escribe los datos de los empleados 
+	 * correspondientes a la página activa calculando los límites de índice pertinentes.
+	 */
 	private void actualizarTabla() {
 		modeloTabla.setRowCount(0);
 		
@@ -391,10 +424,11 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * Convierte los roles del empleado a abreviaturas
-	 * OE = ORDERS_EMPLOYEE
-	 * EI = EXCHANGES_EMPLOYEE
-	 * EP = PRODUCTS_EMPLOYEE
+	 * Convierte la lista interna de roles enumerados de un empleado en una 
+	 * representación condensada por siglas separadas por comas.
+	 * 
+	 * @param emp Instancia del empleado a evaluar.
+	 * @return Cadena formateada con las abreviaturas de los roles (OE, EI, EP) o "N/A".
 	 */
 	private String obtenerRolesAbreviados(Employee emp) {
 		StringBuilder roles = new StringBuilder();
@@ -424,14 +458,18 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * PAGINACIÓN
+	 * Realiza la operación matemática de techo para determinar el número máximo
+	 * de páginas requeridas según la dimensión de la lista de empleados.
 	 */
-	
 	private void calcularPaginas() {
 		totalPaginas = (int) Math.ceil((double) empleadosActuales.size() / empleadosPorPagina);
 		if (totalPaginas == 0) totalPaginas = 1;
 	}
 	
+	/**
+	 * Actualiza el texto informativo del contador de páginas y habilita o deshabilita 
+	 * el estado funcional y los textos de los botones Anterior y Siguiente.
+	 */
 	private void actualizarPaginacion() {
 		labelPaginacion.setText(String.format("Página %d de %d", paginaActual + 1, totalPaginas));
 		btnAnterior.setEnabled(paginaActual > 0);
@@ -440,6 +478,10 @@ public class PanelListaEmpleados extends JPanel {
 		btnSiguiente.setText(paginaActual == totalPaginas - 1 ? "" : "Siguiente >");
 	}
 	
+	/**
+	 * Disminuye el índice de página actual si no se encuentra en el origen, 
+	 * refrescando las celdas de la tabla y sus mandos.
+	 */
 	private void irPaginaAnterior() {
 		if (paginaActual > 0) {
 			paginaActual--;
@@ -448,6 +490,10 @@ public class PanelListaEmpleados extends JPanel {
 		}
 	}
 	
+	/**
+	 * Incrementa el índice de página actual si quedan elementos posteriores, 
+	 * refrescando las celdas de la tabla y sus mandos.
+	 */
 	private void irPaginaSiguiente() {
 		if (paginaActual < totalPaginas - 1) {
 			paginaActual++;
@@ -457,9 +503,11 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * VER DETALLES DEL EMPLEADO
+	 * Identifica el objeto Staff exacto correspondiente a la fila seleccionada 
+	 * combinando el desplazamiento de paginación e instruye al panel principal para mostrarlo.
+	 * 
+	 * @param fila Índice relativo de la fila pulsada dentro de la vista actual del JTable.
 	 */
-	
 	private void verDetallesEmpleado(int fila) {
 		int inicio = paginaActual * empleadosPorPagina;
 		Staff empleado = empleadosActuales.get(inicio + fila);
@@ -469,9 +517,9 @@ public class PanelListaEmpleados extends JPanel {
 	}
 	
 	/**
-	 * LIMPIAR Y REFRESCAR
+	 * Restablece el control visual del cuadro de búsqueda al marcador original, 
+	 * posiciona la navegación en la primera página y recarga el listado completo.
 	 */
-	
 	public void limpiarBusqueda() {
 		aplicarPlaceholder();
 		paginaActual = 0;

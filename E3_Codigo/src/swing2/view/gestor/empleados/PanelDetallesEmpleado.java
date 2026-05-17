@@ -10,6 +10,13 @@ import users.Employee;
 import utils.Permission;
 import utils.EmployeeRoles;
 
+/**
+ * Panel de visualización y edición avanzada para los detalles de un empleado.
+ * Muestra información personal, de contacto, laboral, y permite la gestión directa
+ * de estados (Activo/Inactivo), permisos y roles del empleado seleccionado.
+ * 
+ * @author Lidia Martín
+ */
 public class PanelDetallesEmpleado extends JPanel {
 	private PanelGestionEmpleados panelPadre;
 	private GestorEmpleadoController ctrl;
@@ -20,6 +27,14 @@ public class PanelDetallesEmpleado extends JPanel {
 	private static final Color COLOR_PANEL_INFO = new Color(40, 80, 140);
 	private static final Color COLOR_LABEL = new Color(187, 192, 199);
 	
+	/**
+	 * Constructor de la clase PanelDetallesEmpleado.
+	 * Configura los parámetros iniciales de diseño del panel contenedor, tales como
+	 * la distribución de bordes, color de fondo estructural y márgenes interiores.
+	 * 
+	 * @param panelPadre Panel de gestión de empleados que funciona como orquestador de navegación.
+	 * @param ctrl       Controlador que gestiona la lógica de persistencia y estado de los empleados.
+	 */
 	public PanelDetallesEmpleado(PanelGestionEmpleados panelPadre, GestorEmpleadoController ctrl) {
 		this.panelPadre = panelPadre;
 		this.ctrl = ctrl;
@@ -29,7 +44,12 @@ public class PanelDetallesEmpleado extends JPanel {
 		this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 	}
 	
-	// Cargar y mostrar los detalles de un empleado
+	/**
+	 * Reconstruye dinámicamente la interfaz para cargar y mostrar los detalles actualizados
+	 * de un miembro del personal, estructurando el contenido en cabecera, cuerpo y botonera.
+	 * 
+	 * @param empleado Instancia de Staff de la cual se va a extraer y representar la información.
+	 */
 	public void mostrarDetalles(Staff empleado) {
 		this.empleado = empleado;
 		
@@ -56,7 +76,12 @@ public class PanelDetallesEmpleado extends JPanel {
 		this.repaint();
 	}
 	
-	// BARRA SUPERIOR
+	/**
+	 * Construye la barra superior que alberga el título informativo de la pantalla
+	 * y el botón interactivo para regresar al listado general de personal.
+	 * 
+	 * @return Un JPanel formateado para la cabecera del módulo de detalles.
+	 */
 	private JPanel crearBarraSuperior() {
 		JPanel barra = new JPanel(new BorderLayout());
 		barra.setBackground(COLOR_FONDO);
@@ -84,7 +109,12 @@ public class PanelDetallesEmpleado extends JPanel {
 		return barra;
 	}
 	
-	// CONTENIDO PRINCIPAL: Información del empleado
+	/**
+	 * Instancia, agrupa y organiza secuencialmente todas las subsecciones informativas
+	 * y de edición asociadas al registro del empleado (personales, contacto, laborales, roles y permisos).
+	 * 
+	 * @return Un JPanel contenedor estructurado mediante un diseño de BoxLayout vertical.
+	 */
 	private JPanel crearContenidoPrincipal() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -150,7 +180,13 @@ public class PanelDetallesEmpleado extends JPanel {
 		return panel;
 	}
 	
-	// SECCIÓN CON TÍTULO
+	/**
+	 * Crea un panel contenedor con esquinas lógicas para encapsular bajo un mismo
+	 * bloque visual y un título descriptivo un conjunto homogéneo de información.
+	 * 
+	 * @param titulo Texto indicador de la categoría de datos que se listará en el bloque.
+	 * @return Un JPanel formateado listo para la inserción de tuplas de información.
+	 */
 	private JPanel crearSeccion(String titulo) {
 		JPanel seccion = new JPanel();
 		seccion.setLayout(new BoxLayout(seccion, BoxLayout.Y_AXIS));
@@ -169,7 +205,14 @@ public class PanelDetallesEmpleado extends JPanel {
 		return seccion;
 	}
 	
-	// FILA DE INFORMACION
+	/**
+	 * Modela un componente de fila simple y alineado compuesto por una etiqueta 
+	 * fija de metadato y su valor textual correspondiente en formato clave-valor.
+	 * 
+	 * @param etiqueta Texto que describe la propiedad o campo informativo.
+	 * @param valor    Texto que representa el dato concreto del campo.
+	 * @return Un JPanel alineado horizontalmente a la izquierda.
+	 */
 	private JPanel crearFilaInfo(String etiqueta, String valor) {
 		JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 5));
 		fila.setOpaque(false);
@@ -193,7 +236,12 @@ public class PanelDetallesEmpleado extends JPanel {
 		return fila;
 	}
 	
-	// BARRA INFERIOR: Solo botón volver
+	/**
+	 * Genera la barra inferior del módulo que contiene un control secundario
+	 * de retorno a la lista de administración de empleados.
+	 * 
+	 * @return Un JPanel configurado para la sección sur del panel.
+	 */
 	private JPanel crearBarraInferior() {
 		JPanel barra = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		barra.setBackground(COLOR_FONDO);
@@ -215,7 +263,14 @@ public class PanelDetallesEmpleado extends JPanel {
 		return barra;
 	}
 	
-	// FILA DE ESTADO
+	/**
+	 * Crea un componente de fila interactivo que mediante un grupo de botones de opción
+	 * (JRadioButton) permite conmutar y persistir el estado habilitado del empleado.
+	 * 
+	 * @param etiqueta Texto del descriptor de estado de la fila.
+	 * @param activo   Valor booleano representativo del estado inicial actual del empleado.
+	 * @return Un JPanel con los controles interactivos integrados y vinculados al controlador.
+	 */
 	private JPanel crearFilaEstado(String etiqueta, boolean activo) {
 	    JPanel fila = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 5));
 	    fila.setOpaque(false);
@@ -274,7 +329,14 @@ public class PanelDetallesEmpleado extends JPanel {
 	    return fila;
 	}
 	
-	// FILA DE PERMISOS (CHECKBOXES EN 3 COLUMNAS)
+	/**
+	 * Diseña una matriz avanzada de checkboxes organizados en tres columnas temáticas
+	 * (Productos, Pedidos, Intercambios) para visualizar y modificar de manera granular
+	 * el conjunto de permisos del empleado.
+	 * 
+	 * @param emp Instancia del objeto Employee cuyos permisos van a ser editados.
+	 * @return Un JPanel con la cuadrícula de permisos y su respectivo botón de guardado.
+	 */
 	private JPanel crearFilaPermisos(Employee emp) {
 	    JPanel contenedor = new JPanel();
 	    contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
@@ -358,7 +420,14 @@ public class PanelDetallesEmpleado extends JPanel {
 	    return contenedor;
 	}
 
-	// FILA DE ROL (CHECKBOXES - IGUAL QUE PERMISOS)
+	/**
+	 * Configura una fila estructurada con controles de selección múltiple (JCheckBox) 
+	 * alineados horizontalmente para gestionar los diferentes tipos de roles empresariales
+	 * asignables al empleado.
+	 * 
+	 * @param emp Instancia del objeto Employee cuyos roles funcionales van a ser modificados.
+	 * @return Un JPanel con la botonera de roles y el disparador de sincronización de datos.
+	 */
 	private JPanel crearFilaRol(Employee emp) {
 	    JPanel contenedor = new JPanel();
 	    contenedor.setLayout(new BoxLayout(contenedor, BoxLayout.Y_AXIS));
