@@ -18,24 +18,24 @@ public class PanelListaClientes extends JPanel {
 	private PanelGestionClientes panelPadre;  // Para volver atrás
 	private GestorClienteController ctrl;
 	
-	// === TABLA ===
+	// TABLA
 	private JTable tabla;
 	private DefaultTableModel modeloTabla;
 	private JScrollPane scrollPane;
 	
-	// === BÚSQUEDA Y FILTRADO ===
+	// BÚSQUEDA Y FILTRADO
 	private JTextField campoBusqueda;
 	private ArrayList<Client> clientesFiltrados;
 	private ArrayList<Client> clientesActuales;
 	
-	// === PAGINACIÓN ===
+	// PAGINACIÓN
 	private int paginaActual = 0;
 	private int clientesPorPagina = 10;
 	private int totalPaginas = 1;
 	private JLabel labelPaginacion;
 	private JButton btnAnterior, btnSiguiente;
 	
-	// === COLORES ===
+	// COLORES
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	private static final Color COLOR_TABLE = new Color(40, 80, 140);
 	private static final Color COLOR_HEADER = new Color(20, 50, 100);
@@ -78,9 +78,7 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * 1.- BARRA SUPERIOR (SOLO búsqueda, ancho completo)
-	 * ========================================================
 	 */
 	private JPanel crearBarraSuperior() {
 	    // Contenedor invisible para centrar
@@ -92,7 +90,7 @@ public class PanelListaClientes extends JPanel {
 	    barra.setBackground(COLOR_FONDO);
 	    barra.setPreferredSize(new Dimension(900, 40)); // MISMO ANCHO QUE LA TABLA
 
-	    // --- Búsqueda (ANCHO COMPLETO) ---
+	    // Búsqueda (ANCHO COMPLETO)
 	    campoBusqueda = new JTextField();
 	    aplicarPlaceholder();
 	    campoBusqueda.setPreferredSize(new Dimension(900, 35));
@@ -143,12 +141,10 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * 2.- CREAR LA TABLA
-	 * ========================================================
 	 */
 	private void crearTabla() {
-		String[] columnas = {"ID", "Usuario", "Nombre Completo", "Email", "Teléfono", "Detalles"};
+		String[] columnas = {"ID", "Usuario", "Nombre completo", "Email", "Teléfono", "Detalles"};
 		
 		modeloTabla = new DefaultTableModel(columnas, 0) {
 			@Override
@@ -217,7 +213,7 @@ public class PanelListaClientes extends JPanel {
 		// Ajustar ancho de columnas
 		tabla.getColumnModel().getColumn(0).setPreferredWidth(80);	// ID Usuario
 		tabla.getColumnModel().getColumn(1).setPreferredWidth(130);	// Usuario
-		tabla.getColumnModel().getColumn(2).setPreferredWidth(225);	// Nombre Completo
+		tabla.getColumnModel().getColumn(2).setPreferredWidth(225);	// Nombre completo
 		tabla.getColumnModel().getColumn(3).setPreferredWidth(175);	// Email
 		tabla.getColumnModel().getColumn(4).setPreferredWidth(100);	// Teléfono
 		tabla.getColumnModel().getColumn(5).setPreferredWidth(100); // Ver más
@@ -236,9 +232,7 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * 3.- CREAR BARRA DE PAGINACIÓN
-	 * ========================================================
 	 */
 	private JPanel crearBarraPaginacion() {
 		JPanel barra = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -278,9 +272,7 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * LÓGICA: CARGAR, BUSCAR, ACTUALIZAR
-	 * ========================================================
 	 */
 	
 	public void cargarClientes() {
@@ -319,9 +311,7 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * PAGINACIÓN
-	 * ========================================================
 	 */
 	
 	private void calcularPaginas() {
@@ -354,9 +344,7 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * VER DETALLES DEL CLIENTE
-	 * ========================================================
 	 */
 	
 	private void verDetallesCliente(int fila) {
@@ -368,9 +356,7 @@ public class PanelListaClientes extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * LIMPIAR Y REFRESCAR
-	 * ========================================================
 	 */
 	
 	public void limpiarBusqueda() {

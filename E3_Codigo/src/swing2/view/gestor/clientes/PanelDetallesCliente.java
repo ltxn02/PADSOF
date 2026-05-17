@@ -83,7 +83,7 @@ public class PanelDetallesCliente extends JPanel {
 		return barra;
 	}
 	
-	// CONTENIDO PRINCIPAL: Información del cliente
+	// Información del cliente
 	private JPanel crearContenidoPrincipal() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

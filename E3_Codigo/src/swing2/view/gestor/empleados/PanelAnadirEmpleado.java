@@ -107,7 +107,7 @@ public class PanelAnadirEmpleado extends JPanel {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		panel.setOpaque(false);
 		
-		// Botón Guardar
+		// Botón guardar
 		JButton btnAnadir = new JButton("☑ Añadir empleado");
 		btnAnadir.setPreferredSize(new Dimension(200, 40));
 		btnAnadir.setBackground(new Color(46, 204, 113));

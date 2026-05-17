@@ -15,25 +15,23 @@ public class PanelGestionEmpleados extends JPanel {
 	private VentanaPrincipa ventanaPadre;
 	private GestorEmpleadoController ctrl;
 	
-	// === LAYOUT INTERNO (CardLayout) ===
+	// LAYOUT INTERNO (CardLayout)
 	private CardLayout layoutInterno;
 	private JPanel contenedorInterno;
 	
-	// === PANELES ===
+	// PANELES
 	private PanelListaEmpleados panelListado;
 	private PanelAnadirEmpleado panelAñadir;
 	private PanelDetallesEmpleado panelDetalles;
 	
-	// === COLORES ===
+	// COLORES
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	
 	public PanelGestionEmpleados(VentanaPrincipa ventanaPadre) {
 		this.ventanaPadre = ventanaPadre;
 		this.ctrl = new GestorEmpleadoController(ventanaPadre, this);
-		
-		// ============================================================
+
 		// USAR CardLayout INTERNO para cambiar entre listado y formulario
-		// ============================================================
 		layoutInterno = new CardLayout();
 		contenedorInterno = new JPanel(layoutInterno);
 		

@@ -24,16 +24,15 @@ public class GestorProductoController {
 	}
 
 	// Métodos para lógica de negocio (completar según sea necesario)
-	
 	public void agregarProducto(String nombre, double precio, int stock) {
-		// TODO: Implementar lógica de agregar producto
+		// Implementar lógica de agregar producto
 	}
 
 	public void actualizarProducto(int id, String nombre, double precio, int stock) {
-		// TODO: Implementar lógica de actualizar producto
+		// Implementar lógica de actualizar producto
 	}
 
 	public void eliminarProducto(int id) {
-		// TODO: Implementar lógica de eliminar producto
+		// Implementar lógica de eliminar producto
 	}
 }

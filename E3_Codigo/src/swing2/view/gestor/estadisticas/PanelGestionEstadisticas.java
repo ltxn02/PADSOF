@@ -15,7 +15,7 @@ public class PanelGestionEstadisticas extends JPanel {
     private VentanaPrincipa ventanaPadre;
     private GestorEstadisticasController ctrl;
     
-    // === COLORES LISOS ===
+    // COLORES LISOS
     private static final Color COLOR_FONDO = new Color(23, 48, 79);
     private static final Color COLOR_PANEL_1 = new Color(41, 128, 185);      // Azul
     private static final Color COLOR_PANEL_2 = new Color(39, 174, 96);       // Verde
@@ -23,7 +23,7 @@ public class PanelGestionEstadisticas extends JPanel {
     private static final Color COLOR_TEXT = Color.WHITE;
     private static final Color COLOR_TEXT_DIM = new Color(189, 195, 199);
     
-    // === FUENTES ===
+    // FUENTES
     private static final Font FUENTE_TITULO = new Font("Arial", Font.BOLD, 24);
     private static final Font FUENTE_SUBTITULO = new Font("Arial", Font.BOLD, 16);
     private static final Font FUENTE_NUMERO = new Font("Arial", Font.BOLD, 42);
@@ -66,21 +66,21 @@ public class PanelGestionEstadisticas extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(0, 0, 30, 0));
         
-        // ===== SECCIÓN 1: Recaudación (Ventas vs Valoración) =====
+        // SECCIÓN 1: Recaudación (Ventas vs Valoración)
         panel.add(crearSeccion(
             "RECAUDACIÓN",
             crearPanelRecaudacion()
         ));
         panel.add(Box.createVerticalStrut(30));
         
-        // ===== SECCIÓN 2: Productos Más Vendidos =====
+        // SECCIÓN 2: Productos más vendidos
         panel.add(crearSeccion(
             "PRODUCTOS MÁS VENDIDOS",
             crearPanelProductosMasVendidos()
         ));
         panel.add(Box.createVerticalStrut(30));
         
-        // ===== SECCIÓN 3: Usuarios Más Activos =====
+        // SECCIÓN 3: Usuarios más activos
         panel.add(crearSeccion(
             "USUARIOS MÁS ACTIVOS",
             crearPanelUsuariosMasActivos()
@@ -110,14 +110,12 @@ public class PanelGestionEstadisticas extends JPanel {
         return seccion;
     }
     
- // ========== PANEL 1: RECAUDACIÓN ==========
+ // PANEL 1: RECAUDACIÓN
     private JPanel crearPanelRecaudacion() {
         // Mantenemos las columnas y el espacio de 25 entre ellas
         JPanel panel = new JPanel(new GridLayout(1, 2, 25, 0));
         panel.setOpaque(false);
-        
-        // CAMBIO: Usamos PreferredSize con una altura un poco más holgada (130) 
-        // para que el radio redondeado y el texto respiren bien.
+
         panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 130));
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 130));
         
@@ -142,7 +140,7 @@ public class PanelGestionEstadisticas extends JPanel {
         return panel;
     }
     
- // ========== PANEL 2: PRODUCTOS MÁS VENDIDOS ==========
+ // PANEL 2: PRODUCTOS MÁS VENDIDOS
     private JPanel crearPanelProductosMasVendidos() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -171,7 +169,7 @@ public class PanelGestionEstadisticas extends JPanel {
         return panel;
     }
     
- // ========== PANEL 3: USUARIOS MÁS ACTIVOS ==========
+ // PANEL 3: USUARIOS MÁS ACTIVOS
     private JPanel crearPanelUsuariosMasActivos() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -200,7 +198,7 @@ public class PanelGestionEstadisticas extends JPanel {
         return panel;
     }
     
-// ========== COMPONENTES AUXILIARES ==========
+// COMPONENTES AUXILIARES
     
     private JPanel crearTarjetaMetrica(String titulo, String valor, String descripcion, Color color) {
         JPanel card = new JPanel() {

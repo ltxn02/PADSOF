@@ -85,7 +85,7 @@ public class GestorEmpleadoController {
                                   String email, String telefono, String password, 
                                   String confirmPassword, double salario) {
         
-        // ===== VALIDACIONES =====
+        // VALIDACIONES
         if (nombre == null || nombre.trim().isEmpty()) {
             JOptionPane.showMessageDialog(panel, "El nombre es obligatorio.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -150,7 +150,7 @@ public class GestorEmpleadoController {
                 fecha,
                 email,
                 telefono,
-                salario,  // ← SALARIO PERSONALIZADO
+                salario,  // SALARIO PERSONALIZADO
                 true      // Activo por defecto
             );
 
@@ -190,7 +190,7 @@ public class GestorEmpleadoController {
         String estado = empleado.isActive() ? "✅ Activo" : "❌ Inactivo";
 
         return "📋 DETALLES DEL EMPLEADO\n\n" +
-               "Nombre Completo: " + empleado.getFullname() + "\n" +
+               "Nombre completo: " + empleado.getFullname() + "\n" +
                "Usuario: " + empleado.getUsername() + "\n" +
                "Email: " + empleado.getEmail() + "\n" +
                "Teléfono: " + empleado.getPhoneNumber() + "\n" +
@@ -210,7 +210,7 @@ public class GestorEmpleadoController {
                 panel,
                 "❌ ELIMINAR EMPLEADO (PRÓXIMAMENTE)\n\n" +
                 "Se eliminaría a: " + empleado.getUsername(),
-                "Eliminar Empleado",
+                "Eliminar empleado",
                 JOptionPane.INFORMATION_MESSAGE
             );
             return true;
@@ -236,7 +236,7 @@ public class GestorEmpleadoController {
                 panel,
                 "✏️ EDITAR EMPLEADO (PRÓXIMAMENTE)\n\n" +
                 "Se editaría a: " + empleado.getUsername(),
-                "Editar Empleado",
+                "Editar empleado",
                 JOptionPane.INFORMATION_MESSAGE
             );
             return true;

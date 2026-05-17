@@ -10,11 +10,11 @@ public class PanelGestionClientes extends JPanel {
 	private VentanaPrincipa ventanaPadre;
 	private GestorClienteController ctrl;
 	
-	// === LAYOUT INTERNO (CardLayout) ===
+	// LAYOUT INTERNO (CardLayout)
 	private CardLayout layoutInterno;
 	private JPanel contenedorInterno;
 	
-	// === PANELES ===
+	// PANELES
 	private PanelListaClientes panelListado;
 	private PanelDetallesCliente panelDetalles;
 
@@ -24,10 +24,8 @@ public class PanelGestionClientes extends JPanel {
 	public PanelGestionClientes(VentanaPrincipa ventanaPadre) {
 		this.ventanaPadre = ventanaPadre;
 		this.ctrl = new GestorClienteController(ventanaPadre, this);
-		
-		// ============================================================
+
 		// USAR CardLayout INTERNO para cambiar entre paneles
-		// ============================================================
 		layoutInterno = new CardLayout();
 		contenedorInterno = new JPanel(layoutInterno);
 		

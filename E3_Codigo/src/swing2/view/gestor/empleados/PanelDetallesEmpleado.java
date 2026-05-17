@@ -43,7 +43,7 @@ public class PanelDetallesEmpleado extends JPanel {
 		// CONTENIDO CENTRAL: Información del empleado
 		JPanel contenidoPrincipal = crearContenidoPrincipal();
 		JScrollPane scroll = new JScrollPane(contenidoPrincipal);
-		scroll.getVerticalScrollBar().setUnitIncrement(16);   // más fluido
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 		this.add(scroll, BorderLayout.CENTER);
 		
@@ -109,11 +109,11 @@ public class PanelDetallesEmpleado extends JPanel {
 		panel.add(seccion2);
 		panel.add(Box.createVerticalStrut(20));
 		
-		// ===== SECCIÓN 3: INFORMACIÓN LABORAL =====
+		// SECCIÓN 3: INFORMACIÓN LABORAL
 	    JPanel seccion3 = crearSeccion("INFORMACIÓN LABORAL");
-	    seccion3.add(crearFilaInfo("Salario Mensual:", "€" + String.format("%.2f", empleado.getSalary())));
+	    seccion3.add(crearFilaInfo("Salario mensual:", "€" + String.format("%.2f", empleado.getSalary())));
 	    
-	    // === ESTADO CON RADIO BUTTONS ===
+	    // ESTADO CON RADIO BUTTONS
 	    if (empleado instanceof Employee) {
 	        Employee emp = (Employee) empleado;
 	        seccion3.add(crearFilaEstado("Estado:", emp.isEnabled()));
@@ -271,18 +271,18 @@ public class PanelDetallesEmpleado extends JPanel {
 	        btnInactivo.setSelected(true);
 	    }
 	    
-	    // ===== AGREGAR LISTENERS =====
+	    // AGREGAR LISTENERS
 	    btnActivo.addActionListener(e -> {
 	        boolean exito = ctrl.cambiarEstadoEmpleado(empleado, true);
 	        if (exito) {
-	            mostrarDetalles(empleado);  // Refrescar
+	            mostrarDetalles(empleado);
 	        }
 	    });
 	    
 	    btnInactivo.addActionListener(e -> {
 	        boolean exito = ctrl.cambiarEstadoEmpleado(empleado, false);
 	        if (exito) {
-	            mostrarDetalles(empleado);  // Refrescar
+	            mostrarDetalles(empleado);
 	        }
 	    });
 	    

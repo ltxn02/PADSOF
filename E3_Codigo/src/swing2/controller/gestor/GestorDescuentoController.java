@@ -131,7 +131,7 @@ public class GestorDescuentoController {
         
         if (desc instanceof PercentageDiscount) {
             PercentageDiscount pd = (PercentageDiscount) desc;
-            sb.append("Tipo: Rebaja Porcentual\n");
+            sb.append("Tipo: Rebaja porcentual\n");
             sb.append("Descuento: ").append(String.format("%.1f%%", pd.getValue())).append("\n");
             
             for (NewProduct p : Application.getCatalog()) {
@@ -149,7 +149,7 @@ public class GestorDescuentoController {
             
         } else if (desc instanceof VolumeDiscount) {
             VolumeDiscount vd = (VolumeDiscount) desc;
-            sb.append("Tipo: Descuento por Volumen\n");
+            sb.append("Tipo: Descuento por volumen\n");
             sb.append("Gasto mínimo: €").append(String.format("%.2f", vd.getThreshold())).append("\n");
             sb.append("Descuento: €").append(String.format("%.2f", vd.getValue())).append("\n");
             sb.append("Aplicable: Carrito completo\n");
@@ -162,7 +162,7 @@ public class GestorDescuentoController {
             
         } else if (desc instanceof QuantityDiscount) {
             QuantityDiscount qd = (QuantityDiscount) desc;
-            sb.append("Tipo: Descuento por Cantidad\n");
+            sb.append("Tipo: Descuento por cantidad\n");
             sb.append("Promoción: Lleva ").append(qd.getBuyX()).append(" paga ").append(qd.getPayY()).append("\n");
             
             for (NewProduct p : Application.getCatalog()) {
@@ -497,7 +497,7 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Método auxiliar que busca una categoría por nombre
+     * Metodo auxiliar que busca una categoría por nombre
      */
     private Category buscarCategoriaPorNombre(String nombre) {
         for (Category c : Application.getGlobalCategories()) {
@@ -509,7 +509,7 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Método auxiliar que busca un producto en el catálogo por su nombre
+     * Metodo auxiliar que busca un producto en el catálogo por su nombre
      */
     private NewProduct buscarProductoEnCatalogo(String nombre) {
         for (NewProduct p : Application.getCatalog()) {
