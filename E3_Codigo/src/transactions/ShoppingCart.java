@@ -89,27 +89,32 @@ public class ShoppingCart implements java.io.Serializable{
 	 * @param p        El producto ({@link NewProduct}) a añadir.
 	 * @param quantity La cantidad de unidades a añadir (debe ser > 0).
 	 */
-	public synchronized void addCartItem(NewProduct p, int quantity) {		
-	    CartItem c = null;
-	    double oldPrice = 0;
-	    
-	    if((c = this.cartContains(p)) == null) {
-	        c = new CartItem(p, quantity);
-	        this.cartItems.add(c);  // ← SOLO AÑADIR SI NO EXISTE
-	    } else {
-	        oldPrice = c.fullPrice();
-	        try {
-	            c.orderQuantity(quantity);
-	        } catch (Exception e) {
-	            System.err.println("Error ordering cart item: " + e.getMessage());
-	        }
-	    }
-	    
-	    this.fullPrice -= oldPrice;
-	    this.fullPrice += c.fullPrice();
-	}
-	
 	/**
+	 * Añade un producto al carrito o incrementa su cantidad si ya existe.
+	 * Incluye validación de stock para evitar compras superiores a las existencias.
+	 *
+	 * @param p        El producto (NewProduct) a añadir.
+	 * @param quantity La cantidad de unidades a añadir (debe ser > 0).
+	 */
+	public synchronized boolean addCartItem(NewProduct p, int quantity) {
+		CartItem c = this.cartContains(p);
+
+		
+		int cantidadEnCarrito = (c != null) ? c.getQuantity() : 0;
+		if ((cantidadEnCarrito + quantity) > p.getStock()) {
+			return false; 
+		}
+
+		if(c == null) {
+			c = new CartItem(p, quantity);
+			this.cartItems.add(c);
+		} else {
+			
+			c.setQuantity(c.getQuantity() + quantity);
+		}
+
+		return true; 
+	}	/**
 	 * Elimina una cantidad específica de un producto del carrito.
 	 * 
 	 * Si la cantidad solicitada es >= a la cantidad en el carrito, el CartItem se elimina completamente.
@@ -333,9 +338,9 @@ public class ShoppingCart implements java.io.Serializable{
     
     
     
-	// ═══════════════════════════════════════════════════════════
-    // HELPERS / MÉTODOS AUXILIARES PRIVADOS
-    // ═══════════════════════════════════════════════════════════
+	
+    
+    
 
 	
 	/**

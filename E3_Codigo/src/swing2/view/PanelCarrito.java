@@ -269,34 +269,47 @@ public class PanelCarrito extends JPanel {
         btnPagar.addActionListener(e -> {
             String nTarjeta = txtTarjeta.getText().trim();
 
-            
             if (!nTarjeta.matches("^[0-9]{16}$")) {
                 JOptionPane.showMessageDialog(dialog, "La tarjeta debe tener 16 números.", "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
-                
-                
                 Client clienteActual = (Client) ventana.getUsuarioLogueado();
+
+                
+                for (CartItem ci : carritoActual.getCartItems()) {
+                    if (ci.getQuantity() > ci.getProduct().getStock()) {
+                        JOptionPane.showMessageDialog(dialog, "Error: El stock de " + ci.getProduct().getName() + " ha cambiado y ya no hay suficiente.", "Error de Stock", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
                 Order nuevoPedido = new Order(
                         clienteActual,
                         new ArrayList<>(carritoActual.getCartItems()),
                         carritoActual.getPrice()
                 );
 
-                
                 boolean exito = nuevoPedido.procesarPago(nTarjeta);
 
                 if (exito) {
-                    dialog.dispose(); 
+                    
+                    for (CartItem ci : carritoActual.getCartItems()) {
+                        NewProduct p = ci.getProduct();
+                        p.decreaseStock(ci.getQuantity()); 
+                    }
 
                     
+                    
+                    
+
+                    dialog.dispose();
+
                     JOptionPane.showMessageDialog(this,
                             "¡Pago realizado con éxito!\nCódigo de recogida: " + nuevoPedido.getPickupCode(),
                             "Pedido confirmado", JOptionPane.INFORMATION_MESSAGE);
 
-                    
                     carritoActual.clearCart();
                     actualizarVista();
 
@@ -308,7 +321,6 @@ public class PanelCarrito extends JPanel {
                 JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
         pBoton.add(btnPagar);
 
         dialog.add(pInfo, BorderLayout.NORTH);

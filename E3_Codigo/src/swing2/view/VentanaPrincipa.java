@@ -226,4 +226,16 @@ public class VentanaPrincipa extends JFrame {
 
         SwingUtilities.invokeLater(() -> new VentanaPrincipa());
     }
+    public void cambiarPanelDinamico(JPanel nuevoPanel) {
+        
+        String idDinamico = "PANEL_DINAMICO_" + nuevoPanel.hashCode();
+        contenedor.add(nuevoPanel, idDinamico);
+
+        
+        contenedor.revalidate();
+        contenedor.repaint();
+
+        
+        cardLayout.show(contenedor, idDinamico);
+    }
 }

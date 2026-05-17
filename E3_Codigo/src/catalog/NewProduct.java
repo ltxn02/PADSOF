@@ -14,7 +14,7 @@ import utils.*;
 public abstract class NewProduct extends Item implements java.io.Serializable {
     private int stock;
     private int effectiveStock;
-    private ArrayList<Review> reviews;
+    private ArrayList<Review> reviews = new ArrayList<>();
 
     /**
      * Constructor principal para inicializar un producto nuevo con todos sus datos.
@@ -36,8 +36,7 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
             throw new IllegalArgumentException("Category cannot be empty");
         }
         this.stock = stock;
-        this.reviews = reviews;
-    }
+        this.reviews = (reviews != null) ? new ArrayList<>(reviews) : new ArrayList<>();    }
 
     /**
      * Constructor simplificado para inicializar un producto nuevo sin categorías ni reseñas previas.
@@ -50,6 +49,7 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
      */
     public NewProduct(String name, String description, double price, ArrayList<String> image, int stock) {
         this(name, description, price, image, stock, new ArrayList<Category>(), new ArrayList<Review>());
+
     }
 
     /**
@@ -57,12 +57,12 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
      *
      * @return La media entera de las valoraciones (ej. de 1 a 5). Devuelve 0 si no hay reseñas.
      */
-    public int calculateRating(){
+    public double calculateRating(){
         if (reviews == null || reviews.isEmpty()) {
             return 0; // Evitamos la división por cero
         }
 
-        int rating = 0;
+        double rating = 0;
         for (Review review : reviews){
             rating += review.getRating();
         }
@@ -171,8 +171,10 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
      * @param review Objeto {@link Review} con la calificación y el comentario.
      */
     public void addReview(Review review) {
-        this.reviews.add(review);
-    }
+        if (this.reviews == null) this.reviews = new ArrayList<>();
+        if (!this.reviews.contains(review)) {
+            this.reviews.add(review);
+        }    }
 
     /**
      * Edita la información básica del producto y actualiza su stock si procede.
@@ -186,6 +188,10 @@ public abstract class NewProduct extends Item implements java.io.Serializable {
     public void editProductInfo(String name, String description, double price, String picturePath, int stock) {
         super.edit(name, description, price, picturePath);
         if(stock >= 0) this.stock = stock;
+    }
+
+    public ArrayList<Review> getReviews() {
+        return reviews;
     }
 
     /**

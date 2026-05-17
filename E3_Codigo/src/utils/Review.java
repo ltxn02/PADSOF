@@ -34,7 +34,10 @@ public class Review extends BaseElement implements java.io.Serializable{
         this.rating = rating;
         this.comment = comment;
         this.product = product;
-        this.addReviewToProduct(product);
+        this.postedBy= postedBy;
+        if (product != null) {
+            product.addReview(this);
+        }
         this.reviewId = Review.lastReviewId;
         Review.lastReviewId++;
     }
@@ -73,7 +76,6 @@ public class Review extends BaseElement implements java.io.Serializable{
         if(this.comment.length() <= end) {
             sb.append(this.comment);
         } else {
-            // CORRECCIÓN: Ahora coge el texto desde el principio (0) hasta el límite, y le añade los puntos.
             sb.append(this.comment.substring(0, end - 3) + "...");
         }
         return sb.toString();
@@ -84,5 +86,13 @@ public class Review extends BaseElement implements java.io.Serializable{
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yy HH:mm").withZone(ZoneId.systemDefault());
         return fmt.format(instant);
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public Client getPostedBy() {
+        return postedBy;
     }
 }
