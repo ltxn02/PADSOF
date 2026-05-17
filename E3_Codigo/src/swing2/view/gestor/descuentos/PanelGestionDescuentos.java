@@ -18,29 +18,26 @@ public class PanelGestionDescuentos extends JPanel {
 	private VentanaPrincipa ventanaPadre;
 	private GestorDescuentoController ctrl;
 	
-	// === LAYOUT INTERNO (CardLayout) ===
+	// LAYOUT INTERNO (CardLayout)
 	private CardLayout layoutInterno;
 	private JPanel contenedorInterno;
 	
-	// === PANELES ===
+	// PANELES
 	private PanelListDescuentos panelListado;
 	private PanelGestorSeleccionTipoDescuento panelSeleccionTipo;
 	private PanelAnadirDescuento panelAnadirNuevo;
 	private PanelDetallesDescuento panelDetalles;
-	
-	// === MAPA DE PANELES DE AÑADIR (uno por cada tipo) ===
+
 	private HashMap<Integer, PanelAnadirDescuento> panelesPorTipo = new HashMap<>();
 	
-	// === COLORES ===
+	// COLORES
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	
 	public PanelGestionDescuentos(VentanaPrincipa ventanaPadre) {
 		this.ventanaPadre = ventanaPadre;
 		this.ctrl = new GestorDescuentoController(ventanaPadre, this);
-		
-		// ============================================================
+
 		// USAR CardLayout INTERNO para cambiar entre paneles
-		// ============================================================
 		layoutInterno = new CardLayout();
 		contenedorInterno = new JPanel(layoutInterno);
 		

@@ -37,8 +37,7 @@ public class PanelGestorSeleccionTipoDescuento extends JPanel {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setOpaque(false);
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
-		// Título
+
 		JLabel titulo = new JLabel("SELECCIONA TIPO DE DESCUENTO");
 		titulo.setFont(new Font("Arial", Font.BOLD, 24));
 		titulo.setForeground(Color.WHITE);

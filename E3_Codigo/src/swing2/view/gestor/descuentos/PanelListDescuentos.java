@@ -18,24 +18,24 @@ public class PanelListDescuentos extends JPanel {
 	private PanelGestionDescuentos panelPadre;
 	private GestorDescuentoController ctrl;
 	
-	// === TABLA ===
+	// TABLA
 	private JTable tabla;
 	private DefaultTableModel modeloTabla;
 	private JScrollPane scrollPane;
 	
-	// === BÚSQUEDA Y FILTRADO ===
+	// BÚSQUEDA Y FILTRADO
 	private JTextField campoBusqueda;
 	private ArrayList<IDiscount> descuentosFiltrados;
 	private ArrayList<IDiscount> descuentosActuales;
 	
-	// === PAGINACIÓN ===
+	// PAGINACIÓN
 	private int paginaActual = 0;
 	private int descuentosPorPagina = 10;
 	private int totalPaginas = 1;
 	private JLabel labelPaginacion;
 	private JButton btnAnterior, btnSiguiente;
 	
-	// === COLORES ===
+	// COLORES
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	private static final Color COLOR_TABLE = new Color(40, 80, 140);
 	private static final Color COLOR_HEADER = new Color(20, 50, 100);
@@ -77,9 +77,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * 1.- BARRA SUPERIOR (búsqueda + botón "Añadir descuento")
-	 * ========================================================
 	 */
 	private JPanel crearBarraSuperior() {
 	    JPanel contenedor = new JPanel(new GridBagLayout());
@@ -162,9 +160,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * 2.- CREAR LA TABLA
-	 * ========================================================
 	 */
 	private void crearTabla() {
 		String[] columnas = {"ID", "Categoría", "Tipo", "Porcentaje", "Detalles", "Eliminar"};
@@ -270,9 +266,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * 3.- CREAR BARRA DE PAGINACIÓN
-	 * ========================================================
 	 */
 	private JPanel crearBarraPaginacion() {
 		JPanel barra = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -309,9 +303,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * LÓGICA: CARGAR, BUSCAR, ACTUALIZAR
-	 * ========================================================
 	 */
 	
 	public void cargarDescuentos() {
@@ -350,9 +342,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * PAGINACIÓN
-	 * ========================================================
 	 */
 	
 	private void calcularPaginas() {
@@ -385,9 +375,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * VER DETALLES DEL DESCUENTO
-	 * ========================================================
 	 */
 	
 	private void verDetallesDescuento(IDiscount descuento) {
@@ -395,9 +383,7 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * ELIMINAR DESCUENTO
-	 * ========================================================
 	 */
 	
 	private void eliminarDescuento(IDiscount descuento, int fila, int inicio) {
@@ -417,11 +403,8 @@ public class PanelListDescuentos extends JPanel {
 	}
 	
 	/**
-	 * ========================================================
 	 * LIMPIAR Y REFRESCAR
-	 * ========================================================
 	 */
-	
 	public void limpiarBusqueda() {
 		aplicarPlaceholder();
 		paginaActual = 0;

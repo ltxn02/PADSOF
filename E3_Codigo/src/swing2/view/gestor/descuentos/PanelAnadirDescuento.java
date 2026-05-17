@@ -192,7 +192,7 @@ public class PanelAnadirDescuento extends JPanel {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		panel.setOpaque(false);
 		
-		// Botón Guardar
+		// Botón guardar
 		JButton btnGuardar = new JButton("☑ Crear descuento");
 		btnGuardar.setPreferredSize(new Dimension(200, 40));
 		btnGuardar.setBackground(new Color(46, 204, 113));
@@ -203,7 +203,7 @@ public class PanelAnadirDescuento extends JPanel {
 		btnGuardar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnGuardar.addActionListener(e -> guardarDescuento());
 		
-		// Botón Cancelar
+		// Botón cancelar
 		JButton btnCancelar = new JButton("☒ Cancelar");
 		btnCancelar.setPreferredSize(new Dimension(200, 40));
 		btnCancelar.setBackground(new Color(231, 76, 60));

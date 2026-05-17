@@ -135,7 +135,7 @@ public class RegistroController {
         int seleccion = JOptionPane.showOptionDialog(
                 panel,
                 "Usuario registrado correctamente. Ya puedes iniciar sesión.",
-                "Registro Completado",
+                "Registro completado",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,

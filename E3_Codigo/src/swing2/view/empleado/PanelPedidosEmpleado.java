@@ -35,10 +35,10 @@ public class PanelPedidosEmpleado extends JPanel {
         this.setLayout(new BorderLayout());
         this.setBackground(COLOR_ACTIVO);
 
-        // 1. Barra de Navegación superior
+        // 1. Barra de navegación superior
         setupBarraSuperior();
 
-        // 2. Configurar el CardLayout
+        // 2. Configurar el cardlayout
         cardLayoutCentral = new CardLayout();
         panelContenedorCentral = new JPanel(cardLayoutCentral);
         panelContenedorCentral.setOpaque(false);
@@ -49,9 +49,7 @@ public class PanelPedidosEmpleado extends JPanel {
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
 
-    // ==========================================
     // VISTA 1: LA TABLA DE PEDIDOS
-    // ==========================================
     private JPanel crearPanelTablaPedidos() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
@@ -85,7 +83,6 @@ public class PanelPedidosEmpleado extends JPanel {
 
         panel.add(pnlTop, BorderLayout.NORTH);
 
-        // Zona de la Tabla
         JPanel pnlTabla = new JPanel(new BorderLayout());
         pnlTabla.setOpaque(false);
 
@@ -104,7 +101,7 @@ public class PanelPedidosEmpleado extends JPanel {
         pnlCabecera.setPreferredSize(new Dimension(0, 50));
         pnlCabecera.setBorder(new EmptyBorder(0, 20, 0, 20));
 
-        String[] headers = {"ID Pedido", "ID comprador", "Fecha", "Estado de Pedido"};
+        String[] headers = {"ID pedido", "ID comprador", "Fecha", "Estado de pedido"};
         for (String h : headers) {
             JLabel lblHeader = new JLabel(h, SwingConstants.CENTER);
             lblHeader.setForeground(Color.WHITE);
@@ -170,7 +167,7 @@ public class PanelPedidosEmpleado extends JPanel {
     }
 
     /**
-     * MÉTOD CLAVE: Extrae los pedidos de todos los clientes.
+     * Extrae los pedidos de todos los clientes.
      */
     private List<Order> obtenerTodosLosPedidos() {
         List<Order> listaGlobal = new ArrayList<>();
@@ -178,9 +175,6 @@ public class PanelPedidosEmpleado extends JPanel {
             if (u instanceof Client) {
                 Client c = (Client) u;
                 try {
-                    // ¡¡¡ ATENCIÓN !!!
-                    // Si en tu clase Client el método para obtener pedidos no se llama getOrders(),
-                    // cambia el nombre en esta línea (ej: c.getHistorialPedidos(), c.getOrderHistoric().getOrders(), etc.)
                     if (c.getOrders() != null) {
                         listaGlobal.addAll(c.getOrders());
                     }
@@ -258,18 +252,16 @@ public class PanelPedidosEmpleado extends JPanel {
     }
 
 
-    // ==========================================
     // VISTA 2: EDICIÓN DE ESTADO DEL PEDIDO
-    // ==========================================
     private JPanel crearPanelEditarPedido(Order order) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
-        wrapper.setBackground(COLOR_FONDO_NAV); // Fondo azul oscuro
+        wrapper.setBackground(COLOR_FONDO_NAV);
 
         // Cabecera dorada
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
-        JLabel lblTitulo = new JLabel("Modificar Estado - Pedido #" + order.getOrderId());
+        JLabel lblTitulo = new JLabel("Modificar estado - Pedido #" + order.getOrderId());
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
@@ -283,7 +275,7 @@ public class PanelPedidosEmpleado extends JPanel {
 
         // Fila 1: Cliente
         gbc.gridx = 0; gbc.gridy = 0;
-        JLabel lblCliente = new JLabel("Cliente (Comprador):");
+        JLabel lblCliente = new JLabel("Cliente (comprador):");
         lblCliente.setForeground(Color.WHITE);
         lblCliente.setFont(new Font("Arial", Font.BOLD, 18));
         pnlCentro.add(lblCliente, gbc);
@@ -297,7 +289,7 @@ public class PanelPedidosEmpleado extends JPanel {
 
         // Fila 2: Total
         gbc.gridx = 0; gbc.gridy = 1;
-        JLabel lblTotal = new JLabel("Total del Pedido:");
+        JLabel lblTotal = new JLabel("Total del pedido:");
         lblTotal.setForeground(Color.WHITE);
         lblTotal.setFont(new Font("Arial", Font.BOLD, 18));
         pnlCentro.add(lblTotal, gbc);
@@ -308,7 +300,7 @@ public class PanelPedidosEmpleado extends JPanel {
         lblTotalVal.setFont(new Font("Arial", Font.PLAIN, 18));
         pnlCentro.add(lblTotalVal, gbc);
 
-        // Fila 3: Combo Box de Estado
+        // Fila 3: Combo box de estado
         gbc.gridx = 0; gbc.gridy = 2;
         JLabel lblEstado = new JLabel("Estado actual:");
         lblEstado.setForeground(Color.WHITE);
@@ -323,7 +315,6 @@ public class PanelPedidosEmpleado extends JPanel {
         comboStatus.setFont(new Font("Arial", Font.BOLD, 16));
         pnlCentro.add(comboStatus, gbc);
 
-        // Botonera Inferior
         JPanel pnlBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         pnlBotones.setOpaque(false);
         pnlBotones.setBorder(new EmptyBorder(40, 0, 50, 0));
@@ -331,12 +322,12 @@ public class PanelPedidosEmpleado extends JPanel {
         JButton btnCancelar = crearBotonBlanco("Cancelar");
         btnCancelar.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "TABLA_PEDIDOS"));
 
-        JButton btnGuardar = crearBotonDorado("Guardar Estado");
+        JButton btnGuardar = crearBotonDorado("Guardar estado");
         btnGuardar.addActionListener(e -> {
             OrderStatus nuevoEstado = (OrderStatus) comboStatus.getSelectedItem();
 
             try {
-                // Aquí aplicamos el método que comprueba si el empleado tiene el PERMISO real
+                // Aquí aplicamos el metodo que comprueba si el empleado tiene el PERMISO real
                 empleadoActual.updateOrderStatus(order, nuevoEstado);
 
                 JOptionPane.showMessageDialog(this, "El estado del pedido #" + order.getOrderId() + " ha sido actualizado a " + nuevoEstado + ".", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -347,7 +338,7 @@ public class PanelPedidosEmpleado extends JPanel {
 
             } catch (SecurityException ex) {
                 // Si el empleado no tiene el permiso Permission.ORDER_STATUS_UPDATE, salta esto
-                JOptionPane.showMessageDialog(this, ex.getMessage(), "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "Acceso denegado", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error inesperado al cambiar el estado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -364,9 +355,7 @@ public class PanelPedidosEmpleado extends JPanel {
     }
 
 
-    // ==========================================
     // MÉTODOS AUXILIARES DE ESTILOS
-    // ==========================================
     private JButton crearBotonBlanco(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -412,9 +401,7 @@ public class PanelPedidosEmpleado extends JPanel {
     }
 
 
-    // ==========================================
     // BARRA DE NAVEGACIÓN
-    // ==========================================
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
@@ -491,7 +478,7 @@ public class PanelPedidosEmpleado extends JPanel {
         btnPerfil.setBorderPainted(false);
         btnPerfil.setFocusPainted(false);
         btnPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // FORZAMOS un tamaño mínimo para que nunca se vuelva invisible
+        // Forzamos un tamaño mínimo para que nunca se vuelva invisible
         btnPerfil.setPreferredSize(new Dimension(50, 50));
 
         if (user != null) {
@@ -501,7 +488,7 @@ public class PanelPedidosEmpleado extends JPanel {
         String[] rutasPerfil = {
                 "src/foto/logoPerfilProvisional2.png",
                 "E3_Codigo/src/foto/logoPerfilProvisional2.png",
-                "foto/logoPerfilProvisional2.png" // Por si se ejecuta desde dentro de src
+                "foto/logoPerfilProvisional2.png"
         };
 
         File fPerfil = encontrarArchivo(rutasPerfil);
@@ -509,7 +496,6 @@ public class PanelPedidosEmpleado extends JPanel {
 
         if (fPerfil != null) {
             try {
-                // ImageIO es síncrono y mucho más seguro en Linux
                 java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(fPerfil);
                 if (img != null) {
                     Image scaled = img.getScaledInstance(45, 45, Image.SCALE_SMOOTH);
@@ -521,7 +507,7 @@ public class PanelPedidosEmpleado extends JPanel {
             }
         }
 
-        // Fallback seguro: Si no hay imagen, ponemos texto estándar (sin emojis que den problemas)
+        // Si no hay imagen, ponemos texto estándar (sin emojis que den problemas)
         if (!imagenCargada) {
             btnPerfil.setText("Perfil ▼");
             btnPerfil.setFont(new Font("Arial", Font.BOLD, 16));
@@ -530,7 +516,7 @@ public class PanelPedidosEmpleado extends JPanel {
         }
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar Sesión");
+        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar sesión");
         itemCerrarSesion.setFont(new Font("Arial", Font.BOLD, 14));
         itemCerrarSesion.setForeground(new Color(220, 50, 50));
         itemCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -539,7 +525,7 @@ public class PanelPedidosEmpleado extends JPanel {
             int confirm = JOptionPane.showConfirmDialog(
                     this,
                     "¿Estás seguro de que deseas cerrar sesión?",
-                    "Cerrar Sesión",
+                    "Cerrar sesión",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE
             );

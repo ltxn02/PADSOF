@@ -31,7 +31,6 @@ public class PanelProductosEmpleado extends JPanel {
 
     private NewProduct productoSeleccionadoParaSubida = null;
 
-    // Variables Creación
     private JTextField txtNuevoNombre, txtNuevoPrecio, txtNuevoStock;
     private JTextArea txtNuevoDesc;
     private JList<String> listNuevoCategorias;
@@ -45,7 +44,6 @@ public class PanelProductosEmpleado extends JPanel {
     private JTextField txtFigHeight, txtFigWidth, txtFigDepth, txtFigMaterial, txtFigFranchise;
     private JTextField txtGamePlayers, txtGameMechanics, txtGameAgeMin, txtGameAgeMax;
 
-    // Variables Edición (Simplificadas)
     private String rutaImagenEdicion = null;
     private JTextField txtEditNombre, txtEditPrecio, txtEditStock;
     private JTextArea txtEditDesc;
@@ -73,9 +71,7 @@ public class PanelProductosEmpleado extends JPanel {
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
 
-    // ==========================================
     // VISTA 1: LA TABLA (CON FILAS CLICKABLES)
-    // ==========================================
     private JPanel crearPanelTablaProductos() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
@@ -84,7 +80,7 @@ public class PanelProductosEmpleado extends JPanel {
         JPanel pnlAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         pnlAcciones.setOpaque(false);
 
-        JButton btnSubirManual = crearBotonAzul("Subir Manualmente");
+        JButton btnSubirManual = crearBotonAzul("Subir manualmente");
         JButton btnSubirArchivo = crearBotonAzul("Subir desde un archivo");
 
         btnSubirManual.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "OPCIONES_SUBIDA"));
@@ -216,15 +212,12 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // ==========================================
-    // NUEVA VISTA 8: EDICIÓN DE PRODUCTO
-    // ==========================================
+    // VISTA 8: EDICIÓN DE PRODUCTO
     private JPanel crearPanelEditarProducto(NewProduct p, int id) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
-        wrapper.setBackground(COLOR_FONDO_NAV); // Fondo azul oscuro
+        wrapper.setBackground(COLOR_FONDO_NAV);
 
-        // Cabecera dorada
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
         JLabel lblTitulo = new JLabel("Editar Producto - ID: " + id);
@@ -237,7 +230,6 @@ public class PanelProductosEmpleado extends JPanel {
         pnlCentro.setOpaque(false);
         pnlCentro.setBorder(new EmptyBorder(40, 60, 0, 60));
 
-        // --- COLUMNA IZQUIERDA: DATOS GENERALES ---
         JPanel pnlForm = new JPanel(new GridBagLayout());
         pnlForm.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -274,7 +266,6 @@ public class PanelProductosEmpleado extends JPanel {
         txtEditStock.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
         gbc.gridy = row++; pnlForm.add(txtEditStock, gbc);
 
-        // --- COLUMNA DERECHA: IMAGEN (SOLAMENTE) ---
         JPanel pnlDerecha = new JPanel();
         pnlDerecha.setLayout(new BoxLayout(pnlDerecha, BoxLayout.Y_AXIS));
         pnlDerecha.setOpaque(false);
@@ -310,13 +301,11 @@ public class PanelProductosEmpleado extends JPanel {
         pnlCentro.add(pnlForm);
         pnlCentro.add(pnlDerecha);
 
-        // ¡CLAVE AQUÍ! Hacemos que el ScrollPane sea transparente para que se vea el fondo azul oscuro
         JScrollPane scrollCentro = new JScrollPane(pnlCentro);
         scrollCentro.setOpaque(false);
         scrollCentro.getViewport().setOpaque(false);
         scrollCentro.setBorder(null);
 
-        // BOTONERA INFERIOR
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0));
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(20, 0, 30, 0));
@@ -324,7 +313,7 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnCancelar = crearBotonBlanco("Cancelar");
         btnCancelar.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS"));
 
-        JButton btnGuardar = crearBotonDorado("Guardar Cambios");
+        JButton btnGuardar = crearBotonDorado("Guardar cambios");
         btnGuardar.addActionListener(e -> procesarEdicionProducto(p));
 
         pnlBoton.add(btnCancelar);
@@ -346,14 +335,11 @@ public class PanelProductosEmpleado extends JPanel {
 
             String imgFinal = (rutaImagenEdicion != null) ? rutaImagenEdicion : (p.getFotos() != null && !p.getFotos().isEmpty() ? p.getFotos().get(0) : "src/imgProductos/foto.png");
 
-            // En lugar de pasar por Employee (que exige todos los datos específicos),
-            // actualizamos directamente los datos generales para no perder nada.
             p.editProductInfo(nombre, desc, precio, imgFinal, stock);
 
             JOptionPane.showMessageDialog(this, "Producto actualizado correctamente.");
             rutaImagenEdicion = null;
 
-            // Refrescar tabla
             panelContenedorCentral.add(crearPanelTablaProductos(), "TABLA_PRODUCTOS");
             cardLayoutCentral.show(panelContenedorCentral, "TABLA_PRODUCTOS");
 
@@ -361,10 +347,6 @@ public class PanelProductosEmpleado extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al editar. Revisa los campos numéricos.\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    // ==========================================
-    // RESTO DE VISTAS
-    // ==========================================
 
     private JPanel crearPanelSubirArchivo() {
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -511,7 +493,7 @@ public class PanelProductosEmpleado extends JPanel {
         panelAzul.setBackground(COLOR_FONDO_NAV);
         panelAzul.setBorder(new EmptyBorder(40, 50, 40, 50));
 
-        JLabel titulo = new JLabel("Subida Manual");
+        JLabel titulo = new JLabel("Subida manual");
         titulo.setFont(new Font("Arial", Font.BOLD, 28));
         titulo.setForeground(Color.WHITE);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -555,7 +537,7 @@ public class PanelProductosEmpleado extends JPanel {
 
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
-        JLabel lblTitulo = new JLabel("Subida Manual de un producto existente");
+        JLabel lblTitulo = new JLabel("Subida manual de un producto existente");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
@@ -655,7 +637,7 @@ public class PanelProductosEmpleado extends JPanel {
 
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
-        JLabel lblTitulo = new JLabel("Subida Manual de un producto existente");
+        JLabel lblTitulo = new JLabel("Subida manual de un producto existente");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
@@ -681,7 +663,7 @@ public class PanelProductosEmpleado extends JPanel {
         JPanel pnlBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(60, 0, 0, 0));
-        JButton btnGuardar = crearBotonDorado("Guardar Stock");
+        JButton btnGuardar = crearBotonDorado("Guardar stock");
 
         btnGuardar.addActionListener(e -> {
             try {
@@ -693,7 +675,7 @@ public class PanelProductosEmpleado extends JPanel {
 
                 if (productoSeleccionadoParaSubida != null) {
                     productoSeleccionadoParaSubida.increaseStock(cantidad);
-                    JOptionPane.showMessageDialog(this, "Se han añadido " + cantidad + " unidades correctamente al stock.", "Stock Actualizado", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Se han añadido " + cantidad + " unidades correctamente al stock.", "Stock actualizado", JOptionPane.INFORMATION_MESSAGE);
                     txtCantidad.setText("");
                     productoSeleccionadoParaSubida = null;
 
@@ -723,7 +705,7 @@ public class PanelProductosEmpleado extends JPanel {
 
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
-        JLabel lblTitulo = new JLabel("Subida Manual de un producto nuevo (Paso 1/2)");
+        JLabel lblTitulo = new JLabel("Subida manual de un producto nuevo (paso 1/2)");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
@@ -768,7 +750,7 @@ public class PanelProductosEmpleado extends JPanel {
         txtNuevoStock.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
         gbc.gridy = row++; pnlForm.add(txtNuevoStock, gbc);
 
-        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Categorías (Mantén Ctrl para seleccionar varias):"), gbc);
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Categorías (mantén Ctrl para seleccionar varias):"), gbc);
         ArrayList<catalog.Category> categoriasBD = Application.getGlobalCategories();
         String[] catNombres = new String[categoriasBD.size()];
         for(int i = 0; i < categoriasBD.size(); i++) catNombres[i] = categoriasBD.get(i).getNameCategory();
@@ -785,7 +767,7 @@ public class PanelProductosEmpleado extends JPanel {
         pnlImage.setOpaque(false);
         pnlImage.setBorder(new EmptyBorder(80, 0, 0, 0));
 
-        JButton btnUpload = new JButton("<html><center><b style='font-size:20px'>+</b><br>Subir Imagen</center></html>");
+        JButton btnUpload = new JButton("<html><center><b style='font-size:20px'>+</b><br>Subir imagen</center></html>");
         btnUpload.setBackground(new Color(0, 110, 255));
         btnUpload.setForeground(Color.WHITE);
         btnUpload.setFocusPainted(false);
@@ -826,7 +808,7 @@ public class PanelProductosEmpleado extends JPanel {
         pnlBoton.setOpaque(false);
         pnlBoton.setBorder(new EmptyBorder(10, 0, 30, 0));
 
-        JButton btnSiguiente = crearBotonDorado("Siguiente Paso");
+        JButton btnSiguiente = crearBotonDorado("Siguiente paso");
         btnSiguiente.addActionListener(e -> {
             if(txtNuevoNombre.getText().trim().isEmpty() || txtNuevoPrecio.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, completa los campos principales.");
@@ -862,7 +844,7 @@ public class PanelProductosEmpleado extends JPanel {
 
         JPanel pnlCombo = new JPanel(new FlowLayout(FlowLayout.LEFT));
         pnlCombo.setOpaque(false);
-        pnlCombo.add(crearLabelBlanco("Tipo de Producto: "));
+        pnlCombo.add(crearLabelBlanco("Tipo de producto: "));
 
         comboTipoProducto = new JComboBox<>(new String[]{"CÓMIC", "FIGURA", "JUEGO"});
         comboTipoProducto.setFont(new Font("Arial", Font.BOLD, 16));
@@ -892,7 +874,7 @@ public class PanelProductosEmpleado extends JPanel {
         JButton btnAtras = crearBotonBlanco("Atrás");
         btnAtras.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "CREAR_NUEVO"));
 
-        JButton btnFinal = crearBotonDorado("Crear y Guardar Producto");
+        JButton btnFinal = crearBotonDorado("Crear y guardar producto");
         btnFinal.addActionListener(e -> procesarCreacionProducto());
 
         pnlBoton.add(btnAtras);
@@ -937,10 +919,10 @@ public class PanelProductosEmpleado extends JPanel {
     private JPanel crearFormGame() {
         JPanel grid = new JPanel(new GridLayout(4, 2, 10, 15));
         grid.setOpaque(false);
-        grid.add(crearLabelBlanco("Número de Jugadores:")); grid.add(txtGamePlayers = new JTextField());
+        grid.add(crearLabelBlanco("Número de jugadores:")); grid.add(txtGamePlayers = new JTextField());
         grid.add(crearLabelBlanco("Mecánicas (separadas por coma):")); grid.add(txtGameMechanics = new JTextField());
-        grid.add(crearLabelBlanco("Edad Mínima recomendada:")); grid.add(txtGameAgeMin = new JTextField());
-        grid.add(crearLabelBlanco("Edad Máxima recomendada:")); grid.add(txtGameAgeMax = new JTextField());
+        grid.add(crearLabelBlanco("Edad mínima recomendada:")); grid.add(txtGameAgeMin = new JTextField());
+        grid.add(crearLabelBlanco("Edad máxima recomendada:")); grid.add(txtGameAgeMax = new JTextField());
 
         JPanel wrap = new JPanel(new BorderLayout());
         wrap.setOpaque(false);
@@ -1020,9 +1002,9 @@ public class PanelProductosEmpleado extends JPanel {
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Comprueba los campos numéricos (precio, stock, años, medidas...). Solo deben contener números.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Comprueba los campos numéricos (precio, stock, años, medidas...). Solo deben contener números.", "Error de formato", JOptionPane.ERROR_MESSAGE);
         } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error Lógico", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error lógico", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -1242,7 +1224,6 @@ public class PanelProductosEmpleado extends JPanel {
         btnPerfil.setBorderPainted(false);
         btnPerfil.setFocusPainted(false);
         btnPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // FORZAMOS un tamaño mínimo para que nunca se vuelva invisible
         btnPerfil.setPreferredSize(new Dimension(50, 50));
 
         if (user != null) {
@@ -1260,7 +1241,6 @@ public class PanelProductosEmpleado extends JPanel {
 
         if (fPerfil != null) {
             try {
-                // ImageIO es síncrono y mucho más seguro en Linux
                 java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(fPerfil);
                 if (img != null) {
                     Image scaled = img.getScaledInstance(45, 45, Image.SCALE_SMOOTH);
@@ -1272,16 +1252,16 @@ public class PanelProductosEmpleado extends JPanel {
             }
         }
 
-        // Fallback seguro: Si no hay imagen, ponemos texto estándar (sin emojis que den problemas)
+        // Si no hay imagen, ponemos texto estándar (sin emojis que den problemas)
         if (!imagenCargada) {
             btnPerfil.setText("Perfil ▼");
             btnPerfil.setFont(new Font("Arial", Font.BOLD, 16));
             btnPerfil.setForeground(Color.WHITE);
-            btnPerfil.setPreferredSize(new Dimension(100, 50)); // Lo hacemos más ancho para el texto
+            btnPerfil.setPreferredSize(new Dimension(100, 50));
         }
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar Sesión");
+        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar sesión");
         itemCerrarSesion.setFont(new Font("Arial", Font.BOLD, 14));
         itemCerrarSesion.setForeground(new Color(220, 50, 50));
         itemCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -1290,7 +1270,7 @@ public class PanelProductosEmpleado extends JPanel {
             int confirm = JOptionPane.showConfirmDialog(
                     this,
                     "¿Estás seguro de que deseas cerrar sesión?",
-                    "Cerrar Sesión",
+                    "Cerrar sesión",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE
             );

@@ -125,13 +125,13 @@ public class PanelDetallesDescuento extends JPanel {
 		
 		if (descuento instanceof PercentageDiscount) {
 			PercentageDiscount pd = (PercentageDiscount) descuento;
-			seccion.add(crearFilaInfo("Tipo:", "Rebaja Porcentual"));
+			seccion.add(crearFilaInfo("Tipo:", "Rebaja porcentual"));
 			seccion.add(crearFilaInfo("Porcentaje:", String.format("%.1f%%", pd.getValue())));
 			return seccion;
 			
 		} else if (descuento instanceof VolumeDiscount) {
 			VolumeDiscount vd = (VolumeDiscount) descuento;
-			seccion.add(crearFilaInfo("Tipo:", "Descuento por Volumen"));
+			seccion.add(crearFilaInfo("Tipo:", "Descuento por volumen"));
 			seccion.add(crearFilaInfo("Gasto mínimo:", "€" + String.format("%.2f", vd.getThreshold())));
 			seccion.add(crearFilaInfo("Descuento:", "€" + String.format("%.2f", vd.getValue())));
 			return seccion;
@@ -145,7 +145,7 @@ public class PanelDetallesDescuento extends JPanel {
 			
 		} else if (descuento instanceof QuantityDiscount) {
 			QuantityDiscount qd = (QuantityDiscount) descuento;
-			seccion.add(crearFilaInfo("Tipo:", "Descuento por Cantidad"));
+			seccion.add(crearFilaInfo("Tipo:", "Descuento por cantidad"));
 			seccion.add(crearFilaInfo("Promoción:", "Lleva " + qd.getBuyX() + " paga " + qd.getPayY()));
 			return seccion;
 		}

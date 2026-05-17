@@ -54,7 +54,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         panelContenedorCentral = new JPanel(cardLayoutCentral);
         panelContenedorCentral.setOpaque(false);
 
-        // --- CARTA 1: VISTA PRINCIPAL (Filtros + Cuadrícula) ---
+        // --- CARTA 1: VISTA PRINCIPAL
         JPanel pnlVistaPrincipal = new JPanel(new BorderLayout());
         pnlVistaPrincipal.setOpaque(false);
 
@@ -76,7 +76,6 @@ public class PanelIntercambiosEmpleado extends JPanel {
 
         pnlVistaPrincipal.add(scrollProductos, BorderLayout.CENTER);
 
-        // Añadimos TODAS las cartas al CardLayout
         panelContenedorCentral.add(pnlVistaPrincipal, "VISTA_PRINCIPAL");
         panelContenedorCentral.add(crearPanelOpcionesSubida(), "OPCIONES_SUBIDA");
         panelContenedorCentral.add(crearPanelSubirArchivo(), "SUBIR_ARCHIVO");
@@ -88,9 +87,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         cargarIntercambios();
     }
 
-    // ==========================================
     // BARRA DE FILTROS SUPERIOR
-    // ==========================================
     private JPanel crearBarraFiltros() {
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setOpaque(false);
@@ -100,12 +97,11 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlBotonesCentrales.setOpaque(false);
 
         JButton btnCompletos = crearBotonFiltroBlanco("Intercambios completos");
-        JButton btnSubir = crearBotonFiltroBlanco("Subir Intercambios");
+        JButton btnSubir = crearBotonFiltroBlanco("Subir intercambios");
 
         btnCompletos.setForeground(new Color(30, 45, 80));
         btnCompletos.setFont(new Font("Arial", Font.BOLD, 16));
 
-        // EVENTOS CONECTADOS A LAS NUEVAS VISTAS
         btnCompletos.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "INTERCAMBIOS_COMPLETOS"));
         btnSubir.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "OPCIONES_SUBIDA"));
 
@@ -139,15 +135,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return btn;
     }
 
-    // ==========================================
-    // NUEVA CARTA 5: INTERCAMBIOS COMPLETOS (TABLA)
-    // ==========================================
+    // CARTA 5: INTERCAMBIOS COMPLETOS (TABLA)
     private JPanel crearPanelIntercambiosCompletos() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
         panel.setBorder(new EmptyBorder(20, 40, 20, 40));
 
-        // Título y filtros superiores (Visuales)
+        // Título y filtros superiores
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setOpaque(false);
         pnlTop.setBorder(new EmptyBorder(0, 0, 15, 0));
@@ -175,7 +169,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
 
         panel.add(pnlTop, BorderLayout.NORTH);
 
-        // Zona de la Tabla
+        // Zona de la tabla
         JPanel pnlTabla = new JPanel(new BorderLayout());
         pnlTabla.setOpaque(false);
 
@@ -208,10 +202,6 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlFilas.setLayout(new BoxLayout(pnlFilas, BoxLayout.Y_AXIS));
         pnlFilas.setOpaque(false);
 
-        // ==============================================================
-        // MOCK DATA: Simulación visual basada en la captura de pantalla.
-        // Cuando tengáis el backend listo, iteraréis sobre la lista real de Exchange.
-        // ==============================================================
         pnlFilas.add(Box.createRigidArea(new Dimension(0, 10)));
         pnlFilas.add(crearFilaIntercambio("76543", "90807", "90654", "78965", "89765", true, true));
         pnlFilas.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -262,7 +252,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlCheck1.setOpaque(false);
         JCheckBox chk1 = new JCheckBox();
         chk1.setSelected(rec1);
-        chk1.setEnabled(false); // Visual por ahora
+        chk1.setEnabled(false);
         chk1.setOpaque(false);
         pnlCheck1.add(chk1);
         fila.add(pnlCheck1);
@@ -272,7 +262,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlCheck2.setOpaque(false);
         JCheckBox chk2 = new JCheckBox();
         chk2.setSelected(rec2);
-        chk2.setEnabled(false); // Visual por ahora
+        chk2.setEnabled(false);
         chk2.setOpaque(false);
         pnlCheck2.add(chk2);
         fila.add(pnlCheck2);
@@ -288,9 +278,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return lbl;
     }
 
-    // ==========================================
     // CARTA 2: MENÚ DE OPCIONES DE SUBIDA
-    // ==========================================
     private JPanel crearPanelOpcionesSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -301,7 +289,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         panelAzul.setBackground(COLOR_FONDO_NAV);
         panelAzul.setBorder(new EmptyBorder(40, 50, 40, 50));
 
-        JLabel titulo = new JLabel("Subida de Intercambios");
+        JLabel titulo = new JLabel("Subida de intercambios");
         titulo.setFont(new Font("Arial", Font.BOLD, 28));
         titulo.setForeground(Color.WHITE);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -315,7 +303,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlBotones.setOpaque(false);
         pnlBotones.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btnManual = crearBotonBlanco("Registro Manual");
+        JButton btnManual = crearBotonBlanco("Registro manual");
         JButton btnArchivo = crearBotonBlanco("Subir desde un archivo");
 
         btnManual.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "REGISTRO_MANUAL"));
@@ -338,9 +326,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // ==========================================
     // CARTA 4: REGISTRO MANUAL DE INTERCAMBIO
-    // ==========================================
     private JPanel crearPanelRegistroManual() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -348,7 +334,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
 
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
-        JLabel lblTitulo = new JLabel("Registro Manual de Intercambio");
+        JLabel lblTitulo = new JLabel("Registro manual de intercambio");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
@@ -365,7 +351,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         gbc.weightx = 1.0;
 
         int row = 0;
-        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Username del Cliente (Propietario):"), gbc);
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Username del cliente (propietario):"), gbc);
         txtManualOwner = new JTextField();
         txtManualOwner.setFont(new Font("Arial", Font.BOLD, 16));
         txtManualOwner.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
@@ -385,17 +371,17 @@ public class PanelIntercambiosEmpleado extends JPanel {
         txtManualDesc.setWrapStyleWord(true);
         gbc.gridy = row++; pnlForm.add(new JScrollPane(txtManualDesc), gbc);
 
-        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Tipo de Producto:"), gbc);
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Tipo de producto:"), gbc);
         comboManualTipo = new JComboBox<>(ItemType.values());
         comboManualTipo.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridy = row++; pnlForm.add(comboManualTipo, gbc);
 
-        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Estado (Condición):"), gbc);
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Estado (condición):"), gbc);
         comboManualCondicion = new JComboBox<>(Condition.values());
         comboManualCondicion.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridy = row++; pnlForm.add(comboManualCondicion, gbc);
 
-        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Precio Tasación (€):"), gbc);
+        gbc.gridy = row++; pnlForm.add(crearLabelBlanco("Precio tasación (€):"), gbc);
         txtManualPrecio = new JTextField();
         txtManualPrecio.setFont(new Font("Arial", Font.BOLD, 16));
         txtManualPrecio.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
@@ -406,7 +392,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlImage.setOpaque(false);
         pnlImage.setBorder(new EmptyBorder(80, 0, 0, 0));
 
-        JButton btnUpload = new JButton("<html><center><b style='font-size:20px'>+</b><br>Subir Imagen</center></html>");
+        JButton btnUpload = new JButton("<html><center><b style='font-size:20px'>+</b><br>Subir imagen</center></html>");
         btnUpload.setBackground(new Color(0, 110, 255));
         btnUpload.setForeground(Color.WHITE);
         btnUpload.setFocusPainted(false);
@@ -445,7 +431,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         JButton btnAtras = crearBotonBlanco("Atrás");
         btnAtras.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "OPCIONES_SUBIDA"));
 
-        JButton btnCrear = crearBotonDorado("Crear Intercambio");
+        JButton btnCrear = crearBotonDorado("Crear intercambio");
         btnCrear.addActionListener(e -> procesarRegistroManualIntercambio());
 
         pnlBoton.add(btnAtras);
@@ -487,7 +473,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
             }
 
             if (owner == null) {
-                JOptionPane.showMessageDialog(this, "No se encontró ningún Cliente con el username '" + username + "'.", "Cliente no encontrado", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No se encontró ningún cliente con el username '" + username + "'.", "Cliente no encontrado", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -533,9 +519,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
     }
 
 
-    // ==========================================
     // CARTA 3: SUBIR DESDE UN ARCHIVO (CSV)
-    // ==========================================
     private JPanel crearPanelSubirArchivo() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -588,7 +572,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         JButton btnCancelar = crearBotonBlanco("Atrás");
         btnCancelar.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "OPCIONES_SUBIDA"));
 
-        JButton btnSiguiente = crearBotonDorado("Procesar Archivo");
+        JButton btnSiguiente = crearBotonDorado("Procesar archivo");
         btnSiguiente.addActionListener(e -> {
             if (rutaArchivoCSVSeleccionado == null) {
                 JOptionPane.showMessageDialog(this, "Por favor, selecciona un archivo primero.", "Archivo no seleccionado", JOptionPane.WARNING_MESSAGE);
@@ -601,7 +585,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
                 if (intercambiosAñadidos > 0) {
                     JOptionPane.showMessageDialog(this,
                             "¡Carga completada con éxito!\nSe han registrado " + intercambiosAñadidos + " nuevos intercambios.",
-                            "Carga Exitosa",
+                            "Carga exitosa",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this,
@@ -677,9 +661,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
     }
 
 
-    // ==========================================
     // CARGA DE TARJETAS (CUADRÍCULA PRINCIPAL)
-    // ==========================================
     public void cargarIntercambios() {
         contenedorCentral.removeAll();
         java.util.List<SecondHandProduct> todos = Application.getSecondHandProducts();
@@ -760,7 +742,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pUser.add(lblPic);
         pUser.add(lblOwner);
 
-        JButton btnModificar = new JButton("Modificar Intercambio");
+        JButton btnModificar = new JButton("Modificar intercambio");
         btnModificar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnModificar.setBackground(new Color(50, 130, 220));
         btnModificar.setForeground(Color.WHITE);
@@ -791,9 +773,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return card;
     }
 
-    // ==========================================
     // PANTALLA DE EDICIÓN DE INTERCAMBIO
-    // ==========================================
     private JPanel crearPanelEditarIntercambio(SecondHandProduct p) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -801,7 +781,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
 
         JPanel pnlBanner = new JPanel(new FlowLayout(FlowLayout.LEFT, 60, 20));
         pnlBanner.setBackground(COLOR_ACTIVO);
-        JLabel lblTitulo = new JLabel("Tasación y Modificación - " + p.getName());
+        JLabel lblTitulo = new JLabel("Tasación y modificación - " + p.getName());
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setForeground(new Color(30, 45, 80));
         pnlBanner.add(lblTitulo);
@@ -813,7 +793,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0; gbc.gridy = 0;
-        JLabel lblEstado = new JLabel("Estado (Condición):");
+        JLabel lblEstado = new JLabel("Estado (condición):");
         lblEstado.setForeground(Color.WHITE);
         lblEstado.setFont(new Font("Arial", Font.BOLD, 18));
         pnlCentro.add(lblEstado, gbc);
@@ -827,7 +807,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         pnlCentro.add(comboCondition, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
-        JLabel lblPrecio = new JLabel("Precio de Tasación (€):");
+        JLabel lblPrecio = new JLabel("Precio de tasación (€):");
         lblPrecio.setForeground(Color.WHITE);
         lblPrecio.setFont(new Font("Arial", Font.BOLD, 18));
         pnlCentro.add(lblPrecio, gbc);
@@ -845,7 +825,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         JButton btnCancelar = crearBotonBlanco("Cancelar");
         btnCancelar.addActionListener(e -> cardLayoutCentral.show(panelContenedorCentral, "VISTA_PRINCIPAL"));
 
-        JButton btnGuardar = crearBotonDorado("Guardar Tasación");
+        JButton btnGuardar = crearBotonDorado("Guardar tasación");
         btnGuardar.addActionListener(e -> {
             try {
                 double nuevoPrecio = Double.parseDouble(txtPrecio.getText().trim());
@@ -858,10 +838,10 @@ public class PanelIntercambiosEmpleado extends JPanel {
                     cargarIntercambios();
                     cardLayoutCentral.show(panelContenedorCentral, "VISTA_PRINCIPAL");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Error: El propietario del producto no es un Cliente válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error: El propietario del producto no es un cliente válido.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "El precio de tasación debe ser un número válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El precio de tasación debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Asegúrate de que tienes los permisos suficientes.\nError al modificar: " + ex.getMessage(), "Error de Permisos", JOptionPane.ERROR_MESSAGE);
             }
@@ -877,9 +857,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // ==========================================
     // MÉTODOS AUXILIARES DE ESTILOS
-    // ==========================================
     private JLabel crearBadge(String texto) {
         JLabel badge = new JLabel(texto, SwingConstants.CENTER);
         badge.setOpaque(true);
@@ -978,9 +956,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return null;
     }
 
-    // ==========================================
     // BARRA DE NAVEGACIÓN
-    // ==========================================
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
@@ -1058,7 +1034,6 @@ public class PanelIntercambiosEmpleado extends JPanel {
         btnPerfil.setBorderPainted(false);
         btnPerfil.setFocusPainted(false);
         btnPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // FORZAMOS un tamaño mínimo para que nunca se vuelva invisible
         btnPerfil.setPreferredSize(new Dimension(50, 50));
 
         if (user != null) {
@@ -1068,7 +1043,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
         String[] rutasPerfil = {
                 "src/foto/logoPerfilProvisional2.png",
                 "E3_Codigo/src/foto/logoPerfilProvisional2.png",
-                "foto/logoPerfilProvisional2.png" // Por si se ejecuta desde dentro de src
+                "foto/logoPerfilProvisional2.png"
         };
 
         File fPerfil = encontrarArchivo(rutasPerfil);
@@ -1076,7 +1051,6 @@ public class PanelIntercambiosEmpleado extends JPanel {
 
         if (fPerfil != null) {
             try {
-                // ImageIO es síncrono y mucho más seguro en Linux
                 java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(fPerfil);
                 if (img != null) {
                     Image scaled = img.getScaledInstance(45, 45, Image.SCALE_SMOOTH);
@@ -1088,16 +1062,16 @@ public class PanelIntercambiosEmpleado extends JPanel {
             }
         }
 
-        // Fallback seguro: Si no hay imagen, ponemos texto estándar (sin emojis que den problemas)
+        // Si no hay imagen, ponemos texto estándar
         if (!imagenCargada) {
             btnPerfil.setText("Perfil ▼");
             btnPerfil.setFont(new Font("Arial", Font.BOLD, 16));
             btnPerfil.setForeground(Color.WHITE);
-            btnPerfil.setPreferredSize(new Dimension(100, 50)); // Lo hacemos más ancho para el texto
+            btnPerfil.setPreferredSize(new Dimension(100, 50));
         }
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar Sesión");
+        JMenuItem itemCerrarSesion = new JMenuItem("Cerrar sesión");
         itemCerrarSesion.setFont(new Font("Arial", Font.BOLD, 14));
         itemCerrarSesion.setForeground(new Color(220, 50, 50));
         itemCerrarSesion.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -1106,7 +1080,7 @@ public class PanelIntercambiosEmpleado extends JPanel {
             int confirm = JOptionPane.showConfirmDialog(
                     this,
                     "¿Estás seguro de que deseas cerrar sesión?",
-                    "Cerrar Sesión",
+                    "Cerrar sesión",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE
             );
