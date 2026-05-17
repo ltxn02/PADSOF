@@ -45,7 +45,8 @@ public class VentanaPrincipa extends JFrame {
         });
         setLocationRelativeTo(null);
 
-
+        ReproductorMusica musica = new ReproductorMusica();
+        musica.reproducirMusica("/foto/musica_fondo.wav");
         panelCliente = new PanelInicioo(this, usuarioLogueado);
         panelGestor = new PanelDashboard(this, null);
 
