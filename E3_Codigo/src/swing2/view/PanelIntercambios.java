@@ -289,7 +289,7 @@ public class PanelIntercambios extends JPanel {
         JPanel card = new JPanel(new GridBagLayout());
         card.setOpaque(false);
         card.setPreferredSize(new Dimension(280, 440));
-        JLabel lbl = new JLabel("+ Subir Producto");
+        JLabel lbl = new JLabel("+ Subir producto");
         lbl.setForeground(Color.WHITE);
         card.add(lbl);
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -522,7 +522,7 @@ public class PanelIntercambios extends JPanel {
         JPanel header = new JPanel(new GridLayout(2, 1));
         header.setOpaque(false);
 
-        JLabel lblTitulo = new JLabel("Resumen de la Propuesta #" + (offer.hashCode() % 1000));
+        JLabel lblTitulo = new JLabel("Resumen de la propuesta #" + (offer.hashCode() % 1000));
         lblTitulo.setFont(new Font("Georgia", Font.BOLD, 26));
         lblTitulo.setForeground(ACCENT_CYAN);
 
@@ -632,7 +632,7 @@ public class PanelIntercambios extends JPanel {
 
         JComboBox<ItemType> comboTipo = new JComboBox<>(ItemType.values());
 
-        JButton btnImagen = new JButton("Seleccionar Imagen");
+        JButton btnImagen = new JButton("Seleccionar imagen");
         JLabel lblRutaImagen = new JLabel("No seleccionada");
         lblRutaImagen.setForeground(TEXT_DIM);
         ArrayList<String> listaFotos = new ArrayList<>();
@@ -748,7 +748,7 @@ public class PanelIntercambios extends JPanel {
         };
 
         int opcion = JOptionPane.showConfirmDialog(
-                this, mensaje, "Propuesta de Intercambio Múltiple",
+                this, mensaje, "Propuesta de intercambio múltiple",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (opcion == JOptionPane.OK_OPTION) {

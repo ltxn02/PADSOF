@@ -65,7 +65,7 @@ public class PanelDashboard extends JPanel {
 		menu.setBackground(COLOR_MENU_NORMAL);
 		menu.setPreferredSize(new Dimension(1000, 80));
 		
-		// --- PARTE IZQUIERDA: Logo + Botones ---
+		// PARTE IZQUIERDA: Logo + Botones
 		JPanel nav = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		nav.setOpaque(false);
 		
@@ -91,7 +91,7 @@ public class PanelDashboard extends JPanel {
 		nav.add(btnEmpleados);
 		nav.add(btnClientes);
 		
-		// --- PARTE DERECHA: Usuario + Logout ---
+		// PARTE DERECHA: Usuario + Logout
 		JPanel navDcha = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
 		navDcha.setOpaque(false);
 		

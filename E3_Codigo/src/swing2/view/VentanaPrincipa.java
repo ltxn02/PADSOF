@@ -64,7 +64,6 @@ public class VentanaPrincipa extends JFrame {
     /**
      * Cambia el usuario actual y refresca el Panel de Inicio.
      * Esto permite que el sistema de recomendaciones actúe si el usuario es un Client.
-     * * * !!!! MODIFICADA PARA QUE RECONOZCA EL TIPO DE USUARIO CON EL QUE SE ACCEDE (Client, Employee, Manager)
      * ~ Lidia, 20:10, 05/05/2026
      */
     public void cambiarSesion(RegisteredUser nuevoUsuario) {

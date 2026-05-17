@@ -135,7 +135,7 @@ public class PanelInicioo extends JPanel {
 
         
         JDialog dialog = new JDialog();
-        dialog.setTitle("Seleccionar Cantidad");
+        dialog.setTitle("Seleccionar cantidad");
         dialog.setModal(true);
         dialog.setResizable(false);
         dialog.getContentPane().setBackground(new Color(15, 45, 105)); 
@@ -184,7 +184,7 @@ public class PanelInicioo extends JPanel {
         pBoton.setOpaque(false);
         pBoton.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
-        JButton btnConfirmar = new JButton("Confirmar y Añadir");
+        JButton btnConfirmar = new JButton("Confirmar y añadir");
         btnConfirmar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnConfirmar.setBackground(new Color(110, 30, 230));
         btnConfirmar.setForeground(Color.WHITE);
@@ -601,7 +601,7 @@ public class PanelInicioo extends JPanel {
         
         
 
-        JButton btnVolver = new JButton("Volver al Catálogo");
+        JButton btnVolver = new JButton("Volver al catálogo");
         btnVolver.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         btnVolver.addActionListener(e -> {

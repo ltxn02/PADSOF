@@ -105,7 +105,7 @@ public class PanelPerfil extends JPanel {
 
         JButton btnPass = crearBoton("Cambiar contraseña");
         JButton btnFoto = crearBoton("Actualizar foto");
-        JButton btnLogout = crearBoton("Cerrar Sesión");
+        JButton btnLogout = crearBoton("Cerrar sesión");
         btnLogout.setBackground(new Color(180, 40, 40));
 
         btnPass.addActionListener(e -> gestionarCambioPassword());
@@ -197,7 +197,7 @@ public class PanelPerfil extends JPanel {
             String mensajeCompleto = n.toString(); 
             int opcion = JOptionPane.showConfirmDialog(this,
                     mensajeCompleto,
-                    "Detalle de Notificación",
+                    "Detalle de notificación",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -336,15 +336,15 @@ public class PanelPerfil extends JPanel {
             StringBuilder detalleProds = new StringBuilder();
             
             
-            detalleProds.append("Código de Recogida: ").append(o.getPickupCode()).append("\n");
+            detalleProds.append("Código de recogida: ").append(o.getPickupCode()).append("\n");
             detalleProds.append("Fecha: ").append(o.getPaidAt() != null ? fmt.format(o.getPaidAt()) : "Pendiente").append("\n");
             detalleProds.append("Estado: ").append(o.getOrderStatus()).append("\n");
             detalleProds.append("------------------------------------------\n");
-            detalleProds.append("Precio Total: ").append(String.format("%.2f€", o.getPrice())).append("\n");
+            detalleProds.append("Precio total: ").append(String.format("%.2f€", o.getPrice())).append("\n");
 
             JOptionPane.showMessageDialog(this,
                     detalleProds.toString(),
-                    "Detalle del Pedido #" + o.getPickupCode(),
+                    "Detalle del pedido #" + o.getPickupCode(),
                     JOptionPane.INFORMATION_MESSAGE);
 
             

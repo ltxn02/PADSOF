@@ -216,7 +216,7 @@ public class PanelCarrito extends JPanel {
 
         
         JDialog dialog = new JDialog();
-        dialog.setTitle("Pasarela de Pago Seguro - RONGERO");
+        dialog.setTitle("Pasarela de pago seguro - RONGERO");
         dialog.setModal(true);
         dialog.setResizable(false);
         dialog.getContentPane().setBackground(new Color(15, 45, 105));
@@ -227,7 +227,7 @@ public class PanelCarrito extends JPanel {
         pInfo.setOpaque(false);
         pInfo.setBorder(BorderFactory.createEmptyBorder(20, 25, 10, 25));
 
-        JLabel lblTitulo = new JLabel("Resumen de Pedido");
+        JLabel lblTitulo = new JLabel("Resumen de pedido");
         lblTitulo.setForeground(Color.WHITE);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -260,7 +260,7 @@ public class PanelCarrito extends JPanel {
         pBoton.setOpaque(false);
         pBoton.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
-        JButton btnPagar = new JButton("Pagar Ahora");
+        JButton btnPagar = new JButton("Pagar ahora");
         btnPagar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnPagar.setBackground(new Color(0, 178, 255));
         btnPagar.setForeground(Color.WHITE);
@@ -271,7 +271,7 @@ public class PanelCarrito extends JPanel {
 
             
             if (!nTarjeta.matches("^[0-9]{16}$")) {
-                JOptionPane.showMessageDialog(dialog, "La tarjeta debe tener 16 números.", "Formato Incorrecto", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(dialog, "La tarjeta debe tener 16 números.", "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -294,14 +294,14 @@ public class PanelCarrito extends JPanel {
                     
                     JOptionPane.showMessageDialog(this,
                             "¡Pago realizado con éxito!\nCódigo de recogida: " + nuevoPedido.getPickupCode(),
-                            "Pedido Confirmado", JOptionPane.INFORMATION_MESSAGE);
+                            "Pedido confirmado", JOptionPane.INFORMATION_MESSAGE);
 
                     
                     carritoActual.clearCart();
                     actualizarVista();
 
                 } else {
-                    JOptionPane.showMessageDialog(dialog, "El pago ha sido rechazado por el banco.", "Error de Pago", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "El pago ha sido rechazado por el banco.", "Error de pago", JOptionPane.ERROR_MESSAGE);
                 }
 
             } catch (Exception ex) {

@@ -28,11 +28,11 @@ public class PanelRegistro extends JPanel {
         int r = 1;
 
         
-        agregarFilaFormulario("Nombre Completo:", txtNombre = new JTextField(15), null, g, r++);
-        agregarFilaFormulario("F. Nacimiento (DD/MM/AAAA):", txtFecha = new JTextField(15), null, g, r++);
+        agregarFilaFormulario("Nombre completo:", txtNombre = new JTextField(15), null, g, r++);
+        agregarFilaFormulario("F. nacimiento (DD/MM/AAAA):", txtFecha = new JTextField(15), null, g, r++);
         agregarFilaFormulario("DNI (8 nms + letra):", txtDni = new JTextField(15), null, g, r++);
-        agregarFilaFormulario("Nombre Usuario:", txtUser = new JTextField(15), null, g, r++);
-        agregarFilaFormulario("Correo Electrónico:", txtEmail = new JTextField(15), null, g, r++);
+        agregarFilaFormulario("Nombre usuario:", txtUser = new JTextField(15), null, g, r++);
+        agregarFilaFormulario("Correo electrónico:", txtEmail = new JTextField(15), null, g, r++);
         agregarFilaFormulario("Teléfono:", txtTlf = new JTextField(15), null, g, r++);
 
         
@@ -43,7 +43,7 @@ public class PanelRegistro extends JPanel {
         
         txtConfirm = new JPasswordField(15);
         JToggleButton btnVer2 = crearBotonOjo(txtConfirm);
-        agregarFilaFormulario("Confirmar Pass:", txtConfirm, btnVer2, g, r++);
+        agregarFilaFormulario("Confirmar pass:", txtConfirm, btnVer2, g, r++);
 
         
         JButton btnFinalizar = new JButton("FINALIZAR REGISTRO");
