@@ -9,6 +9,8 @@ import swing2.view.VentanaPrincipa;
 /**
  * Panel contenedor para gestión de productos.
  * Maneja la navegación entre listado y formulario.
+ * 
+ * @author Lidia Martin
  */
 public class PanelGestionProductos extends JPanel {
 	private VentanaPrincipa ventanaPadre;
@@ -25,6 +27,13 @@ public class PanelGestionProductos extends JPanel {
 	// === COLORES ===
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	
+	/**
+	 * Constructor de la clase PanelGestionProductos.
+	 * Inicializa el contenedor interno utilizando un CardLayout para gestionar 
+	 * el intercambio entre la vista de listado y la vista de creación de productos.
+	 * 
+	 * @param ventanaPadre La ventana principal de la aplicación que actúa como marco contenedor.
+	 */
 	public PanelGestionProductos(VentanaPrincipa ventanaPadre) {
 		this.ventanaPadre = ventanaPadre;
 		this.ctrl = new GestorProductoController(ventanaPadre, this);
@@ -54,7 +63,8 @@ public class PanelGestionProductos extends JPanel {
 	}
 	
 	/**
-	 * Mostrar el panel del listado de productos
+	 * Muestra el panel correspondiente al listado de productos
+	 * y actualiza/refresca sus datos visuales en pantalla.
 	 */
 	public void mostrarListado() {
 		layoutInterno.show(contenedorInterno, "LISTADO");
@@ -62,12 +72,18 @@ public class PanelGestionProductos extends JPanel {
 	}
 	
 	/**
-	 * Mostrar el panel para añadir producto
+	 * Muestra el panel correspondiente al formulario para añadir 
+	 * un nuevo producto al sistema.
 	 */
 	public void mostrarAnadirProducto() {
 		layoutInterno.show(contenedorInterno, "AÑADIR");
 	}
 	
+	/**
+	 * Recupera el controlador asignado a la gestión de los productos.
+	 * 
+	 * @return Objeto GestorProductoController que maneja la lógica de negocio de este panel.
+	 */
 	public GestorProductoController getController() {
 		return ctrl;
 	}

@@ -15,20 +15,32 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 /**
- * Controlador para gestionar descuentos de la tienda.
- * Separa la lógica de negocio de la interfaz gráfica.
+ * Controlador encargado de gestionar las promociones y la política de descuentos de la tienda.
+ * Implementa el patrón MVC separando la lógica operacional de la persistencia de datos 
+ * frente a los componentes visuales de administración de ofertas.
+ * 
+ * @author Lidia Martín
  */
 public class GestorDescuentoController {
     private VentanaPrincipa ventana;
     private PanelGestionDescuentos panel;
 
+    /**
+     * Constructor de la clase GestorDescuentoController.
+     * Vincula el controlador con el flujo de la ventana principal y el panel administrador de promociones.
+     * 
+     * @param ventana Ventana principal que coordina el estado global de la interfaz.
+     * @param panel   Panel especializado en la gestión visual de los modelos de descuentos.
+     */
     public GestorDescuentoController(VentanaPrincipa ventana, PanelGestionDescuentos panel) {
         this.ventana = ventana;
         this.panel = panel;
     }
 
     /**
-     * Obtener lista de todos los descuentos globales
+     * Recupera del sistema de persistencia todos los descuentos de ámbito global configurados.
+     * 
+     * @return Un ArrayList con los objetos que implementan la interfaz IDiscount.
      */
     public ArrayList<IDiscount> obtenerDescuentos() {
         ArrayList<IDiscount> descuentos = new ArrayList<>();
@@ -42,7 +54,12 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Buscar descuentos por término
+     * Filtra una lista base de ofertas basándose en la coincidencia parcial de texto.
+     * Evalúa la descripción interna del descuento ignorando diferencias entre mayúsculas y minúsculas.
+     * 
+     * @param descuentosBase Estructura de origen que contiene el histórico total de ofertas.
+     * @param termino        Cadena de caracteres o palabra clave de búsqueda.
+     * @return Un nuevo ArrayList reducido con las ocurrencias que satisfacen el criterio.
      */
     public ArrayList<IDiscount> buscarDescuentos(ArrayList<IDiscount> descuentosBase, String termino) {
         ArrayList<IDiscount> resultados = new ArrayList<>();
@@ -62,7 +79,10 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener el tipo de descuento como string
+     * Identifica el subtipo específico de descuento mapeándolo a una etiqueta de texto legible.
+     * 
+     * @param desc Instancia genérica del descuento a identificar.
+     * @return Cadena informativa correspondiente a la implementación concreta del objeto.
      */
     public String obtenerTipoDescuento(IDiscount desc) {
         if (desc instanceof PercentageDiscount) {
@@ -78,7 +98,10 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener el porcentaje del descuento (si aplica)
+     * Extrae el valor porcentual de las promociones basadas en reducciones fraccionales.
+     * 
+     * @param desc Instancia del descuento evaluado.
+     * @return Representación textual formateada del porcentaje (ej. "15.0%") o "N/A" si no aplica.
      */
     public String obtenerPorcentaje(IDiscount desc) {
         if (desc instanceof PercentageDiscount) {
@@ -89,7 +112,11 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener la categoría del producto al que se aplica (si aplica)
+     * Determina el alcance o categoría de aplicación asociada a la campaña del descuento provisto.
+     * Rastrea de forma inversa el catálogo buscando qué artículos contienen vinculado dicho objeto.
+     * 
+     * @param desc Instancia del descuento a auditar.
+     * @return El nombre del grupo de artículos afectado o el ámbito general del mismo en el carrito.
      */
     public String obtenerCategoria(IDiscount desc) {
         if (desc instanceof PercentageDiscount) {
@@ -124,7 +151,12 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener información adicional del descuento
+     * Compone una ficha técnica o desglose estructural con las propiedades internas del descuento.
+     * Genera especificaciones detalladas dependiendo de las variables implícitas de cada subtipo 
+     * (umbrales económicos, multiplicadores de cantidad o productos de obsequio).
+     * 
+     * @param desc El objeto de descuento del cual estructurar el informe.
+     * @return Una cadena multilínea con los atributos detallados del elemento.
      */
     public String obtenerDetalles(IDiscount desc) {
         StringBuilder sb = new StringBuilder();
@@ -185,7 +217,11 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Parsear fecha en formato DD/MM/YYYY HH:mm a LocalDateTime
+     * Parsea un valor textual cronológico bajo el formato de máscara "dd/MM/yyyy HH:mm".
+     * 
+     * @param fechaStr Cadena de entrada que representa el instante temporal.
+     * @return El objeto LocalDateTime resultante.
+     * @throws DateTimeParseException Si el texto no respeta la sintaxis de fecha u hora obligatoria.
      */
     private LocalDateTime parsearFecha(String fechaStr) throws DateTimeParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -193,14 +229,27 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Validar que la fecha de fin sea posterior a la de inicio
+     * Valida la coherencia secuencial de un intervalo de tiempo.
+     * 
+     * @param desde Instancia temporal que demarca el inicio.
+     * @param hasta Instancia temporal que demarca la finalización.
+     * @return true si el límite superior es estrictamente posterior al de inicio; false de lo contrario.
      */
     private boolean validarFechas(LocalDateTime desde, LocalDateTime hasta) {
         return hasta.isAfter(desde);
     }
 
     /**
-     * Crear descuento de rebaja porcentual por categoría
+     * Da de alta y asocia de forma masiva un descuento de reducción porcentual a una categoría.
+     * Valida rangos aritméticos lógicos, consistencia temporal de vigencia y altera las propiedades 
+     * de los productos adscritos en el catálogo general guardando el estado final en disco.
+     * 
+     * @param descripcion Detalle enunciativo de la promoción.
+     * @param categoria   Nombre identificativo del sector de productos afectado.
+     * @param porcentaje  Tasa de reducción (rango abierto de 0 a 100).
+     * @param fechaInicio Fecha de activación del descuento.
+     * @param fechaFin    Fecha de expiración o cese del beneficio.
+     * @return true si la operación se completó con éxito; false si falló alguna validación previa.
      */
     public boolean crearDescuentoRebaja(String descripcion, String categoria, double porcentaje, 
                                        String fechaInicio, String fechaFin) {
@@ -275,7 +324,14 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Crear descuento por volumen de carrito
+     * Da de alta un descuento por volumen de compra global aplicable al total neto facturado.
+     * 
+     * @param descripcion   Texto descriptivo con las condiciones de la oferta.
+     * @param gastoMinimo   Cota monetaria inferior requerida para activar la ventaja.
+     * @param descuentoEuro Importe directo en euros a deducir del balance de compra.
+     * @param fechaInicio   Momento de inicio de validez legal.
+     * @param fechaFin      Momento de término de validez legal.
+     * @return true si la operación transaccional se consolida de forma correcta; false si incumple reglas.
      */
     public boolean crearDescuentoVolumen(String descripcion, double gastoMinimo, 
                                         double descuentoEuro, String fechaInicio, String fechaFin) {
@@ -331,7 +387,14 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Crear descuento regalo
+     * Crea un incentivo promocional basado en obsequiar un artículo si se supera un umbral financiero.
+     * 
+     * @param descripcion    Etiqueta conceptual del incentivo de regalo.
+     * @param gastoMinimo    Monto mínimo a satisfacer para obtener el beneficio.
+     * @param productoRegalo Nombre identificativo del artículo del catálogo que se asignará sin coste.
+     * @param fechaInicio    Instante inicial de la promoción.
+     * @param fechaFin       Instante de caducidad programada.
+     * @return true si la entidad se valida y asienta en los registros; false en caso contrario.
      */
     public boolean crearDescuentoRegalo(String descripcion, double gastoMinimo, String productoRegalo,
                                        String fechaInicio, String fechaFin) {
@@ -388,7 +451,16 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Crear descuento por cantidad (Lleva X, Paga Y)
+     * Configura y distribuye un descuento por lote de adquisición lineal ("Lleva X, Paga Y").
+     * El beneficio se propaga de forma transversal a todos los productos agrupados en la categoría indicada.
+     * 
+     * @param descripcion Enunciado representativo de la oferta por lote.
+     * @param categoria   Nombre de la familia de artículos receptora de la regla comercial.
+     * @param lleva       Cantidad de artículos requeridos para la composición de la oferta.
+     * @param paga        Fracción neta de artículos facturables de dicho conjunto.
+     * @param fechaInicio Inicio de la vigencia.
+     * @param fechaFin    Término de la vigencia.
+     * @return true si se registra de forma unívoca y se actualizan los productos; false si falla.
      */
     public boolean crearDescuentoCantidad(String descripcion, String categoria, int lleva, int paga,
                                          String fechaInicio, String fechaFin) {
@@ -468,7 +540,12 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Eliminar un descuento
+     * Da de baja del sistema un descuento activo. 
+     * Limpia las referencias directas presentes en los artículos del catálogo vinculados
+     * y extrae el objeto del registro global antes de persistir los cambios.
+     * 
+     * @param descuento Instancia de la oferta a remover del sistema.
+     * @return true si la eliminación concluye sin excepciones; false en caso de anomalía.
      */
     public boolean eliminarDescuento(IDiscount descuento) {
         try {
@@ -497,7 +574,11 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Metodo auxiliar que busca una categoría por nombre
+     * Método auxiliar de búsqueda interna de categorías.
+     * Evaluado por comparación exacta sin discriminar mayúsculas.
+     * 
+     * @param nombre Denominación textual de la categoría requerida.
+     * @return El objeto Category localizado o null si es inexistente.
      */
     private Category buscarCategoriaPorNombre(String nombre) {
         for (Category c : Application.getGlobalCategories()) {
@@ -509,7 +590,10 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Metodo auxiliar que busca un producto en el catálogo por su nombre
+     * Método auxiliar de búsqueda interna de productos del catálogo por coincidencia de nombre.
+     * 
+     * @param nombre Identificador textual descriptivo del producto a localizar.
+     * @return El objeto NewProduct emparejado o null si no se halla en el catálogo.
      */
     private NewProduct buscarProductoEnCatalogo(String nombre) {
         for (NewProduct p : Application.getCatalog()) {
@@ -521,7 +605,10 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener lista de nombres de categorías para combobox
+     * Genera una colección indexada con los nombres de todas las categorías activas.
+     * Se inyecta un registro por defecto para servir de cabecera neutral en selectores combobox.
+     * 
+     * @return ArrayList de String con el listado formateado de nombres.
      */
     public ArrayList<String> obtenerNombresCategorias() {
         ArrayList<String> nombres = new ArrayList<>();
@@ -533,7 +620,10 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Obtener lista de nombres de productos para combobox
+     * Genera una colección indexada con la denominación comercial de todos los productos disponibles.
+     * Diseñada para la carga de selectores interactivos en la vista de administración.
+     * 
+     * @return ArrayList de String con el listado nominal de productos.
      */
     public ArrayList<String> obtenerNombresProductos() {
         ArrayList<String> nombres = new ArrayList<>();
@@ -545,7 +635,9 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Mostrar diálogo de error
+     * Centraliza y despliega diálogos emergentes de advertencia ante entradas o lógicas erróneas.
+     * 
+     * @param mensaje Contenido explicativo del error a mostrar en la interfaz gráfica.
      */
     private void mostrarError(String mensaje) {
         JOptionPane.showMessageDialog(panel, 
@@ -554,7 +646,9 @@ public class GestorDescuentoController {
     }
 
     /**
-     * Mostrar diálogo de éxito
+     * Centraliza y despliega diálogos emergentes informativos tras confirmar operaciones exitosas.
+     * 
+     * @param mensaje Contenido descriptivo del hito alcanzado.
      */
     private void mostrarExito(String mensaje) {
         JOptionPane.showMessageDialog(panel, 

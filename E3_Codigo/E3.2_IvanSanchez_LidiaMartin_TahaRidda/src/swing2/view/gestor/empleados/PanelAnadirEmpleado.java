@@ -6,6 +6,13 @@ import swing2.view.VentanaPrincipa;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panel de formulario para el registro y alta de nuevos empleados en el sistema.
+ * Gestiona la disposición de los campos de entrada mediante GridBagLayout, incluye
+ * validación preliminar de datos numéricos y sincroniza el guardado con el controlador.
+ * 
+ * @author Lidia Martín
+ */
 public class PanelAnadirEmpleado extends JPanel {
 	private VentanaPrincipa ventanaPadre;
 	private PanelGestionEmpleados panelEmpleados;
@@ -15,6 +22,14 @@ public class PanelAnadirEmpleado extends JPanel {
 	private JTextField txtNombre, txtFecha, txtDni, txtUsername, txtEmail, txtTlf, txtSalario;
 	private JPasswordField txtPwd, txtConfirmPwd;
 	
+	/**
+	 * Constructor de la clase PanelAnadirEmpleado.
+	 * Inicializa los componentes gráficos de entrada de texto, las opciones de 
+	 * enmascaramiento de contraseñas y estructura la cuadrícula del formulario.
+	 * 
+	 * @param ventanaPadre   La ventana principal de la aplicación.
+	 * @param panelEmpleados El panel contenedor general que gestiona la navegación.
+	 */
 	public PanelAnadirEmpleado(VentanaPrincipa ventanaPadre, PanelGestionEmpleados panelEmpleados) {
 		this.ventanaPadre = ventanaPadre;
 		this.panelEmpleados = panelEmpleados;
@@ -66,7 +81,16 @@ public class PanelAnadirEmpleado extends JPanel {
 		this.add(panelBotones, g);
 	}
 	
-	// Fila de formulario (etiqueta + campo + botón opcional)
+	/**
+	 * Inserta una fila estructurada dentro del GridBagLayout que consta de una etiqueta
+	 * informativa, un componente de texto y un control o espacio de alineación derecho.
+	 * 
+	 * @param etiqueta Texto explicativo para el campo.
+	 * @param campo    Componente de entrada de datos (JTextField o JPasswordField).
+	 * @param btn      Botón opcional de palanca (JToggleButton), usualmente para visibilidad.
+	 * @param g        Restricciones de diseño del GridBagLayout.
+	 * @param fila     Índice de la fila del grid en la que se posicionarán los elementos.
+	 */
 	private void agregarFilaFormulario(String etiqueta, JTextField campo, JToggleButton btn, GridBagConstraints g, int fila) {
 		g.gridy = fila;
 		
@@ -93,7 +117,13 @@ public class PanelAnadirEmpleado extends JPanel {
 		}
 	}
 	
-	// Crear botón para mostrar/ocultar contraseña
+	/**
+	 * Crea y configura un botón de palanca diseñado para alternar el eco visual
+	 * del campo de contraseña, permitiendo alternar entre texto oculto y plano.
+	 * 
+	 * @param campo El componente JPasswordField que se desea intervenir de forma dinámica.
+	 * @return Un JToggleButton configurado con su respectiva acción de escucha.
+	 */
 	private JToggleButton crearBotonVer(JPasswordField campo) {
 		JToggleButton btn = new JToggleButton("Ver");
 		btn.setPreferredSize(new Dimension(45, 25));
@@ -102,7 +132,14 @@ public class PanelAnadirEmpleado extends JPanel {
 		return btn;
 	}
 	
-	// Crear panel con botones guardar/cancelar
+	/**
+	 * Construye el panel inferior que agrupa los botones operacionales de confirmación 
+	 * (registro de datos) y cancelación (retorno al módulo de listado).
+	 * 
+	 * @param g    Restricciones de diseño compartidas del layout del panel base.
+	 * @param fila Posición de fila asignada para ubicar la botonera.
+	 * @return Un JPanel flotante con disposición horizontal centrado.
+	 */
 	private JPanel crearPanelBotones(GridBagConstraints g, int fila) {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 		panel.setOpaque(false);
@@ -135,7 +172,11 @@ public class PanelAnadirEmpleado extends JPanel {
 		return panel;
 	}
 	
-	// Añadir empleado (controlador)
+	/**
+	 * Extrae y valida los datos provistos en el formulario de la interfaz. Si los criterios 
+	 * de tipos de datos se cumplen (ej. formato numérico del salario), delega la creación 
+	 * al controlador de negocio y gestiona posibles excepciones mediante alertas visuales.
+	 */
 	private void anadirEmpleado() {
 		try {
 			// Parsear salario
@@ -178,7 +219,10 @@ public class PanelAnadirEmpleado extends JPanel {
 		}
 	}
 	
-	// Volver al listado de empleados
+	/**
+	 * Cancela el flujo de edición actual, delega al contenedor primario la restauración 
+	 * de la pantalla del listado general y restablece los valores del formulario.
+	 */
 	private void volverAlListado() {
 		// Mostrar panel de empleados nuevamente
 		panelEmpleados.mostrarListado();
@@ -187,7 +231,10 @@ public class PanelAnadirEmpleado extends JPanel {
 		limpiarCampos();
 	}
 	
-	// Limpiar todos los campos
+	/**
+	 * Restablece el estado por defecto de todos los componentes de texto y de 
+	 * contraseñas del formulario dejándolos vacíos o listos para un nuevo registro.
+	 */
 	private void limpiarCampos() {
 		txtNombre.setText("");
         txtFecha.setText("");

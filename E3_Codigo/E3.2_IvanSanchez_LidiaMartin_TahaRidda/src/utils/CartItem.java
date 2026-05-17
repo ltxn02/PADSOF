@@ -37,7 +37,11 @@ public class CartItem implements java.io.Serializable{
 	    this.quantity = quantity;
 	    this.product.addedToCart();
 	}
-	
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
 	/**
 	 * Calcula el precio total de este CartItem (cantidad × precio unitario).
 	 * 

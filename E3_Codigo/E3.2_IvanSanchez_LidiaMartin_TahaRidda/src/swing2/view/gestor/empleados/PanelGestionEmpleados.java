@@ -8,8 +8,11 @@ import swing2.view.VentanaPrincipa;
 import users.Staff;
 
 /**
- * Panel contenedor para gestión de empleados.
- * Maneja la navegación entre listado y formulario.
+ * Panel contenedor para la gestión de empleados.
+ * Administra de forma centralizada la navegación interna entre las pantallas
+ * de listado, formulario de alta y vista de detalles mediante un CardLayout.
+ * 
+ * @author Lidia Martín
  */
 public class PanelGestionEmpleados extends JPanel {
 	private VentanaPrincipa ventanaPadre;
@@ -27,6 +30,13 @@ public class PanelGestionEmpleados extends JPanel {
 	// COLORES
 	private static final Color COLOR_FONDO = new Color(23, 48, 79);
 	
+	/**
+	 * Constructor de la clase PanelGestionEmpleados.
+	 * Inicializa el controlador de empleados, instancia los subpaneles de la sección
+	 * y los registra dentro del contenedor principal bajo una distribución de tarjetas.
+	 * 
+	 * @param ventanaPadre La ventana principal de la aplicación que actúa como marco superior.
+	 */
 	public PanelGestionEmpleados(VentanaPrincipa ventanaPadre) {
 		this.ventanaPadre = ventanaPadre;
 		this.ctrl = new GestorEmpleadoController(ventanaPadre, this);
@@ -54,7 +64,8 @@ public class PanelGestionEmpleados extends JPanel {
 	}
 	
 	/**
-	 * Mostrar el panel del listado de empleados
+	 * Alterna la vista activa del contenedor hacia el panel de listado general 
+	 * y restablece los filtros o búsquedas previas para refrescar los datos en pantalla.
 	 */
 	public void mostrarListado() {
 		layoutInterno.show(contenedorInterno, "LISTADO");
@@ -62,14 +73,18 @@ public class PanelGestionEmpleados extends JPanel {
 	}
 	
 	/**
-	 * Mostrar el panel para añadir empleado
+	 * Alterna la vista activa del contenedor hacia el formulario de inserción 
+	 * para posibilitar el alta de un nuevo registro de empleado.
 	 */
 	public void mostrarAnadirEmpleado() {
 		layoutInterno.show(contenedorInterno, "AÑADIR");
 	}
 	
 	/**
-	 * Mostrar detalles de un empleado
+	 * Carga la información de un miembro del personal específico en el subpanel 
+	 * correspondiente y conmuta la interfaz para mostrar su ficha detallada.
+	 * 
+	 * @param empleado Instancia de Staff que contiene la información del empleado consultado.
 	 */
 	public void mostrarDetalles(Staff empleado) {
 		panelDetalles.mostrarDetalles(empleado);

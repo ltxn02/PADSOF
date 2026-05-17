@@ -10,6 +10,8 @@ import swing2.view.VentanaPrincipa;
 /**
  * Panel para añadir un nuevo producto.
  * Placeholder que sigue la estructura de PanelAnadirEmpleado.
+ * 
+ * @author Lidia Martin
  */
 public class PanelAnadirProducto extends JPanel {
 	private VentanaPrincipa ventanaPadre;
@@ -21,6 +23,13 @@ public class PanelAnadirProducto extends JPanel {
 	private static final Color COLOR_BOTON = new Color(52, 152, 219);
 	private static final Color COLOR_BOTON_CANCELAR = new Color(200, 50, 50);
 
+	/**
+	 * Constructor de la clase PanelAnadirProducto.
+	 * Configura el layout básico y el color de fondo para el panel de inserción.
+	 * 
+	 * @param ventanaPadre La ventana principal de la aplicación.
+	 * @param panelPadre   El panel de gestión de productos que actúa como contenedor de navegación.
+	 */
 	public PanelAnadirProducto(VentanaPrincipa ventanaPadre, PanelGestionProductos panelPadre) {
 		this.ventanaPadre = ventanaPadre;
 		this.panelPadre = panelPadre;
@@ -31,6 +40,10 @@ public class PanelAnadirProducto extends JPanel {
 		crearInterfaz();
 	}
 
+	/**
+	 * Inicializa, distribuye y ensambla los componentes principales de la interfaz,
+	 * como el área central del formulario y el panel inferior de botones.
+	 */
 	private void crearInterfaz() {
 		// Panel principal centrado
 		JPanel pnlCentral = new JPanel(new BorderLayout());
@@ -48,6 +61,12 @@ public class PanelAnadirProducto extends JPanel {
 		this.add(pnlCentral, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Diseña y dibuja el contenedor del formulario con bordes redondeados y 
+	 * posicionamiento GridBagLayout, incluyendo leyendas provisionales de desarrollo.
+	 * 
+	 * @return Un JPanel personalizado que representa la estructura física del formulario.
+	 */
 	private JPanel crearFormulario() {
 		JPanel panel = new JPanel() {
 			@Override
@@ -93,6 +112,12 @@ public class PanelAnadirProducto extends JPanel {
 		return panel;
 	}
 
+	/**
+	 * Crea y agrupa los botones encargados de confirmar la acción o de cancelar
+	 * la operación regresando al listado principal.
+	 * 
+	 * @return Un JPanel que actúa como barra de herramientas inferior con los botones de acción.
+	 */
 	private JPanel crearPanelBotones() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 		panel.setOpaque(false);
@@ -114,6 +139,14 @@ public class PanelAnadirProducto extends JPanel {
 		return panel;
 	}
 
+	/**
+	 * Factoría interna para construir botones con estética estilizada, 
+	 * esquinas redondeadas, efectos de cursor y colores específicos de la aplicación.
+	 * 
+	 * @param texto Etiqueta textual visible que portará el botón.
+	 * @param color Color de fondo que se aplicará al diseño del componente gráfico.
+	 * @return Un JButton personalizado según las especificaciones provistas.
+	 */
 	private JButton crearBoton(String texto, Color color) {
 		JButton btn = new JButton(texto) {
 			@Override

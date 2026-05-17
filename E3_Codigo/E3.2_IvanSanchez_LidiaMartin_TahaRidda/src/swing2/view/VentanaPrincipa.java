@@ -2,6 +2,7 @@ package swing2.view;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.net.URL;
 
 import javax.swing.*;
 
@@ -45,6 +46,19 @@ public class VentanaPrincipa extends JFrame {
         });
         setLocationRelativeTo(null);
 
+        try {
+            URL iconURL = getClass().getResource("/foto/logoi.png"); 
+            if (iconURL == null) {
+                iconURL = getClass().getResource("../../foto/logoi.png");
+            }
+
+            if (iconURL != null) {
+                ImageIcon icon = new ImageIcon(iconURL);
+                this.setIconImage(icon.getImage());
+            }
+        } catch (Exception e) {
+            System.err.println("No se pudo cargar el icono de la aplicación");
+        }
 
         panelCliente = new PanelInicioo(this, usuarioLogueado);
         panelGestor = new PanelDashboard(this, null);
@@ -220,10 +234,17 @@ public class VentanaPrincipa extends JFrame {
     public RegisteredUser getUsuarioLogueado() {
         return usuarioLogueado;
     }
+    
+    public void cambiarPanelDinamico(JPanel nuevoPanel) {
+        
+        String idDinamico = "PANEL_DINAMICO_" + nuevoPanel.hashCode();
+        contenedor.add(nuevoPanel, idDinamico);
 
-    public static void main(String[] args) {
-        System.setProperty("sun.java2d.uiScale", "1.0");
+        
+        contenedor.revalidate();
+        contenedor.repaint();
 
-        SwingUtilities.invokeLater(() -> new VentanaPrincipa());
+        
+        cardLayout.show(contenedor, idDinamico);
     }
 }

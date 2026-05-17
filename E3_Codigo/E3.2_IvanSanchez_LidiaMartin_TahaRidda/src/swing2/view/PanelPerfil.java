@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import users.Client;
 import users.RegisteredUser;
 import transactions.Order;
-import utils.Notification;
+import utils.*;
 
 public class PanelPerfil extends JPanel {
     private RegisteredUser usuario;
@@ -333,9 +333,27 @@ public class PanelPerfil extends JPanel {
             Order o = pedidos.get(index);
 
             
+            if (o.getOrderStatus() == OrderStatus.ENTREGADO) {
+
+                int respuesta = JOptionPane.showConfirmDialog(this,
+                        "Este pedido ya ha sido entregado. ¿Deseas valorar los productos?",
+                        "Pedido Entregado",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    
+                    
+                    PanelReseñasPedido panelReview = new PanelReseñasPedido(ventana, o, usuario);
+
+                    
+                    ventana.cambiarPanelDinamico(panelReview);
+                    return; 
+                }
+            }
+
+            
             StringBuilder detalleProds = new StringBuilder();
-            
-            
             detalleProds.append("Código de recogida: ").append(o.getPickupCode()).append("\n");
             detalleProds.append("Fecha: ").append(o.getPaidAt() != null ? fmt.format(o.getPaidAt()) : "Pendiente").append("\n");
             detalleProds.append("Estado: ").append(o.getOrderStatus()).append("\n");
@@ -346,8 +364,5 @@ public class PanelPerfil extends JPanel {
                     detalleProds.toString(),
                     "Detalle del pedido #" + o.getPickupCode(),
                     JOptionPane.INFORMATION_MESSAGE);
-
-            
         }
-    }
-}
+    }}

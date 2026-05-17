@@ -17,6 +17,8 @@ import swing2.controller.gestor.GestorProductoController;
 /**
  * Panel de listado de productos.
  * Muestra tabla con todos los productos del catálogo con soporte de búsqueda en tiempo real.
+ * 
+ * @author Lidia Martín
  */
 public class PanelListaProductos extends JPanel {
 	private PanelGestionProductos panelPadre;
@@ -33,6 +35,12 @@ public class PanelListaProductos extends JPanel {
 	private static final Color COLOR_TEXTO_FILA = new Color(30, 45, 80);
 	private static final Color COLOR_BOTON = new Color(52, 152, 219);
 
+	/**
+	 * Constructor de la clase PanelListaProductos.
+	 * 
+	 * @param panelPadre Panel principal de gestión de productos que contiene a este panel.
+	 * @param ctrl       Controlador encargado de la lógica de gestión de productos.
+	 */
 	public PanelListaProductos(PanelGestionProductos panelPadre, GestorProductoController ctrl) {
 		this.panelPadre = panelPadre;
 		this.ctrl = ctrl;
@@ -42,6 +50,10 @@ public class PanelListaProductos extends JPanel {
 		crearInterfaz();
 	}
 
+	/**
+	 * Inicializa y construye la interfaz gráfica del panel, incluyendo 
+	 * la barra de búsqueda, botones de acción y la tabla de productos.
+	 */
 	private void crearInterfaz() {
 		// Panel de acciones (botones superiores)
 		JPanel pnlAcciones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
@@ -92,12 +104,22 @@ public class PanelListaProductos extends JPanel {
 		actualizarTabla("");
 	}
 	
+	/**
+	 * Aplica el texto y el estilo visual de marcador de posición (placeholder) 
+	 * al campo de búsqueda cuando está vacío o pierde el foco.
+	 */
 	private void aplicarPlaceholder() {
 		campoBusqueda.setText("Buscar productos");
 		campoBusqueda.setForeground(Color.GRAY);
 		campoBusqueda.setFont(new Font("Arial", Font.ITALIC, 12));
 	}
 
+	/**
+	 * Construye la estructura base del contenedor de la tabla de productos, 
+	 * generando la cabecera y el área desplazable (scroll) para las filas.
+	 * 
+	 * @return Un JPanel configurado que contiene la tabla gráfica.
+	 */
 	private JPanel crearTablaProductos() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
@@ -148,6 +170,8 @@ public class PanelListaProductos extends JPanel {
 	/**
 	 * Lógica encargada de vaciar el contenedor e insertar únicamente 
 	 * aquellos productos que coincidan con la búsqueda.
+	 * 
+	 * @param filtro Cadena de texto utilizada para filtrar productos según su nombre, tipo, marca o ID.
 	 */
 	private void actualizarTabla(String filtro) {
 		pnlFilas.removeAll(); // Borramos lo que haya actualmente en pantalla
@@ -210,6 +234,14 @@ public class PanelListaProductos extends JPanel {
 		pnlFilas.repaint();
 	}
 
+	/**
+	 * Genera un panel formateado visualmente que representa una fila con los datos
+	 * detallados de un producto específico.
+	 * 
+	 * @param p  Instancia del producto con la información a mostrar.
+	 * @param id Identificador numérico real asociado al producto.
+	 * @return Un JPanel listo para ser insertado en el contenedor de filas.
+	 */
 	private JPanel crearFilaProducto(NewProduct p, int id) {
 		JPanel wrapper = new JPanel(new BorderLayout());
 		wrapper.setOpaque(false);
@@ -266,6 +298,13 @@ public class PanelListaProductos extends JPanel {
 		return wrapper;
 	}
 
+	/**
+	 * Crea un componente de etiqueta (JLabel) estándar para las celdas de la tabla,
+	 * aplicando formato y estilos definidos.
+	 * 
+	 * @param texto Contenido textual a mostrar en la etiqueta.
+	 * @return Objeto JLabel configurado.
+	 */
 	private JLabel crearLabelFila(String texto) {
 		JLabel lbl = new JLabel(texto, SwingConstants.CENTER);
 		lbl.setFont(new Font("Arial", Font.BOLD, 13));
@@ -273,6 +312,13 @@ public class PanelListaProductos extends JPanel {
 		return lbl;
 	}
 
+	/**
+	 * Recupera, escala y asigna la primera imagen disponible de un producto a una etiqueta.
+	 * En caso de no existir imagen, muestra un texto indicativo por defecto.
+	 * 
+	 * @param p        Producto del que se obtendrán las rutas de la imagen.
+	 * @param imgLabel Etiqueta (JLabel) en la cual se mostrará el icono resultante.
+	 */
 	private void cargarImagenPequena(NewProduct p, JLabel imgLabel) {
 		if (p.getFotos() != null && !p.getFotos().isEmpty()) {
 			String nombreArchivo = new File(p.getFotos().get(0)).getName();
@@ -294,6 +340,12 @@ public class PanelListaProductos extends JPanel {
 		}
 	}
 
+	/**
+	 * Explora un arreglo de rutas tratando de ubicar un archivo físico existente.
+	 * 
+	 * @param rutas Lista de posibles rutas (absolutas o relativas) de ubicación.
+	 * @return Objeto File correspondiente al primer archivo encontrado, o null en caso contrario.
+	 */
 	private File encontrarArchivo(String[] rutas) {
 		for (String r : rutas) {
 			File f = new File(r);
@@ -302,6 +354,10 @@ public class PanelListaProductos extends JPanel {
 		return null;
 	}
 	
+	/**
+	 * Refresca y actualiza visualmente el panel restableciendo el campo de búsqueda 
+	 * a su estado inicial y cargando nuevamente el catálogo completo.
+	 */
 	public void refrescar() {
 	    if (campoBusqueda != null) {
 	        aplicarPlaceholder();

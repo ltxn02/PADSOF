@@ -13,17 +13,38 @@ import javax.swing.JOptionPane;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Controlador encargado de gestionar el proceso de registro de nuevos usuarios.
+ * Valida los datos introducidos en la interfaz (como la obligatoriedad de campos, 
+ * coincidencia de contraseñas, mayoría de edad y algoritmo oficial del DNI español) 
+ * antes de proceder a la creación y persistencia del nuevo cliente en el sistema.
+ * 
+ * @author Taha Ridda
+ */
 public class RegistroController {
     private VentanaPrincipa ventana;
     private PanelRegistro panel;
 
+    /**
+     * Constructor de la clase RegistroController.
+     * Vincula el controlador con la ventana principal y el panel de registro de la interfaz.
+     * 
+     * @param ventana Ventana principal de la aplicación que gestiona el cambio de pantallas.
+     * @param panel   Panel que contiene el formulario físico de inserción de datos.
+     */
     public RegistroController(VentanaPrincipa ventana, PanelRegistro panel) {
         this.ventana = ventana;
         this.panel = panel;
     }
 
     /**
-     * Algoritmo oficial de validación de DNI español
+     * Aplica el algoritmo oficial de validación del DNI español.
+     * Verifica que el formato general coincida con 8 dígitos seguidos de una letra
+     * y comprueba de forma matemática que la letra proporcionada corresponda con el 
+     * residuo del cálculo del número entre 23.
+     * 
+     * @param dni Cadena de texto que representa el DNI completo a evaluar.
+     * @return true si el DNI es sintáctica y matemáticamente válido; false en caso contrario.
      */
     private boolean validarDniAlgoritmo(String dni) {
         
@@ -49,6 +70,21 @@ public class RegistroController {
         }
     }
 
+    /**
+     * Procesa las peticiones de alta de un nuevo usuario cliente en el sistema.
+     * Ejecuta de forma secuencial controles sobre los campos obligatorios, el formato de fecha, 
+     * la edad mínima permitida por la configuración del sistema, la integridad de las claves 
+     * de acceso y la validez legal del documento de identidad provisto.
+     * 
+     * @param nombre      Nombre completo del aspirante a registrarse.
+     * @param fechaStr    Fecha de nacimiento en formato de texto estándar (DD/MM/AAAA).
+     * @param dni         Documento Nacional de Identidad para la validación algorítmica.
+     * @param user        Nombre de cuenta único o nickname para el acceso al entorno.
+     * @param email       Correo electrónico para notificaciones y contacto.
+     * @param tlf         Teléfono de contacto asociado al usuario.
+     * @param pass        Contraseña de seguridad de la cuenta.
+     * @param confirmPass Duplicado exacto para la verificación de la contraseña.
+     */
     public void procesarRegistro(String nombre, String fechaStr, String dni, String user, String email, String tlf, String pass, String confirmPass) {
 
         
@@ -130,6 +166,11 @@ public class RegistroController {
         }
     }
 
+    /**
+     * Muestra un cuadro de diálogo informativo que indica que el registro concluyó 
+     * de manera exitosa, vacía el contenido residual de los campos del formulario 
+     * y redirige el foco de la interfaz gráfica de vuelta hacia la pantalla de Login.
+     */
     private void mostrarConfirmacionExito() {
         Object[] opciones = {"Aceptar"};
         int seleccion = JOptionPane.showOptionDialog(

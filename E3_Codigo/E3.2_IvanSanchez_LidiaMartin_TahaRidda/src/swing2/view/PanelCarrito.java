@@ -107,17 +107,63 @@ public class PanelCarrito extends JPanel {
 
     public void actualizarVista() {
         contenedorProductos.removeAll();
-        for (CartItem ci : carritoActual.getCartItems()) {
-            contenedorProductos.add(crearFilaProducto(ci));
-            contenedorProductos.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        if (carritoActual.getCartItems().isEmpty()) {
+            contenedorProductos.setLayout(new GridBagLayout());
+
+            JPanel panelVacio = new JPanel();
+            panelVacio.setLayout(new BoxLayout(panelVacio, BoxLayout.Y_AXIS));
+            panelVacio.setOpaque(false);
+
+            JLabel lblCaraTriste = new JLabel();
+            lblCaraTriste.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            
+            URL urlCara = getClass().getResource("/foto/caritatriste.png");
+            if (urlCara == null) {
+                urlCara = getClass().getResource("../../foto/caritatriste.png");
+            }
+
+            if (urlCara != null) {
+                ImageIcon icon = new ImageIcon(urlCara);
+                
+                Image img = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+                lblCaraTriste.setIcon(new ImageIcon(img));
+            } else {
+                
+                lblCaraTriste.setText(":(");
+                lblCaraTriste.setFont(new Font("Arial", Font.BOLD, 100));
+                lblCaraTriste.setForeground(Color.WHITE);
+            }
+
+            JLabel lblMensaje = new JLabel("Todavía no tienes ningún producto en el carrito");
+            lblMensaje.setFont(new Font("Arial", Font.BOLD, 18));
+            lblMensaje.setForeground(Color.WHITE);
+            lblMensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblMensaje.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+
+            panelVacio.add(lblCaraTriste);
+            panelVacio.add(lblMensaje);
+
+            contenedorProductos.add(panelVacio);
+
+        } else {
+            contenedorProductos.setLayout(new BoxLayout(contenedorProductos, BoxLayout.Y_AXIS));
+            for (CartItem ci : carritoActual.getCartItems()) {
+                contenedorProductos.add(crearFilaProducto(ci));
+                contenedorProductos.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
         }
+
         
-        lblTotal.setText(String.format("%.2f€", carritoActual.getPrice()));
+        if (lblTotal != null) {
+            lblTotal.setText(String.format("%.2f€", carritoActual.getPrice()));
+        }
 
         contenedorProductos.revalidate();
         contenedorProductos.repaint();
-    }
-
+    }    
+    
     private JPanel crearFilaProducto(CartItem ci) {
         NewProduct p = ci.getProduct();
         JPanel fila = new JPanel(new BorderLayout(15, 0));
@@ -269,34 +315,47 @@ public class PanelCarrito extends JPanel {
         btnPagar.addActionListener(e -> {
             String nTarjeta = txtTarjeta.getText().trim();
 
-            
             if (!nTarjeta.matches("^[0-9]{16}$")) {
                 JOptionPane.showMessageDialog(dialog, "La tarjeta debe tener 16 números.", "Formato incorrecto", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
-                
-                
                 Client clienteActual = (Client) ventana.getUsuarioLogueado();
+
+                
+                for (CartItem ci : carritoActual.getCartItems()) {
+                    if (ci.getQuantity() > ci.getProduct().getStock()) {
+                        JOptionPane.showMessageDialog(dialog, "Error: El stock de " + ci.getProduct().getName() + " ha cambiado y ya no hay suficiente.", "Error de Stock", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+
                 Order nuevoPedido = new Order(
                         clienteActual,
                         new ArrayList<>(carritoActual.getCartItems()),
                         carritoActual.getPrice()
                 );
 
-                
                 boolean exito = nuevoPedido.procesarPago(nTarjeta);
 
                 if (exito) {
-                    dialog.dispose(); 
+                    
+                    for (CartItem ci : carritoActual.getCartItems()) {
+                        NewProduct p = ci.getProduct();
+                        p.decreaseStock(ci.getQuantity()); 
+                    }
 
                     
+                    
+                    
+
+                    dialog.dispose();
+
                     JOptionPane.showMessageDialog(this,
                             "¡Pago realizado con éxito!\nCódigo de recogida: " + nuevoPedido.getPickupCode(),
                             "Pedido confirmado", JOptionPane.INFORMATION_MESSAGE);
 
-                    
                     carritoActual.clearCart();
                     actualizarVista();
 
@@ -308,7 +367,6 @@ public class PanelCarrito extends JPanel {
                 JOptionPane.showMessageDialog(dialog, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
-
         pBoton.add(btnPagar);
 
         dialog.add(pInfo, BorderLayout.NORTH);

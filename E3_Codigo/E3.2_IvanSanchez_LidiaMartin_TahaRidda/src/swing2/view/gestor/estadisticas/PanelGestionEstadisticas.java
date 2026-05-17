@@ -10,6 +10,8 @@ import java.util.List;
 /**
  * Panel de Estadísticas del Gestor - RF-1.6
  * Colores lisos, paneles redondeados, datos 100% reales
+ * 
+ * @author Lidia Martín
  */
 public class PanelGestionEstadisticas extends JPanel {
     private VentanaPrincipa ventanaPadre;
@@ -29,6 +31,13 @@ public class PanelGestionEstadisticas extends JPanel {
     private static final Font FUENTE_NUMERO = new Font("Arial", Font.BOLD, 42);
     private static final Font FUENTE_TEXTO = new Font("Arial", Font.PLAIN, 14);
     
+    /**
+     * Constructor de la clase PanelGestionEstadisticas.
+     * Configura la distribución del panel, añade la cabecera principal y envuelve
+     * el contenedor de estadísticas en un área desplazable (JScrollPane).
+     * 
+     * @param ventanaPadre La ventana principal que actúa como marco de la aplicación.
+     */
     public PanelGestionEstadisticas(VentanaPrincipa ventanaPadre) {
         this.ventanaPadre = ventanaPadre;
         this.ctrl = new GestorEstadisticasController(this);
@@ -60,6 +69,12 @@ public class PanelGestionEstadisticas extends JPanel {
         this.add(scroll, BorderLayout.CENTER);
     }
     
+    /**
+     * Instancia y organiza verticalmente los bloques principales que componen
+     * el cuadro de mando estadístico.
+     * 
+     * @return Un JPanel configurado como contenedor secuencial de secciones.
+     */
     private JPanel crearContenidoPrincipal() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -89,6 +104,14 @@ public class PanelGestionEstadisticas extends JPanel {
         return panel;
     }
     
+    /**
+     * Construye un bloque de sección estructurado mediante una etiqueta de título
+     * superior y su panel gráfico de datos relacionado.
+     * 
+     * @param titulo    Texto de cabecera representativo de la sección.
+     * @param contenido Subpanel con los componentes visuales o datos estadísticos.
+     * @return Un JPanel formateado con alineación a la izquierda.
+     */
     private JPanel crearSeccion(String titulo, JPanel contenido) {
         JPanel seccion = new JPanel();
         seccion.setOpaque(false);
@@ -110,7 +133,12 @@ public class PanelGestionEstadisticas extends JPanel {
         return seccion;
     }
     
- // PANEL 1: RECAUDACIÓN
+    /**
+     * Genera la sección económica del panel, solicitando al controlador los montos
+     * totales y organizándolos en tarjetas gráficas independientes.
+     * 
+     * @return Un JPanel con disposición de rejilla (GridLayout) para las tarjetas de ingresos.
+     */
     private JPanel crearPanelRecaudacion() {
         // Mantenemos las columnas y el espacio de 25 entre ellas
         JPanel panel = new JPanel(new GridLayout(1, 2, 25, 0));
@@ -140,7 +168,12 @@ public class PanelGestionEstadisticas extends JPanel {
         return panel;
     }
     
- // PANEL 2: PRODUCTOS MÁS VENDIDOS
+    /**
+     * Genera el bloque visual correspondiente al listado de artículos más vendidos,
+     * calculando dinámicamente las dimensiones en base al tamaño de la colección devuelta.
+     * 
+     * @return Un JPanel con el ranking de productos o un mensaje si no hay registros.
+     */
     private JPanel crearPanelProductosMasVendidos() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -169,7 +202,12 @@ public class PanelGestionEstadisticas extends JPanel {
         return panel;
     }
     
- // PANEL 3: USUARIOS MÁS ACTIVOS
+    /**
+     * Diseña la sección orientada a clasificar y mostrar a los clientes con 
+     * mayor flujo de pedidos procesados por la tienda.
+     * 
+     * @return Un JPanel con el ranking de los usuarios más activos del sistema.
+     */
     private JPanel crearPanelUsuariosMasActivos() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -200,6 +238,16 @@ public class PanelGestionEstadisticas extends JPanel {
     
 // COMPONENTES AUXILIARES
     
+    /**
+     * Factoría gráfica encargada de crear una tarjeta contenedora para métricas numéricas.
+     * Implementa renderizado personalizado para suavizar esquinas mediante técnicas de antialiasing.
+     * 
+     * @param titulo      Concepto principal de la métrica que corona la tarjeta.
+     * @param valor       Dato bruto o formateado de gran tamaño.
+     * @param descripcion Nota aclaratoria al pie de la métrica.
+     * @param color       Color plano base empleado para pintar el fondo de la tarjeta.
+     * @return Un JPanel diseñado como tarjeta informativa.
+     */
     private JPanel crearTarjetaMetrica(String titulo, String valor, String descripcion, Color color) {
         JPanel card = new JPanel() {
             @Override
@@ -245,6 +293,14 @@ public class PanelGestionEstadisticas extends JPanel {
         return card;
     }
     
+    /**
+     * Construye una fila estilizada y compacta para estructurar los elementos 
+     * pertenecientes a un ranking de clasificación (Top).
+     * 
+     * @param posicion  Puesto asignado en el escalafón del ranking.
+     * @param contenido Descripción o nombre del elemento clasificado.
+     * @return Un JPanel con un diseño redondeado e indicadores de posición alineados.
+     */
     private JPanel crearFilaRanking(int posicion, String contenido) {
         JPanel fila = new JPanel() {
             @Override
@@ -282,6 +338,10 @@ public class PanelGestionEstadisticas extends JPanel {
         return fila;
     }
     
+    /**
+     * Solicita la revalidación estructural y el repintado inmediato 
+     * del panel en la pantalla para reflejar cambios.
+     */
     public void refrescar() {
         this.revalidate();
         this.repaint();

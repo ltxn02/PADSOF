@@ -17,6 +17,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que representa el panel de la interfaz gráfica destinado a los empleados
+ * para la visualización y gestión de los pedidos realizados por los clientes.
+ * Utiliza un {@link CardLayout} para alternar entre la tabla general de pedidos
+ * y la vista de edición de estados de un pedido específico.
+ * * @author Ivan Sanchez
+ */
 public class PanelPedidosEmpleado extends JPanel {
     private VentanaPrincipa ventana;
     private Employee empleadoActual;
@@ -29,6 +36,13 @@ public class PanelPedidosEmpleado extends JPanel {
     private JPanel panelContenedorCentral;
     private JPanel contenedorTabla;
 
+    /**
+     * Constructor del panel de gestión de pedidos para el empleado.
+     * Inicializa la barra de navegación y las distintas vistas manejadas por el CardLayout.
+     *
+     * @param ventana  La ventana principal de la aplicación.
+     * @param empleado El empleado que ha iniciado sesión actual.
+     */
     public PanelPedidosEmpleado(VentanaPrincipa ventana, Employee empleado) {
         this.ventana = ventana;
         this.empleadoActual = empleado;
@@ -49,6 +63,12 @@ public class PanelPedidosEmpleado extends JPanel {
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
 
+    /**
+     * Construye la vista principal que contiene la tabla con el listado
+     * general de todos los pedidos registrados en el sistema.
+     *
+     * @return Un {@link JPanel} estructurado con la tabla de pedidos y filtros visuales.
+     */
     // VISTA 1: LA TABLA DE PEDIDOS
     private JPanel crearPanelTablaPedidos() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -129,6 +149,12 @@ public class PanelPedidosEmpleado extends JPanel {
         return panel;
     }
 
+    /**
+     * Obtiene la lista de todos los pedidos de la aplicación y genera gráficamente
+     * las filas correspondientes dentro del contenedor especificado.
+     *
+     * @param pnlFilas El {@link JPanel} contenedor donde se añadirán las filas visuales de los pedidos.
+     */
     private void cargarFilasPedidos(JPanel pnlFilas) {
         pnlFilas.removeAll();
         List<Order> todosLosPedidos = obtenerTodosLosPedidos();
@@ -167,7 +193,9 @@ public class PanelPedidosEmpleado extends JPanel {
     }
 
     /**
-     * Extrae los pedidos de todos los clientes.
+     * Extrae y recopila los pedidos de todos los clientes registrados en el sistema.
+     *
+     * @return Una {@link List} que contiene todos los objetos {@link Order} encontrados.
      */
     private List<Order> obtenerTodosLosPedidos() {
         List<Order> listaGlobal = new ArrayList<>();
@@ -186,6 +214,17 @@ public class PanelPedidosEmpleado extends JPanel {
         return listaGlobal;
     }
 
+    /**
+     * Construye una fila gráfica para la tabla de pedidos, la cual es interactiva
+     * y responde al clic del ratón redirigiendo a la pantalla de edición de dicho pedido.
+     *
+     * @param order  El objeto {@link Order} asociado a esta fila.
+     * @param idPed  El identificador formateado del pedido.
+     * @param idComp El identificador o nombre de usuario del comprador.
+     * @param fecha  La fecha formateada de la compra.
+     * @param estado El estado actual del pedido.
+     * @return Un {@link JPanel} interactivo que representa la fila del pedido.
+     */
     // Fila interactiva que al hacer clic abre la edición
     private JPanel crearFilaPedidoInteractiva(Order order, String idPed, String idComp, String fecha, String estado) {
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -244,6 +283,13 @@ public class PanelPedidosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Crea un componente JLabel con un estilo de fuente oscuro y centrado,
+     * diseñado específicamente para las celdas de la tabla de pedidos.
+     *
+     * @param texto El texto que mostrará la etiqueta.
+     * @return Un {@link JLabel} configurado.
+     */
     private JLabel crearLabelFilaOscuro(String texto) {
         JLabel lbl = new JLabel(texto, SwingConstants.CENTER);
         lbl.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -251,7 +297,13 @@ public class PanelPedidosEmpleado extends JPanel {
         return lbl;
     }
 
-
+    /**
+     * Crea el panel que permite a un empleado autorizado visualizar y
+     * modificar el estado (ej. EN_PREPARACION, ENTREGADO) de un pedido concreto.
+     *
+     * @param order El objeto {@link Order} cuyo estado se va a modificar.
+     * @return Un {@link JPanel} que contiene el formulario de edición de estado.
+     */
     // VISTA 2: EDICIÓN DE ESTADO DEL PEDIDO
     private JPanel crearPanelEditarPedido(Order order) {
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -354,7 +406,13 @@ public class PanelPedidosEmpleado extends JPanel {
         return wrapper;
     }
 
-
+    /**
+     * Utilidad para crear botones con diseño redondeado y fondo blanco,
+     * empleados normalmente como botones secundarios o de cancelación.
+     *
+     * @param texto El texto del botón.
+     * @return Un {@link JButton} modificado.
+     */
     // MÉTODOS AUXILIARES DE ESTILOS
     private JButton crearBotonBlanco(String texto) {
         JButton btn = new JButton(texto) {
@@ -378,6 +436,13 @@ public class PanelPedidosEmpleado extends JPanel {
         return btn;
     }
 
+    /**
+     * Utilidad para crear botones con diseño redondeado y fondo dorado,
+     * empleados normalmente como botones principales o de confirmación de acción.
+     *
+     * @param texto El texto del botón.
+     * @return Un {@link JButton} modificado.
+     */
     private JButton crearBotonDorado(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -400,7 +465,11 @@ public class PanelPedidosEmpleado extends JPanel {
         return btn;
     }
 
-
+    /**
+     * Configura y ensambla la barra de navegación superior (Navbar).
+     * Incluye las opciones de navegación principal entre Productos, Intercambios
+     * y Pedidos, y carga el logotipo de la aplicación y las opciones de sesión del usuario.
+     */
     // BARRA DE NAVEGACIÓN
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
@@ -432,6 +501,14 @@ public class PanelPedidosEmpleado extends JPanel {
         this.add(barra, BorderLayout.NORTH);
     }
 
+    /**
+     * Permite crear los botones de las pestañas en la barra superior.
+     * Cambia de color si el botón corresponde a la pestaña activa en el momento.
+     *
+     * @param t      El texto visible del botón (p.ej., "Pedidos").
+     * @param activo Si es true, pinta el botón con el color de estado activo (dorado).
+     * @return Un {@link JButton} adaptado para la barra de navegación.
+     */
     private JButton crearBotonNav(String t, boolean activo) {
         JButton b = new JButton(t);
         b.setPreferredSize(new Dimension(140, 80));
@@ -450,6 +527,12 @@ public class PanelPedidosEmpleado extends JPanel {
         return b;
     }
 
+    /**
+     * Construye y carga el logotipo gráfico de la aplicación para posicionarlo
+     * en el extremo izquierdo de la barra de navegación.
+     *
+     * @return Un {@link JPanel} contenedor con el logo repintado.
+     */
     private JPanel crearPanelLogo() {
         JPanel p = new JPanel() {
             @Override
@@ -469,6 +552,14 @@ public class PanelPedidosEmpleado extends JPanel {
         return p;
     }
 
+    /**
+     * Crea el menú desplegable del perfil del empleado logueado en la esquina derecha de la navbar.
+     * Contiene su icono de perfil, despliega opciones como cerrar la sesión e integra el
+     * diálogo de confirmación de salida.
+     *
+     * @param user El {@link Employee} que se encuentra manejando el panel.
+     * @return Un {@link JPanel} alineado a la derecha que contiene el control de perfil de la sesión.
+     */
     private JPanel crearPanelUsuario(Employee user) {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         p.setOpaque(false);
@@ -545,6 +636,13 @@ public class PanelPedidosEmpleado extends JPanel {
         return p;
     }
 
+    /**
+     * Utilidad que busca un archivo probando diferentes rutas relativas para
+     * evitar fallos por directorios de trabajo configurados incorrectamente.
+     *
+     * @param rutas Un array de strings con todas las posibles rutas de un archivo.
+     * @return El {@link File} válido si lo encuentra en alguna de las rutas, o null si en ninguna existe.
+     */
     private File encontrarArchivo(String[] rutas) {
         for (String r : rutas) {
             File f = new File(r);
