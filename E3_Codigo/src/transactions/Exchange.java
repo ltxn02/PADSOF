@@ -4,6 +4,9 @@ import utils.*;
 import users.*;
 import catalog.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase que representa la ejecución física y administrativa de un intercambio de productos.
  * Gestiona el ciclo de vida de la transacción una vez que una {@link ExchangeOffer} ha sido
@@ -45,9 +48,15 @@ public class Exchange implements java.io.Serializable {
         if(!associatedOffer.ofertaaceptada()) {
             throw new IllegalStateException("No se puede validar una oferta que no ha sido aceptada previamente.");
         }
+        if(this.status == ExchangeStatus.COMPLETADO){
+            throw new IllegalStateException("Este intercambio ya ha sido procesado.");
+        }
+        if(!e.permissions.contains(Permission.EXCH_VALIDATE)){
+            throw new IllegalStateException("No tienes permisos para validar intercambios.");
+        }
+        this.associatedOffer.intercambiar_propietarios();
         this.processedBy = e;
         this.status = ExchangeStatus.COMPLETADO;
-        associatedOffer.aceptaroferta();
     }
 
     /**
@@ -64,6 +73,9 @@ public class Exchange implements java.io.Serializable {
         this.processedBy = e;
         this.status = ExchangeStatus.CANCELADO;
         this.associatedOffer.liberarProductos();
+        String msgFinal = "La tienda ha validado vuestro intercambio. ¡Ya podéis disfrutar de vuestros nuevos productos!";
+        this.associatedOffer.getOfferor().getMyNotifications().add(new Notification(msgFinal, new ArrayList<>(List.of(this.associatedOffer.getOfferor()))));
+        this.associatedOffer.getReceptor().getMyNotifications().add(new Notification(msgFinal, new ArrayList<>(List.of(this.associatedOffer.getReceptor()))));
     }
 
     /**

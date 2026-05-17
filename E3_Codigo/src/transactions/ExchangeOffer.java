@@ -110,30 +110,16 @@ public class ExchangeOffer implements java.io.Serializable {
     /**
      * Acepta formalmente la oferta.
      */
-    public void aceptaroferta(){
+    public void aceptaroferta() {
         this.status = ExchangeOfferStatus.ACEPTADA;
-        try {
-            
-            intercambiar_propietarios();
 
-            Exchange exchange = new Exchange(this);
-            this.offeror.addExchange(exchange);
-            this.receptor.addExchange(exchange);
+        String msg = "Ambas partes han aceptado el intercambio #" + this.offerId +
+                ". Pendiente de validación final por la tienda.";
 
-            
-            String msg = "¡Intercambio #" + this.offerId + " realizado con éxito!";
-            this.offeror.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.offeror))));
-            this.receptor.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.receptor))));
+        this.offeror.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.offeror))));
+        this.receptor.getMyNotifications().add(new Notification(msg, new ArrayList<>(List.of(this.receptor))));
 
-            
-            this.offeror.getOffersMade().remove(this);
-            this.receptor.obtenerMisOfertasRecibidos().remove(this);
-
-        } catch (Exception e) {
-            System.err.println("Error al generar el intercambio técnico: " + e.getMessage());
-        }
     }
-
     /**
      * Procesa la expiración de la oferta si el tiempo de validez ha concluido.
      */
