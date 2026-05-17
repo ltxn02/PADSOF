@@ -19,6 +19,13 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Clase que representa el panel de la interfaz gráfica del empleado
+ * destinado a la gestión de productos de intercambio (segunda mano).
+ * * Este panel utiliza un {@link CardLayout} para alternar entre diferentes vistas:
+ * el catálogo principal de intercambios, la tabla de intercambios completos,
+ * los formularios de registro manual y la carga masiva mediante archivos CSV.
+ */
 public class PanelIntercambiosEmpleado extends JPanel {
     private VentanaPrincipa ventana;
     private Employee empleadoActual;
@@ -42,6 +49,14 @@ public class PanelIntercambiosEmpleado extends JPanel {
     private JComboBox<Condition> comboManualCondicion;
     private String rutaImagenManualSeleccionada = null;
 
+    /**
+     * Constructor del panel de intercambios del empleado.
+     * Inicializa la interfaz, configura la barra de navegación superior y
+     * prepara el CardLayout con todas las vistas disponibles.
+     *
+     * @param ventana  Referencia a la ventana principal de la aplicación para gestionar la navegación.
+     * @param empleado El empleado que ha iniciado sesión y está utilizando el panel.
+     */
     public PanelIntercambiosEmpleado(VentanaPrincipa ventana, Employee empleado) {
         this.ventana = ventana;
         this.empleadoActual = empleado;
@@ -87,7 +102,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         cargarIntercambios();
     }
 
-    // BARRA DE FILTROS SUPERIOR
+    /**
+     * Crea la barra superior que contiene los botones de filtrado y acceso a
+     * vistas adicionales (Intercambios completos y Subida de intercambios).
+     *
+     * @return Un {@link JPanel} configurado con los botones de filtrado.
+     */
     private JPanel crearBarraFiltros() {
         JPanel pnlTop = new JPanel(new BorderLayout());
         pnlTop.setOpaque(false);
@@ -113,6 +133,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return pnlTop;
     }
 
+    /**
+     * Método auxiliar para crear un botón con estilo blanco y bordes redondeados,
+     * utilizado habitualmente en las barras de filtros.
+     *
+     * @param texto El texto que mostrará el botón.
+     * @return Un {@link JButton} estilizado.
+     */
     private JButton crearBotonFiltroBlanco(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -135,7 +162,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return btn;
     }
 
-    // CARTA 5: INTERCAMBIOS COMPLETOS (TABLA)
+    /**
+     * Crea el panel que muestra la tabla con el historial de intercambios completados
+     * en el sistema. Incluye cabeceras descriptivas y permite hacer scroll.
+     *
+     * @return Un {@link JPanel} con la tabla de intercambios completos.
+     */
     private JPanel crearPanelIntercambiosCompletos() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
@@ -223,6 +255,18 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return panel;
     }
 
+    /**
+     * Construye de forma gráfica una fila individual para la tabla de intercambios completos.
+     *
+     * @param idInt Identificador único del intercambio.
+     * @param idU1  Identificador del primer usuario implicado.
+     * @param idU2  Identificador del segundo usuario implicado.
+     * @param idOb1 Identificador del objeto ofrecido por el primer usuario.
+     * @param idOb2 Identificador del objeto ofrecido por el segundo usuario.
+     * @param rec1  Booleano que indica si el objeto 1 ha sido recogido.
+     * @param rec2  Booleano que indica si el objeto 2 ha sido recogido.
+     * @return Un {@link JPanel} que representa la fila de la tabla.
+     */
     private JPanel crearFilaIntercambio(String idInt, String idU1, String idU2, String idOb1, String idOb2, boolean rec1, boolean rec2) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -271,6 +315,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Método auxiliar para crear etiquetas de texto oscuras utilizadas en las filas de las tablas.
+     *
+     * @param texto El texto a mostrar en la etiqueta.
+     * @return Un {@link JLabel} configurado.
+     */
     private JLabel crearLabelFilaOscuro(String texto) {
         JLabel lbl = new JLabel(texto, SwingConstants.CENTER);
         lbl.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -278,7 +328,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return lbl;
     }
 
-    // CARTA 2: MENÚ DE OPCIONES DE SUBIDA
+    /**
+     * Crea el panel que funciona como menú intermedio para seleccionar el tipo
+     * de subida de intercambios: Registro Manual o Subida desde archivo.
+     *
+     * @return Un {@link JPanel} con las opciones de subida.
+     */
     private JPanel crearPanelOpcionesSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -326,7 +381,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // CARTA 4: REGISTRO MANUAL DE INTERCAMBIO
+    /**
+     * Crea el formulario que permite a un empleado registrar un producto de segunda mano
+     * de forma manual, asociándolo obligatoriamente al nombre de usuario de un cliente existente.
+     *
+     * @return Un {@link JPanel} que contiene el formulario de registro manual.
+     */
     private JPanel crearPanelRegistroManual() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -450,6 +510,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Procesa los datos introducidos en el formulario de registro manual.
+     * Valida que los campos no estén vacíos, que el precio sea numérico y
+     * que el cliente asociado exista en el sistema antes de instanciar
+     * y registrar el {@link SecondHandProduct}.
+     */
     private void procesarRegistroManualIntercambio() {
         try {
             String username = txtManualOwner.getText().trim();
@@ -510,6 +576,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         }
     }
 
+    /**
+     * Método auxiliar para crear etiquetas con texto blanco.
+     *
+     * @param texto El texto de la etiqueta.
+     * @return Un {@link JLabel} configurado con la fuente y el color correspondientes.
+     */
     private JLabel crearLabelBlanco(String texto) {
         JLabel l = new JLabel(texto);
         l.setForeground(Color.WHITE);
@@ -519,7 +591,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
     }
 
 
-    // CARTA 3: SUBIR DESDE UN ARCHIVO (CSV)
+    /**
+     * Crea el panel que permite seleccionar y procesar un archivo CSV o TXT
+     * para la carga masiva de productos de intercambio al sistema.
+     *
+     * @return Un {@link JPanel} con el selector de archivos y opciones de carga.
+     */
     private JPanel crearPanelSubirArchivo() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -621,6 +698,15 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Lógica encargada de leer el archivo especificado y registrar iterativamente
+     * los productos de segunda mano leídos en el sistema.
+     * El formato del CSV debe ser: TIPO;NOMBRE;DESCRIPCION;PRECIO;CONDICION;FOTO;USERNAME
+     *
+     * @param filePath La ruta absoluta del archivo a procesar.
+     * @return El número total de intercambios que se han añadido exitosamente.
+     * @throws java.io.IOException Si ocurre un error durante la lectura del archivo.
+     */
     private int procesarCargaMasivaLocalIntercambios(String filePath) throws java.io.IOException {
         int contador = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -661,7 +747,10 @@ public class PanelIntercambiosEmpleado extends JPanel {
     }
 
 
-    // CARGA DE TARJETAS (CUADRÍCULA PRINCIPAL)
+    /**
+     * Obtiene todos los productos de segunda mano activos en la aplicación
+     * y refresca la cuadrícula principal para generar sus tarjetas correspondientes.
+     */
     public void cargarIntercambios() {
         contenedorCentral.removeAll();
         java.util.List<SecondHandProduct> todos = Application.getSecondHandProducts();
@@ -683,6 +772,14 @@ public class PanelIntercambiosEmpleado extends JPanel {
         contenedorCentral.repaint();
     }
 
+    /**
+     * Construye una tarjeta visual que representa un producto de segunda mano específico.
+     * Muestra la imagen, el estado de conservación, precio, nombre, usuario propietario
+     * y proporciona un botón para abrir el panel de edición/tasación.
+     *
+     * @param p El objeto {@link SecondHandProduct} del cual se construirá la vista.
+     * @return Un {@link JPanel} en forma de tarjeta.
+     */
     private JPanel crearTarjeta(SecondHandProduct p) {
         JPanel card = new JPanel() {
             @Override
@@ -773,7 +870,14 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return card;
     }
 
-    // PANTALLA DE EDICIÓN DE INTERCAMBIO
+    /**
+     * Genera la vista de edición o tasación para un intercambio existente.
+     * Permite al empleado autorizado modificar la condición y el precio
+     * haciendo uso del backend establecido.
+     *
+     * @param p El producto de segunda mano ({@link SecondHandProduct}) a tasar.
+     * @return Un {@link JPanel} con el formulario de tasación.
+     */
     private JPanel crearPanelEditarIntercambio(SecondHandProduct p) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -857,7 +961,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return wrapper;
     }
 
-    // MÉTODOS AUXILIARES DE ESTILOS
+    /**
+     * Método auxiliar para crear etiquetas con estilo visual llamativo ("badges"),
+     * utilizadas comúnmente para mostrar el precio y estado sobre las imágenes de los productos.
+     *
+     * @param texto El texto a incluir en el badge.
+     * @return Un {@link JLabel} configurado.
+     */
     private JLabel crearBadge(String texto) {
         JLabel badge = new JLabel(texto, SwingConstants.CENTER);
         badge.setOpaque(true);
@@ -867,6 +977,12 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return badge;
     }
 
+    /**
+     * Método auxiliar para crear botones con un estilo visual blanco redondeado.
+     *
+     * @param texto El texto que presentará el botón.
+     * @return Un {@link JButton} con estilo blanco.
+     */
     private JButton crearBotonBlanco(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -889,6 +1005,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return btn;
     }
 
+    /**
+     * Método auxiliar para crear botones de confirmación o acción principal
+     * con un estilo dorado redondeado.
+     *
+     * @param texto El texto que presentará el botón.
+     * @return Un {@link JButton} con estilo dorado.
+     */
     private JButton crearBotonDorado(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -911,6 +1034,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return btn;
     }
 
+    /**
+     * Carga y escala la imagen principal asociada a un producto de segunda mano
+     * en un JLabel proporcionado.
+     *
+     * @param p        El producto de segunda mano que contiene las rutas de las fotos.
+     * @param imgLabel El {@link JLabel} donde se renderizará la imagen.
+     */
     private void cargarImagenProducto(SecondHandProduct p, JLabel imgLabel) {
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
             String nombreArchivo = new File(p.getFotos().get(0)).getName();
@@ -931,6 +1061,11 @@ public class PanelIntercambiosEmpleado extends JPanel {
         }
     }
 
+    /**
+     * Carga la foto de perfil del usuario por defecto para mostrarla en la esquina de la tarjeta.
+     *
+     * @param imgLabel El {@link JLabel} donde se cargará el icono de perfil.
+     */
     private void cargarImagenPerfil(JLabel imgLabel) {
         String[] rutas = {
                 "E3_Codigo/src/foto/logoPerfil.png",
@@ -948,6 +1083,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         }
     }
 
+    /**
+     * Comprueba varias rutas relativas para ubicar un archivo físico.
+     * Útil para compensar diferentes configuraciones de ejecución de rutas.
+     *
+     * @param rutas Array de strings con las distintas rutas a probar.
+     * @return El archivo ({@link File}) si se ha encontrado, null en caso contrario.
+     */
     private File encontrarArchivo(String[] rutas) {
         for (String r : rutas) {
             File f = new File(r);
@@ -956,7 +1098,10 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return null;
     }
 
-    // BARRA DE NAVEGACIÓN
+    /**
+     * Configura el menú superior del panel de empleado, integrando la botonera de
+     * navegación (Productos, Intercambios, Pedidos) y el control de perfil del usuario actual.
+     */
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
@@ -988,6 +1133,14 @@ public class PanelIntercambiosEmpleado extends JPanel {
         this.add(barra, BorderLayout.NORTH);
     }
 
+    /**
+     * Crea un botón de navegación para la barra superior, permitiendo destacar de
+     * forma visual la sección que se encuentra activa actualmente.
+     *
+     * @param t      El texto del botón (ej. "Pedidos").
+     * @param activo Indica si esta es la pestaña en la que se encuentra el usuario.
+     * @return Un {@link JButton} modificado.
+     */
     private JButton crearBotonNav(String t, boolean activo) {
         JButton b = new JButton(t);
         b.setPreferredSize(new Dimension(140, 80));
@@ -1006,6 +1159,11 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return b;
     }
 
+    /**
+     * Renderiza el logotipo de la aplicación en la esquina superior izquierda.
+     *
+     * @return Un {@link JPanel} que pinta la imagen cargada.
+     */
     private JPanel crearPanelLogo() {
         JPanel p = new JPanel() {
             @Override
@@ -1025,6 +1183,13 @@ public class PanelIntercambiosEmpleado extends JPanel {
         return p;
     }
 
+    /**
+     * Crea el botón desplegable de perfil de usuario para la esquina superior derecha,
+     * el cual incluye opciones de cuenta como cerrar sesión.
+     *
+     * @param user El empleado que tiene iniciada la sesión actualmente.
+     * @return Un {@link JPanel} que integra el botón y su lógica de despliegue.
+     */
     private JPanel crearPanelUsuario(Employee user) {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         p.setOpaque(false);

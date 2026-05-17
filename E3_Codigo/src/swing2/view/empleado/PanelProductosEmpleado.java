@@ -18,6 +18,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Clase que representa el panel de la interfaz gráfica destinado a los empleados
+ * para la gestión integral de productos nuevos del sistema.
+ * <p>
+ * Este panel utiliza un {@link CardLayout} para alternar entre diversas vistas,
+ * tales como la tabla del catálogo de productos, las opciones de edición de un producto
+ * específico, la creación de nuevos productos y la carga masiva mediante archivos CSV.
+ * </p>
+ * * @author Ivan Sanchez
+ */
 public class PanelProductosEmpleado extends JPanel {
     private VentanaPrincipa ventana;
     private Employee empleadoActual;
@@ -48,6 +58,14 @@ public class PanelProductosEmpleado extends JPanel {
     private JTextField txtEditNombre, txtEditPrecio, txtEditStock;
     private JTextArea txtEditDesc;
 
+    /**
+     * Constructor del panel de gestión de productos para el empleado.
+     * Inicializa el diseño, la barra de navegación superior y prepara el
+     * sistema de cartas (CardLayout) con todas las vistas disponibles.
+     *
+     * @param ventana  La ventana principal de la aplicación que gestiona la navegación.
+     * @param empleado El empleado que tiene iniciada la sesión actualmente.
+     */
     public PanelProductosEmpleado(VentanaPrincipa ventana, Employee empleado) {
         this.ventana = ventana;
         this.empleadoActual = empleado;
@@ -71,6 +89,12 @@ public class PanelProductosEmpleado extends JPanel {
         this.add(panelContenedorCentral, BorderLayout.CENTER);
     }
 
+    /**
+     * Construye la vista principal que contiene la tabla de todos los productos
+     * registrados en el catálogo. Incluye los botones para acceder a las opciones de subida.
+     *
+     * @return Un {@link JPanel} estructurado con la lista interactiva de productos.
+     */
     // VISTA 1: LA TABLA (CON FILAS CLICKABLES)
     private JPanel crearPanelTablaProductos() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -145,6 +169,14 @@ public class PanelProductosEmpleado extends JPanel {
         return panel;
     }
 
+    /**
+     * Construye de forma gráfica una fila interactiva para la tabla de productos.
+     * Al hacer clic en ella, redirige a la vista de edición de ese producto en particular.
+     *
+     * @param p  El objeto {@link NewProduct} asociado a la fila.
+     * @param id El identificador único del producto.
+     * @return Un {@link JPanel} interactivo que representa el producto.
+     */
     private JPanel crearFilaProductoInteractiva(NewProduct p, int id) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -212,6 +244,14 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Genera la vista de edición para un producto existente, proporcionando
+     * un formulario para modificar su información general (nombre, descripción, precio, stock, imagen).
+     *
+     * @param p  El producto ({@link NewProduct}) que se desea editar.
+     * @param id El identificador único del producto.
+     * @return Un {@link JPanel} con el formulario de edición.
+     */
     // VISTA 8: EDICIÓN DE PRODUCTO
     private JPanel crearPanelEditarProducto(NewProduct p, int id) {
         JPanel wrapper = new JPanel(new BorderLayout());
@@ -326,6 +366,12 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Procesa y valida los datos introducidos en el formulario de edición,
+     * aplicando los cambios al objeto de tipo {@link NewProduct}.
+     *
+     * @param p El producto a actualizar.
+     */
     private void procesarEdicionProducto(NewProduct p) {
         try {
             String nombre = txtEditNombre.getText().trim();
@@ -348,6 +394,12 @@ public class PanelProductosEmpleado extends JPanel {
         }
     }
 
+    /**
+     * Crea el panel de interfaz para la subida masiva de productos
+     * mediante la selección de un archivo CSV o de texto plano.
+     *
+     * @return Un {@link JPanel} configurado con el selector de archivos.
+     */
     private JPanel crearPanelSubirArchivo() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -438,6 +490,13 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Lee y procesa las líneas del archivo CSV especificado, instanciando
+     * y guardando en el catálogo global los productos leídos.
+     * * @param filePath Ruta absoluta del archivo CSV a leer.
+     * @return El número de productos añadidos al catálogo.
+     * @throws java.io.IOException Si ocurre un problema leyendo el fichero.
+     */
     private int procesarCargaMasivaLocal(String filePath) throws java.io.IOException {
         int contador = 0;
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(filePath))) {
@@ -483,6 +542,12 @@ public class PanelProductosEmpleado extends JPanel {
         return contador;
     }
 
+    /**
+     * Crea el panel que funciona como menú intermedio para seleccionar
+     * el método de subida de stock: manual (producto nuevo o existente) o automático.
+     *
+     * @return Un {@link JPanel} de menú de opciones.
+     */
     private JPanel crearPanelOpcionesSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -530,6 +595,12 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Crea un panel con buscador que permite localizar en el catálogo
+     * un producto existente mediante su ID numérico.
+     *
+     * @return Un {@link JPanel} configurado con caja de búsqueda.
+     */
     private JPanel crearPanelSubirExistente() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -630,6 +701,12 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Crea el panel para definir cuántas unidades de stock se añadirán
+     * al producto que ha sido buscado y seleccionado previamente.
+     *
+     * @return Un {@link JPanel} con el input de cantidad.
+     */
     private JPanel crearPanelCantidadSubida() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -698,6 +775,13 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Crea la primera pantalla del asistente (paso 1/2) para registrar
+     * un producto complemente nuevo en el catálogo. Permite introducir
+     * información genérica como nombre, precio, categorías e imagen.
+     *
+     * @return Un {@link JPanel} con el formulario genérico.
+     */
     private JPanel crearPanelSubirNuevo() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -825,6 +909,13 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Crea la segunda pantalla del asistente (paso 2/2), la cual permite
+     * introducir los datos técnicos y específicos dependiendo del tipo
+     * de producto seleccionado (Cómic, Figura o Juego).
+     *
+     * @return Un {@link JPanel} dinámico que cambia según la clase del producto.
+     */
     private JPanel crearPanelSubirNuevoEspecifico() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(true);
@@ -887,6 +978,10 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Construye el sub-formulario necesario para crear un objeto de clase {@link Comic}.
+     * * @return Un {@link JPanel} con cajas de texto específicas para cómics.
+     */
     private JPanel crearFormComic() {
         JPanel grid = new JPanel(new GridLayout(4, 2, 10, 15));
         grid.setOpaque(false);
@@ -901,6 +996,10 @@ public class PanelProductosEmpleado extends JPanel {
         return wrap;
     }
 
+    /**
+     * Construye el sub-formulario necesario para crear un objeto de clase {@link Figurine}.
+     * * @return Un {@link JPanel} con cajas de texto específicas para figuras.
+     */
     private JPanel crearFormFigurine() {
         JPanel grid = new JPanel(new GridLayout(5, 2, 10, 15));
         grid.setOpaque(false);
@@ -916,6 +1015,10 @@ public class PanelProductosEmpleado extends JPanel {
         return wrap;
     }
 
+    /**
+     * Construye el sub-formulario necesario para crear un objeto de clase {@link Game}.
+     * * @return Un {@link JPanel} con cajas de texto específicas para juegos de mesa.
+     */
     private JPanel crearFormGame() {
         JPanel grid = new JPanel(new GridLayout(4, 2, 10, 15));
         grid.setOpaque(false);
@@ -930,6 +1033,11 @@ public class PanelProductosEmpleado extends JPanel {
         return wrap;
     }
 
+    /**
+     * Procesa todos los datos del formulario de creación (Paso 1 y Paso 2),
+     * instanciando el tipo correcto de producto en base a lo seleccionado en el ComboBox,
+     * y lo registra oficialmente en el catálogo global de la aplicación.
+     */
     private void procesarCreacionProducto() {
         try {
             String nombre = txtNuevoNombre.getText().trim();
@@ -1008,6 +1116,13 @@ public class PanelProductosEmpleado extends JPanel {
         }
     }
 
+    /**
+     * Utilidad auxiliar para la creación de etiquetas visuales descriptivas
+     * en color blanco dentro de los distintos formularios del panel.
+     *
+     * @param texto El texto que aparecerá en la etiqueta.
+     * @return Un {@link JLabel} formateado.
+     */
     private JLabel crearLabelBlanco(String texto) {
         JLabel l = new JLabel(texto);
         l.setForeground(Color.WHITE);
@@ -1016,6 +1131,14 @@ public class PanelProductosEmpleado extends JPanel {
         return l;
     }
 
+    /**
+     * Crea un componente de tipo Fila (no interactiva) habitualmente utilizado en
+     * listados o previsualizaciones simples.
+     *
+     * @param p  El objeto {@link NewProduct} asociado.
+     * @param id El ID correspondiente.
+     * @return Un {@link JPanel} representando la información mínima de la fila.
+     */
     private JPanel crearFilaProducto(NewProduct p, int id) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setOpaque(false);
@@ -1056,6 +1179,13 @@ public class PanelProductosEmpleado extends JPanel {
         return wrapper;
     }
 
+    /**
+     * Método auxiliar de diseño para estandarizar el texto mostrado
+     * en el interior de las celdas de las tablas visuales.
+     *
+     * @param texto El texto de la celda.
+     * @return Un {@link JLabel} centrado.
+     */
     private JLabel crearLabelFila(String texto) {
         JLabel lbl = new JLabel(texto, SwingConstants.CENTER);
         lbl.setFont(new Font("Arial", Font.BOLD, 13));
@@ -1063,6 +1193,12 @@ public class PanelProductosEmpleado extends JPanel {
         return lbl;
     }
 
+    /**
+     * Utilidad para crear un botón redondo y blanco para acciones secundarias.
+     *
+     * @param texto Texto del botón.
+     * @return {@link JButton} modificado visualmente.
+     */
     private JButton crearBotonBlanco(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -1085,6 +1221,12 @@ public class PanelProductosEmpleado extends JPanel {
         return btn;
     }
 
+    /**
+     * Utilidad para crear un botón azul usado en la barra de herramientas de la tabla principal.
+     *
+     * @param texto Texto del botón.
+     * @return {@link JButton} modificado visualmente.
+     */
     private JButton crearBotonAzul(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -1107,6 +1249,13 @@ public class PanelProductosEmpleado extends JPanel {
         return btn;
     }
 
+    /**
+     * Utilidad para crear un botón dorado usado como botón de acción afirmativa
+     * y finalización de procesos.
+     *
+     * @param texto Texto del botón.
+     * @return {@link JButton} modificado visualmente.
+     */
     private JButton crearBotonDorado(String texto) {
         JButton btn = new JButton(texto) {
             @Override
@@ -1129,6 +1278,13 @@ public class PanelProductosEmpleado extends JPanel {
         return btn;
     }
 
+    /**
+     * Revisa la ruta de la primera foto asignada a un producto y escala la imagen
+     * en un JLabel concreto para que encaje como avatar miniatura en las celdas de las tablas.
+     *
+     * @param p        El producto.
+     * @param imgLabel El contenedor donde insertar la imagen.
+     */
     private void cargarImagenPequena(NewProduct p, JLabel imgLabel) {
         if (p.getFotos() != null && !p.getFotos().isEmpty()) {
             String nombreArchivo = new File(p.getFotos().get(0)).getName();
@@ -1148,6 +1304,10 @@ public class PanelProductosEmpleado extends JPanel {
         }
     }
 
+    /**
+     * Construye y estructura la barra superior de navegación (Navbar)
+     * enlazando este panel con el resto de pantallas destinadas al empleado.
+     */
     private void setupBarraSuperior() {
         JPanel barra = new JPanel(new BorderLayout());
         barra.setBackground(COLOR_FONDO_NAV);
@@ -1178,6 +1338,14 @@ public class PanelProductosEmpleado extends JPanel {
         this.add(barra, BorderLayout.NORTH);
     }
 
+    /**
+     * Crea un botón de navegación con diseño adaptativo según si representa
+     * a la vista activa actual o no.
+     *
+     * @param t      El texto del botón.
+     * @param activo Si es true, el botón se ilumina.
+     * @return El {@link JButton} configurado.
+     */
     private JButton crearBotonNav(String t, boolean activo) {
         JButton b = new JButton(t);
         b.setPreferredSize(new Dimension(140, 80));
@@ -1196,6 +1364,12 @@ public class PanelProductosEmpleado extends JPanel {
         return b;
     }
 
+    /**
+     * Carga el logotipo de la empresa y lo devuelve en un JPanel
+     * listo para anclar a la izquierda de la barra superior.
+     *
+     * @return {@link JPanel} con el logotipo dibujado.
+     */
     private JPanel crearPanelLogo() {
         JPanel p = new JPanel() {
             @Override
@@ -1215,6 +1389,13 @@ public class PanelProductosEmpleado extends JPanel {
         return p;
     }
 
+    /**
+     * Construye el módulo derecho de la barra de navegación que muestra
+     * el perfil de la sesión y permite hacer desplegar el menú de opciones (Cerrar Sesión).
+     *
+     * @param user El empleado que inició sesión.
+     * @return {@link JPanel} interactivo de perfil.
+     */
     private JPanel crearPanelUsuario(Employee user) {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 15));
         p.setOpaque(false);
@@ -1290,6 +1471,13 @@ public class PanelProductosEmpleado extends JPanel {
         return p;
     }
 
+    /**
+     * Busca la existencia de un archivo físico iterando sobre distintas
+     * posibilidades de ruta, previniendo errores por la localización de ejecución actual.
+     *
+     * @param rutas El listado de strings con las rutas relativas.
+     * @return El objeto {@link File} resuelto si es hallado, de lo contrario null.
+     */
     private File encontrarArchivo(String[] rutas) {
         for (String r : rutas) {
             File f = new File(r);
